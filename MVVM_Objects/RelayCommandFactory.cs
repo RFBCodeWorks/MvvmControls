@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MVVMObjects
+namespace RFBCodeWorks.MVVMObjects
 {
     /// <summary>
     /// Factory for creating <see cref="RelayCommand"/> objects

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MVVMObjects
+namespace RFBCodeWorks.MVVMObjects
 {
     /// <summary>
     /// Base class for an <see cref="ObservableCollection{T}"/> of objects of some time

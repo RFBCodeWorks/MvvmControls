@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace MVVMObjects
+namespace RFBCodeWorks.MVVMObjects
 {
     /// <summary>
     /// Provide a Command and a ToolTip <br/>

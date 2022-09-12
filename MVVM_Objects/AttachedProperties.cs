@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace MVVMObjects
+namespace RFBCodeWorks.MVVMObjects
 {
 
     public enum UpdateTargetTrigger

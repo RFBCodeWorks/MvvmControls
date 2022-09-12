@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MVVMObjects
+namespace RFBCodeWorks.MVVMObjects
 {
     /// <summary>
     /// Command that executes takes a method with a return type of Task and monitors its execution. This will prevent the task being started if it is already in progress.

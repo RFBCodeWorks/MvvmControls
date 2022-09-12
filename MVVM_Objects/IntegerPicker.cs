@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace MVVMObjects
+namespace RFBCodeWorks.MVVMObjects
 {
     /// <summary>
     /// ViewModel for a ComboBox that is filled with integers

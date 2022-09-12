@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace MVVMObjects.DragDrop
+namespace RFBCodeWorks.MVVMObjects.DragDrop
 {
 
     /// <summary>
     /// Base class for a FileDrop Target portion of a ViewModel
     /// </summary>
-    public class DragHandler : MVVMObjects.ViewModelBase, IDragHandler
+    public class DragHandler : RFBCodeWorks.MVVMObjects.ViewModelBase, IDragHandler
     {
         /// <inheritdoc/>
         public bool IsDragging

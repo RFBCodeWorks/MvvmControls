@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace MVVMObjects.DragDrop
+namespace RFBCodeWorks.MVVMObjects.DragDrop
 {
     /// <summary>
     /// Static Methods and properties for this implementation

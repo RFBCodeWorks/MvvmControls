@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace MVVMObjects.DragDrop
+namespace RFBCodeWorks.MVVMObjects.DragDrop
 {
     /// <summary>
     /// Interface that combines both <see cref="IDragHandler"/> and <see cref="IFileDropTarget"/>

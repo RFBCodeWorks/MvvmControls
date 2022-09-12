@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows.Input;
 using RelayCmd = Microsoft.Toolkit.Mvvm.Input.RelayCommand;
 
-namespace MVVMObjects
+namespace RFBCodeWorks.MVVMObjects
 {
     /// <summary>
     /// A Variant of <see cref="RelayCmd"/> that allows inheritance but also allows for accepting a parameter of type <typeparamref name="T"/>

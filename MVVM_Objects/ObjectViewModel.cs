@@ -11,7 +11,7 @@ using System.Windows.Input;
 //using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 
-namespace MVVMObjects
+namespace RFBCodeWorks.MVVMObjects
 {
     /// <summary>
     /// Base class for a ViewModel object that provides a view for a single object.

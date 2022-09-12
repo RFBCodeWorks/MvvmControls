@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 
 
-namespace MVVMObjects.DragDrop
+namespace RFBCodeWorks.MVVMObjects.DragDrop
 {
     /// <summary>
     /// Defines the Drag Source Object

@@ -11,7 +11,7 @@
 //using System.Windows.Media;
 //using GongSolutions.Wpf.DragDrop.Utilities;
 
-//namespace MVVMObjects.DragDrop
+//namespace RFBCodeWorks.MVVMObjects.DragDrop
 //{
 //    /// <summary>
 //    /// 
