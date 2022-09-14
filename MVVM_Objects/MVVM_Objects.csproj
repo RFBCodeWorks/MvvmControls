@@ -4,9 +4,9 @@
     <RootNamespace>MVVMObjects</RootNamespace>
       <LangVersion>9.0</LangVersion>
       <UseWPF>true</UseWPF>
+      <Platforms>AnyCPU;x86;x64</Platforms>
       <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\MVVM Objects.xml</DocumentationFile>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
