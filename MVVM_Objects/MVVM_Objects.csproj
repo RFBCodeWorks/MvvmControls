@@ -4,10 +4,7 @@
     <RootNamespace>MVVMObjects</RootNamespace>
       <LangVersion>9.0</LangVersion>
       <UseWPF>true</UseWPF>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\MVVM Objects.xml</DocumentationFile>
+      <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\MVVM Objects.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
