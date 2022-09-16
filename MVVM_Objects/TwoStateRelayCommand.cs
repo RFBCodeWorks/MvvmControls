@@ -30,9 +30,12 @@ namespace RFBCodeWorks.MVVMObjects
             AlternateAction = alternateAction;
             AlternateActionCanExecute = alternateCanExecute;
         }
-
+        
         private bool defaultEnabled;
 
+        /// <summary>
+        /// Update the state of the RelayCommand, which updates all the properties of the button
+        /// </summary>
         public bool IsDefaultState {
             get => defaultEnabled;
             set
