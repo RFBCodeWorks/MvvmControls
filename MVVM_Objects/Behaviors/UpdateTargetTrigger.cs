@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-namespace RFBCodeWorks.MVVMObjects
+namespace RFBCodeWorks.MVVMObjects.Behaviors
 {
 
+    /// <summary>
+    /// 
+    /// </summary>
     public enum UpdateTargetTrigger
     {
         /// <summary>
@@ -33,44 +36,58 @@ namespace RFBCodeWorks.MVVMObjects
         Default
     }
 
+    /// <summary>
+    /// Attached Property that causes a binding to refresh on some trigger
+    /// </summary>
     public class UpdateTargetAttachedProperty
     {
-        public UpdateTargetAttachedProperty()
-        {
-
-        }
-
+        
+        /// <summary>
+        /// Event that occurs when the source is updated
+        /// </summary>
         public static readonly RoutedEvent SourceUpdated = EventManager.RegisterRoutedEvent("SourceUpdated", RoutingStrategy.Direct, typeof(PropertyChangedCallback), typeof(DependencyProperty));
 
+        /// <summary>
+        /// The DependencyProperty to refresh when the trigger occurs
+        /// </summary>
         public DependencyProperty TargetProperty { get; set; }
 
-
+        /// <summary>
+        /// The Attached Property
+        /// </summary>
         public static readonly DependencyProperty UpdateTargetTriggerProperty =
             DependencyProperty.RegisterAttached(
                 nameof(UpdateTargetTrigger),
                 typeof(UpdateTargetTrigger),
-                typeof(DependencyObject),
+                typeof(UpdateTargetAttachedProperty),
                 new FrameworkPropertyMetadata(null,
                     new PropertyChangedCallback((o, e) =>
                    {
-
+                       // To Do - figure this out? no idewa where I left off.
                    })));
 
+        /// <summary>
+        /// Get the value
+        /// </summary>
         public static UpdateTargetTrigger GetUpdateTargetProperty(FrameworkElement prop)
         {
             return (UpdateTargetTrigger)prop.GetValue(UpdateTargetTriggerProperty);
         }
 
+        /// <summary>
+        /// Set the value
+        /// </summary>
         public static void SetUpdateTargetProperty(FrameworkElement prop, UpdateTargetAttachedProperty trigger)
         {
-
-
-
             prop.GetBindingExpression(trigger.TargetProperty).UpdateTarget();
             prop.SetValue(UpdateTargetTriggerProperty, trigger);
         }
 
-
+        /// <summary>
+        /// Updates the <see cref="TargetProperty"/>
+        /// </summary>
+        /// <param name="b"></param>
+        /// <param name="trigger"></param>
         private static void RefreshBinding(BindingExpression b, UpdateTargetTrigger trigger)
         {
             bool OKToRefresh = b.ParentBinding.Mode switch

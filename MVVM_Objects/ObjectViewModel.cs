@@ -17,7 +17,7 @@ namespace RFBCodeWorks.MVVMObjects
     /// Base class for a ViewModel object that provides a view for a single object.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract partial class ObjectViewModel<T> : ViewModelBase where T : class
+    public abstract class ObjectViewModel<T> : ViewModelBase where T : class
     {
         #region < ObjectViewModel Class >
         #region < Constructors >

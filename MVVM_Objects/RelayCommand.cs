@@ -12,7 +12,7 @@ namespace RFBCodeWorks.MVVMObjects
     /// A Variant of <see cref="RelayCmd"/> that allows inheritance but also allows for accepting a parameter of type <typeparamref name="T"/>
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class RelayCommand<T> : ObservableObject, IButtonDefinition, ICommand, IRelayCommand
+    public class RelayCommand<T> : AbstractButtonDefinition, IButtonDefinition, ICommand, IRelayCommand
     {
         #region < Constructors >
 
@@ -77,7 +77,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// Gets queried after <see cref="CanExecuteChanged"/> is raised. 
         /// </remarks>
         /// <inheritdoc cref="ICommand.CanExecute(object)"/>
-        public virtual bool CanExecute(object parameter)
+        public override bool CanExecute(object parameter)
         {
             if (CanExecuteFunction is null) return true; // If a custom execute is not specified, return true
             if (parameter is T | parameter is null)
@@ -92,7 +92,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// If the <paramref name="parameter"/> is not of type <typeparamref name="T"/>, then an <see cref="ArgumentException"/> will be thrown. <br/>
         /// Does not throw if parameter is null.
         /// </remarks>
-        public virtual void Execute(object parameter)
+        public override void Execute(object parameter)
         {
             if (parameter is T | parameter is null)
                 ExecuteAction((T)parameter);
@@ -119,7 +119,7 @@ namespace RFBCodeWorks.MVVMObjects
     /// <remarks>
     /// <inheritdoc cref="RelayCmd" path="*"/>
     /// </remarks>
-    public class RelayCommand : ObservableObject, IButtonDefinition, IRelayCommand
+    public class RelayCommand : AbstractButtonDefinition, IButtonDefinition, IRelayCommand
     {
         /// <inheritdoc cref="RelayCmd.RelayCommand(Action)"/>
         public RelayCommand(Action execute) { RelayCmd = new RelayCmd(execute); }
@@ -137,32 +137,24 @@ namespace RFBCodeWorks.MVVMObjects
         /// The underlying <see cref="Microsoft.Toolkit.Mvvm.Input.RelayCommand"/>
         /// </summary>
         protected RelayCmd RelayCmd { get; }
-
-        /// <inheritdoc cref="IToolTipProvider.ToolTip"/>
-        public string ToolTip
-        {
-            get => toolTip;
-            set => base.SetProperty(ref toolTip, value, nameof(ToolTip));
-        }
-        private string toolTip;
  
         #region < IRelayCommand >
 
         /// <inheritdoc cref="ICommand.CanExecuteChanged"/>
-        public virtual event EventHandler CanExecuteChanged
+        public override event EventHandler CanExecuteChanged
         {
             add { ((ICommand)RelayCmd).CanExecuteChanged += value; }
             remove { ((ICommand)RelayCmd).CanExecuteChanged -= value; }
         }
 
         /// <inheritdoc cref="IRelayCommand.NotifyCanExecuteChanged"/>
-        public virtual void NotifyCanExecuteChanged() => ((IRelayCommand)RelayCmd).NotifyCanExecuteChanged();
+        public override void NotifyCanExecuteChanged() => ((IRelayCommand)RelayCmd).NotifyCanExecuteChanged();
 
         /// <inheritdoc cref="ICommand.CanExecute(object)"/>
-        public virtual bool CanExecute(object parameter) => ((ICommand)RelayCmd).CanExecute(parameter);
+        public override bool CanExecute(object parameter) => ((ICommand)RelayCmd).CanExecute(parameter);
 
         /// <inheritdoc cref="ICommand.Execute(object)"/>        
-        public virtual void Execute(object parameter) => ((ICommand)RelayCmd).Execute(parameter);
+        public override void Execute(object parameter) => ((ICommand)RelayCmd).Execute(parameter);
 
         #endregion
     }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.MVVMObjects
+namespace RFBCodeWorks.MVVMObjects.ViewModels
 {
     /// <summary>
     /// ViewModel
@@ -17,7 +17,7 @@ namespace RFBCodeWorks.MVVMObjects
             Static12Hours = new int[] { 00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11 };
             Static24Hours = new int[] { 00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
             StaticAMPM = new string[] { "AM", "PM" };
-            StaticMinutesSeconds = IntegerPicker.GenerateArray(60);
+            StaticMinutesSeconds = MVVMObjects.ViewModels.IntegerPicker.GenerateArray(60);
         }
 
         private static int[] Static24Hours { get; }

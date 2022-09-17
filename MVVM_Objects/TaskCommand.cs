@@ -9,22 +9,29 @@ using System.Threading.Tasks;
 namespace RFBCodeWorks.MVVMObjects
 {
     /// <summary>
-    /// Command that executes takes a method with a return type of Task and monitors its execution. This will prevent the task being started if it is already in progress.
+    /// Abstract base class for the Async Task Commands
     /// </summary>
-    public class TaskCommand : AbstractButtonDefinition, IButtonDefinition
+    public abstract class AbstractTaskCommand : AbstractButtonDefinition, IButtonDefinition
     {
-        public TaskCommand(Func<Task> TaskGenerator) { TaskAction = TaskGenerator; }
-
-        public TaskCommand(Func<Task> TaskGenerator, Action<Exception> taskFaultedAction) { TaskAction = TaskGenerator; TaskFaultedAction = taskFaultedAction; }
-
-        public TaskCommand(Func<Task> TaskGenerator, Action<Exception> taskFaultedAction, Action taskCancelledAction) { TaskAction = TaskGenerator; TaskFaultedAction = taskFaultedAction; TaskCancelledAction = taskCancelledAction; }
+        /// <summary>
+        /// Flag that should be set true when the task is being about to start
+        /// </summary>
+        protected bool IsTaskStarting;
 
         /// <summary>
-        /// The method that will produce the Task that will be monitored
+        /// The Task that is running / has run
         /// </summary>
-        protected Func<Task> TaskAction { get; }
-        public Task Task { get; private set; }
-        private bool TaskStarting;
+        public Task Task { get; protected set; }
+
+        /// <summary>
+        /// A Function that controls when the Task can start, assuming it has not started.
+        /// </summary>
+        public Func<bool> CanExecuteFunc { get; init; }
+
+        /// <summary>
+        /// Action to take when an exception occuring that ends the task prematurely
+        /// </summary>
+        public Action<Exception> TaskFaultedAction { get; init; }
 
         /// <summary>
         /// Action to take when the task was cancelled
@@ -32,50 +39,151 @@ namespace RFBCodeWorks.MVVMObjects
         public Action TaskCancelledAction { get; init; }
 
         /// <summary>
-        /// Action to take when an exception occuring that ends the task prematurely
+        /// State of the task
         /// </summary>
-        public Action<Exception> TaskFaultedAction { get; init; }
+        public bool IsRunning
+        {
+            get => isRunning;
+            protected set
+            {
+                SetProperty(ref isRunning, value, nameof(IsRunning));
+                OnPropertyChanged(nameof(ButtonText));
+            }
+        }
+        private bool isRunning;
 
+        /// <summary>
+        /// Check if the task is running / starting
+        /// </summary>
+        /// <returns>
+        /// If the task is not running (or task has run to completion), return the result of <see cref="CanExecuteFunc"/> or true.  <br/>
+        /// Otherwise return false. 
+        /// </returns>
+        /// <inheritdoc/>
         public override bool CanExecute(object parameter)
         {
-            if (Task is null) return true;
-            if (!TaskStarting) return true; // Task not started
+            
+            if (Task is null && !IsTaskStarting && !IsRunning) return CanExecuteFunc?.Invoke() ?? true;
             if (Task.Status > TaskStatus.RanToCompletion) // Task Started but ran to completion/faulted
             {
-                return true;
+                return CanExecuteFunc?.Invoke() ?? true;
             }
             return false;
         }
 
-        public override async void Execute(object parameter)
+        /// <summary>
+        /// Set the <see cref="Task"/> and <see cref="IsRunning"/> property, await its completion, the invoke the actions if it was cancelled or faulted.
+        /// </summary>
+        /// <param name="task"></param>
+        /// <returns></returns>
+        protected async Task AwaitTaskCompletion(Task task)
         {
-            TaskStarting = true;
+            IsTaskStarting = true;
+            IsRunning = true;
             NotifyCanExecuteChanged();
-            Task = TaskAction();
+            Task = task;
+            bool cancelActionRun = false;
+            bool faultedActionRun = false;
             if (Task.Status < TaskStatus.RanToCompletion)
             {
                 try
                 {
-                    await Task;
+                    await task;
                 }
                 catch (TaskCanceledException _)
                 {
-                    if (TaskCancelledAction != null) TaskCancelledAction();
+                    TaskCancelledAction?.Invoke();
+                    cancelActionRun = true;
                 }
                 catch (Exception e)
                 {
-                    if (Task.IsCanceled)
+                    if (task.IsCanceled)
                     {
-                        if (TaskCancelledAction != null) TaskCancelledAction();
+                        TaskCancelledAction?.Invoke();
+                        cancelActionRun = true;
                     }
                     else
                     {
-                        if (TaskFaultedAction != null) TaskFaultedAction(e);
+                        TaskFaultedAction?.Invoke(e);
+                        faultedActionRun = true;
                     }
                 }
-                TaskStarting = false;
-                NotifyCanExecuteChanged();
+                finally
+                {
+                    if (!faultedActionRun && task.IsFaulted && task.Exception != null && TaskFaultedAction != null)
+                    {
+                        TaskFaultedAction(task.Exception);
+                    }
+                    else if (!cancelActionRun && task.IsCanceled && TaskCancelledAction != null)
+                    {
+                        TaskCancelledAction();
+                    }
+                }
             }
+            IsTaskStarting = false;
+            IsRunning = false;
+            NotifyCanExecuteChanged();
+        }
+    }
+
+
+    /// <summary>
+    /// Command that executes takes a method with a return type of Task and monitors its execution. This will prevent the task being started if it is already in progress.
+    /// </summary>
+    public class TaskCommand : AbstractTaskCommand, IButtonDefinition
+    {
+
+        #region < Constructors >
+
+        /// <summary>
+        /// Create a TaskCommand object designed to prevent the user pressing the button while the task is running
+        /// </summary>
+        public TaskCommand() : base() { }
+
+        /// <inheritdoc cref="TaskCommand.TaskCommand()"/>
+        /// <param name="TaskGenerator"></param>
+        public TaskCommand(Func<Task> TaskGenerator) : this()
+        {
+            TaskAction = TaskGenerator;
+        }
+
+        /// <param name="taskFaultedAction"></param>
+        /// <inheritdoc cref="TaskCommand.TaskCommand(Func{Task})"/>
+        /// <param name="TaskGenerator"/>
+        public TaskCommand(Func<Task> TaskGenerator, Action<Exception> taskFaultedAction)
+            : this(TaskGenerator)
+        {
+            TaskFaultedAction = taskFaultedAction;
+        }
+
+        /// <param name="taskCancelledAction"></param>
+        /// <inheritdoc cref="TaskCommand.TaskCommand(Func{Task}, Action{Exception})"/>
+        /// <param name="taskFaultedAction"/><param name="TaskGenerator"/>
+        public TaskCommand(Func<Task> TaskGenerator, Action<Exception> taskFaultedAction, Action taskCancelledAction)
+        : this(TaskGenerator, taskFaultedAction)
+        {
+            TaskCancelledAction = taskCancelledAction;
+        }
+
+        #endregion
+
+        #region < Properties >
+
+        /// <summary>
+        /// The method that will produce the Task that will be monitored
+        /// </summary>
+        public Func<Task> TaskAction { get; init; }
+
+        #endregion
+
+
+        /// <inheritdoc/>
+        public override async void Execute(object parameter)
+        {
+            IsTaskStarting = true;
+            NotifyCanExecuteChanged();
+            Task = TaskAction();
+            await base.AwaitTaskCompletion(Task);
         }
     }
 
@@ -84,48 +192,42 @@ namespace RFBCodeWorks.MVVMObjects
     /// Command that executes takes a method with a return type of Task and monitors its execution. <br/>
     /// This also provides a binding for the text to update depending on the task state
     /// </summary>
-    public class CancellableTaskCommand : AbstractButtonDefinition, IButtonDefinition
+    public class CancellableTaskCommand : AbstractTaskCommand, IButtonDefinition
     {
+
+        #region < Constructors >
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="TaskGenerator"></param>
         public CancellableTaskCommand(Func<TaskPair> TaskGenerator)
         {
             TaskAction = TaskGenerator;
         }
 
+        #endregion
+
+
         /// <summary>
         /// The method that will produce the Task that will be monitored
         /// </summary>
-        protected Func<TaskPair> TaskAction { get; }
-        
-        /// <summary>
-        /// The currently running task
-        /// </summary>
-        public Task Task { get; private set; }
+        public Func<TaskPair> TaskAction { get; init;  }
 
         /// <summary>
         /// The Task's assoicated cancellation token
         /// </summary>
         public CancelAction CancelToken { get; private set; }
 
-        private bool isRunning;
-
-        /// <summary>
-        /// State of the task
-        /// </summary>
-        public bool IsRunning { get => isRunning;
-            private set
-            {
-                SetProperty(ref isRunning, value, nameof(IsRunning));
-                OnPropertyChanged(nameof(ButtonText));
-            }
-        }
-
-        public string ButtonText => IsRunning ? StopTaskText : StartTaskText;
+        
+        /// <inheritdoc/>
+        public override string ButtonText => IsRunning ? StopTaskText : StartTaskText;
 
         /// <summary>
         /// Text to display when the task is not running
         /// </summary>
         public string StartTaskText { get => StartText; set => SetProperty(ref StartText, value, nameof(StartTaskText)); }
-            private string StartText = "Start";
+        private string StartText = "Start";
 
         /// <summary>
         /// Text to display while the task is running
@@ -133,36 +235,32 @@ namespace RFBCodeWorks.MVVMObjects
         public string StopTaskText { get => StopText; set => SetProperty(ref StopText, value, nameof(StopTaskText)); }
         private string StopText = "Cancel";
 
-
+        /// <inheritdoc/>
         public override bool CanExecute(object parameter)
         {
-            if (Task is null) return true;
-            bool CanCancel = CancelToken != null && !CancelToken.IsCancellationRequested;
-            if (CanCancel | Task.Status >= TaskStatus.RanToCompletion) return true;
-            return false;
+            bool canCancel = CancelToken != null && !CancelToken.IsCancellationRequested && Task.Status < TaskStatus.RanToCompletion;
+            if (IsRunning) return canCancel;
+            return base.CanExecute(parameter);
         }
 
+        /// <inheritdoc/>
         public override async void Execute(object parameter)
         {
             if (IsRunning)
-                StopTask();
+                await StopTask();
             else
-                StartTask();
+                await StartTask();
         }
 
-        private async void StartTask()
+        private async Task StartTask()
         {
             var TP = TaskAction();
             Task = TP.Task;
             CancelToken = TP.CancelAction;
-            NotifyCanExecuteChanged();
-            IsRunning = true;
-            await Task;
-            IsRunning = false;
-            NotifyCanExecuteChanged();
+            await base.AwaitTaskCompletion(Task);
         }
 
-        private async void StopTask()
+        private async Task StopTask()
         {
             if (CancelToken?.IsCancellationRequested ?? false) CancelToken?.Cancel();
             NotifyCanExecuteChanged();
@@ -170,7 +268,6 @@ namespace RFBCodeWorks.MVVMObjects
             NotifyCanExecuteChanged();
         }
 
-        
     }
 
     /// <summary>
@@ -262,6 +359,9 @@ namespace RFBCodeWorks.MVVMObjects
             }
         }
 
+        /// <summary>
+        /// Dispose of the underlying CancellationToken
+        /// </summary>
         public void Dispose()
         {
             ((IDisposable)Token).Dispose();
