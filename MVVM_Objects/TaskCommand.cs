@@ -63,8 +63,9 @@ namespace RFBCodeWorks.MVVMObjects
         public override bool CanExecute(object parameter)
         {
             
-            if (Task is null && !IsTaskStarting && !IsRunning) return CanExecuteFunc?.Invoke() ?? true;
-            if (Task.Status > TaskStatus.RanToCompletion) // Task Started but ran to completion/faulted
+            if (!IsTaskStarting && !IsRunning) return CanExecuteFunc?.Invoke() ?? true;
+            if (IsTaskStarting | IsRunning) return false;
+            if (Task != null &&  Task.Status > TaskStatus.RanToCompletion) // Task Started but ran to completion/faulted
             {
                 return CanExecuteFunc?.Invoke() ?? true;
             }

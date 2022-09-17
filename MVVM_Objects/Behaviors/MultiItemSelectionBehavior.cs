@@ -17,27 +17,27 @@ namespace RFBCodeWorks.MVVMObjects.Behaviors
     /// <summary>
     /// Allows two-way binding to ListBox.SelectedItems for listboxes with a object type of int
     /// </summary>
-    public class MultiItemSelectionBehavior_Int : MultiItemSelectionBehavior<int> { }
+    public class MultiItemSelectionBehaviorInt : MultiItemSelectionBehavior<int> { }
 
     /// <summary>
     /// Allows two-way binding to ListBox.SelectedItems for listboxes with a object type of string
     /// </summary>
-    public class MultiItemSelectionBehavior_String : MultiItemSelectionBehavior<string> { }
+    public class MultiItemSelectionBehaviorString : MultiItemSelectionBehavior<string> { }
 
     /// <summary>
     /// Allows two-way binding to ListBox.SelectedItems for listboxes with a object type of FileInfo
     /// </summary>
-    public class MultiItemSelectionBehavior_FileInfo : MultiItemSelectionBehavior<FileInfo> { }
+    public class MultiItemSelectionBehaviorFileInfo : MultiItemSelectionBehavior<FileInfo> { }
 
     /// <summary>
     /// Allows two-way binding to ListBox.SelectedItems for listboxes with a object type of FileInfo
     /// </summary>
-    public class MultiItemSelectionBehavior_DirectoryInfo : MultiItemSelectionBehavior<DirectoryInfo> { }
+    public class MultiItemSelectionBehaviorDirectoryInfo : MultiItemSelectionBehavior<DirectoryInfo> { }
 
     /// <summary>
     /// Allows two-way binding to ListBox.SelectedItems for listboxes with a object type of FileInfo
     /// </summary>
-    public class MultiItemSelectionBehavior_DriveInfo : MultiItemSelectionBehavior<DriveInfo> { }
+    public class MultiItemSelectionBehaviorDriveInfo : MultiItemSelectionBehavior<DriveInfo> { }
 }
 
 namespace RFBCodeWorks.MVVMObjects.Behaviors.Base
