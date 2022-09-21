@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RFBCodeWorks.MVVMObjects.BaseControlDefinitions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -91,7 +92,7 @@ namespace RFBCodeWorks.MVVMObjects
                 {
                     await task;
                 }
-                catch (TaskCanceledException _)
+                catch (TaskCanceledException)
                 {
                     TaskCancelledAction?.Invoke();
                     cancelActionRun = true;
@@ -330,6 +331,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// Create a new CancelAction from some action
         /// </summary>
         /// <param name="action"></param>
+        /// <param name="source"></param>
         public CancelAction(Action action, CancellationTokenSource source)
         {
             if (action is null) throw new ArgumentNullException(nameof(action));

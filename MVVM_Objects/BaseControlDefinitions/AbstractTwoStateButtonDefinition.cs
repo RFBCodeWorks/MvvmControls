@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.MVVMObjects
+namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
 {
     /// <summary>
     /// Abstract Base class for buttons that update their tooltips and display text between two states dynamically
@@ -23,7 +23,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// <summary>
         /// Object that provides the behavior to update the button text
         /// </summary>
-        protected TwoStateButtonTextProvider ButtonDefinition { get; } = new();
+        public TwoStateButtonTextProvider ButtonDefinition { get; } = new();
 
         /// <summary>
         /// Text to display on the button

@@ -20,14 +20,33 @@ namespace RFBCodeWorks.MVVMObjects
         {
             ButtonTextProvider = new();
             ToolTipTextProvider = new();
-            ButtonTextProvider.PropertyChanged += ButtonTextUpdatedHandler;
-            ToolTipTextProvider.PropertyChanged += ToolTipTextUpdatedHandler;
         }
 
         /// <inheritdoc />
-        public TwoStateTextProvider ButtonTextProvider { get; }
+        public TwoStateTextProvider ButtonTextProvider
+        {
+            get => buttontextprovider;
+            init
+            {
+                if (buttontextprovider != null) buttontextprovider.PropertyChanged -= ButtonTextUpdatedHandler;
+                buttontextprovider = value;
+                value.PropertyChanged -= ButtonTextUpdatedHandler;
+            }
+        }
+        private TwoStateTextProvider buttontextprovider;
+
         /// <inheritdoc />
-        public TwoStateTextProvider ToolTipTextProvider { get; }
+        public TwoStateTextProvider ToolTipTextProvider
+        {
+            get => buttontextprovider;
+            init
+            {
+                if (tooltiptextprovider != null) tooltiptextprovider.PropertyChanged -= ToolTipTextUpdatedHandler;
+                tooltiptextprovider = value;
+                value.PropertyChanged -= ToolTipTextUpdatedHandler;
+            }
+        }
+        private TwoStateTextProvider tooltiptextprovider;
 
         /// <inheritdoc />
         public string ButtonText => ButtonTextProvider.DisplayText;

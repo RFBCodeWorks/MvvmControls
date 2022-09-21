@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace RFBCodeWorks.MVVMObjects
+namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
 {
     /// <summary>
     /// Abstract base object that inherits from the following:
@@ -15,20 +15,11 @@ namespace RFBCodeWorks.MVVMObjects
     /// <br/> - <see cref="IRelayCommand"/>
     /// <br/> - <see cref="ICommand"/>
     /// <br/> - <see cref="IToolTipProvider"/>
-    /// <br/> - <see cref="INotifyPropertyChanged"/> ( Notify when updating the <see cref="ToolTip"/> )
+    /// <br/> - <see cref="INotifyPropertyChanged"/>
     /// <br/> - <see cref="IButtonDefinition"/>
     /// </summary>
-    public abstract class AbstractButtonDefinition : ObservableObject, IButtonDefinition
+    public abstract class AbstractButtonDefinition : BaseControlDefinition, IButtonDefinition
     {
-
-        /// <inheritdoc/>
-        public virtual string ToolTip
-        {
-            get => toolTip;
-            set => base.SetProperty(ref toolTip, value, nameof(ToolTip));
-        }
-        private string toolTip;
-
 
         /// <inheritdoc/>
         public virtual string ButtonText
@@ -37,16 +28,6 @@ namespace RFBCodeWorks.MVVMObjects
             set { SetProperty(ref ButtonTextField, value, nameof(ButtonText)); }
         }
         private string ButtonTextField;
-
-
-        /// <inheritdoc/>
-        public virtual System.Windows.Visibility Visibility
-        {
-            get { return VisibilityField; }
-            set { SetProperty(ref VisibilityField, value, nameof(Visibility)); }
-        }
-        private System.Windows.Visibility  VisibilityField;
-
 
         /// <summary>
         /// <inheritdoc cref="ICommand.CanExecuteChanged"/>
@@ -63,6 +44,11 @@ namespace RFBCodeWorks.MVVMObjects
         /// Raises the <see cref="CanExecuteChanged"/> event
         /// </summary>
         public virtual void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, new EventArgs());
+
+        /// <summary>
+        /// Event Handler that allows an external event to raise CanExecuteChanged
+        /// </summary>
+        public void NotifyCanExecuteChanged(object sender, EventArgs e) => this.NotifyCanExecuteChanged();
     }
 
 }

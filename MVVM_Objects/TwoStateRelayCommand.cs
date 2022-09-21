@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RFBCodeWorks.MVVMObjects.BaseControlDefinitions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,23 +46,52 @@ namespace RFBCodeWorks.MVVMObjects
             }
         }
 
+        /// <summary>
+        /// The action to perform while <see cref="IsDefaultState"/> == true
+        /// </summary>
         public Action DefaultAction { get; init; }
+
+        /// <summary>
+        /// The action to perform while <see cref="IsDefaultState"/> == false
+        /// </summary>
         public Action AlternateAction { get; init; }
 
+        /// <summary>
+        /// Determine if the <see cref="DefaultAction"/> can execute
+        /// </summary>
         public Func<bool> DefaultActionCanExecute { get; init; }
+
+        /// <summary>
+        /// Determine if the <see cref="AlternateAction"/> can execute
+        /// </summary>
         public Func<bool> AlternateActionCanExecute { get; init; }
 
+        /// <summary>
+        /// Tooltip to display while <see cref="IsDefaultState"/> == true
+        /// </summary>
         public string DefaultTooltip { get => base.ButtonDefinition.ToolTipTextProvider.DefaultText; set => base.ButtonDefinition.ToolTipTextProvider.DefaultText = value; }
+
+        /// <summary>
+        /// Tooltip to display while <see cref="IsDefaultState"/> == false
+        /// </summary>
         public string AlternateToolTip { get => base.ButtonDefinition.ToolTipTextProvider.AlternateText; set => base.ButtonDefinition.ToolTipTextProvider.AlternateText = value; }
 
+        /// <summary>
+        /// Button Text  to display while <see cref="IsDefaultState"/> == true
+        /// </summary>
         public string DefaultButtonText { get => base.ButtonDefinition.ButtonTextProvider.DefaultText; set => base.ButtonDefinition.ButtonTextProvider.DefaultText = value; }
+        /// <summary>
+        /// Button Text  to display while <see cref="IsDefaultState"/> == false
+        /// </summary>
         public string AlternateButtonText { get => base.ButtonDefinition.ButtonTextProvider.AlternateText; set => base.ButtonDefinition.ButtonTextProvider.AlternateText = value; }
 
+        /// <inheritdoc/>
         public override bool CanExecute(object parameter)
         {
             return IsDefaultState ? DefaultActionCanExecute() : AlternateActionCanExecute();
         }
 
+        /// <inheritdoc/>
         public override void Execute(object parameter)
         {
             if (IsDefaultState)

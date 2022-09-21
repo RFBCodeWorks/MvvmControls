@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Mvvm.Input;
+using RFBCodeWorks.MVVMObjects.BaseControlDefinitions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,7 +22,7 @@ namespace RFBCodeWorks.MVVMObjects
         {
             ExecuteAction = execute;
             CanExecuteFunction = null;
-            CommandManager.RequerySuggested += this.CanExecuteChanged; 
+            CommandManager.RequerySuggested += base.NotifyCanExecuteChanged; 
         }
 
         /// <summary>
@@ -37,27 +38,7 @@ namespace RFBCodeWorks.MVVMObjects
 
         #endregion
 
-        #region < Events >
-
-        /// <inheritdoc cref="ICommand.CanExecuteChanged"/>
-        public event EventHandler CanExecuteChanged;
-
-        #endregion
-
         #region < Properties >
-
-        /// <inheritdoc cref="IToolTipProvider.ToolTip"/>
-        public string ToolTip
-        {
-            get => toolTip;
-            set
-            {
-                base.SetProperty(ref toolTip, value, nameof(ToolTip));
-                //toolTip = value; 
-                //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ToolTip))); 
-            }
-        }
-        private string toolTip;
 
         /// <summary>
         /// Action to execute via the <see cref="Execute(object)"/> method. <br/> This can be left null if the <see cref="Execute(object)"/> method is overridden.
@@ -74,7 +55,7 @@ namespace RFBCodeWorks.MVVMObjects
         #region < Methods >
 
         /// <remarks>
-        /// Gets queried after <see cref="CanExecuteChanged"/> is raised. 
+        /// Gets queried after CanExecuteChanged is raised. 
         /// </remarks>
         /// <inheritdoc cref="ICommand.CanExecute(object)"/>
         public override bool CanExecute(object parameter)
@@ -100,16 +81,6 @@ namespace RFBCodeWorks.MVVMObjects
                 throw new ArgumentException($"Invalid object type passed to ICommand object.\n Expected: {typeof(T)}\nReceived: {parameter.GetType()}");
         }
 
-        /// <summary>
-        /// Raise the <see cref="CanExecuteChanged"/> event.
-        /// </summary>
-        public virtual void NotifyCanExecuteChanged()
-        {
-            CanExecuteChanged?.Invoke(this, new EventArgs());
-        }
-
-        public void NotifyCanExecuteChanged(object sender, EventArgs e) => this.NotifyCanExecuteChanged();
-
         #endregion
     }
 
@@ -122,39 +93,48 @@ namespace RFBCodeWorks.MVVMObjects
     public class RelayCommand : AbstractButtonDefinition, IButtonDefinition, IRelayCommand
     {
         /// <inheritdoc cref="RelayCmd.RelayCommand(Action)"/>
-        public RelayCommand(Action execute) { RelayCmd = new RelayCmd(execute); }
+        public RelayCommand(Action execute) : this(execute, ReturnTrue) { }
 
         /// <inheritdoc cref="RelayCmd.RelayCommand(Action, Func{bool})"/>
-        public RelayCommand(Action execute, Func<bool> canExecute) { RelayCmd = new RelayCmd(execute, canExecute); }
-
-        /// <summary>
-        /// Initialize a new RelayCommand object that utilized the provided <paramref name="relayCommand"/>
-        /// </summary>
-        /// <param name="relayCommand"></param>
-        public RelayCommand(RelayCmd relayCommand) { RelayCmd = relayCommand; }
-
-        /// <summary>
-        /// The underlying <see cref="Microsoft.Toolkit.Mvvm.Input.RelayCommand"/>
-        /// </summary>
-        protected RelayCmd RelayCmd { get; }
- 
-        #region < IRelayCommand >
-
-        /// <inheritdoc cref="ICommand.CanExecuteChanged"/>
-        public override event EventHandler CanExecuteChanged
+        public RelayCommand(Action execute, Func<bool> canExecute)
         {
-            add { ((ICommand)RelayCmd).CanExecuteChanged += value; }
-            remove { ((ICommand)RelayCmd).CanExecuteChanged -= value; }
+            ExecuteAction = execute;
+            CanExecuteFunction = canExecute;
         }
 
-        /// <inheritdoc cref="IRelayCommand.NotifyCanExecuteChanged"/>
-        public override void NotifyCanExecuteChanged() => ((IRelayCommand)RelayCmd).NotifyCanExecuteChanged();
+        private static bool ReturnTrue() => true;
 
+        /// <summary>
+        /// Action to execute via the <see cref="Execute(object)"/> method. <br/> This can be left null if the <see cref="Execute(object)"/> method is overridden.
+        /// </summary>
+        protected Action ExecuteAction { get; init; }
+
+        /// <summary>
+        /// The function that is called by the base <see cref="CanExecute(object)"/> method.
+        /// </summary>
+        protected Func<bool> CanExecuteFunction { get; init; }
+
+        #region < IRelayCommand >
+
+        /// <remarks>
+        /// Gets queried after CanExecuteChanged is raised. 
+        /// </remarks>
         /// <inheritdoc cref="ICommand.CanExecute(object)"/>
-        public override bool CanExecute(object parameter) => ((ICommand)RelayCmd).CanExecute(parameter);
+        public override bool CanExecute(object parameter)
+        {
+            return CanExecuteFunction();
+        }
 
-        /// <inheritdoc cref="ICommand.Execute(object)"/>        
-        public override void Execute(object parameter) => ((ICommand)RelayCmd).Execute(parameter);
+        /// <inheritdoc cref="ICommand.Execute(object)"/>
+        /// <remarks>
+        /// If the <paramref name="parameter"/> is not of type <typeparamref name="T"/>, then an <see cref="ArgumentException"/> will be thrown. <br/>
+        /// Does not throw if parameter is null.
+        /// </remarks>
+        public override void Execute(object parameter)
+        {
+            if (CanExecute(parameter))
+                ExecuteAction();
+        }
 
         #endregion
     }

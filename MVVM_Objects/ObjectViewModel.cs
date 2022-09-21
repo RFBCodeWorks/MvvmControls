@@ -10,6 +10,7 @@ using System.Windows.Input;
 //using Microsoft.Toolkit.Mvvm;
 //using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using RFBCodeWorks.MVVMObjects.BaseControlDefinitions;
 
 namespace RFBCodeWorks.MVVMObjects
 {
@@ -279,14 +280,17 @@ namespace RFBCodeWorks.MVVMObjects
 
         #region TwoStateObjectCommand 
 
+        /// <inheritdoc cref="TwoStateRelayCommand"/>
         public class TwoStateObjectCommand : ObjectCommand
         {
+            /// <inheritdoc cref="TwoStateRelayCommand.TwoStateRelayCommand(Action, Func{bool}, Action, Func{bool})"/>
             public TwoStateObjectCommand(ObjectViewModel<T> viewModel, Action execute) : base(viewModel, execute)
             {
                 ButtonDefinition = new();
                 //ButtonDefinition.PropertyChanged += (o, e) => OnPropertyChanged(e.PropertyName);
             }
 
+            /// <inheritdoc cref="TwoStateRelayCommand.TwoStateRelayCommand(Action, Func{bool}, Action, Func{bool})"/>
             public TwoStateObjectCommand(ObjectViewModel<T> viewModel, Action execute, Func<bool> canExecute) : base(viewModel, execute, canExecute)
             {
                 ButtonDefinition = new();

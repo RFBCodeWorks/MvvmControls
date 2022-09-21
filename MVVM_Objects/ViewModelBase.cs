@@ -9,7 +9,7 @@ namespace RFBCodeWorks.MVVMObjects
     /// <summary>
     /// Abstract Base class for ViewModels. Inherits <see cref="ObservableObject"/>
     /// </summary>
-    public abstract class ViewModelBase : ObservableObject, IDisposable
+    public abstract class ViewModelBase : ObservableObject, IDisposable, IViewModel
     {
         
         /// <summary>
@@ -26,7 +26,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// Create a new instance of the ViewModelBase
         /// </summary>
         /// <param name="parent"></param>
-        public ViewModelBase(ViewModelBase parent) : base() 
+        public ViewModelBase(IViewModel parent) : base() 
         {
             ParentViewModel = parent;
         }
@@ -34,7 +34,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// <summary>
         /// Reference back to the parent view model - Can be used by the messaging bus in this case the view model is being provided as a property within another ViewModel.
         /// </summary>
-        public ViewModelBase ParentViewModel { get; init; }
+        public IViewModel ParentViewModel { get; init; }
 
         /// <summary>
         /// <inheritdoc cref="MVVMObjects.RelayCommandFactory"/>

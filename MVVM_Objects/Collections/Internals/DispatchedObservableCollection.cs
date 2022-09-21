@@ -7,6 +7,8 @@ using System.Threading;
 using System.Windows.Threading;
 using RFBCodeWorks.MVVMObjects;
 
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+
 namespace Meziantou.Framework.WPF.Collections
 {
 
@@ -333,6 +335,7 @@ namespace Meziantou.Framework.WPF.Collections
             ((ICollection)Items).CopyTo(array, index);
         }
 
+
         int IList.Add(object? value)
         {
             // it will immediatly modify both collections as we are on the dispatcher thread
@@ -388,3 +391,4 @@ namespace Meziantou.Framework.WPF.Collections
         }
     }
 }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.

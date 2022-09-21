@@ -66,16 +66,16 @@ namespace RFBCodeWorks.MVVMObjects.DragDrop
         /// <remarks>Bubbling ( Source Control -> Parent -> Window )</remarks>
         public void OnDragOver(object sender, DragEventArgs e);
 
-        /// <summary>
-        /// Occurs continuously while dragging an object across the control.
-        /// </summary>
-        /// <remarks>TUNNELING ( Window -> Child -> Source Control )</remarks>
+        ///// <summary>
+        ///// Occurs continuously while dragging an object across the control.
+        ///// </summary>
+        ///// <remarks>TUNNELING ( Window -> Child -> Source Control )</remarks>
         //public void OnPreviewGiveFeedback(object sender, DragEventArgs e);
 
-        /// <summary>
-        /// Occurs continuously while dragging an object across the control.
-        /// </summary>
-        /// <remarks>TUNNELING ( Window -> Child -> Source Control )</remarks>
+        ///// <summary>
+        ///// Occurs continuously while dragging an object across the control.
+        ///// </summary>
+        ///// <remarks>TUNNELING ( Window -> Child -> Source Control )</remarks>
         //public void OnPreviewDragOver(object sender, DragEventArgs e);
     }
 

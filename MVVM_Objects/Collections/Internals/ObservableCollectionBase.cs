@@ -3,11 +3,15 @@ using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
+
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 namespace Meziantou.Framework.WPF.Collections {
 
     internal abstract class ObservableCollectionBase<T> : INotifyCollectionChanged, INotifyPropertyChanged
     {
+
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private protected List<T> Items { get; }
@@ -131,3 +135,4 @@ namespace Meziantou.Framework.WPF.Collections {
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs args) => CollectionChanged?.Invoke(this, args);
     }
 }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.

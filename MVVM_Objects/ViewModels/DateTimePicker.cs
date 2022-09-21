@@ -205,7 +205,7 @@ namespace RFBCodeWorks.MVVMObjects.ViewModels
 
 
         /// <summary>
-        /// Set the value for if the <see cref="Date"/> is in use by the View
+        /// Set the value for if the Date is in use by the View
         /// </summary>
         public bool IsDateEnabled
         {

@@ -2,9 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using Meziantou.Framework.WPF.Collections;
+
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
 namespace RFBCodeWorks.MVVMObjects
 {
@@ -92,6 +95,7 @@ namespace RFBCodeWorks.MVVMObjects
                 this[index] = (T)value!;
             }
         }
+
 
         /// <inheritdoc/>
         public T this[int index]
@@ -204,7 +208,6 @@ namespace RFBCodeWorks.MVVMObjects
                     _observableCollection?.EnqueueRemove(item);
                     return true;
                 }
-
                 return false;
             }
         }
@@ -216,6 +219,38 @@ namespace RFBCodeWorks.MVVMObjects
             {
                 _items = _items.RemoveAt(index);
                 _observableCollection?.EnqueueRemoveAt(index);
+            }
+        }
+
+        /// Remove the <param name="items"/> from the collection
+        public void RemoveAll(IEnumerable<T> items)
+        {
+            lock (_lock)
+            {
+                var newList = _items;
+                foreach(var item in items)
+                {
+                    newList = newList.Remove(item);
+                }
+                if (newList != _items)
+                {
+                    _items = newList;
+                    _observableCollection?.EnqueueReset(newList);
+                }
+            }
+        }
+
+        /// <inheritdoc cref="List{T}.RemoveAll(Predicate{T})"/>
+        public void RemoveAll(Predicate<T> match)
+        {
+            lock (_lock)
+            {
+                var newList = _items.RemoveAll(match);
+                if (newList != _items)
+                {
+                    _items = newList;
+                    _observableCollection?.EnqueueReset(newList);
+                }
             }
         }
 
@@ -327,3 +362,4 @@ namespace RFBCodeWorks.MVVMObjects
         }
     }
 }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
