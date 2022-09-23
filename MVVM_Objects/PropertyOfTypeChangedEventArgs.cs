@@ -18,7 +18,6 @@ namespace RFBCodeWorks.MVVMObjects
     /// <typeparam name="T"></typeparam>
     public class PropertyOfTypeChangedEventArgs<T> : PropertyChangedEventArgs
     {
-
         /// <summary>
         /// Declare a new set of args
         /// </summary>

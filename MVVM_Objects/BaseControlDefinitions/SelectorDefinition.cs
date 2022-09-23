@@ -17,12 +17,12 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
         /// <summary>
         /// Occurs after the <see cref="SelectedItem"/> has been updated
         /// </summary>
-        public event PropertyOfTypeChangedEventHandler<T> SelectionChanged;
+        public event PropertyOfTypeChangedEventHandler<T> SelectedItemChanged;
 
         /// <summary> Raises the SelectionChanged event </summary>
-        protected virtual void OnSelectionChanged(PropertyOfTypeChangedEventArgs<T> e)
+        protected virtual void OnSelectedItemChanged(PropertyOfTypeChangedEventArgs<T> e)
         {
-            SelectionChanged?.Invoke(this, e);
+            SelectedItemChanged?.Invoke(this, e);
             OnPropertyChanged(e);
         }
 
@@ -55,7 +55,14 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
         public T SelectedItem
         {
             get { return SelectedItemField; }
-            set { SetProperty(ref SelectedItemField, value, nameof(SelectedItem)); }
+            set {
+                if (value is null && SelectedItemField is null) return;
+                if (value?.Equals(SelectedItemField) ?? false) return;
+                var e = new PropertyOfTypeChangedEventArgs<T>(SelectedItemField, value, nameof(SelectedItem));
+                OnPropertyChanging(e.PropertyName);
+                SelectedItemField = value;
+                OnSelectedItemChanged(e);
+            }
         }
         private T SelectedItemField;
 

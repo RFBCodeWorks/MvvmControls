@@ -88,9 +88,9 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
         public E ItemSource
         {
             get { return ItemSourceField; }
-            set
+            set 
             {
-                if (!ItemSourceField.Equals(value))
+                if (!(ItemSourceField?.Equals(value) ?? value is null))
                 {
                     UnSubscribe(ItemSourceField);
                     SetProperty(ref ItemSourceField, value, nameof(ItemSource));

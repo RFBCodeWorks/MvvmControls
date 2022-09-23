@@ -73,6 +73,12 @@ namespace RFBCodeWorks.MVVMObjects
 
     #region < Refreshable >
 
+    /// <summary>
+    /// A listbox that contains only strings
+    /// </summary>
+    /// <inheritdoc cref="RefreshableListBoxDefinition{T, V}"/>
+    public class RefreshableListBoxDefinition : RefreshableListBoxDefinition<string, object> { }
+
     /// <inheritdoc cref="RefreshableListBoxDefinition{T, V}"/>
     public class RefreshableListBoxDefinition<T> : RefreshableListBoxDefinition<T, object> { }
 
