@@ -20,6 +20,10 @@ namespace RFBCodeWorks.MVVMObjects
     /// </summary>
     public interface IButtonDefinition : IRelayCommand, ICommand, IToolTipProvider, INotifyPropertyChanged, IButtonTextProvider, IControlDefinition
     {
+        /// <summary>
+        /// Event Handler that allows an external event to raise CanExecuteChanged
+        /// </summary>
+        void NotifyCanExecuteChanged(object sender, EventArgs e);
     }
 
     /// <summary>

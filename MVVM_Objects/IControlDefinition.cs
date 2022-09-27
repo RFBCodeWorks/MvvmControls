@@ -16,5 +16,9 @@ namespace RFBCodeWorks.MVVMObjects
         /// Flag to set the visibility of the button
         /// </summary>
         System.Windows.Visibility Visibility { get; set; }
+
+        /// <inheritdoc cref="BaseControlDefinitions.BaseControlDefinition.IsVisible" path="*"/>
+        bool IsVisible { get; set; }
+
     }
 }

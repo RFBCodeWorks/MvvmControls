@@ -45,9 +45,7 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
         /// </summary>
         public virtual void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, new EventArgs());
 
-        /// <summary>
-        /// Event Handler that allows an external event to raise CanExecuteChanged
-        /// </summary>
+        /// <inheritdoc/>
         public void NotifyCanExecuteChanged(object sender, EventArgs e) => this.NotifyCanExecuteChanged();
     }
 
