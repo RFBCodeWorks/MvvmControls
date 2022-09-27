@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.ComponentModel;
 using System.Collections.Specialized;
 using System.Windows;
+using System.Collections;
 
 namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
 {
@@ -16,7 +17,8 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
     /// </summary>
     /// <typeparam name="T"> The type of objects within the collection </typeparam>
     /// <typeparam name="E"> The type of collection - must implement <see cref="IEnumerable{T}"/></typeparam>
-    public class ItemSourceDefinition<T,E> : BaseControlDefinition, IItemSource<T,E> where E : IEnumerable<T>
+    public class ItemSourceDefinition<T,E> : BaseControlDefinition, IItemSource, IItemSource<T,E> 
+        where E : IList<T>
     {
 
         #region < Constructors >
@@ -99,6 +101,9 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
                 }
             }
         }
+
+        IList IItemSource.ItemSource { get => (IList)ItemSource; }
+
         private E ItemSourceField;
 
         private void UnSubscribe(E itemSource)

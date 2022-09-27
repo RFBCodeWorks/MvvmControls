@@ -9,9 +9,9 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
     /// <typeparam name="V">The type of property represented by the <see cref="SelectedValue"/></typeparam>
     /// <inheritdoc cref="ItemSourceDefinition{T, E}"/>
     /// <typeparam name="E"/><typeparam name="T"/>
-    public class SelectorDefinition<T,E, V> : ItemSourceDefinition<T,E> where E : IEnumerable<T>
+    public class SelectorDefinition<T,E, V> : ItemSourceDefinition<T,E>, ISelector, ISelector<T>, ISelector<T, E>
+        where E : IList<T>
     {
-
         #region < SelectionChangedEvent >
 
         /// <summary>
@@ -23,6 +23,7 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
         protected virtual void OnSelectedItemChanged(PropertyOfTypeChangedEventArgs<T> e)
         {
             SelectedItemChanged?.Invoke(this, e);
+            ISelectorEvent?.Invoke(this, e);
             OnPropertyChanged(e);
         }
 
@@ -100,6 +101,37 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
             set { SetProperty(ref SelectedValuePathField, value ?? "", nameof(SelectedValuePath)); }
         }
         private string SelectedValuePathField = "";
+
+        #endregion
+
+        #region < ISelector Implementation >
+
+        object ISelector.SelectedItem
+        {
+            get => SelectedItem; 
+            set 
+            { 
+                if (value is T val)
+                    SelectedItem = val;
+            }
+        }
+
+        object ISelector.SelectedValue
+        {
+            get => SelectedValue;
+            set
+            {
+                if (value is V val)
+                    SelectedValue = val;
+            }
+        }
+
+        event EventHandler ISelector.SelectedItemChanged
+        {
+            add { ISelectorEvent += value; }
+            remove { ISelectorEvent -= value; }
+        }
+        private event EventHandler ISelectorEvent;
 
         #endregion
 

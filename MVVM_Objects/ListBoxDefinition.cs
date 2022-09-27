@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -10,6 +11,35 @@ using RFBCodeWorks.MVVMObjects.BaseControlDefinitions;
 
 namespace RFBCodeWorks.MVVMObjects
 {
+    /// <summary>
+    /// Interface all ListBoxDefinitions should implement to be assignable via AttachedProperty
+    /// </summary>
+    public interface IListBoxDefinition : ISelector
+    {
+        /// <inheritdoc cref="ListBox.SelectionMode" path="*"/>
+        SelectionMode SelectionMode { get; }
+
+        /// <inheritdoc cref="ListBoxDefinition{T, E, V}.IsMultiSelect"/>
+        bool IsMultiSelect { get; }
+
+        /// <summary>
+        /// Check if the ItemSource has any items
+        /// </summary>
+        /// <returns>TRUE if the ItemSource has atleast 1 item, otherwise false</returns>
+        bool HasItems { get; }
+
+        /// <summary>
+        /// Check if the SelectedItems has any items
+        /// </summary>
+        /// <returns>TRUE if the SelectedItems has atleast 1 item, otherwise false</returns>
+        bool HasItemsSelected { get; }
+
+        /// <summary>
+        /// Enumerate through the Selected Items
+        /// </summary>
+        IList SelectedItems { get; }
+    }
+
     #region < ListBox Definitions >
 
     /// <summary>
@@ -31,17 +61,32 @@ namespace RFBCodeWorks.MVVMObjects
     public class ListBoxDefinition2<T, E> : ListBoxDefinition<T, E, object> where E : IList<T> { }
 
     /// <summary>
-    /// A generic definition for a ListBox/ListView control
+    /// The base ListBoxDefinition object
     /// </summary>
     /// <inheritdoc cref="SelectorDefinition{T, E, V}"/>
-    public class ListBoxDefinition<T, E, V> : SelectorDefinition<T, E, V> where E : IList<T>
+    public class ListBoxDefinition<T, E, V> : SelectorDefinition<T, E, V>, IListBoxDefinition
+        where E : IList<T>
     {
+        #region < SelectionChangedEvent >
 
         /// <summary>
-        /// Check if the ItemSource has any items
+        /// Occurs after the <see cref="SelectedItems"/> has been updated
         /// </summary>
-        /// <returns>TRUE if the ItemSource has atleast 1 item, otherwise false</returns>
+        public event EventHandler SelectedItemsChanged;
+
+        /// <summary> Raises the SelectedItemsChanged event </summary>
+        protected virtual void OnSelectedItemsChanged()
+        {
+            SelectedItemsChanged?.Invoke(this, new());
+        }
+
+        #endregion
+
+        /// <inheritdoc/>
         public bool HasItems => ItemSource?.Any() ?? false;
+
+        /// <inheritdoc/>
+        public bool HasItemsSelected => SelectedItems?.Any() ?? false;
 
         /// <summary>
         /// Check if the <see cref="SelectionMode"/> is not <see cref="SelectionMode.Single"/>
@@ -54,12 +99,15 @@ namespace RFBCodeWorks.MVVMObjects
         public IList<T> SelectedItems
         {
             get { return SelectedItemsField; }
-            set { SetProperty(ref SelectedItemsField, value, nameof(SelectedItems)); }
+            set { 
+                var updated = SetProperty(ref SelectedItemsField, value, nameof(SelectedItems));
+                if (updated) OnSelectedItemsChanged();
+            }
         }
         private IList<T> SelectedItemsField;
+        IList IListBoxDefinition.SelectedItems => (IList)SelectedItems;
 
-
-        /// <inheritdoc cref="ListBox.SelectionMode" path="*"/>
+        /// <inheritdoc/>
         public SelectionMode SelectionMode
         {
             get { return SelectionModeField; }

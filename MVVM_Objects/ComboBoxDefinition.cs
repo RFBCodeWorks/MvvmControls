@@ -9,31 +9,40 @@ using RFBCodeWorks.MVVMObjects.BaseControlDefinitions;
 namespace RFBCodeWorks.MVVMObjects
 {
 
+    /// <summary>
+    /// Interface all ComboBoxDefinitions should implement to be assignable via AttachedProperty
+    /// </summary>
+    public interface IComboBoxDefinition : ISelector
+    {
+
+    }
+
     #region < ComboBox Definition >
 
     /// <summary>
     /// A Simple ComboBox Definition that only specifies the enumerated type
     /// </summary>
     /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
-    public class ComboBoxDefinition<T> : ComboBoxDefinition<T, IEnumerable<T>, object> { }
+    public class ComboBoxDefinition<T> : ComboBoxDefinition<T, IList<T>, object> { }
 
     /// <summary>
     /// A generic bindable definition for a ComboBox whose ItemSource is any IEnumerable object, that expects a SelectedValue of a specific type
     /// </summary>
     /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
-    public class ComboBoxDefinition<T, V> : ComboBoxDefinition<T, IEnumerable<T>, V> { }
+    public class ComboBoxDefinition<T, V> : ComboBoxDefinition<T, IList<T>, V> { }
 
     /// <summary>
-    /// A definition for a combox where the ItemSource is a specific type of <see cref="IEnumerable{T}"/>
+    /// A definition for a combox where the ItemSource is a specific type of <see cref="IList{T}"/>
     /// </summary>
     /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
-    public class ComboBoxDefinition2<T, E> : ComboBoxDefinition<T, E, object> where E : IEnumerable<T> { }
+    public class ComboBoxDefinition2<T, E> : ComboBoxDefinition<T, E, object> where E : IList<T> { }
 
     /// <summary>
-    /// A generic definition for a ComboBox control
+    /// The base ComboBoxDefinition
     /// </summary>
     /// <inheritdoc cref="SelectorDefinition{T, E, V}"/>
-    public class ComboBoxDefinition<T, E, V> : SelectorDefinition<T, E, V> where E : IEnumerable<T>
+    public class ComboBoxDefinition<T, E, V> : SelectorDefinition<T, E, V> , IComboBoxDefinition
+        where E : IList<T>
     {
         /// <inheritdoc cref="System.Windows.Controls.ComboBox.Text"/>
         /// <remarks>

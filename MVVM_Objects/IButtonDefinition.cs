@@ -18,12 +18,8 @@ namespace RFBCodeWorks.MVVMObjects
     /// <br/> - <see cref="IToolTipProvider"/>
     /// <br/> - <see cref="INotifyPropertyChanged"/>
     /// </summary>
-    public interface IButtonDefinition : IRelayCommand, ICommand, IToolTipProvider, INotifyPropertyChanged, IButtonTextProvider
+    public interface IButtonDefinition : IRelayCommand, ICommand, IToolTipProvider, INotifyPropertyChanged, IButtonTextProvider, IControlDefinition
     {
-        /// <summary>
-        /// Flag to set the visibility of the button
-        /// </summary>
-        System.Windows.Visibility Visibility { get; set; }
     }
 
     /// <summary>

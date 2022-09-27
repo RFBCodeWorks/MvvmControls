@@ -134,6 +134,8 @@ namespace RFBCodeWorks.MVVMObjects
         {
             if (CanExecute(parameter))
                 ExecuteAction();
+            else
+                NotifyCanExecuteChanged();
         }
 
         #endregion
