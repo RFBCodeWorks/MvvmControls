@@ -13,7 +13,7 @@ namespace RFBCodeWorks.MVVMObjects
     public interface IControlDefinition : IToolTipProvider, INotifyPropertyChanged
     {
         /// <summary>
-        /// Flag to set the visibility of the button
+        /// Flag to set the visibility of the control
         /// </summary>
         System.Windows.Visibility Visibility { get; set; }
 
