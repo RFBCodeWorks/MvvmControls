@@ -47,6 +47,13 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
 
         #region < Properties >
 
+        private bool UpdatingSelectedItem;
+
+        /// <summary>
+        /// Enable/Disable auto-updating of SelectedItem and SelectedIndex if bound by the ItemSource binding definition attached property
+        /// </summary>
+        internal bool IsBoundByBehavior { get; set; }
+
         /// <summary>
         /// The Currently Selected item within the user control - May be null!
         /// </summary>
@@ -57,15 +64,47 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
         {
             get { return SelectedItemField; }
             set {
-                if (value is null && SelectedItemField is null) return;
-                if (value?.Equals(SelectedItemField) ?? false) return;
-                var e = new PropertyOfTypeChangedEventArgs<T>(SelectedItemField, value, nameof(SelectedItem));
-                OnPropertyChanging(e.PropertyName);
-                SelectedItemField = value;
-                OnSelectedItemChanged(e);
+                T oldValue = SelectedItemField;
+                if (SetProperty(ref SelectedItemField, value, nameof(SelectedItem)))
+                {
+                    UpdatingSelectedItem = true;
+                    SelectedIndex = ItemSource.IndexOf(value);
+                    UpdatingSelectedItem = false;
+                    OnSelectedItemChanged(new(oldValue, value, nameof(SelectedItem)));
+                }
             }
         }
         private T SelectedItemField;
+
+        /// <summary>
+        /// The index of the currently selected item within the ItemSource
+        /// </summary>
+        /// <remarks>
+        /// If bound, updates the selected item.
+        /// </remarks>
+        public int SelectedIndex
+        {
+            get { return SelectedIndexField; }
+            set
+            {
+                if (UpdatingSelectedItem)
+                    SelectedIndexField = value;
+                else
+                {
+                    SetProperty(ref SelectedIndexField, value, nameof(SelectedIndex));
+                    if (value >= 0 && value < ItemSource.Count)
+                    {
+                        SelectedItem = ItemSource[value];
+                    }
+                    else
+                    {
+                        SelectedItem = default;
+                    }
+                }
+            }
+
+        }
+        private int SelectedIndexField;
 
         /// <summary>
         /// If bound to the control, the control will set this property according to the property defined by SelectedValuePath
@@ -78,12 +117,11 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
             get { return SelectedValueField; }
             set
             {
-                if (value is null && SelectedValueField is null) return;
-                if (value?.Equals(SelectedValueField) ?? false) return;
-                var e = new PropertyOfTypeChangedEventArgs<V>(SelectedValueField, value, nameof(SelectedValue));
-                OnPropertyChanging(e.PropertyName);
-                SelectedValueField = value;
-                OnSelectedValueChanged(e);
+                V oldValue = SelectedValueField;
+                if (SetProperty(ref SelectedValueField, value, nameof(SelectedValue)))
+                {
+                    OnSelectedValueChanged(new(oldValue, value, nameof(SelectedValue)));
+                }
             }
         }
         private V SelectedValueField;
