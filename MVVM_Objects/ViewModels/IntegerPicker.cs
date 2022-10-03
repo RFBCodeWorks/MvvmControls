@@ -68,7 +68,7 @@ namespace RFBCodeWorks.MVVMObjects.ViewModels
         }
 
         /// <inheritdoc cref="IntegerPicker.IntegerPicker(int, bool, ViewModelBase)"/>
-        public IntegerPicker(ViewModelBase parent, params int[] values) : base(parent)
+        public IntegerPicker(IViewModel parent, params int[] values) : base(parent)
         {
             Range = values;
             AllowNegatives = values.Any((i) => i < 0);

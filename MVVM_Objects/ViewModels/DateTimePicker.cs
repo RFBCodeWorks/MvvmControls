@@ -29,7 +29,7 @@ namespace RFBCodeWorks.MVVMObjects.ViewModels
         public DateTimePicker() :base() { }
         
         /// <summary> </summary>
-        public DateTimePicker(ViewModelBase parent) : base(parent) { }
+        public DateTimePicker(IViewModel parent) : base(parent) { }
 
         /// <summary>
         /// 
