@@ -11,11 +11,6 @@ namespace RFBCodeWorks.MVVMObjects
     /// </summary>
     public abstract class ViewModelBase : ObservableObject, IDisposable, IViewModel
     {
-        
-        /// <summary>
-        /// The static <see cref="RelayCommandFactory"/> provided to the viewmodels. If not set by consumer, provides <see cref="RelayCommandFactory.Factory"/>
-        /// </summary>
-        public static RelayCommandFactory DefaultRelayCommandFactory { get; set; } = RelayCommandFactory.Factory;
 
         /// <summary>
         /// Create a new instance of the ViewModelBase
@@ -36,15 +31,6 @@ namespace RFBCodeWorks.MVVMObjects
         /// </summary>
         public IViewModel ParentViewModel { get; init; }
 
-        /// <summary>
-        /// <inheritdoc cref="MVVMObjects.RelayCommandFactory"/>
-        /// </summary>
-        protected RelayCommandFactory RelayCommandFactory
-        {
-            get => factory ?? DefaultRelayCommandFactory;
-            set => factory = value;
-        }
-        private RelayCommandFactory factory;
         private bool disposedValue;
 
         /// <summary>
