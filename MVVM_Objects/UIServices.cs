@@ -43,8 +43,9 @@ namespace RFBCodeWorks.MVVMObjects
         }
 
         /// <summary>
-        /// Sets cursor to the <see cref="BusyCursor"/>
+        /// Sets cursor to the <see cref="BusyCursor"/> to indicate application is performing a long-running action
         /// </summary>
+        /// <remarks>Automatically resets cursor on Application.Idle</remarks>
         public static void SetBusyState()
         {
             SetBusyState(true);
