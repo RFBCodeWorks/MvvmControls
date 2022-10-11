@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
 namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
 {
@@ -91,8 +92,10 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
                     SelectedIndexField = value;
                 else
                 {
-                    SetProperty(ref SelectedIndexField, value, nameof(SelectedIndex));
-                    if (value >= 0 && value < ItemSource.Count)
+                    int newValue = ItemSource != null ? value : -1;
+                    bool changed = SetProperty(ref SelectedIndexField, newValue, nameof(SelectedIndex));
+                    if (!changed || ItemSource is null) return;         // Check if was updated, and if there is an itemsource
+                    if (newValue >= 0 && newValue < ItemSource.Count)   // check if within acceptable range
                     {
                         SelectedItem = ItemSource[value];
                     }
@@ -104,7 +107,7 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
             }
 
         }
-        private int SelectedIndexField;
+        private int SelectedIndexField = -1;
 
         /// <summary>
         /// If bound to the control, the control will set this property according to the property defined by SelectedValuePath
@@ -138,7 +141,7 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
             get { return SelectedValuePathField; }
             set { SetProperty(ref SelectedValuePathField, value ?? "", nameof(SelectedValuePath)); }
         }
-        private string SelectedValuePathField = "";
+        private string SelectedValuePathField = DefaultDisplayMemberPath;
 
         #endregion
 

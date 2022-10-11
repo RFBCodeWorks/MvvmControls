@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Collections;
+using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
 namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
 {

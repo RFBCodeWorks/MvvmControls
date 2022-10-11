@@ -5,13 +5,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
 namespace RFBCodeWorks.MVVMObjects
 {
     /// <summary>
     /// Object that provides display Two-State text for both the ToolTip and the Display Text for a button via <see cref="TwoStateTextProvider"/> objects
     /// </summary>
-    public class TwoStateButtonTextProvider : ObservableObject, IToolTipProvider, IButtonTextProvider
+    public class TwoStateButtonTextProvider : ObservableObject, IToolTipProvider, IDisplayTextProvider
     {
         /// <summary>
         /// Instantiate thje object
@@ -49,7 +50,7 @@ namespace RFBCodeWorks.MVVMObjects
         private TwoStateTextProvider tooltiptextprovider;
 
         /// <inheritdoc />
-        public string ButtonText => ButtonTextProvider.DisplayText;
+        public string DisplayText => ButtonTextProvider.DisplayText;
 
         /// <inheritdoc />
         public string ToolTip => ToolTipTextProvider.DisplayText;
@@ -80,7 +81,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// <summary>
         /// OnPropertyChanged(ButtonText)
         /// </summary>
-        public void NotifyButtonTextUpdated() => OnPropertyChanged(nameof(ButtonText));
+        public void NotifyButtonTextUpdated() => OnPropertyChanged(nameof(DisplayText));
 
         /// <summary>
         /// OnPropertyChanged(ToolTip)

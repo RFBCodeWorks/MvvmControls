@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
 namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
 {
     /// <summary>
     /// Contains the basic bindings all controls have
     /// </summary>
-    public class BaseControlDefinition : ObservableObject, IToolTipProvider
+    public class BaseControlDefinition : ObservableObject,  IControlDefinition, IToolTipProvider
     {
 
         #region < OnVisibilityChanged >

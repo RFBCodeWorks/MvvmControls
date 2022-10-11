@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.MVVMObjects
+namespace RFBCodeWorks.MVVMObjects.ControlInterfaces
 {
     
     /// <summary>
@@ -30,6 +30,9 @@ namespace RFBCodeWorks.MVVMObjects
 
         /// <inheritdoc cref="BaseControlDefinitions.ItemSourceDefinition{T, E}.ItemSource"/>
         IList ItemSource { get; }
+
+        /// <inheritdoc cref="BaseControlDefinitions.ItemSourceDefinition{T, E}.DisplayMemberPath"/>
+        string DisplayMemberPath { get; }
     }
 
     /// <summary>

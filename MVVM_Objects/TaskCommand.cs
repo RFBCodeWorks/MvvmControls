@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
 namespace RFBCodeWorks.MVVMObjects
 {
@@ -48,7 +49,7 @@ namespace RFBCodeWorks.MVVMObjects
             protected set
             {
                 SetProperty(ref isRunning, value, nameof(IsRunning));
-                OnPropertyChanged(nameof(ButtonText));
+                OnPropertyChanged(nameof(DisplayText));
             }
         }
         private bool isRunning;
@@ -223,7 +224,7 @@ namespace RFBCodeWorks.MVVMObjects
 
         
         /// <inheritdoc/>
-        public override string ButtonText => IsRunning ? StopTaskText : StartTaskText;
+        public override string DisplayText => IsRunning ? StopTaskText : StartTaskText;
 
         /// <summary>
         /// Text to display when the task is not running

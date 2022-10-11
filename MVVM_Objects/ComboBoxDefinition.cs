@@ -5,43 +5,29 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using RFBCodeWorks.MVVMObjects.BaseControlDefinitions;
+using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
-namespace RFBCodeWorks.MVVMObjects
+namespace RFBCodeWorks.MVVMObjects.ControlInterfaces
 {
-
     /// <summary>
     /// Interface all ComboBoxDefinitions should implement to be assignable via AttachedProperty
     /// </summary>
     public interface IComboBoxDefinition : ISelector
     {
-
+        /// <inheritdoc cref="System.Windows.Controls.ComboBox.IsDropDownOpen"/>
+        /// <remarks>This property can be used to force the drop-down open from the ViewModel</remarks>
+        public bool IsDropDownOpen { get; set; }
     }
+}
 
-    #region < ComboBox Definition >
-
-    /// <summary>
-    /// A Simple ComboBox Definition that only specifies the enumerated type
-    /// </summary>
-    /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
-    public class ComboBoxDefinition<T> : ComboBoxDefinition<T, IList<T>, object> { }
-
-    /// <summary>
-    /// A generic bindable definition for a ComboBox whose ItemSource is any IEnumerable object, that expects a SelectedValue of a specific type
-    /// </summary>
-    /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
-    public class ComboBoxDefinition<T, V> : ComboBoxDefinition<T, IList<T>, V> { }
-
-    /// <summary>
-    /// A definition for a combox where the ItemSource is a specific type of <see cref="IList{T}"/>
-    /// </summary>
-    /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
-    public class ComboBoxDefinition2<T, E> : ComboBoxDefinition<T, E, object> where E : IList<T> { }
+namespace RFBCodeWorks.MVVMObjects
+{
 
     /// <summary>
     /// The base ComboBoxDefinition
     /// </summary>
     /// <inheritdoc cref="SelectorDefinition{T, E, V}"/>
-    public class ComboBoxDefinition<T, E, V> : SelectorDefinition<T, E, V> , IComboBoxDefinition
+    public class ComboBoxDefinition<T, E, V> : SelectorDefinition<T, E, V>, IComboBoxDefinition
         where E : IList<T>
     {
         /// <inheritdoc cref="System.Windows.Controls.ComboBox.Text"/>
@@ -70,7 +56,36 @@ namespace RFBCodeWorks.MVVMObjects
         /// <see href="https://learn.microsoft.com/en-us/dotnet/api/system.windows.controls.combobox?view=windowsdesktop-6.0"/>
         /// </remarks>
         public bool IsReadOnly { get; set; } = true;
+
+        /// <inheritdoc/>
+        public bool IsDropDownOpen
+        {
+            get { return IsDropDownOpenField; }
+            set { SetProperty(ref IsDropDownOpenField, value, nameof(IsDropDownOpen)); }
+        }
+        private bool IsDropDownOpenField;
+
     }
+
+    #region < ComboBox Definition >
+
+    /// <summary>
+    /// A Simple ComboBox Definition that only specifies the enumerated type
+    /// </summary>
+    /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
+    public class ComboBoxDefinition<T> : ComboBoxDefinition<T, IList<T>, object> { }
+
+    /// <summary>
+    /// A generic bindable definition for a ComboBox whose ItemSource is any IEnumerable object, that expects a SelectedValue of a specific type
+    /// </summary>
+    /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
+    public class ComboBoxDefinition<T, V> : ComboBoxDefinition<T, IList<T>, V> { }
+
+    /// <summary>
+    /// A definition for a combox where the ItemSource is a specific type of <see cref="IList{T}"/>
+    /// </summary>
+    /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
+    public class ComboBoxDefinition2<T, E> : ComboBoxDefinition<T, E, object> where E : IList<T> { }
 
     #endregion'
 
@@ -114,7 +129,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// <inheritdoc/>
         public virtual void Refresh()
         {
-            if (CanRefresh())
+            if (RefreshFunc != null && (CanRefresh?.Invoke() ?? true))
                 ItemSource = RefreshFunc();
         }
 

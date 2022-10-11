@@ -25,7 +25,7 @@ namespace RFBCodeWorks.MVVMObjects.DragDrop
     }
 
     /// <summary>
-    /// Interface for interacting with File Dragging
+    /// Interface for interacting with Drag &amp; Drop Handling
     /// </summary>
     public interface IDragHandler : INotifyPropertyChanged
     {

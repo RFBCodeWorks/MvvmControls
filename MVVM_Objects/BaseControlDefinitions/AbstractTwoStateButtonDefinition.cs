@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
 namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
 {
     /// <summary>
     /// Abstract Base class for buttons that update their tooltips and display text between two states dynamically
     /// </summary>
-    public abstract class AbstractTwoStateButtonDefinition : AbstractButtonDefinition, IButtonTextProvider
+    public abstract class AbstractTwoStateButtonDefinition : AbstractButtonDefinition, IDisplayTextProvider
     {
         /// <summary>
         /// Instantiate the object
@@ -28,7 +29,7 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
         /// <summary>
         /// Text to display on the button
         /// </summary>
-        public  override string ButtonText => ButtonDefinition.ButtonText;
+        public  override string DisplayText => ButtonDefinition.DisplayText;
 
         /// <inheritdoc/>
         public override string ToolTip => ButtonDefinition.ToolTip;

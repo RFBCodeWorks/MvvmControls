@@ -33,7 +33,7 @@ namespace RFBCodeWorks.MVVMObjects.DragDrop
         /// <summary>
         /// This class is a folder, so no file extension exists
         /// </summary>
-        public override string FileExtension => DirInfo.Extension;
+        public sealed override string FileExtension => DirInfo.Extension;
 
         /// <summary>
         /// This method is not implemented for <see cref="DroppedFolder"/> objects.

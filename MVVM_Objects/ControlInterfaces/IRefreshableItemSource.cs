@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace RFBCodeWorks.MVVMObjects
+namespace RFBCodeWorks.MVVMObjects.ControlInterfaces
 {
     /// <summary>
     /// Represents an <see cref="BaseControlDefinitions.ItemSourceDefinition{T, E}"/> that is an array of type T, 

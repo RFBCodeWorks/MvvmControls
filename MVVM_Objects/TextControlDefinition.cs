@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
 namespace RFBCodeWorks.MVVMObjects
 {
@@ -13,7 +14,8 @@ namespace RFBCodeWorks.MVVMObjects
     {
 
         /// <summary>
-        /// Function to get a string of text.
+        /// A function that returns a string of text. <br/>
+        /// This will be used to apply the result to the <see cref="Text"/> property when the <see cref="Refresh()"/> method is invoked
         /// </summary>
         public Func<string> GetText { get; init; }
 

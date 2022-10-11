@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
 namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
 {
@@ -22,10 +23,10 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
     {
 
         /// <inheritdoc/>
-        public virtual string ButtonText
+        public virtual string DisplayText
         {
             get { return ButtonTextField; }
-            set { SetProperty(ref ButtonTextField, value, nameof(ButtonText)); }
+            set { SetProperty(ref ButtonTextField, value, nameof(DisplayText)); }
         }
         private string ButtonTextField;
 

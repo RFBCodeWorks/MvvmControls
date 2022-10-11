@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BaseObj = Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject;
+using RFBCodeWorks.MVVMObjects.ControlInterfaces;
+
 namespace RFBCodeWorks.MVVMObjects
 {
     /// <inheritdoc cref="BaseObj"/>

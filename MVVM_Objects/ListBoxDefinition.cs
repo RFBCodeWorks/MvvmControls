@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using RFBCodeWorks.MVVMObjects.BaseControlDefinitions;
+using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
-namespace RFBCodeWorks.MVVMObjects
+namespace RFBCodeWorks.MVVMObjects.ControlInterfaces
 {
     /// <summary>
     /// Interface all ListBoxDefinitions should implement to be assignable via AttachedProperty
@@ -39,27 +40,10 @@ namespace RFBCodeWorks.MVVMObjects
         /// </summary>
         IList SelectedItems { get; }
     }
+}
 
-    #region < ListBox Definitions >
-
-    /// <summary>
-    /// A Simple ListBox/ListView Definition that only ListBox/ListView the enumerated type
-    /// </summary>
-    /// <inheritdoc cref="ListBoxDefinition{T, E, V}"/>
-    public class ListBoxDefinition<T> : ListBoxDefinition<T, object> { }
-
-    /// <summary>
-    /// A generic definition for a ListBox/ListView whose ItemSource is any IEnumerable object, that expects a SelectedValue of a specific type
-    /// </summary>
-    /// <inheritdoc cref="ListBoxDefinition{T, E, V}"/>
-    public class ListBoxDefinition<T, V> : ListBoxDefinition<T, ConcurrentObservableCollection<T>, V> { }
-
-    /// <summary>
-    /// A definition for a ListBox/ListView where the ItemSource is a specific type of <see cref="IEnumerable{T}"/>
-    /// </summary>
-    /// <inheritdoc cref="ListBoxDefinition{T, E, V}"/>
-    public class ListBoxDefinition2<T, E> : ListBoxDefinition<T, E, object> where E : IList<T> { }
-
+namespace RFBCodeWorks.MVVMObjects
+{
     /// <summary>
     /// The base ListBoxDefinition object
     /// </summary>
@@ -99,7 +83,8 @@ namespace RFBCodeWorks.MVVMObjects
         public IList<T> SelectedItems
         {
             get { return SelectedItemsField; }
-            set { 
+            set
+            {
                 var updated = SetProperty(ref SelectedItemsField, value, nameof(SelectedItems));
                 if (updated) OnSelectedItemsChanged();
             }
@@ -116,6 +101,26 @@ namespace RFBCodeWorks.MVVMObjects
         private SelectionMode SelectionModeField = SelectionMode.Single;
 
     }
+
+    #region < ListBox Definitions >
+
+    /// <summary>
+    /// A Simple ListBox/ListView Definition that only ListBox/ListView the enumerated type
+    /// </summary>
+    /// <inheritdoc cref="ListBoxDefinition{T, E, V}"/>
+    public class ListBoxDefinition<T> : ListBoxDefinition<T, object> { }
+
+    /// <summary>
+    /// A generic definition for a ListBox/ListView whose ItemSource is any IEnumerable object, that expects a SelectedValue of a specific type
+    /// </summary>
+    /// <inheritdoc cref="ListBoxDefinition{T, E, V}"/>
+    public class ListBoxDefinition<T, V> : ListBoxDefinition<T, ConcurrentObservableCollection<T>, V> { }
+
+    /// <summary>
+    /// A definition for a ListBox/ListView where the ItemSource is a specific type of <see cref="IEnumerable{T}"/>
+    /// </summary>
+    /// <inheritdoc cref="ListBoxDefinition{T, E, V}"/>
+    public class ListBoxDefinition2<T, E> : ListBoxDefinition<T, E, object> where E : IList<T> { }
 
     #endregion
 
@@ -165,7 +170,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// <inheritdoc/>
         public virtual void Refresh()
         {
-            if (CanRefresh())
+            if (RefreshFunc != null && (CanRefresh?.Invoke() ?? true))
                 ItemSource = RefreshFunc();
         }
 

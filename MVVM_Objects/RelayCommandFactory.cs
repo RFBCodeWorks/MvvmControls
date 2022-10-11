@@ -9,24 +9,8 @@ namespace RFBCodeWorks.MVVMObjects
     /// <summary>
     /// Factory for creating <see cref="RelayCommand"/> objects
     /// </summary>
-    public class RelayCommandFactory
+    public static class RelayCommandFactory
     {
-        #region < Constructors & Properties >
-
-        /// <summary>
-        /// Basic factory object
-        /// </summary>
-        public static RelayCommandFactory Factory { get; } = new();
-
-        /// <summary>
-        /// Create the Factory
-        /// </summary>
-        public RelayCommandFactory() { }
-
-        #endregion
-
-        #region < Methods >
-
         /// <returns>TRUE if the ViewModel.ObjectModel is not null. ( FALSE is the reference is null ) </returns>
         private static bool DefaultCanExecuteFunction() => true;
         private static bool DefaultCanExecuteFunction<T>(T parameter) => DefaultCanExecuteFunction();
@@ -37,7 +21,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// Create a new <see cref="RelayCommand"/> that executes an execute that does not require any parameters
         /// </summary>
         /// <inheritdoc cref="RelayCommand.RelayCommand(Action)" path="*"/>
-        public virtual RelayCommand CreateCommand(Action execute, string toolTip = "")
+        public static RelayCommand CreateCommand(Action execute, string toolTip = "")
         {
             if (execute is null) throw new ArgumentNullException(nameof(execute));
             return new RelayCommand(
@@ -47,7 +31,7 @@ namespace RFBCodeWorks.MVVMObjects
         }
 
         /// <inheritdoc cref="RelayCommand{T}.RelayCommand(Action{T}, Func{T, bool})" path="*"/>
-        public virtual RelayCommand CreateCommand(Action execute, string toolTip, Func<bool> canExecute)
+        public static RelayCommand CreateCommand(Action execute, string toolTip, Func<bool> canExecute)
         {
             if (execute is null) throw new ArgumentNullException(nameof(execute));
             return new RelayCommand(
@@ -60,14 +44,14 @@ namespace RFBCodeWorks.MVVMObjects
         /// Create a new <see cref="RelayCommand{T}"/>
         /// </summary>
         /// <inheritdoc cref="RelayCommand{T}.RelayCommand(Action{T})" path="*"/>
-        public virtual RelayCommand<T> CreateCommand<T>(Action<T> execute, string toolTip = "")
+        public static RelayCommand<T> CreateCommand<T>(Action<T> execute, string toolTip = "")
         {
             if (execute is null) throw new ArgumentNullException(nameof(execute));
             return new RelayCommand<T>(execute) { ToolTip = toolTip };
         }
 
         /// <inheritdoc cref="RelayCommand{T}.RelayCommand(Action{T}, Func{T, bool})" path="*"/>
-        public virtual RelayCommand<T> CreateCommand<T>(Action<T> execute, string toolTip, Func<T, bool> canExecute)
+        public static RelayCommand<T> CreateCommand<T>(Action<T> execute, string toolTip, Func<T, bool> canExecute)
         {
             if (execute is null) throw new ArgumentNullException(nameof(execute));
             return new RelayCommand<T>(
@@ -77,7 +61,7 @@ namespace RFBCodeWorks.MVVMObjects
         }
 
         /// <inheritdoc cref="RelayCommand{T}.RelayCommand(Action{T}, Func{T, bool})" path="*"/>
-        public virtual RelayCommand<T> CreateCommand<T>(Action<T> execute, string toolTip, Func<bool> canExecute)
+        public static RelayCommand<T> CreateCommand<T>(Action<T> execute, string toolTip, Func<bool> canExecute)
         {
             if (execute is null) throw new ArgumentNullException(nameof(execute));
             if (canExecute is null)
@@ -100,7 +84,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// <param name="canExecute">Function that determines if the action can execute in either state</param>
         /// <inheritdoc cref="CreateTwoStateRelayCommand(Action, Action, string, string, Func{bool}, Func{bool})"/>
         /// <param name="defaultText"/> <param name="alternateText"/>
-        public virtual TwoStateRelayCommand CreateTwoStateRelayCommand(Action action, string defaultText = "", string alternateText = "", Func<bool> canExecute = default)
+        public static TwoStateRelayCommand CreateTwoStateRelayCommand(Action action, string defaultText = "", string alternateText = "", Func<bool> canExecute = default)
         {
             return CreateTwoStateRelayCommand(action, action, defaultText, alternateText, canExecute, canExecute);
         }
@@ -115,7 +99,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// <param name="alternateText">Button Text for the alternate state</param>
         /// <param name="alternateCanExecute">function to determine if the <paramref name="alternateAction"/> can execute</param>
         /// <returns></returns>
-        public virtual TwoStateRelayCommand CreateTwoStateRelayCommand(Action defaultAction, Action alternateAction, string defaultText = "", string alternateText = "", Func<bool> defaultCanExecute = default, Func<bool> alternateCanExecute = default)
+        public static TwoStateRelayCommand CreateTwoStateRelayCommand(Action defaultAction, Action alternateAction, string defaultText = "", string alternateText = "", Func<bool> defaultCanExecute = default, Func<bool> alternateCanExecute = default)
         {
             if (defaultAction is null) throw new ArgumentNullException(nameof(defaultAction));
             if (alternateAction is null) throw new ArgumentNullException(nameof(alternateAction));
@@ -147,7 +131,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// nameof(ViewModel.ObjectModel.MethodToCall(T)
         /// </param>
         /// <typeparam name="T">The object type to invoke the method against</typeparam>
-        protected static Action<T> CreateParameterlessActionFromObjectMethod<T>(string methodName)
+        private static Action<T> CreateParameterlessActionFromObjectMethod<T>(string methodName)
         {
             if (methodName is null) throw new ArgumentNullException(nameof(methodName));
             if (string.IsNullOrWhiteSpace(methodName)) throw new ArgumentException("Method Name must not be empty", nameof(methodName));
@@ -164,7 +148,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// <summary>
         /// Anonymous method variant that calls <see cref="CreateParameterlessActionFromObjectMethod{T}(string)"/>, but gets <typeparamref name="T"/> from the supplied <paramref name="objectReference"/>
         /// </summary>
-        protected Action<T> CreateParameterlessActionFromObjectMethod<T>(string methodName, T objectReference) => CreateParameterlessActionFromObjectMethod<T>(methodName);
+        private static Action<T> CreateParameterlessActionFromObjectMethod<T>(string methodName, T objectReference) => CreateParameterlessActionFromObjectMethod<T>(methodName);
 
 
         /// <summary>
@@ -173,13 +157,13 @@ namespace RFBCodeWorks.MVVMObjects
         /// <typeparam name="T"></typeparam>
         /// <param name="objectReference"></param>
         /// <returns>FALSE if the object is null, TRUE if not null</returns>
-        protected static bool EvaluateNullObject<T>(T objectReference) => !(objectReference is null);
+        private static bool EvaluateNullObject<T>(T objectReference) => !(objectReference is null);
 
         #endregion
 
         /// <returns>new <see cref="RelayCommand{T}"/></returns>
         /// <inheritdoc cref="CreateParameterlessActionFromObjectMethod{T}(string)"/>
-        public virtual RelayCommand<T> ObjectInvokesMethodName<T>(string methodName, string toolTip = "")
+        public static RelayCommand<T> ObjectInvokesMethodName<T>(string methodName, string toolTip = "")
         {
             
             return new RelayCommand<T>(
@@ -191,7 +175,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// <returns>new <see cref="RelayCommand{T}"/></returns>
         /// <inheritdoc cref="CreateParameterlessActionFromObjectMethod{T}(string)"/>
         /// <inheritdoc cref="RelayCommand{T}.RelayCommand(Action{T}, Func{T, bool})"/>
-        public virtual RelayCommand<T> ObjectInvokesMethodName<T>(string methodName, string toolTip, Func<bool> canExecute)
+        public static RelayCommand<T> ObjectInvokesMethodName<T>(string methodName, string toolTip, Func<bool> canExecute)
         {
             if (canExecute is null) return ObjectInvokesMethodName<T>(methodName);
             return new RelayCommand<T>(
@@ -201,7 +185,7 @@ namespace RFBCodeWorks.MVVMObjects
         }
 
         /// <inheritdoc cref="ObjectInvokesMethodName{T}(string, string, Func{bool})"/>
-        public virtual RelayCommand<T> ObjectInvokesMethodName<T>(string methodName, string toolTip, Func<T, bool> canExecute)
+        public static RelayCommand<T> ObjectInvokesMethodName<T>(string methodName, string toolTip, Func<T, bool> canExecute)
         {
             return new RelayCommand<T>(
                 CreateParameterlessActionFromObjectMethod<T>(methodName), 
@@ -211,6 +195,5 @@ namespace RFBCodeWorks.MVVMObjects
 
         #endregion
 
-        #endregion
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.MVVMObjects
+namespace RFBCodeWorks.MVVMObjects.ControlInterfaces
 {
     /// <summary>
     /// Represents an <see cref="BaseControlDefinitions.ItemSourceDefinition{T, E}"/> whose collection can be modified via Add/Remove/Clear commands

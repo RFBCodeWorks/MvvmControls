@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Text;
 using System.Windows.Input;
 using RelayCmd = Microsoft.Toolkit.Mvvm.Input.RelayCommand;
+using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
 namespace RFBCodeWorks.MVVMObjects
 {
@@ -126,16 +127,12 @@ namespace RFBCodeWorks.MVVMObjects
         }
 
         /// <inheritdoc cref="ICommand.Execute(object)"/>
-        /// <remarks>
-        /// If the <paramref name="parameter"/> is not of type <typeparamref name="T"/>, then an <see cref="ArgumentException"/> will be thrown. <br/>
-        /// Does not throw if parameter is null.
-        /// </remarks>
         public override void Execute(object parameter)
         {
-            if (CanExecute(parameter))
+            //if (CanExecute(parameter))
                 ExecuteAction();
-            else
-                NotifyCanExecuteChanged();
+            //else
+            //    NotifyCanExecuteChanged();
         }
 
         #endregion

@@ -21,7 +21,7 @@ namespace RFBCodeWorks.MVVMObjects.DragDrop
         /// <returns></returns>
         public static bool IsMultiFileDrop(this DragEventArgs e)
         {
-            var fd = e.Data.GetData("FileDrop") as string[];   //This is a collection of files/folders
+            var fd = e.Data.GetData(DataFormats.FileDrop) as string[];   //This is a collection of files/folders
             if (fd.IsNull() || fd.Length == 0) return false;
             return true;
         }

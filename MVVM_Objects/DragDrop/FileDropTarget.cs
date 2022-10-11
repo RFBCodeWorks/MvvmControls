@@ -12,7 +12,7 @@ namespace RFBCodeWorks.MVVMObjects.DragDrop
     /// <summary>
     /// Base class for a FileDrop Target portion of a ViewModel
     /// </summary>
-    public class DragHandler : RFBCodeWorks.MVVMObjects.ViewModelBase, IDragHandler
+    public abstract class DragHandler : RFBCodeWorks.MVVMObjects.ViewModelBase, IDragHandler
     {
         /// <inheritdoc/>
         public bool IsDragging
@@ -63,7 +63,7 @@ namespace RFBCodeWorks.MVVMObjects.DragDrop
     /// <summary>
     /// Base class for a FileDrop Target portion of a ViewModel
     /// </summary>
-    public class FileDropTarget : DragHandler, IFileDragDropTarget, IFileDropTarget
+    public abstract class FileDropTarget : DragHandler, IFileDragDropTarget, IFileDropTarget
     {
         /// <inheritdoc/>
         public virtual void OnPreviewFileDrop(object sender, IDroppedFile e)
@@ -81,7 +81,7 @@ namespace RFBCodeWorks.MVVMObjects.DragDrop
     /// <summary>
     /// Base class for a FileDrop Target portion of a ViewModel
     /// </summary>
-    public class MultiFileDropTarget : DragHandler, IMultiFileDragDropTarget, IMultiFileDropTarget
+    public abstract class MultiFileDropTarget : DragHandler, IMultiFileDragDropTarget, IMultiFileDropTarget
     {
         /// <inheritdoc/>
         public virtual void OnPreviewFileDrop(object sender, IDroppedFile[] e)
