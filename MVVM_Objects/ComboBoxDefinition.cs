@@ -18,6 +18,12 @@ namespace RFBCodeWorks.MVVMObjects.ControlInterfaces
         /// <remarks>This property can be used to force the drop-down open from the ViewModel</remarks>
         public bool IsDropDownOpen { get; set; }
     }
+
+    /// <summary>
+    /// Interface all ComboBoxDefinitions of some type implement
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public interface IComboBoxDefinition<T> : ISelector<T>, IComboBoxDefinition { }
 }
 
 namespace RFBCodeWorks.MVVMObjects
@@ -27,7 +33,7 @@ namespace RFBCodeWorks.MVVMObjects
     /// The base ComboBoxDefinition
     /// </summary>
     /// <inheritdoc cref="SelectorDefinition{T, E, V}"/>
-    public class ComboBoxDefinition<T, E, V> : SelectorDefinition<T, E, V>, IComboBoxDefinition
+    public class ComboBoxDefinition<T, E, V> : SelectorDefinition<T, E, V>, IComboBoxDefinition, IComboBoxDefinition<T>
         where E : IList<T>
     {
         /// <inheritdoc cref="System.Windows.Controls.ComboBox.Text"/>

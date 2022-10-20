@@ -33,7 +33,7 @@ namespace RFBCodeWorks.MVVMObjects
             AlternateActionCanExecute = alternateCanExecute;
         }
         
-        private bool defaultEnabled;
+        private bool defaultEnabled = true;
 
         /// <summary>
         /// Update the state of the RelayCommand, which updates all the properties of the button
@@ -99,6 +99,16 @@ namespace RFBCodeWorks.MVVMObjects
                 DefaultAction();
             else
                 AlternateAction();
+        }
+
+        /// <summary>
+        /// Evaluate the <see cref="DefaultActionCanExecute" /> function and set the result to <see cref="IsDefaultState"/>
+        /// </summary>
+        /// <param name="sender">This is part of the signature only to allow subscription to events. This value is not used.</param>
+        /// <param name="e">This is part of the signature only to allow subscription to events. This value is not used.</param>
+        public virtual void UpdateState(object sender = null, EventArgs e = null)
+        {
+            IsDefaultState = DefaultActionCanExecute?.Invoke() ?? true;
         }
     }
 }

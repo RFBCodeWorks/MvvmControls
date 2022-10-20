@@ -13,11 +13,20 @@ namespace RFBCodeWorks.MVVMObjects.ControlInterfaces
     /// <summary>
     /// Represents an ItemSource collection
     /// </summary>
-    public interface IItemSource<T,E> : IItemSource
+    public interface IItemSource<T,E> : IItemSource<T>
         where E : IList<T>
     {
         /// <inheritdoc cref="BaseControlDefinitions.ItemSourceDefinition{T, E}.ItemSource"/>
         new E ItemSource { get; set; }
+    }
+
+    /// <summary>
+    /// Represents an ItemSource collection
+    /// </summary>
+    public interface IItemSource<T> : IItemSource
+    {
+        /// <inheritdoc cref="BaseControlDefinitions.ItemSourceDefinition{T, E}.ItemSource"/>
+        new IList<T> ItemSource { get; }
     }
 
     /// <summary>
@@ -55,22 +64,20 @@ namespace RFBCodeWorks.MVVMObjects.ControlInterfaces
 
         /// <inheritdoc cref="SelectorDefinition{T, E, V}.SelectedValuePath"/>
         string SelectedValuePath { get; }
+
+        /// <inheritdoc cref="SelectorDefinition{T, E, V}.SelectedIndex"/>
+        int SelectedIndex { get; set; }
     }
 
     /// <summary>
     /// Interface for Selectors of a specific type
     /// </summary>
-    public interface ISelector<T> : INotifyPropertyChanged
+    public interface ISelector<T> : ISelector, IItemSource<T>
     {
-        /// <summary>
-        /// Occurs when the SelectedItem changes
-        /// </summary>
-        event PropertyOfTypeChangedEventHandler<T> SelectedItemChanged;
-        
         /// <summary>
         /// Gets the SelectedItem from the Selector
         /// </summary>
-        T SelectedItem { get; }
+        new T SelectedItem { get; set; }
     }
 
     /// <summary>

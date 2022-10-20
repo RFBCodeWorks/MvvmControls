@@ -15,13 +15,8 @@ namespace RFBCodeWorks.MVVMObjects
         /// <summary>
         /// Create a new instance of the ViewModelBase
         /// </summary>
-        public ViewModelBase() : base() { }
-        
-        /// <summary>
-        /// Create a new instance of the ViewModelBase
-        /// </summary>
-        /// <param name="parent"></param>
-        public ViewModelBase(IViewModel parent) : base() 
+        /// <param name="parent">The <see cref="IViewModel"/> object that owns this ViewModel </param>
+        public ViewModelBase(IViewModel parent = null) : base() 
         {
             ParentViewModel = parent;
         }

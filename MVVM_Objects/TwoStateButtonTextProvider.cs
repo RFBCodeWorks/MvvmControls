@@ -39,7 +39,7 @@ namespace RFBCodeWorks.MVVMObjects
         /// <inheritdoc />
         public TwoStateTextProvider ToolTipTextProvider
         {
-            get => buttontextprovider;
+            get => tooltiptextprovider;
             init
             {
                 if (tooltiptextprovider != null) tooltiptextprovider.PropertyChanged -= ToolTipTextUpdatedHandler;
@@ -66,6 +66,7 @@ namespace RFBCodeWorks.MVVMObjects
                 ButtonTextProvider.DisplayAlternateText = value;
                 ToolTipTextProvider.DisplayAlternateText = value;
                 SetProperty(ref displayAltText, value, nameof(DisplayAlternateText));
+                NotifyButtonAndToolTip();
             }
         }
 

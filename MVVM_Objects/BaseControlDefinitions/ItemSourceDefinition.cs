@@ -104,6 +104,7 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
         }
 
         IList IItemSource.ItemSource { get => (IList)ItemSource; }
+        IList<T> IItemSource<T>.ItemSource { get => ItemSource; }
 
         private E ItemSourceField;
 

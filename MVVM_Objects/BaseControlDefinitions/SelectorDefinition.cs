@@ -7,10 +7,10 @@ using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
 namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
 {
-    /// <typeparam name="V">The type of property represented by the <see cref="SelectedValue"/></typeparam>
+    /// <typeparam name="V">The SelectedValue Type obtained by the SelectedValuePath</typeparam>
     /// <inheritdoc cref="ItemSourceDefinition{T, E}"/>
     /// <typeparam name="E"/><typeparam name="T"/>
-    public class SelectorDefinition<T,E, V> : ItemSourceDefinition<T,E>, ISelector, ISelector<T>, ISelector<T, E>
+    public class SelectorDefinition<T, E, V> : ItemSourceDefinition<T,E>, ISelector, ISelector<T>, ISelector<T, E>
         where E : IList<T>
     {
         #region < SelectionChangedEvent >
@@ -144,6 +144,19 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
         private string SelectedValuePathField = DefaultDisplayMemberPath;
 
         #endregion
+
+        /// <summary> 
+        /// Searches the ItemSource for the first match to the <paramref name="predicate"/>, then sets the SelectedValue to the result. 
+        /// <br/> If no match is found, the SelectedIndex is set to the <paramref name="defaultIndex"/>
+        /// </summary>
+        /// <param name="defaultIndex">The index of the item to select if no match exists within the ItemSource</param>
+        /// <param name="predicate">A function used to determine if the item should be selected.</param>
+        public virtual void TrySelectItem(Func<T, bool> predicate, int defaultIndex = -1)
+        {
+            var item = ItemSource.FirstOrDefault(o => predicate(o));
+            var index = item is null ? -1 : ItemSource.IndexOf(item);
+            SelectedIndex = index == -1 ? defaultIndex : index;
+        }
 
         #region < ISelector Implementation >
 
