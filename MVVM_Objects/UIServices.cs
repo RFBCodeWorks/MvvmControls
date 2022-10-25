@@ -52,6 +52,14 @@ namespace RFBCodeWorks.MVVMObjects
         }
 
         /// <summary>
+        /// Attempt to call <see cref="SetBusyState()"/>. Will only set the busy state of the cursor if called from a UI thread.
+        /// </summary>
+        public static void TrySetBusyState()
+        {
+            try { System.Windows.Application.Current.Dispatcher.Invoke(SetBusyState); } finally { }
+        }
+
+        /// <summary>
         /// Sets the busystate to busy or not busy.
         /// </summary>
         /// <param name="busy">if set to <c>true</c> the application is now busy.</param>

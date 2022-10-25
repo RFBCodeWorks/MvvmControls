@@ -87,40 +87,37 @@ namespace RFBCodeWorks.MVVMObjects
             Task = task;
             bool cancelActionRun = false;
             bool faultedActionRun = false;
-            if (Task.Status < TaskStatus.RanToCompletion)
+            try
             {
-                try
-                {
-                    await task;
-                }
-                catch (TaskCanceledException)
+                await task;
+            }
+            catch (TaskCanceledException)
+            {
+                TaskCancelledAction?.Invoke();
+                cancelActionRun = true;
+            }
+            catch (Exception e)
+            {
+                if (task.IsCanceled)
                 {
                     TaskCancelledAction?.Invoke();
                     cancelActionRun = true;
                 }
-                catch (Exception e)
+                else
                 {
-                    if (task.IsCanceled)
-                    {
-                        TaskCancelledAction?.Invoke();
-                        cancelActionRun = true;
-                    }
-                    else
-                    {
-                        TaskFaultedAction?.Invoke(e);
-                        faultedActionRun = true;
-                    }
+                    TaskFaultedAction?.Invoke(e);
+                    faultedActionRun = true;
                 }
-                finally
+            }
+            finally
+            {
+                if (!faultedActionRun && task.IsFaulted && task.Exception != null && TaskFaultedAction != null)
                 {
-                    if (!faultedActionRun && task.IsFaulted && task.Exception != null && TaskFaultedAction != null)
-                    {
-                        TaskFaultedAction(task.Exception);
-                    }
-                    else if (!cancelActionRun && task.IsCanceled && TaskCancelledAction != null)
-                    {
-                        TaskCancelledAction();
-                    }
+                    TaskFaultedAction(task.Exception);
+                }
+                else if (!cancelActionRun && task.IsCanceled && TaskCancelledAction != null)
+                {
+                    TaskCancelledAction();
                 }
             }
             IsTaskStarting = false;
