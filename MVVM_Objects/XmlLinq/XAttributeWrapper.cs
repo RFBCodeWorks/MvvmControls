@@ -1,57 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Xml.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
+//using System.ComponentModel;
 
-namespace RFBCodeWorks.MVVMObjects.XmlLinq
-{
-    /// <summary>
-    /// Wraps an XAttribute to implement INotifyPropertyChanged
-    /// </summary>
-    public class XAttributetWrapper : XAttribute, INotifyPropertyChanged, IXAttributeProvider
-    {
-        /// <inheritdoc cref="XAttribute.XAttribute(XName, object)"/>
-        public XAttributetWrapper(XName name, object content) : base(name, content)
-        {
-            SubScribe();
-        }
+//namespace RFBCodeWorks.MVVMObjects.XmlLinq
+//{
+//    /// <summary>
+//    /// Wraps an XAttribute to implement INotifyPropertyChanged
+//    /// </summary>
+//    public class XAttributeWrapper : XAttribute, INotifyPropertyChanged, IXAttributeProvider, IXObjectProvider, IXValueObject
+//    {
+//        /// <inheritdoc cref="XAttribute.XAttribute(XName, object)"/>
+//        public XAttributeWrapper(XName name, object content) : this(new XAttribute(name, content)) { }
 
-        /// <inheritdoc cref="XAttribute.XAttribute(XAttribute)"/>
-        public XAttributetWrapper(XAttribute other) : base(other)
-        {
-            SubScribe();
-        }
+//        /// <inheritdoc cref="XAttribute.XAttribute(XAttribute)"/>
+//        public XAttributeWrapper(XAttribute other) : base(other)
+//        {
+//            base.Changed += XAttributeChanged;
+//        }
 
-        /// <inheritdoc/>
-        public event PropertyChangedEventHandler PropertyChanged;
+//        private void XAttributeChanged(object sender, XObjectChangeEventArgs e)
+//        {
+//            switch(e.ObjectChange)
+//            {
+//                case XObjectChange.Value:
+//                    ValueChanged?.Invoke(this, new EventArgs());
+//                    OnPropertyChanged(nameof(Value));
+//                    break;
+//                default:
+//                    throw new NotImplementedException($"Unexepected XObjectChangeEventArg value of type: {e.ObjectChange}");
+//            }
+//        }
 
-        /// <summary>
-        /// Raise the <see cref="PropertyChanged"/> event
-        /// </summary>
-        /// <param name="propertyName"></param>
-        protected virtual void OnPropertyChanged(string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new(propertyName));
-        }
+//        /// <inheritdoc/>
+//        public event PropertyChangedEventHandler PropertyChanged;
 
-        private void SubScribe()
-        {
-            base.Changed += (o, e) => OnPropertyChanged();
-        }
+//        /// <inheritdoc/>
+//        public event EventHandler ValueChanged;
 
-        event EventHandler IXAttributeProvider.XAttributeChanged
-        {
-            add { }
-            remove { }
-        }
+//        // this will never get raised
+//        event EventHandler IXObjectProvider.Added { add { } remove { } }
+//        event EventHandler IXObjectProvider.Removed { add { } remove { } }
+//        IXElementProvider IXObjectProvider.Parent => this.Parent != null ? new XElementWrapper(this.Parent) : null;
+        
+//        /// <summary>
+//        /// Raise the <see cref="PropertyChanged"/> event
+//        /// </summary>
+//        /// <param name="propertyName"></param>
+//        protected virtual void OnPropertyChanged(string propertyName = "")
+//        {
+//            PropertyChanged?.Invoke(this, new(propertyName));
+//        }
 
-        XAttribute IXAttributeProvider.GetXAttribute()
-        {
-            return this;
-        }
-
-        string IXValueProvider.XmlValue { get => base.Value; set => base.Value = value; }
-    }
-}
+//        string IXValueObject.Name => this.Name.LocalName;
+//        XAttribute IXAttributeProvider.XObject => this;
+//        XObject IXObjectProvider.XObject => this;
+//    }
+//}

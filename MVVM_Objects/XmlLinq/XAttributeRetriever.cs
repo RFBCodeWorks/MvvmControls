@@ -10,22 +10,8 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
     /// <summary>
     /// Provides a way to present an XAttribute into a ViewModel via XML.Linq
     /// </summary>
-    public class XAttributeRetriever : ObservableObject, IXAttributeProvider
+    public class XAttributeRetriever : ObservableObject, IXAttributeProvider, IXValueObject, IXObjectProvider
     {
-        /// <summary>
-        /// Create a new XAttributeRetriever that represents some XAttribute object
-        /// </summary>
-        /// <param name="xAttribute">the XAttribute</param>
-        public XAttributeRetriever(XAttribute xAttribute)
-        {
-            if (xAttribute is XAttributetWrapper wrapper)
-                XAttr = wrapper;
-            else
-                XAttr =  new(xAttribute);
-            
-            AttrName = XAttr.Name.LocalName;
-        }
-
         /// <summary>
         /// Create a new XAttributeRetriever that uses LINQ to get an XAttribute of the specified <paramref name="attributeName"/> from the <paramref name="parent"/>
         /// </summary>
@@ -33,101 +19,143 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         /// <param name="parent">The parent that provides the XElement the attribute resides within</param>
         public XAttributeRetriever(string attributeName, IXElementProvider parent)
         {
-            XElementProvider = parent ?? throw new ArgumentNullException(nameof(parent));
-            AttrName = attributeName.IsNotEmpty() ? attributeName : throw new ArgumentException("attributeName is empty");
-            parent.XElementChanged += RefreshxAttr;
+            AttrName = attributeName.IsNotEmpty() ? attributeName.Trim() : throw new ArgumentException("attributeName is empty");
+            Parent = parent ?? throw new ArgumentNullException(nameof(parent));
+            
+            Parent.DescendantChanged += Parent_DescendantChanged;
+            Parent.Added += Parent_Added; 
+            Parent.Removed += Parent_Removed;
+            Refresh();
         }
 
         /// <inheritdoc/>
-        public event EventHandler XAttributeChanged;
-        private event EventHandler NodeChangedEvent;
-        event EventHandler IXValueProvider.XNodeChanged
-        {
-            add
-            {
-                NodeChangedEvent += value;
-            }
+        public event EventHandler ValueChanged;
+        /// <inheritdoc/>
+        public event EventHandler Added;
+        /// <inheritdoc/>
+        public event EventHandler Removed;
 
-            remove
-            {
-                NodeChangedEvent -= value;
-            }
-        }
-        
-        private XAttributetWrapper xAttrField;
+        private XAttribute xAttrField;
         private readonly string AttrName;
-        private readonly IXElementProvider XElementProvider;
+        private XElement ParentElement => Parent.XObject;
 
-        private XAttributetWrapper XAttr {
+        /// <inheritdoc/>
+        public IXElementProvider Parent { get; }
+
+        /// <summary>
+        /// Use Xml.Linq to retrieve the first XAttribute with a matching <see cref="Name"/> from the parent node
+        /// </summary>
+        public XAttribute XAttribute
+        {
             get => xAttrField;
-            set
+            private set
             {
-                if (xAttrField != value)
+                if (XAttribute.ReferenceEquals(xAttrField, value)) return;
+                if (xAttrField != null) //removing the reference
                 {
-                    xAttrField.PropertyChanged += XAttrField_PropertyChanged;
-                    xAttrField = value;
-                    if (value != null) value.PropertyChanged += XAttrField_PropertyChanged;
-                    OnXAttributeChanged();
+
+                    xAttrField.Changed -= XAttrField_Changed;
+                    xAttrField = null;
+                    Removed?.Invoke(this, new());
                 }
+                if (value != null)
+                {
+                    xAttrField = value;
+                    xAttrField.Changed += XAttrField_Changed;
+                    Added?.Invoke(this, new());
+                }
+                OnValueChange();
+                OnPropertyChanged("");
             }
         }
 
         /// <summary>
         /// Gets the Name of the Attribute
         /// </summary>
-        public string AttributeName => XAttr?.Name?.LocalName ?? AttrName;
+        public string Name => XAttribute?.Name?.LocalName ?? AttrName;
         
         /// <summary>
-        /// Get => Gets the current value of the Attribute, if the attribute does not exist returns null.
-        /// <br/> Set => Sets the value of the attribute, adding it if necessary.
+        /// Set TRUE to create the parent element if it is missing when setting the value
         /// </summary>
-        public virtual string XmlValue
+        public bool CreateParentIfMissing { get; set; }
+
+        /// <summary>
+        /// Get => Gets the current value of the Attribute, if the attribute does not exist returns null.
+        /// <br/> Set => Sets the value of the attribute.
+        /// <br/> ---> If the parent XElement exists, it will add the attribute if necessary.
+        /// <br/> ---> If the parent XElement does not exist, will create it if '<see cref="CreateParentIfMissing"/>' is true
+        /// </summary>
+        public virtual string Value
         {
-            get => XAttr?.Value;
+            get => XAttribute?.Value;
             set
             {
-                if (XAttr is null && value.IsNotEmpty())
+                if (value == Value) return;
+                if (value is null)
                 {
-                    XElementProvider.GetXElement()?.SetAttributeValue(AttributeName, value);
+                    //Removing the attribute
+                    if (ParentElement is null)
+                        return;
+                    else
+                        XAttribute?.Remove();
                 }
-                else if (XAttr != null)
+                else if (ParentElement is null)
                 {
-                    XAttr.Value = value;
+                    if (CreateParentIfMissing)
+                        Parent.CreateXElement().SetAttributeValue(AttrName, value);
                 }
-                OnPropertyChanged(nameof(XmlValue));
+                else
+                {
+                    ParentElement.SetAttributeValue(AttrName, value);
+                }
             }
         }
 
+        XAttribute IXAttributeProvider.XObject => this.XAttribute;
+        XObject IXObjectProvider.XObject => this.XAttribute;
+
         /// <inheritdoc/>
-        public XAttribute GetXAttribute()
+        public void Refresh()
         {
-            return XAttr;
+            XAttribute = ParentElement?.Attribute(AttrName);
         }
 
-        private void RefreshxAttr(object sender, EventArgs e)
+        /// <inheritdoc/>
+        public void Remove()
         {
-            var val = XElementProvider?.GetXElement()?.Attribute(this.AttrName);
-            if (val is null)
-                XAttr = null;
-            else if (XAttr is XAttributetWrapper wrapper)
-                XAttr = wrapper;
-            else
-                XAttr = new(val);
-        }
-
-        private void XAttrField_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            OnPropertyChanged("");
+            XAttribute?.Remove();
         }
 
         /// <summary>
-        /// Raises XAttributeChanged
+        /// Raise ValueChanged and INotifyPropertyChanged('Value')
         /// </summary>
-        protected virtual void OnXAttributeChanged()
+        protected virtual void OnValueChange()
         {
-            XAttributeChanged?.Invoke(this, new());
-            NodeChangedEvent?.Invoke(this, new());
-            OnPropertyChanged("");
+            ValueChanged?.Invoke(this, new());
+            OnPropertyChanged(nameof(Value));
+        }
+
+        private void XAttrField_Changed(object sender, XObjectChangeEventArgs e)
+        {
+            //validate - this will throw if not a valid result
+            _ = XObjectChangedEventEvaluation.XAttributeChanged(sender, e);
+            OnValueChange();
+        }
+
+        private void Parent_Removed(object sender, EventArgs e)
+        {
+            XAttribute = null;
+            OnValueChange();
+        }
+
+        private void Parent_Added(object sender, EventArgs e)
+        {
+            Refresh();
+        }
+
+        private void Parent_DescendantChanged(object sender, EventArgs e)
+        {
+            Refresh();
         }
     }
 }

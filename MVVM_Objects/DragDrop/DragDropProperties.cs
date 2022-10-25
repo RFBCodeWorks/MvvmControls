@@ -283,6 +283,7 @@ namespace RFBCodeWorks.MVVMObjects.DragDrop
             var multiDrop = GetMultiDropTarget(sender, e);
             if (multiDrop.IsNotNull())
             {
+                UIServices.SetBusyState();
                 multiDrop.Item1.OnFileDrop(sender, multiDrop.Item2);
                 //return;
             }
@@ -290,6 +291,7 @@ namespace RFBCodeWorks.MVVMObjects.DragDrop
             var drop = GetDropTarget(sender, e);
             if (drop.IsNotNull())
             {
+                UIServices.SetBusyState();
                 drop.Item1.OnFileDrop(sender, drop.Item2);
                 //return;
             }

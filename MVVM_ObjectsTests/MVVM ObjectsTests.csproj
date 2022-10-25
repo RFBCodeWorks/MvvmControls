@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>.NETFramework,Version=v4.7.2</TargetFramework>
-    <RootNamespace>MVVM_ObjectsTests</RootNamespace>
-
+    <RootNamespace>RFBCodeWorks.MVVM_ObjectsTests</RootNamespace>
+      <LangVersion>9.0</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MVVM Objects\MVVM_Objects.csproj" />
     <ProjectReference Include="..\MVVM_Objects\MVVM_Objects.csproj" />
   </ItemGroup>
 

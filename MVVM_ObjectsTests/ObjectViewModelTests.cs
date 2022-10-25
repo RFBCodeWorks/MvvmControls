@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MVVMObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Reflection;
 
-namespace MVVMObjects.Tests
+namespace RFBCodeWorks.MVVMObjects.Tests
 {
     [TestClass()]
     public class ObjectViewModelTests
