@@ -45,7 +45,7 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         /// <summary>
         /// <inheritdoc cref="XObjectChangedEventEvaluation.XElementChanged(object, XObjectChangeEventArgs, XElement, bool)" path="/param[@name='discriminateDescendants']" />
         /// </summary>
-        public bool DiscriminateDescendantChanged { get; set; }
+        public bool DiscriminateDescendantChanged { get; set; } = true;
 
         /// <summary>
         /// Raise the <see cref="PropertyChanged"/> event
@@ -60,6 +60,10 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         string IXValueObject.Name => this.Name.LocalName;
         XElement IXElementProvider.XObject => this;
         XObject IXObjectProvider.XObject => this;
+
+        bool IXObjectProvider.IsNodeAvailable => true;
+
+        bool IXObjectProvider.CanBeCreated { get => true; set { } }
 
         XElement IXElementProvider.CreateXElement()
         {

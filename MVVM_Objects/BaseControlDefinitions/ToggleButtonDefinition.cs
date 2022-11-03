@@ -32,7 +32,7 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
         public event EventHandler Indeterminate;
 
         /// <inheritdoc cref="ToggleButton.IsChecked"/>
-        public bool? IsChecked
+        public virtual bool? IsChecked
         {
             get { return IsCheckedField; }
             set

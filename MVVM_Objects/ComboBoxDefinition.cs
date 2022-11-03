@@ -43,14 +43,20 @@ namespace RFBCodeWorks.MVVMObjects
         /// See the link below for more information on this interaction: <br/>
         /// <see href="https://learn.microsoft.com/en-us/dotnet/api/system.windows.controls.combobox?view=windowsdesktop-6.0"/>
         /// </remarks>
-        public string Text { get; set; }
+        public virtual string Text { get; set; }
 
         /// <inheritdoc cref="System.Windows.Controls.ComboBox.IsEditable"/>
         /// <remarks>
         /// See the link below for more information on this interaction: <br/>
         /// <see href="https://learn.microsoft.com/en-us/dotnet/api/system.windows.controls.combobox?view=windowsdesktop-6.0"/>
         /// </remarks>
-        public bool IsEditable { get; set; } = false;
+        public virtual bool IsEditable
+        {
+            get { return IsEditableField; }
+            set { SetProperty(ref IsEditableField, value, nameof(IsEditable)); }
+        }
+        private bool IsEditableField;
+
 
         /// <returns>
         /// true if the ComboBox is read-only; otherwise, false. <br/>

@@ -18,7 +18,8 @@ namespace RFBCodeWorks.MVVMObjects.Behaviors
 
             //ItemSource
             SetBinding(obj, ItemsControl.ItemsSourceProperty, nameof(IItemSource.ItemSource), def, BindingMode.OneWay);
-            SetBinding(obj, ItemsControl.DisplayMemberPathProperty, nameof(IItemSource.DisplayMemberPath), def, BindingMode.OneWay);
+            if (obj.GetValue(ItemsControl.ItemTemplateProperty) == null)
+                SetBinding(obj, ItemsControl.DisplayMemberPathProperty, nameof(IItemSource.DisplayMemberPath), def, BindingMode.OneWay);
         }
 
         private static void UnbindItemSource(ItemsControl obj, IItemSource oldDef)

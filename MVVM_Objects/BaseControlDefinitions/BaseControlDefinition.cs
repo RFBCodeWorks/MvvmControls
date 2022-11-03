@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,12 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
     /// </summary>
     public class BaseControlDefinition : ObservableObject,  IControlDefinition, IToolTipProvider
     {
+        /// <summary>
+        /// Subscribe to a component's PropertyChanged event to pass on the args. <see langword="sender"/> will be this control object.
+        /// </summary>
+        /// <param name="sender">The sender - this value is thrown out and is only present to conform as an EventHandler method</param>
+        /// <param name="e">These ares will be passed directly to this object's PropertyChanged event</param>
+        protected void OnPropertyChanged(object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
 
         #region < OnVisibilityChanged >
 
@@ -30,6 +37,17 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
         }
 
         #endregion
+
+
+        /// <summary>
+        /// Enable/Disable a control
+        /// </summary>
+        public virtual bool IsEnabled
+        {
+            get { return IsEnabledField; }
+            set { SetProperty(ref IsEnabledField, value, nameof(IsEnabled)); }
+        }
+        private bool IsEnabledField;
 
 
         /// <inheritdoc/>

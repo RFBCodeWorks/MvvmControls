@@ -65,9 +65,10 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Tests
             Console.WriteLine(doc.ToString());
 
             Console.WriteLine("\n------------------------------------------- Attempt to write attribute 2 without element");
+            element2.CanBeCreated = false;
             attr2.Value = "test";
             Assert.IsNull(attr.XObject);
-            ((XAttributeRetriever)attr2).CreateParentIfMissing = true;
+            element2.CanBeCreated = true;
             attr2.Value = "test";
             Assert.IsNotNull(attr2.XObject);
             Console.WriteLine(doc.ToString());

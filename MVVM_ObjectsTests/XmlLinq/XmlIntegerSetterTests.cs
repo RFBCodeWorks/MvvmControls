@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RFBCodeWorks.MVVMObjects.XmlLinq;
+using RFBCodeWorks.MVVMObjects.XmlLinq.ValueSetters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Tests
 
         private void TextIXValueProvider(IXValueObject provider, bool isWrapper, bool isAttribute)
         {
-            var valueObj = new XmlIntegerSetter(provider) { Minimum = 0, Maximum = 100 };
+            var valueObj = new XIntegerSetter(provider) { Minimum = 0, Maximum = 100 };
             bool isAttributeProvider = provider is IXAttributeProvider;
             void AssertNodeExists(bool shouldExist)
             {

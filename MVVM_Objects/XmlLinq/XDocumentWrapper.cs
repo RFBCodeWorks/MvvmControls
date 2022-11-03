@@ -55,6 +55,13 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         XObject IXObjectProvider.XObject => base.Root;
         XElement IXElementProvider.XObject => base.Root;
 
+        /// <summary>
+        /// Determine if a Root XElement object exists
+        /// </summary>
+        public bool IsNodeAvailable => base.Root != null;
+
+        bool IXObjectProvider.CanBeCreated { get => IsNodeAvailable; set { } }
+
         private void XObjectChanged(object sender, XObjectChangeEventArgs e)
         {
             if (sender == this | sender == this.Root)

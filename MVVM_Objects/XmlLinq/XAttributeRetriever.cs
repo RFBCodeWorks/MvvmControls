@@ -21,7 +21,9 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         {
             AttrName = attributeName.IsNotEmpty() ? attributeName.Trim() : throw new ArgumentException("attributeName is empty");
             Parent = parent ?? throw new ArgumentNullException(nameof(parent));
-            
+            CanBeCreated = true;
+            CanBeRemoved = true;
+
             Parent.DescendantChanged += Parent_DescendantChanged;
             Parent.Added += Parent_Added; 
             Parent.Removed += Parent_Removed;
@@ -73,17 +75,27 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         /// Gets the Name of the Attribute
         /// </summary>
         public string Name => XAttribute?.Name?.LocalName ?? AttrName;
-        
+
+        /// <inheritdoc/>
+        public bool IsNodeAvailable => XAttribute != null;
+
+        /// <inheritdoc/>
+        public bool CanBeCreated
+        {
+            get => CanBeCreatedField && (Parent.IsNodeAvailable || Parent.CanBeCreated);
+            set => CanBeCreatedField = value;
+        }
+        private bool CanBeCreatedField;
+
         /// <summary>
-        /// Set TRUE to create the parent element if it is missing when setting the value
+        /// If TRUE, Allow the XAttribute to be removed from its parent XElement by setting it to a null value. 
+        /// <br/> If FALSE, do not accept null values.
         /// </summary>
-        public bool CreateParentIfMissing { get; set; }
+        public bool CanBeRemoved { get; set; }
 
         /// <summary>
         /// Get => Gets the current value of the Attribute, if the attribute does not exist returns null.
-        /// <br/> Set => Sets the value of the attribute.
-        /// <br/> ---> If the parent XElement exists, it will add the attribute if necessary.
-        /// <br/> ---> If the parent XElement does not exist, will create it if '<see cref="CreateParentIfMissing"/>' is true
+        /// <br/> Set => Sets the value of the attribute, creating it within the tree if necessary.
         /// </summary>
         public virtual string Value
         {
@@ -96,17 +108,12 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
                     //Removing the attribute
                     if (ParentElement is null)
                         return;
-                    else
+                    else if (CanBeRemoved)
                         XAttribute?.Remove();
                 }
-                else if (ParentElement is null)
+                else if (IsNodeAvailable || CanBeCreated)
                 {
-                    if (CreateParentIfMissing)
-                        Parent.CreateXElement().SetAttributeValue(AttrName, value);
-                }
-                else
-                {
-                    ParentElement.SetAttributeValue(AttrName, value);
+                    Parent.CreateXElement()?.SetAttributeValue(AttrName, value);
                 }
             }
         }
@@ -156,6 +163,15 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         private void Parent_DescendantChanged(object sender, EventArgs e)
         {
             Refresh();
+        }
+
+        /// <summary>
+        /// Write out the contents of the <see cref="XAttribute"/>
+        /// </summary>
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return XAttribute?.ToString() ?? string.Empty;
         }
     }
 }

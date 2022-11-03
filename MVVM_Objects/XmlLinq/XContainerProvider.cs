@@ -49,8 +49,8 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
                 if (XContainer != null)
                 {
                     XContainer.Changed -= XContainer_Changed;
-                    Removed?.Invoke(this, new());
                     XContainerField = null;
+                    Removed?.Invoke(this, new());
                 }
                 if (value != null)
                 {
@@ -76,7 +76,13 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
 
         private XContainer XContainerField;
 
-        private XElement ProvidedElement
+        /// <summary>
+        /// The XElement provided by this XContainerProvider.
+        /// <br/> - If an XDocument is the XContainer, then this will be the root node.
+        /// <br/> - If an XElement is the XContainer, then this will be the XElement.
+        /// <br/> - If this is a custom type derived from XContainer, this will throw a <see cref="NotImplementedException"/>
+        /// </summary>
+        public XElement ProvidedElement
         {
             get
             {
@@ -98,6 +104,11 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         public string Name => ProvidedElement?.Name?.LocalName;
 
         /// <inheritdoc/>
+        public bool IsNodeAvailable => this.ProvidedElement != null;
+
+        bool IXObjectProvider.CanBeCreated { get => IsNodeAvailable; set { } }
+
+        /// <inheritdoc/>
         public XElement CreateXElement()
         {
             return ProvidedElement;
@@ -109,7 +120,16 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         /// <exception cref="NotImplementedException"/>
         public void Remove()
         {
-            throw new NotImplementedException("'XContainerProvider.Remove' functionality is not implemented since this is designed as a root provider for other IXObjectProvider objects");
+            throw new InvalidOperationException("'XContainerProvider.Remove' functionality is not implemented since this is designed as a root provider for other IXObjectProvider objects");
+        }
+
+        /// <summary>
+        /// Write out the contents of the <see cref="XContainer"/>
+        /// </summary>
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return XContainer?.ToString() ?? string.Empty;
         }
     }
 }

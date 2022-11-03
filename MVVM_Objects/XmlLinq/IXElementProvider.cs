@@ -65,6 +65,18 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         /// </summary>
         XObject? XObject { get; }
 
+        /// <summary>
+        /// Determine if the XObject is available to interact with
+        /// </summary>
+        bool IsNodeAvailable { get; }
+
+        /// <summary>
+        /// Setting to enable/disable automatic creation of missing XElements within the tree under various scenarios, 
+        /// such as if an XAttributeProvider's value was set but the parent XElement does not exist
+        /// </summary>
+        /// <returns>TRUE if the XElement node can be created, otherwise false.</returns>
+        bool CanBeCreated { get; set; }
+
         /// <inheritdoc cref="XNode.Remove"/>
         void Remove();
     }
@@ -77,7 +89,7 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         /// <summary>
         /// The name of the XObject
         /// </summary>
-        public string Name { get; }
+        string Name { get; }
 
         /// <summary>
         /// Occurs when the Value is changed
@@ -86,10 +98,9 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
 
         /// <summary>
         /// Property used to get/set the string value of the node. <br/>
-        /// If the node/parent node does not exist, the value will not be set.
+        /// If the node does not exist, setting to a non-null value will attempt to create the node within the tree.
         /// </summary>
         string Value { get; set; }
-
     }
 
     /// <summary>
@@ -100,7 +111,7 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         /// <summary>
         /// The name of the XElement
         /// </summary>
-        public string Name { get; }
+        string Name { get; }
 
         /// <summary>
         /// Occurs when this node received a 'Changed' event that indicates an ADD or REMOVE event from some descendant within the tree. <br/>
@@ -121,7 +132,7 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         /// <summary>
         /// Create the XElement within the tree if it is missing
         /// </summary>
-        /// <returns>The XElement object</returns>
+        /// <returns>The XElement object, or null if the XElement was not created/does not exist.</returns>
         XElement CreateXElement();
 
     }
@@ -131,7 +142,6 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
     /// </summary>
     public interface IXAttributeProvider : IXObjectProvider, IXValueObject
     {
-        
         /// <summary>
         /// Get the XAttribute from the provider
         /// </summary>

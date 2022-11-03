@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
 
-namespace RFBCodeWorks.MVVMObjects.XmlLinq
+namespace RFBCodeWorks.MVVMObjects.XmlLinq.ValueSetters
 {
     /// <summary>
     /// Provides a way to interact with an <see cref="IXValueObject"/> to set it to an <see cref="int"/> value
     /// </summary>
     /// <inheritdoc/>
-    public class XmlIntegerSetter : XmlNumericSetterBase<int>
+    public class XIntegerSetter : XNumericSetterBase<int>
     {
         /// <inheritdoc/>
-        public XmlIntegerSetter(IXValueObject xValueProvider) : base(xValueProvider) { Maximum = int.MaxValue; }
+        public XIntegerSetter(IXValueObject xValueProvider) : base(xValueProvider) { Maximum = int.MaxValue; }
         /// <inheritdoc/>
         protected override bool IsWithinRange(int value) => value <= Maximum && value >= Minimum;
         /// <inheritdoc/>
@@ -27,10 +27,10 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
     /// Provides a way to interact with an <see cref="IXValueObject"/> to set it to a <see cref="double"/> value
     /// </summary>
     /// <inheritdoc/>
-    public class XmlDoubleSetter : XmlNumericSetterBase<double>
+    public class XDoubleSetter : XNumericSetterBase<double>
     {
         /// <inheritdoc/>
-        public XmlDoubleSetter(IXValueObject xValueProvider) : base(xValueProvider) { Maximum = double.MaxValue; }
+        public XDoubleSetter(IXValueObject xValueProvider) : base(xValueProvider) { Maximum = double.MaxValue; }
         /// <inheritdoc/>
         protected override bool IsWithinRange(double value) => value <= Maximum && value >= Minimum;
         /// <inheritdoc/>
@@ -39,37 +39,19 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
 
 
     /// <remarks><br/> - Explicitly implements <see cref="ControlInterfaces.IRangeControlDefinition"/> </remarks>
-    public abstract class XmlNumericSetterBase<T> : ExplicitControlDefinition, ControlInterfaces.IRangeControlDefinition, ControlInterfaces.IDisplayTextProvider
+    public abstract class XNumericSetterBase<T> : ValueSetterBase<T>
     where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
     {
         /// <summary>
         /// Create the XML Numeric Setter
         /// </summary>
         /// <param name="xValueProvider">The object that will provide the node whose value needs to be set</param>
-        public XmlNumericSetterBase(IXValueObject xValueProvider)
-        {
-            this.XValueProvider = xValueProvider ?? throw new ArgumentNullException(nameof(xValueProvider));
-            this.XValueProvider.Removed += XValue_XNodeChanged;
-            this.XValueProvider.Added += XValue_XNodeChanged;
-            this.XValueProvider.ValueChanged += XValueProvider_ValueChanged;
-        }
-
-        /// <inheritdoc/>
-        public event EventHandler ValueChanged;
+        public XNumericSetterBase(IXValueObject xValueProvider) : base(xValueProvider) { }
 
         /// <summary>
-        /// Raise the ValueChanged event
+        /// Occurs when an invalid value has been submitted
         /// </summary>
-        protected virtual void OnValueChanged()
-        {
-            ValueChanged?.Invoke(this, new());
-        }
-
-
-        /// <summary>
-        /// The object that provides XNode whose value will be updated
-        /// </summary>
-        public IXValueObject XValueProvider { get; }
+        public event EventHandler<ValueEventArgs<T>> InvalidValueSubmitted;
 
         /// <summary>
         /// The integer value of the node. 
@@ -78,22 +60,27 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         /// Get => Attempts to parse the value from the node. If unable to, returns the default. <br/>
         /// Set => If <see langword="IsEnabled"/>, store the value to the XValue.
         /// </remarks>
-        public virtual T Value
+        public override T Value
         {
             get
             {
-                return IsEnabled && TryParse(XValueProvider.Value, out T result) ? result : default;
+                return XValueProvider.IsNodeAvailable && TryParse(XValueProvider.Value, out T result) ? result : default;
             }
             set
             {
-                if (!IsEnabled || Value.Equals(value)) return;
+                if (ValueField != null &&  ValueField.Equals(value)) return;
+                base.IsSettingValue = true;
                 if (IsWithinRange(value))
                 {
                     XValueProvider.Value = ConvertToString(value);
                     ValueField = value;
                     OnPropertyChanged(nameof(Value));
                     OnValueChanged();
+                }else
+                {
+                    InvalidValueSubmitted?.Invoke(this, new(value));
                 }
+                base.IsSettingValue = false;
             }
         }
         private T? ValueField;
@@ -101,13 +88,12 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         /// <summary>
         /// The minimum value to accept
         /// </summary>
-        public virtual T Minimum { get; init; }
+        public virtual T Minimum { get; set; }
 
         /// <summary>
         /// The Maximum value to accept
         /// </summary>
-        public virtual T Maximum { get; init; }
-
+        public virtual T Maximum { get; set; }
 
         /// <summary>
         /// Converts the value to a string for saving to the XObject
@@ -129,37 +115,25 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         /// <returns>TRUE if the value is within the range of acceptable values, otherwise false</returns>
         protected abstract bool IsWithinRange(T value);
 
-        /// <summary>
-        /// This is called whenever the XValue.XNodeChanged event is fired.
-        /// </summary>
-        /// <remarks>Raises OnPropertyChanged for IsEnabled and Value</remarks>
-        protected virtual void XValue_XNodeChanged(object sender, EventArgs e)
+        /// <inheritdoc/>
+        protected override void XValueProvider_ValueChanged()
+        {
+            ValueField = Value;
+            OnValueChanged();
+        }
+
+        /// <inheritdoc/>
+        protected override void XValueProvider_Removed()
         {
             ValueField = null;
-            OnPropertyChanged(nameof(IsEnabled));
             OnValueChanged();
         }
 
-        private void XValueProvider_ValueChanged(object sender, EventArgs e)
+        /// <inheritdoc/>
+        protected override void XValueProvider_Added()
         {
-            ValueField = IsEnabled ? Value : null;
-            OnPropertyChanged(nameof(Value));
-            OnValueChanged();
+            XValueProvider_ValueChanged();
         }
-
-        /// <summary>
-        /// Determine if the value can be set.
-        /// </summary>
-        /// <remarks>Base implementation evaluates if the XObject provides by the XValue is null or not</remarks>
-        public virtual bool IsEnabled => XValueProvider.XObject != null;
-
-        double ControlInterfaces.IRangeControlDefinition.Minimum { get => (double)(object)Minimum; set { } }
-        double ControlInterfaces.IRangeControlDefinition.Maximum { get => (double)(object)Maximum; set { } }
-        double ControlInterfaces.IRangeControlDefinition.SmallChange { get => 1; set { } }
-        double ControlInterfaces.IRangeControlDefinition.LargeChange { get => 1; set { } }
-        double ControlInterfaces.IRangeControlDefinition.Value { get => (double)(object)Value; set => Value = (T)(object)value; }
-        string ControlInterfaces.IToolTipProvider.ToolTip => $"Min: {ConvertToString(Minimum)} \\ Max: {ConvertToString(Maximum)}";
-        string ControlInterfaces.IDisplayTextProvider.DisplayText => XValueProvider.GetName();
     }
 
 }

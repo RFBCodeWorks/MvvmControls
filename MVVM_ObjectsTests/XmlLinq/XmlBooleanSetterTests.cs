@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RFBCodeWorks.MVVMObjects.XmlLinq;
+using RFBCodeWorks.MVVMObjects.XmlLinq.ValueSetters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,38 +16,24 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Tests
         [TestMethod()]
         public void CreateBinarySetterTest()
         {
-            var obj = XmlBooleanSetter.CreateBinarySetter(new XElementWrapper("test"));
+            var obj = XBooleanSetter.CreateBinarySetter(new XElementWrapper("test"));
             Assert.AreSame(obj.Converter, BooleanConverter.StoreAsBinary);
 
             obj.Value = true;
             Assert.AreEqual("1", obj.XValueProvider.Value);
             obj.Value = false;
             Assert.AreEqual("0", obj.XValueProvider.Value);
-
-            obj.Toggle();
-            Assert.IsTrue(obj.Value);
-            Assert.AreEqual("1", obj.XValueProvider.Value);
-            obj.Toggle();
-            Assert.IsFalse(obj.Value);
-            Assert.AreEqual("0", obj.XValueProvider.Value);
         }
 
         [TestMethod()]
         public void CreateStandardStringSetterTest()
         {
-            var obj = XmlBooleanSetter.CreateStandardStringSetter(new XElementWrapper("test"));
+            var obj = XBooleanSetter.CreateStandardStringSetter(new XElementWrapper("test"));
             Assert.AreSame(obj.Converter, BooleanConverter.StoreAsString);
 
             obj.Value = true;
             Assert.AreEqual("true", obj.XValueProvider.Value);
             obj.Value = false;
-            Assert.AreEqual("false", obj.XValueProvider.Value);
-
-            obj.Toggle();
-            Assert.IsTrue(obj.Value);
-            Assert.AreEqual("true", obj.XValueProvider.Value);
-            obj.Toggle();
-            Assert.IsFalse(obj.Value);
             Assert.AreEqual("false", obj.XValueProvider.Value);
         }
 
@@ -89,7 +76,7 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Tests
 
         private void TextIXValueProvider(IXValueObject provider, bool isWrapper)
         {
-            var valueObj = XmlBooleanSetter.CreateBinarySetter(provider);
+            var valueObj = XBooleanSetter.CreateBinarySetter(provider);
             bool isAttributeProvider = provider is IXAttributeProvider;
             void AssertNodeExists(bool shouldExist)
             {

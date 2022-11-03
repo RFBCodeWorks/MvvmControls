@@ -41,5 +41,18 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Tests
             Assert.IsNull(a.XAttribute);
         }
 
+        [TestMethod()]
+        public void ValueSetTest()
+        {
+            var p = new XElementWrapper("parent");
+            var e = new XElementProvider("name", p);
+            var v = new XAttributeRetriever("ValueNode", e);
+            Assert.IsNotNull(p);
+            Assert.IsNull(e.XElement);
+            Assert.IsNull(v.XAttribute);
+            v.Value = "TestValue";
+            Assert.AreEqual("TestValue", v.Value);
+        }
+
     }
 }

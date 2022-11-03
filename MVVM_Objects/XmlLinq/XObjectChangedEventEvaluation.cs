@@ -100,13 +100,13 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
                         return ChangeType.None;
 
                 case XObjectChange.Remove:
-                    if (sender is XText && isParent)
-                        // do nothing, since the Remove event is always followed by either an 'Add' event or a 'Value' event
+                    if (sender is XText)
+                        // do nothing, since an XText Remove event is always followed by either an 'Add' event or a 'Value' event
                         return ChangeType.None;
-                    else if (isParent)
+                    else 
+                        // Cannot discriminate against the 'Removed' event, since the sender will never report the current node as its parent.
                         return ChangeType.DescendantRemoved;
-                    else
-                        return ChangeType.None;
+
                 default:
                     throw new NotImplementedException($"Unknown XObjectChangeEventArg value -- {e.ObjectChange}");
             }

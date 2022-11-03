@@ -52,6 +52,24 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         ///// <returns>a new <see cref="XAttributeWrapper"/></returns>
         ///// <inheritdoc cref="XAttributeWrapper.XAttributeWrapper(XAttribute)"/>
         //public static XAttributeWrapper Wrap(this XAttribute element) => new XAttributeWrapper(element);
+
+        /// <inheritdoc cref="XElementProvider.XElementProvider(string, IXElementProvider)"/>
+        public static XElementProvider CreateChildProvider(this IXElementProvider parent, string elementName)
+        {
+            return new XElementProvider(elementName, parent);
+        }
+
+        /// <inheritdoc cref="XElementProvider.GetXElementProvider(IXElementProvider, string, string, string)"/>
+        public static XElementProvider CreateChildProvider(this IXElementProvider parent, string elementName, string attributeName, string attributeValue)
+        {
+            return XElementProvider.GetXElementProvider(parent, elementName, attributeName, attributeValue);
+        }
+
+        /// <inheritdoc cref="XAttributeRetriever.XAttributeRetriever(string, IXElementProvider)"/>
+        public static XAttributeRetriever CreateAttributeProvider(this IXElementProvider parent, string attributeName)
+        {
+            return new XAttributeRetriever(attributeName, parent);
+        }
     }
 
 }
