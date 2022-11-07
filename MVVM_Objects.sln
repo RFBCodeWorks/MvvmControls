@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32630.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVVM ObjectsTests", "MVVM_ObjectsTests\MVVM ObjectsTests.csproj", "{70F1F67C-BDE4-40DA-8493-273235C6A2F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmControlsTests", "MVVM_ObjectsTests\MvvmControlsTests.csproj", "{70F1F67C-BDE4-40DA-8493-273235C6A2F8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVVM_Objects", "MVVM_Objects\MVVM_Objects.csproj", "{759021FE-B314-45EC-8133-44AE65EB839B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmControls", "MVVM_Objects\MvvmControls.csproj", "{759021FE-B314-45EC-8133-44AE65EB839B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
