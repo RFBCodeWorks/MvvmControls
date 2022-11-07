@@ -38,7 +38,7 @@ namespace RFBCodeWorks.MvvmControls.ControlInterfaces
     /// </summary>
     public interface IRadioButtonDefinition : IToggleButtonDefinition
     {
-        /// <inheritdoc cref="MVVMObjects.RadioButtonDefinition.GroupName"/>
+        /// <inheritdoc cref="MvvmControls.RadioButtonDefinition.GroupName"/>
         public string GroupName { get; set; }
     }
 }

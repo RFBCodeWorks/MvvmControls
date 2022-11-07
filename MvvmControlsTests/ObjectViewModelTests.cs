@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Reflection;
 
-namespace RFBCodeWorks.MVVMObjects.Tests
+namespace RFBCodeWorks.MvvmControls.Tests
 {
     [TestClass()]
     public class ObjectViewModelTests
@@ -136,7 +136,7 @@ namespace RFBCodeWorks.MVVMObjects.Tests
 
     }
 
-    public class TestViewModel : MVVMObjects.ObjectViewModel<ObjectModel>
+    public class TestViewModel : MvvmControls.ObjectViewModel<ObjectModel>
     {
         public static TestViewModel ViewModel { get; } = new TestViewModel();
 

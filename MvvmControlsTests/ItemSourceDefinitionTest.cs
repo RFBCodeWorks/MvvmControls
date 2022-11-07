@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace RFBCodeWorks.MVVMObjects.Tests
+namespace RFBCodeWorks.MvvmControls.Tests
 {
     [TestClass()]
     public class ItemSourceDefinitionTests : BaseControlDefinitionTests

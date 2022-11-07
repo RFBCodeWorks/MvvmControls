@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Linq;
 
-namespace RFBCodeWorks.MVVMObjects.XmlLinq.Tests
+namespace RFBCodeWorks.MvvmControls.XmlLinq.Tests
 {
 
     [TestClass()]

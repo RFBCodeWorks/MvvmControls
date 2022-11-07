@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RFBCodeWorks.MVVMObjects.XmlLinq;
-using RFBCodeWorks.MVVMObjects.XmlLinq.ValueSetters;
+using RFBCodeWorks.MvvmControls.XmlLinq;
+using RFBCodeWorks.MvvmControls.XmlLinq.ValueSetters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace RFBCodeWorks.MVVMObjects.XmlLinq.Tests
+namespace RFBCodeWorks.MvvmControls.XmlLinq.Tests
 {
     [TestClass()]
     public class XmlBooleanSetterTests

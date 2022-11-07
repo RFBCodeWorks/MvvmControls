@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>.NETFramework,Version=v4.7.2</TargetFramework>
-    <RootNamespace>RFBCodeWorks.MVVMObjects.Tests</RootNamespace>
+    <RootNamespace>RFBCodeWorks.MvvmControls.Tests</RootNamespace>
       <LangVersion>9.0</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MVVM_Objects\MvvmControls.csproj" />
+    <ProjectReference Include="..\MvvmControls\MvvmControls.csproj" />
   </ItemGroup>
 
 </Project>

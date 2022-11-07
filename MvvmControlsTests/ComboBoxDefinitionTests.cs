@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Windows.Controls;
 
-namespace RFBCodeWorks.MVVMObjects.Tests
+namespace RFBCodeWorks.MvvmControls.Tests
 {
     [TestClass()]
     public class ComboBoxDefinitionTests : SelectorDefinitionTests

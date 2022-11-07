@@ -1,14 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RFBCodeWorks.MVVMObjects.XmlLinq.Controls;
+using RFBCodeWorks.MvvmControls.XmlLinq.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RFBCodeWorks.MVVMObjects.Tests;
+using RFBCodeWorks.MvvmControls.Tests;
 using System.Windows.Controls;
 
-namespace RFBCodeWorks.MVVMObjects.XmlLinq.Controls.Tests
+namespace RFBCodeWorks.MvvmControls.XmlLinq.Controls.Tests
 {
     [TestClass()]
     public class XRadioButtonElementProviderTests : XRadioButtonElementWrapperTests

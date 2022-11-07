@@ -1,12 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RFBCodeWorks.MVVMObjects.XmlLinq;
+using RFBCodeWorks.MvvmControls.XmlLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.MVVMObjects.XmlLinq.Tests
+namespace RFBCodeWorks.MvvmControls.XmlLinq.Tests
 {
     [TestClass()]
     public class XAttributeRetrieverTests
