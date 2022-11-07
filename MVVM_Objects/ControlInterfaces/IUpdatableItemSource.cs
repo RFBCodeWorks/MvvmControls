@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace RFBCodeWorks.MVVMObjects.ControlInterfaces
 {
     /// <summary>
-    /// Represents an <see cref="BaseControlDefinitions.ItemSourceDefinition{T, E}"/> whose collection can be modified via Add/Remove/Clear commands
+    /// Represents an <see cref="ItemSourceDefinition{T, E}"/> whose collection can be modified via Add/Remove/Clear commands
     /// </summary>
     public interface IUpdatableItemSource<T, E>: INotifyPropertyChanged, IItemSource<T, E>
         where E : IList<T>

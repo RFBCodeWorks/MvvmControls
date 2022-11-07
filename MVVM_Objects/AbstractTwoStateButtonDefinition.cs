@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
-namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
+namespace RFBCodeWorks.MVVMObjects
 {
     /// <summary>
     /// Abstract Base class for buttons that update their tooltips and display text between two states dynamically

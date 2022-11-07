@@ -7,21 +7,21 @@ namespace RFBCodeWorks.MVVMObjects.ControlInterfaces
     /// </summary>
     public interface IToggleButtonDefinition : IDisplayTextProvider, IControlDefinition
     {
-        /// <inheritdoc cref="BaseControlDefinitions.ToggleButtonDefinition.IsChecked"/>
+        /// <inheritdoc cref="ToggleButtonDefinition.IsChecked"/>
         bool? IsChecked { get; set; }
-        /// <inheritdoc cref="BaseControlDefinitions.ToggleButtonDefinition.IsThreeState"/>
+        /// <inheritdoc cref="ToggleButtonDefinition.IsThreeState"/>
         bool IsThreeState { get; set; }
 
-        /// <inheritdoc cref="BaseControlDefinitions.ToggleButtonDefinition.Checked"/>
+        /// <inheritdoc cref="ToggleButtonDefinition.Checked"/>
         event EventHandler Checked;
-        /// <inheritdoc cref="BaseControlDefinitions.ToggleButtonDefinition.Indeterminate"/>
+        /// <inheritdoc cref="ToggleButtonDefinition.Indeterminate"/>
         event EventHandler Indeterminate;
-        /// <inheritdoc cref="BaseControlDefinitions.ToggleButtonDefinition.StateChange"/>
+        /// <inheritdoc cref="ToggleButtonDefinition.StateChange"/>
         event EventHandler StateChange;
-        /// <inheritdoc cref="BaseControlDefinitions.ToggleButtonDefinition.Unchecked"/>
+        /// <inheritdoc cref="ToggleButtonDefinition.Unchecked"/>
         event EventHandler Unchecked;
 
-        /// <inheritdoc cref="BaseControlDefinitions.ToggleButtonDefinition.Toggle"/>
+        /// <inheritdoc cref="ToggleButtonDefinition.Toggle"/>
         void Toggle();
     }
 

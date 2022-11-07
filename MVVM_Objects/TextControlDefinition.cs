@@ -10,7 +10,7 @@ namespace RFBCodeWorks.MVVMObjects
     /// <summary>
     /// A definition for a control that displays text
     /// </summary>
-    public class TextControlDefinition : BaseControlDefinitions.BaseControlDefinition, IDisplayTextProvider
+    public class TextControlDefinition : BaseControlDefinition, IDisplayTextProvider
     {
 
         /// <summary>

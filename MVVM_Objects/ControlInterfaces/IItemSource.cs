@@ -1,4 +1,4 @@
-﻿using RFBCodeWorks.MVVMObjects.BaseControlDefinitions;
+﻿using RFBCodeWorks.MVVMObjects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace RFBCodeWorks.MVVMObjects.ControlInterfaces
     public interface IItemSource<T,E> : IItemSource<T>
         where E : IList<T>
     {
-        /// <inheritdoc cref="BaseControlDefinitions.ItemSourceDefinition{T, E}.ItemSource"/>
+        /// <inheritdoc cref="ItemSourceDefinition{T, E}.ItemSource"/>
         new E ItemSource { get; set; }
     }
 
@@ -25,7 +25,7 @@ namespace RFBCodeWorks.MVVMObjects.ControlInterfaces
     /// </summary>
     public interface IItemSource<T> : IItemSource
     {
-        /// <inheritdoc cref="BaseControlDefinitions.ItemSourceDefinition{T, E}.ItemSource"/>
+        /// <inheritdoc cref="ItemSourceDefinition{T, E}.ItemSource"/>
         new IList<T> ItemSource { get; }
     }
 
@@ -34,13 +34,13 @@ namespace RFBCodeWorks.MVVMObjects.ControlInterfaces
     /// </summary>
     public interface IItemSource : IControlDefinition
     {
-        /// <inheritdoc cref="BaseControlDefinitions.ItemSourceDefinition{T, E}.ItemSourceChanged"/>
+        /// <inheritdoc cref="ItemSourceDefinition{T, E}.ItemSourceChanged"/>
         event EventHandler ItemSourceChanged;
 
-        /// <inheritdoc cref="BaseControlDefinitions.ItemSourceDefinition{T, E}.ItemSource"/>
+        /// <inheritdoc cref="ItemSourceDefinition{T, E}.ItemSource"/>
         IList ItemSource { get; }
 
-        /// <inheritdoc cref="BaseControlDefinitions.ItemSourceDefinition{T, E}.DisplayMemberPath"/>
+        /// <inheritdoc cref="ItemSourceDefinition{T, E}.DisplayMemberPath"/>
         string DisplayMemberPath { get; }
     }
 

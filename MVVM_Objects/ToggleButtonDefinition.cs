@@ -7,12 +7,12 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
-namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
+namespace RFBCodeWorks.MVVMObjects
 {
     /// <summary>
     /// Base Definition for a CheckBox or other Toggle Button
     /// </summary>
-    public class ToggleButtonDefinition : BaseControlDefinitions.BaseControlDefinition, IDisplayTextProvider, IToggleButtonDefinition
+    public class ToggleButtonDefinition : BaseControlDefinition, IDisplayTextProvider, IToggleButtonDefinition
     {
         /// <summary>
         /// Occurs when the value is <see cref="IsChecked"/> is updated to a new value, prior to the corresponding event that is raised based on the actual new value
@@ -34,7 +34,13 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
         /// <inheritdoc cref="ToggleButton.IsChecked"/>
         public virtual bool? IsChecked
         {
-            get { return IsCheckedField; }
+            get
+            {
+                if (IsThreeState)
+                    return IsCheckedField;
+                else
+                    return IsCheckedField ?? false;
+            }
             set
             {
                 if (value is null && !IsThreeState) return; //ignore null values if IsThreeState is set to FALSE
@@ -51,7 +57,7 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
                 }
             }
         }
-        private bool? IsCheckedField = false;
+        private bool? IsCheckedField;
 
         /// <inheritdoc cref="ToggleButton.IsThreeState"/>
         public virtual bool IsThreeState

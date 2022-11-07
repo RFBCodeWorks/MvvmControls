@@ -9,10 +9,10 @@ using System.Windows;
 namespace RFBCodeWorks.MVVMObjects.ControlInterfaces
 {
     /// <summary>
-    /// Represents an <see cref="BaseControlDefinitions.ItemSourceDefinition{T, E}"/> that is an array of type T, 
+    /// Represents an <see cref="ItemSourceDefinition{T, E}"/> that is an array of type T, 
     /// whose collection can be refreshed on demand via the <see cref="RefreshFunc"/>
     /// </summary>
-    /// <inheritdoc cref="BaseControlDefinitions.ItemSourceDefinition{T, E}"/>
+    /// <inheritdoc cref="ItemSourceDefinition{T, E}"/>
     public interface IRefreshableItemSource<T> : IItemSource<T, T[]>
     { 
 

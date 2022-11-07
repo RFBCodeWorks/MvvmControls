@@ -11,7 +11,7 @@ using System.Windows;
 using System.Collections;
 using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
-namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
+namespace RFBCodeWorks.MVVMObjects
 {
     /// <summary>
     /// Represents an ItemSource binding
@@ -127,4 +127,6 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
 
         #endregion
     }
+
+
 }

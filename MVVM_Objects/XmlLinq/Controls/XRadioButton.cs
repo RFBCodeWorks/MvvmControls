@@ -14,6 +14,7 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Controls
     {
         private XRadioButton(XBooleanSetter setter) : base()
         {
+            base.StateChange += XRadioButton_StateChange;
             NodeValueSetter = setter;
             NodeValueSetter.IsThreeState = false;
             NodeValueSetter.XValueProvider.ValueChanged += XValueProvider_ValueChanged;
@@ -37,21 +38,15 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Controls
         public XBooleanSetter NodeValueSetter { get; }
 
         /// <inheritdoc/>
-        public override bool? IsChecked
-        {
-            get => base.IsChecked;
-            set
-            {
-                base.IsChecked = value;
-                NodeValueSetter.Value = base.IsChecked;
-            }
-        }
-
-        /// <inheritdoc/>
         public override bool IsEnabled
         {
             get => base.IsEnabled;
             set => base.IsEnabled = value;
+        }
+
+        private void XRadioButton_StateChange(object sender, EventArgs e)
+        {
+            NodeValueSetter.Value = IsChecked;
         }
 
         private void XValueProvider_ValueChanged(object sender, EventArgs e)

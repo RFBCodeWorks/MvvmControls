@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
-namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
+namespace RFBCodeWorks.MVVMObjects
 {
     /// <summary>
     /// Contains the basic bindings all controls have
@@ -47,7 +47,7 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
             get { return IsEnabledField; }
             set { SetProperty(ref IsEnabledField, value, nameof(IsEnabled)); }
         }
-        private bool IsEnabledField;
+        private bool IsEnabledField = true;
 
 
         /// <inheritdoc/>
@@ -70,25 +70,20 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
             get { return Visibility == Visibility.Visible; }
             set
             {
-                if (IsVisibleField != value)
+                if (value != IsVisible)
                 {
-                    bool oldValue = IsVisibleField;
-                    IsVisibleField = value;
-                    if (!ChangingVisibility) OnOnVisibilityChanged(oldValue, value); // Raise event if not also updating Visibility property
+                    OnPropertyChanging(nameof(IsVisible));
+                    if (value)
+                    {
+                        Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        Visibility = HiddenMode;
+                    }
                 }
-                if (ChangingVisibility) return;
-                ChangingVisibility = true;
-                Visibility = value ? Visibility.Visible : HiddenMode;
-                ChangingVisibility = false;
-                OnOnVisibilityChanged(!IsVisible, IsVisible);
             }
         }
-        private bool IsVisibleField = true;
-        
-        /// <summary>
-        /// Flag turned on within the Set methods for IsVisible and Visibility to avoid loops.
-        /// </summary>
-        protected bool ChangingVisibility;
 
         /// <summary>
         /// Get/Set the visibility of the control. This field is 
@@ -98,11 +93,15 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
             get { return VisibilityField; }
             set
             {
-                SetProperty(ref VisibilityField, value, nameof(Visibility));
-                if (ChangingVisibility) return;
-                ChangingVisibility = true;
-                IsVisible = false;
-                ChangingVisibility = false;
+                var oldValue = VisibilityField;
+                bool changed = SetProperty(ref VisibilityField, value, nameof(Visibility));
+                if (changed)
+                {
+                    if (oldValue == Visibility.Visible)
+                        OnOnVisibilityChanged(true, false);
+                    else if (value == Visibility.Visible)
+                        OnOnVisibilityChanged(false, true);
+                }
             }
         }
         private Visibility VisibilityField = Visibility.Visible;

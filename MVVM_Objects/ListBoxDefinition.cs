@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using RFBCodeWorks.MVVMObjects.BaseControlDefinitions;
+using RFBCodeWorks.MVVMObjects;
 using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
 namespace RFBCodeWorks.MVVMObjects.ControlInterfaces

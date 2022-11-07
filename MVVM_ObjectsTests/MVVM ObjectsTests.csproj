@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>.NETFramework,Version=v4.7.2</TargetFramework>
-    <RootNamespace>RFBCodeWorks.MVVM_ObjectsTests</RootNamespace>
+    <RootNamespace>RFBCodeWorks.MVVMObjects.Tests</RootNamespace>
       <LangVersion>9.0</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>

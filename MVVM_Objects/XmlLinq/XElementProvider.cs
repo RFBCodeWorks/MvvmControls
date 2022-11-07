@@ -160,7 +160,12 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
                 if (value is null)
                 {
                     //Remove text nodes
-                    XElement.Nodes().Where(n => n is XText).Remove();
+                    var nodes = XElement.Nodes().OfType<XText>();
+                    if (nodes.Any())
+                    {
+                        nodes.Remove();
+                        OnValueChange();
+                    }                    
                 }
                 else
                 {

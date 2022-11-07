@@ -13,6 +13,22 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Tests
     [TestClass()]
     public class XmlBooleanSetterTests
     {
+        private void TestNull(XBooleanSetter obj)
+        {
+            obj.IsThreeState = true;
+            obj.Value = true;
+            Assert.IsTrue(obj.Value);
+            Assert.IsTrue(obj.XValueProvider.IsNodeAvailable);
+
+            obj.Value = false;
+            Assert.IsFalse(obj.Value);
+            Assert.IsTrue(obj.XValueProvider.IsNodeAvailable);
+
+            obj.Value = null;
+            Assert.IsNull(obj.Value);
+            Assert.AreNotEqual(obj.XValueProvider is XAttributeRetriever, obj.XValueProvider.IsNodeAvailable);
+        }
+
         [TestMethod()]
         public void CreateBinarySetterTest()
         {
@@ -23,6 +39,7 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Tests
             Assert.AreEqual("1", obj.XValueProvider.Value);
             obj.Value = false;
             Assert.AreEqual("0", obj.XValueProvider.Value);
+            TestNull(obj);
         }
 
         [TestMethod()]
@@ -35,6 +52,7 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Tests
             Assert.AreEqual("true", obj.XValueProvider.Value);
             obj.Value = false;
             Assert.AreEqual("false", obj.XValueProvider.Value);
+            TestNull(obj);
         }
 
 
@@ -125,6 +143,7 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Tests
                 provider.Remove();
                 AssertNodeExists(false);
             }
+            TestNull(valueObj);
         }
     }
 }

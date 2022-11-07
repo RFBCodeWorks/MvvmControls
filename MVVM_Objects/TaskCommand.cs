@@ -1,4 +1,4 @@
-﻿using RFBCodeWorks.MVVMObjects.BaseControlDefinitions;
+﻿using RFBCodeWorks.MVVMObjects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

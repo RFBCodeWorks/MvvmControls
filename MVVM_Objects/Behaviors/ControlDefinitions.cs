@@ -71,6 +71,7 @@ namespace RFBCodeWorks.MVVMObjects.Behaviors
             //Visibility
             SetBinding(obj, UIElement.VisibilityProperty, nameof(IControlDefinition.Visibility), def, BindingMode.OneWay);
             SetBinding(obj, FrameworkElement.ToolTipProperty, nameof(IControlDefinition.ToolTip), def, BindingMode.OneWay);
+            SetBinding(obj, FrameworkElement.IsEnabledProperty, nameof(IControlDefinition.IsEnabled), def, BindingMode.OneWay);
         }
 
         /// <summary>
@@ -80,6 +81,7 @@ namespace RFBCodeWorks.MVVMObjects.Behaviors
         {
             UnbindIfBound(obj, UIElement.VisibilityProperty, def);
             UnbindIfBound(obj, FrameworkElement.ToolTipProperty, def);
+            UnbindIfBound(obj, FrameworkElement.IsEnabledProperty, def);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace RFBCodeWorks.MVVMObjects
     /// <summary>
     /// Provides a definition for Radio Button controls
     /// </summary>
-    public class RadioButtonDefinition : BaseControlDefinitions.ToggleButtonDefinition, ControlInterfaces.IRadioButtonDefinition
+    public class RadioButtonDefinition : ToggleButtonDefinition, ControlInterfaces.IRadioButtonDefinition
     {
         /// <inheritdoc cref="System.Windows.Controls.RadioButton.GroupName"/>
         public string GroupName

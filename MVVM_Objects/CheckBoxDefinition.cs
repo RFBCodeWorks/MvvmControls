@@ -9,7 +9,7 @@ namespace RFBCodeWorks.MVVMObjects
     /// <summary>
     /// Provides a definition for Checkbox controls
     /// </summary>
-    public class CheckBoxDefinition : BaseControlDefinitions.ToggleButtonDefinition, ControlInterfaces.ICheckBoxDefinition
+    public class CheckBoxDefinition : ToggleButtonDefinition, ControlInterfaces.ICheckBoxDefinition
     {
     }
 }

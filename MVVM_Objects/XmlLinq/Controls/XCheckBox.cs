@@ -15,6 +15,7 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Controls
         private XCheckBox(XBooleanSetter setter) : base()
         {
             NodeValueSetter = setter;
+            base.StateChange += XCheckBox_StateChange;
             NodeValueSetter.XValueProvider.ValueChanged += XValueProvider_ValueChanged;
             NodeValueSetter.XValueProvider.Removed += CheckNodeAvailable;
             NodeValueSetter.XValueProvider.Added += CheckNodeAvailable;
@@ -36,17 +37,6 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Controls
         public XBooleanSetter NodeValueSetter { get; }
 
         /// <inheritdoc/>
-        public override bool? IsChecked
-        {
-            get => base.IsChecked;
-            set
-            {
-                base.IsChecked = value;
-                NodeValueSetter.Value = base.IsChecked;
-            }
-        }
-
-        /// <inheritdoc/>
         public override bool IsThreeState { 
             get => base.IsThreeState;
             set
@@ -61,6 +51,11 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Controls
         { 
             get => base.IsEnabled; 
             set => base.IsEnabled = value; 
+        }
+
+        private void XCheckBox_StateChange(object sender, EventArgs e)
+        {
+            NodeValueSetter.Value = base.IsChecked;
         }
 
         private void XValueProvider_ValueChanged(object sender, EventArgs e)

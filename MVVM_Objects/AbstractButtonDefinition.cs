@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
-namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
+namespace RFBCodeWorks.MVVMObjects
 {
     /// <summary>
     /// Abstract base object that inherits from the following:

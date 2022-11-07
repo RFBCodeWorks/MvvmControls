@@ -9,7 +9,7 @@ using System.Windows.Threading;
 namespace RFBCodeWorks.MVVMObjects
 {
     /// <summary>
-    ///   Contains helper methods for UI, so far just one for showing a waitcursor
+    /// Contains helper methods for UI, so far just one for showing a waitcursor
     /// </summary>
     public static class UIServices
     {

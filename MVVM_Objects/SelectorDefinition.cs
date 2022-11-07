@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
-namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
+namespace RFBCodeWorks.MVVMObjects
 {
     /// <typeparam name="V">The SelectedValue Type obtained by the SelectedValuePath</typeparam>
     /// <inheritdoc cref="ItemSourceDefinition{T, E}"/>
@@ -25,7 +25,6 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
         {
             SelectedItemChanged?.Invoke(this, e);
             ISelectorEvent?.Invoke(this, e);
-            OnPropertyChanged(e);
         }
 
         #endregion
@@ -89,7 +88,7 @@ namespace RFBCodeWorks.MVVMObjects.BaseControlDefinitions
             set
             {
                 if (UpdatingSelectedItem)
-                    SelectedIndexField = value;
+                    SetProperty(ref SelectedIndexField, value, nameof(SelectedIndex));
                 else
                 {
                     int newValue = ItemSource != null ? value : -1;

@@ -17,8 +17,11 @@ namespace RFBCodeWorks.MVVMObjects.ControlInterfaces
         /// </summary>
         System.Windows.Visibility Visibility { get; set; }
 
-        /// <inheritdoc cref="BaseControlDefinitions.BaseControlDefinition.IsVisible" path="*"/>
+        /// <inheritdoc cref="BaseControlDefinition.IsVisible" path="*"/>
         bool IsVisible { get; set; }
+
+        /// <inheritdoc cref="BaseControlDefinition.IsEnabled"/>
+        bool IsEnabled { get; }
 
     }
 

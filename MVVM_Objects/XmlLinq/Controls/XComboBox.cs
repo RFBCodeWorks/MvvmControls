@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace RFBCodeWorks.MVVMObjects.XmlLinq.Controls
 {
+
     /// <summary>
     /// ComboBox that stores a selected string value into an <see cref="IXValueObject"/>
     /// </summary>
@@ -17,9 +18,27 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Controls
     }
 
     /// <summary>
+    /// ComboBox that stores a selected value into an <see cref="IXValueObject"/>
+    /// </summary>
+    public class XComboBox<T> : XComboBox<T, object>, IComboBoxDefinition<T>
+    {
+        /// <inheritdoc/>
+        public XComboBox(IXValueObject xValueProvider) : base(xValueProvider) { }
+    }
+
+    /// <summary>
+    /// ComboBox that stores a selected value into an <see cref="IXValueObject"/>
+    /// </summary>
+    public class XComboBox<T,V> : XComboBox<T, IList<T>, V>, IComboBoxDefinition<T>
+    {
+        /// <inheritdoc/>
+        public XComboBox(IXValueObject xValueProvider) : base(xValueProvider) { }
+    }
+
+    /// <summary>
     /// ComboBox that provides a list of some type, then stores the converted value of the selected item into an <see cref="IXValueObject"/>
     /// </summary>
-    public class XComboBox<T> : ComboBoxDefinition<T>, IXValueControl
+    public class XComboBox<T, E, V> : ComboBoxDefinition<T,E, V>, IXValueControl where E: IList<T>
     {
         /// <summary>
         /// Create a new ComboBox that will store the SelectedItem into the <paramref name="xValueProvider"/>

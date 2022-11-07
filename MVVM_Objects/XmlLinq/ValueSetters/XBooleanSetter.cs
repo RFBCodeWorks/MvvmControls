@@ -80,12 +80,10 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.ValueSetters
         {
             get
             {
-                if (XValueProvider.IsNodeAvailable)
+                if (XValueProvider.IsNodeAvailable && !String.IsNullOrWhiteSpace(XValueProvider.Value))
                     return Converter.Convert(XValueProvider.Value);
-                else if (IsThreeState)
-                    return null;
                 else
-                    return false;
+                    return IsThreeState ? null : false;
             }
             set
             {

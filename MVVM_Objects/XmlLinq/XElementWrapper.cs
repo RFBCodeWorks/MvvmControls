@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Linq;
 
 namespace RFBCodeWorks.MVVMObjects.XmlLinq
 {
@@ -54,6 +55,27 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq
         protected virtual void OnPropertyChanged(string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new(propertyName));
+        }
+
+        /// <inheritdoc cref="XElement.Value"/>
+        new public string Value { 
+            get => base.Value; 
+            set
+            {
+                if (value is null)
+                {
+                    var nodes = base.Nodes().OfType<XText>();
+                    if (nodes.Any())
+                    {
+                        nodes.Remove();
+                        ValueChanged?.Invoke(this, new());
+                    }
+                }
+                else
+                {
+                    base.Value = value;
+                }
+            }
         }
 
         string IXElementProvider.Name => this.Name.LocalName;

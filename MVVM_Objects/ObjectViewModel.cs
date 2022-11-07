@@ -10,7 +10,7 @@ using System.Windows.Input;
 //using Microsoft.Toolkit.Mvvm;
 //using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using RFBCodeWorks.MVVMObjects.BaseControlDefinitions;
+using RFBCodeWorks.MVVMObjects;
 using RFBCodeWorks.MVVMObjects.ControlInterfaces;
 
 namespace RFBCodeWorks.MVVMObjects

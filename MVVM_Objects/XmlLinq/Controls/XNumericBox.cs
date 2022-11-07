@@ -11,7 +11,7 @@ namespace RFBCodeWorks.MVVMObjects.XmlLinq.Controls
     /// Represents a control that has an integer value within a specified range
     /// </summary>
     public class XNumericBox : 
-        BaseControlDefinitions.BaseControlDefinition, IXValueControl,
+        BaseControlDefinition, IXValueControl,
         ControlInterfaces.IRangeControlDefinition, 
         ControlInterfaces.IDisplayTextProvider,
         ControlInterfaces.IToolTipProvider

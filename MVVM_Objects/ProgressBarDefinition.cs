@@ -27,7 +27,7 @@ namespace RFBCodeWorks.MVVMObjects
     /// <summary>
     /// Definition for a Progress Bar
     /// </summary>
-    public class ProgressBarDefinition : BaseControlDefinitions.BaseControlDefinition, IProgressBarDefinition
+    public class ProgressBarDefinition : BaseControlDefinition, IProgressBarDefinition
     {
         /// <inheritdoc cref="System.Windows.Controls.Primitives.RangeBase.ValueChanged"/>
         event EventHandler ValueChanged;
