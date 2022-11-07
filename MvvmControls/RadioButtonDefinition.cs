@@ -1,6 +1,16 @@
 ﻿namespace RFBCodeWorks.MvvmControls
 {
     /// <summary>
+    /// Interface for Radio Button Definitions
+    /// </summary>
+    public interface IRadioButtonDefinition : IToggleButtonDefinition
+    {
+        /// <inheritdoc cref="MvvmControls.RadioButtonDefinition.GroupName"/>
+        public string GroupName { get; set; }
+    }
+
+
+    /// <summary>
     /// Provides a definition for Radio Button controls
     /// </summary>
     public class RadioButtonDefinition : ToggleButtonDefinition, IRadioButtonDefinition

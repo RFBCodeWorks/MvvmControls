@@ -88,9 +88,10 @@ namespace RFBCodeWorks.MvvmControls
         {
             window.Loaded -= OnWindowLoaded;
             window.Closing -= OnWindowClosing;
+            window.Closed -= OnWindowClosed;
             window.ContentRendered -= OnWindowContentRendered;
-            window.Activated += OnWindowActivated;
-            window.Deactivated += OnWindowDeactivated;
+            window.Activated -= OnWindowActivated;
+            window.Deactivated -= OnWindowDeactivated;
         }
 
         /// <summary>

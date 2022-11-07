@@ -25,20 +25,4 @@ namespace RFBCodeWorks.MvvmControls
         void Toggle();
     }
 
-    /// <summary>
-    /// Interface for CheckBox Definitions
-    /// </summary>
-    public interface ICheckBoxDefinition : IToggleButtonDefinition
-    {
-
-    }
-
-    /// <summary>
-    /// Interface for Radio Button Definitions
-    /// </summary>
-    public interface IRadioButtonDefinition : IToggleButtonDefinition
-    {
-        /// <inheritdoc cref="MvvmControls.RadioButtonDefinition.GroupName"/>
-        public string GroupName { get; set; }
-    }
 }

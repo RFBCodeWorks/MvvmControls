@@ -15,7 +15,7 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         /// <param name="obj">the bound control</param>
         /// <param name="prop">the bound dependencyproperty</param>
         /// <param name="source">The control definition</param>
-        private static void UnbindIfBound<T>(DependencyObject obj, DependencyProperty prop, T source)
+        internal static void UnbindIfBound<T>(DependencyObject obj, DependencyProperty prop, T source)
             where T : class, IControlDefinition
         {
             var binding = BindingOperations.GetBindingExpression(obj, prop)?.ParentBinding;
@@ -34,7 +34,7 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         /// <param name="mode">The binding mode - if not specified uses the default for this property</param>
         /// <returns>The binding that was created</returns>
         /// <typeparam name="T">The IControlDefinition interface type</typeparam>
-        private static void SetBinding<T>(DependencyObject obj, DependencyProperty prop, string propertyName, T source, BindingMode? mode = null)
+        internal static void SetBinding<T>(DependencyObject obj, DependencyProperty prop, string propertyName, T source, BindingMode? mode = null)
         where T : class, IControlDefinition
         {
             if (mode.HasValue)
