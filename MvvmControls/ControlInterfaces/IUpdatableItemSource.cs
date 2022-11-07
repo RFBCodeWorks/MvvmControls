@@ -54,18 +54,5 @@ namespace RFBCodeWorks.MvvmControls.ControlInterfaces
         /// </summary>
         public void RemoveAll(Predicate<T> match);
 
-        
-    }
-
-    /// <summary>
-    /// The collection of items as an Observable List
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface IConcurrentItemSource<T> : IUpdatableItemSource<T, ConcurrentObservableCollection<T>>
-    {
-        /// <summary>
-        /// The collection of items within as an ObservableList
-        /// </summary>
-        new public ConcurrentObservableCollection<T> ItemSource { get; }
     }
 }
