@@ -44,3 +44,15 @@ And the corresponding xaml:
 
 	<ComboBox Behavaior:ControlDefinitions.ComboBoxDefinition="{Binding ComboBoxDefinition}" />
 ```
+
+### Development Targets
+
+This library utilizes C#9.0, so all consumers must use atleast C#9.0.
+- If a consumer is not using C#9, you can refer to the following guide: https://blog.ndepend.com/using-c9-record-and-init-property-in-your-net-framework-4-x-net-standard-and-net-core-projects/
+ - The file 'CSharp9_MissingComponents.cs' is already included within this library, so the file can just be included in your project to provide the necesary components, then include the following in your project file: `<LangVersion>9.0</LangVersion>`
+
+Build Targets:
+- .NetFramework `net472`, `net480`
+- `.NetCoreApp3.1`
+- `.Net5.0-windows`
+
