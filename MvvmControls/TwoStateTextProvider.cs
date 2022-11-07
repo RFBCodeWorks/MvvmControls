@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RFBCodeWorks.MvvmControls.ControlInterfaces;
-
-namespace RFBCodeWorks.MvvmControls
+﻿namespace RFBCodeWorks.MvvmControls
 {
     /// <summary>
     /// Object designed to alternate between two displayed values based on a boolean property

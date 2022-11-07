@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RFBCodeWorks.MvvmControls.ControlInterfaces
+namespace RFBCodeWorks.MvvmControls
 {
     /// <summary>
     /// Interface for ToggleButton objects`

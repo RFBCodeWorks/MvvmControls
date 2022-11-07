@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RFBCodeWorks.MvvmControls.ControlInterfaces;
-
-namespace RFBCodeWorks.MvvmControls
+﻿namespace RFBCodeWorks.MvvmControls
 {
     /// <summary>
     /// Abstract Base class for buttons that update their tooltips and display text between two states dynamically

@@ -1,15 +1,10 @@
-﻿using RFBCodeWorks.MvvmControls;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RFBCodeWorks.MvvmControls.ControlInterfaces
+namespace RFBCodeWorks.MvvmControls
 {
-    
+
     /// <summary>
     /// Represents an ItemSource collection
     /// </summary>

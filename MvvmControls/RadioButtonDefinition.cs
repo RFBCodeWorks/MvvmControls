@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RFBCodeWorks.MvvmControls
+﻿namespace RFBCodeWorks.MvvmControls
 {
     /// <summary>
     /// Provides a definition for Radio Button controls
     /// </summary>
-    public class RadioButtonDefinition : ToggleButtonDefinition, ControlInterfaces.IRadioButtonDefinition
+    public class RadioButtonDefinition : ToggleButtonDefinition, IRadioButtonDefinition
     {
         /// <inheritdoc cref="System.Windows.Controls.RadioButton.GroupName"/>
         public string GroupName

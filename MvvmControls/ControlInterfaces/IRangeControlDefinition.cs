@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 
-namespace RFBCodeWorks.MvvmControls.ControlInterfaces
+namespace RFBCodeWorks.MvvmControls
 {
     /// <summary>
     /// Interface for the definition of a control that interacts with a <see cref="System.Windows.Controls.Primitives.RangeBase"/>

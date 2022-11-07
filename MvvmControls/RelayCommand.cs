@@ -1,12 +1,7 @@
 ﻿using Microsoft.Toolkit.Mvvm.Input;
-using RFBCodeWorks.MvvmControls;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
 using System.Windows.Input;
 using RelayCmd = Microsoft.Toolkit.Mvvm.Input.RelayCommand;
-using RFBCodeWorks.MvvmControls.ControlInterfaces;
 
 namespace RFBCodeWorks.MvvmControls
 {

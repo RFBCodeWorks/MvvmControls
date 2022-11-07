@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using RFBCodeWorks.MvvmControls;
-using RFBCodeWorks.MvvmControls.ControlInterfaces;
 
-namespace RFBCodeWorks.MvvmControls.ControlInterfaces
+namespace RFBCodeWorks.MvvmControls
 {
     /// <summary>
     /// Interface all ComboBoxDefinitions should implement to be assignable via AttachedProperty

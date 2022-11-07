@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 
 namespace RFBCodeWorks.MvvmControls
 {
     /// <summary>
     /// Interface for an IProgressBar definition
     /// </summary>
-    public interface IProgressBarDefinition : ControlInterfaces.IControlDefinition
+    public interface IProgressBarDefinition : IControlDefinition
     {
 
         /// <inheritdoc cref="ProgressBarDefinition.IsIndeterminate"/>

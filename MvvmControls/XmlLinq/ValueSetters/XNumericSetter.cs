@@ -1,11 +1,4 @@
-﻿using RFBCodeWorks.MvvmControls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Xml.Linq;
+﻿using System;
 
 namespace RFBCodeWorks.MvvmControls.XmlLinq.ValueSetters
 {
@@ -38,7 +31,7 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq.ValueSetters
     }
 
 
-    /// <remarks><br/> - Explicitly implements <see cref="ControlInterfaces.IRangeControlDefinition"/> </remarks>
+    /// <remarks><br/> - Explicitly implements <see cref="IRangeControlDefinition"/> </remarks>
     public abstract class XNumericSetterBase<T> : ValueSetterBase<T>
     where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
     {

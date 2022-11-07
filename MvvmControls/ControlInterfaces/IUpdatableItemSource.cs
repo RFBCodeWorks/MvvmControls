@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RFBCodeWorks.MvvmControls.ControlInterfaces
+namespace RFBCodeWorks.MvvmControls
 {
     /// <summary>
     /// Represents an <see cref="ItemSourceDefinition{T, E}"/> whose collection can be modified via Add/Remove/Clear commands

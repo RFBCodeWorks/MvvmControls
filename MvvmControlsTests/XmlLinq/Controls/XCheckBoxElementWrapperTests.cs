@@ -1,11 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RFBCodeWorks.MvvmControls.Tests;
-using RFBCodeWorks.MvvmControls.XmlLinq.Controls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace RFBCodeWorks.MvvmControls.XmlLinq.Controls.Tests

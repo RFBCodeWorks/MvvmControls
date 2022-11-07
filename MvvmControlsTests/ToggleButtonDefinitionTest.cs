@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace RFBCodeWorks.MvvmControls.Tests

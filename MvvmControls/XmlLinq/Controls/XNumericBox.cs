@@ -1,9 +1,4 @@
-﻿using RFBCodeWorks.MvvmControls.ControlInterfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace RFBCodeWorks.MvvmControls.XmlLinq.Controls
 {
@@ -12,9 +7,9 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq.Controls
     /// </summary>
     public class XNumericBox : 
         BaseControlDefinition, IXValueControl,
-        ControlInterfaces.IRangeControlDefinition, 
-        ControlInterfaces.IDisplayTextProvider,
-        ControlInterfaces.IToolTipProvider
+        IRangeControlDefinition, 
+        IDisplayTextProvider,
+        IToolTipProvider
     {
         /// <summary>
         /// Create a control that interacts with an XML node, settings it to an integer within a  specified range
