@@ -15,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ExtensionMethods\System.Extensions\System.Extensions.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="SpecializedHelpers\" />
   </ItemGroup>
 

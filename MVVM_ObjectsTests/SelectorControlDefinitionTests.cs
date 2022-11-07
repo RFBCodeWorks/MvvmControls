@@ -61,7 +61,7 @@ namespace RFBCodeWorks.MVVMObjects.Tests
 
             ControlDefinition.SelectedItem = 4;
             Assert.AreEqual(1, selectedItemChanged, "SelectedItemChanged event raised incorrect number of times");
-            Assert.AreEqual(ControlDefinition.ItemSource.IndexOf(ControlDefinition.SelectedItem), ControlDefinition.SelectedIndex, "\nSelectedIndex was not properly updated after setting the SelectedItem");
+            Assert.AreEqual(((IList<SelectorTestItem>)ControlDefinition.ItemSource).IndexOf(ControlDefinition.SelectedItem), ControlDefinition.SelectedIndex, "\nSelectedIndex was not properly updated after setting the SelectedItem");
             Assert.IsTrue(propNameChanging.Contains(nameof(ControlDefinition.SelectedIndex)), "\nPropertyChanging does not contain SelectedIndex");
             Assert.IsTrue(propNameChanged.Contains(nameof(ControlDefinition.SelectedIndex)), "\nPropertyChanged does not contain SelectedIndex");
             Assert.IsTrue(propNameChanging.Contains(nameof(ControlDefinition.SelectedItem)), "\nPropertyChanging does not contain SelectedItem");
