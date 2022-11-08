@@ -7,17 +7,30 @@
         mc:Ignorable="d"
         
         x:Name="ThisWindow"
-        xmlns:behavaior="clr-namespace:RFBCodeWorks.MvvmControls.Behaviors;assembly=MvvmControls"
-        behavaior:WindowBehaviors.IWindowClosingHandler="{Binding ElementName=ThisWindow, Path=DataContext}"
+        xmlns:Behaviors="clr-namespace:RFBCodeWorks.MvvmControls.Behaviors;assembly=MvvmControls"
+        Behaviors:WindowBehaviors.IWindowClosingHandler="{Binding ElementName=ThisWindow, Path=DataContext}"
+        Behaviors:WindowBehaviors.IWindowLoadingHandler="{Binding ElementName=ThisWindow, Path=DataContext}"
         d:DataContext="{d:DesignInstance Type=local:MainViewModel, IsDesignTimeCreatable=True}"
         Title="MainWindow" Height="450" Width="800">
     <StackPanel>
-        <GroupBox Header="Enable / Disable Controls ( via Checkbox / RadioButton Definitions )">
+        <StackPanel.Resources>
+            <!-- Apply the FocusHandler to all GroupBoxes on the page -->
+            <Style TargetType="GroupBox">
+                <Setter Property="Behaviors:WindowBehaviors.IWindowFocusHandler" Value="{Binding ElementName=ThisWindow, Path=DataContext}"/>
+            </Style>
+        </StackPanel.Resources>
+        <GroupBox Header="Various Interface Tests">
             <StackPanel>
-                <CheckBox behavaior:ControlDefinitions.CheckBoxDefinition="{Binding EnableDisableListBox}"/>
+                <CheckBox IsChecked="{Binding WasContentRendered}" Content="IWindowLoadingHandler.OnContentRendered" IsEnabled="False"/>
+                <CheckBox IsChecked="{Binding WasLoaded}" Content="IWindowLoadingHandler.OnWindowLoaded" IsEnabled="False"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Enable / Disable Controls ( via Checkbox / RadioButton Definitions )" >
+            <StackPanel>
+                <CheckBox Behaviors:ControlDefinitions.CheckBoxDefinition="{Binding EnableDisableListBox}"/>
                 <Separator Visibility="Hidden" Height="20"/>
-                <RadioButton behavaior:ControlDefinitions.RadioButtonDefinition="{Binding EnableComboBox}"/>
-                <RadioButton behavaior:ControlDefinitions.RadioButtonDefinition="{Binding DisableComboBox}"/>
+                <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding EnableComboBox}"/>
+                <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding DisableComboBox}"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="ListBox Definition" IsEnabled="{Binding EnableDisableListBox.IsChecked}">
@@ -31,7 +44,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <ListBox behavaior:ControlDefinitions.ListBoxDefinition="{Binding ListBoxDefinition}" Grid.ColumnSpan="2"/>
+                <ListBox Behaviors:ControlDefinitions.ListBoxDefinition="{Binding ListBoxDefinition}" Grid.ColumnSpan="2"/>
                 <TextBlock Grid.Row="1" Text="Selected Index: " />
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ListBoxDefinition.SelectedIndex}" />
                 <TextBlock Grid.Row="2" Text="Selected Item: " />
@@ -49,7 +62,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <ComboBox behavaior:ControlDefinitions.ComboBoxDefinition="{Binding ComboBoxDefinition}" Grid.ColumnSpan="2"/>
+                <ComboBox Behaviors:ControlDefinitions.ComboBoxDefinition="{Binding ComboBoxDefinition}" Grid.ColumnSpan="2"/>
                 <TextBlock Grid.Row="1" Text="Selected Index: " />
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ComboBoxDefinition.SelectedIndex}" />
                 <TextBlock Grid.Row="2" Text="Selected Item: " />

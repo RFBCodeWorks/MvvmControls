@@ -19,7 +19,7 @@ namespace RFBCodeWorks.MvvmControls.Behaviors.Tests
         public void IWindowActivatedHandlerTest(bool subscribe)
         {
             Window w = new();
-            var handler = new WindowEventHandlersTests.WindowHandlerObj();
+            var handler = new WindowBehaviorTests2.WindowHandlerObj();
             WindowBehaviors.SetIWindowActivatedHandler(w, handler);
             Assert.AreSame(handler, WindowBehaviors.GetIWindowActivatedHandler(w));
 
@@ -43,7 +43,7 @@ namespace RFBCodeWorks.MvvmControls.Behaviors.Tests
         public void IWindowClosingHandlerTest(bool subscribe)
         {
             Window w = new();
-            var handler = new WindowEventHandlersTests.WindowHandlerObj();
+            var handler = new WindowBehaviorTests2.WindowHandlerObj();
             WindowBehaviors.SetIWindowClosingHandler(w, handler);
             Assert.AreSame(handler, WindowBehaviors.GetIWindowClosingHandler(w));
             if (!subscribe)
@@ -71,7 +71,7 @@ namespace RFBCodeWorks.MvvmControls.Behaviors.Tests
         public void IWindowLoadingHandlerTest(bool subscribe)
         {
             Window w = new();
-            var handler = new WindowEventHandlersTests.WindowHandlerObj();
+            var handler = new WindowBehaviorTests2.WindowHandlerObj();
             WindowBehaviors.SetIWindowLoadingHandler(w, handler);
             Assert.AreSame(handler, WindowBehaviors.GetIWindowLoadingHandler(w));
 

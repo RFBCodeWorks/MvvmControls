@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RFBCodeWorks.MvvmControls;
+using RFBCodeWorks.MvvmControls.Behaviors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace RFBCodeWorks.MvvmControls.Tests
+namespace RFBCodeWorks.MvvmControls.Behaviors.Tests
 {
     [TestClass()]
-    public class WindowEventHandlersTests
+    public class WindowBehaviorTests2
     {
-        public WindowEventHandlersTests()
+        public WindowBehaviorTests2()
         {
             handler = new();
         }
@@ -54,7 +55,10 @@ namespace RFBCodeWorks.MvvmControls.Tests
             Console.Write("\nFocusing Other Window -- ");
             Window2.Activate();
             Console.Write("\nActivating Window -- ");
+            TestWindow.Show();
             TestWindow.Activate();
+            ((Button)((StackPanel)((Grid)TestWindow.Content).Children[0]).Children[1]).Focus(); // simulate the button getting focus
+            Window2.Focus();
             Window2.Close();
             if (isSubscribed)
             {
@@ -76,16 +80,26 @@ namespace RFBCodeWorks.MvvmControls.Tests
             Assert.AreEqual(isSubscribed, handler.WasActivated, "Window Activated Test Failed");
             Assert.AreEqual(isSubscribed, handler.WasClosing, "Window Closing Test Failed");
             Assert.AreEqual(isSubscribed, handler.WasClosed, "Window Closed Test Failed");
-            //Assert.AreEqual(isSubscribed, handler.WasContentRendered, "Window ContentRendered Test Failed");
+            //Assert.AreEqual(isSubscribed, handler.WasContentRendered, "Window ContentRendered Test Failed");  //ContentRendered always failed, but works properly in example app
             Assert.AreEqual(isSubscribed, handler.WasDeactivated, "Window Deactivated Test Failed");
-            WindowEventHandlers.Unsubscribe(TestWindow);
+            Assert.AreEqual(isSubscribed, handler.GotFocus, "Window GotFocus test failed");
+            Assert.AreEqual(isSubscribed, handler.LostFocus, "Window LostFocus test failed");
+            
+        }
+
+        private void Subscribe(Window window, WindowHandlerObj value)
+        {
+            WindowBehaviors.SetIWindowActivatedHandler(window, value);
+            WindowBehaviors.SetIWindowClosingHandler(window, value);
+            WindowBehaviors.SetIWindowFocusHandler(window, value);
+            WindowBehaviors.SetIWindowLoadingHandler(window, value);
         }
 
         [TestMethod()]
         public void SubscribeTest()
         {
             var TestWindow = GetWindow("TestWindow");
-            WindowEventHandlers.Subscribe(TestWindow);
+            Subscribe(TestWindow, handler);
             CheckSubscription(TestWindow, new(), true);
         }
 
@@ -93,12 +107,12 @@ namespace RFBCodeWorks.MvvmControls.Tests
         public void UnsubscribeTest()
         {
             var TestWindow = GetWindow("TestWindow");
-            WindowEventHandlers.Subscribe(TestWindow);
-            WindowEventHandlers.Unsubscribe(TestWindow);
+            Subscribe(TestWindow, handler);
+            Subscribe(TestWindow, null);
             CheckSubscription(TestWindow, new(), false);
         }
 
-        internal class WindowHandlerObj : IWindowActivated, IWindowClosing, IWindowLoading
+        internal class WindowHandlerObj : IWindowActivatedHandler, IWindowClosingHandler, IWindowLoadingHandler, IWindowFocusHandler
         {
             public bool WasLoaded;
             public bool WasClosed;
@@ -106,47 +120,59 @@ namespace RFBCodeWorks.MvvmControls.Tests
             public bool WasContentRendered;
             public bool WasActivated;
             public bool WasDeactivated;
+            public bool GotFocus;
+            public bool LostFocus;
 
             public bool CancelClosing;
 
-            public void OnClosed()
+            public void OnWindowClosed(object sender, EventArgs e)
             {
                 WasClosed = true;
                 Console.WriteLine("Window Closed");
             }
 
-            public bool OnClosing()
+            public void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
             {
                 WasClosing = true;
                 if (CancelClosing)
                     Console.WriteLine("Window Closing Cancelled"); 
                 else
                     Console.WriteLine("Window Closing");
-                return !CancelClosing;
+                e.Cancel = CancelClosing;
             }
 
-            public void OnContentRendered()
+            public void OnWindowContentRendered(object sender, EventArgs e)
             {
                 WasContentRendered = true;
                 Console.WriteLine("Window Content Rendered");
             }
 
-            public void OnLoaded()
+            public void OnWindowLoaded(object sender, EventArgs e)
             {
                 WasLoaded = true;
                 Console.WriteLine("Window Loaded");
             }
 
-            public void OnWindowActivated()
+            public void OnWindowActivated(object sender, EventArgs e)
             {
                 WasActivated = true;
                 Console.WriteLine("Window Activated");
             }
 
-            public void OnWindowDeactivated()
+            public void OnWindowDeactivated(object sender, EventArgs e)
             {
                 WasDeactivated = true;
                 Console.WriteLine("Window De-Activated");
+            }
+
+            public void OnUIElementGotFocus(object sender, EventArgs e)
+            {
+                GotFocus = true;
+            }
+
+            public void OnUIElementLostFocus(object sender, EventArgs e)
+            {
+                LostFocus = true;
             }
         }
     }
