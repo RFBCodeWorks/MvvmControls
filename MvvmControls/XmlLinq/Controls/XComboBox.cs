@@ -131,7 +131,7 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq.Controls
         /// </summary>
         protected void OnNodeChanged()
         {
-            NodeChanged?.Invoke(this, new());
+            NodeChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void NodeValueSetter_ValueChanged(object sender, EventArgs e)

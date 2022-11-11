@@ -41,13 +41,13 @@ namespace RFBCodeWorks.MvvmControls
                 var updated = SetProperty(ref IsCheckedField, value, nameof(IsChecked));
                 if (updated)
                 {
-                    StateChange?.Invoke(this, new());
+                    StateChange?.Invoke(this, EventArgs.Empty);
                     if (value is null)
-                        Indeterminate?.Invoke(this, new());
+                        Indeterminate?.Invoke(this, EventArgs.Empty);
                     else if (value.Value)
-                        Checked?.Invoke(this, new());
+                        Checked?.Invoke(this, EventArgs.Empty);
                     else
-                        Unchecked?.Invoke(this, new());
+                        Unchecked?.Invoke(this, EventArgs.Empty);
                 }
             }
         }

@@ -147,14 +147,14 @@ namespace RFBCodeWorks.MvvmControls.Tests
 
         }
 
-        public ObjectCommand FromMethodName_ObjectMethod { get; }
-        public ObjectCommand<String> FromMethodName_ObjectMethodGeneric { get; }
+        public ButtonDefinition FromMethodName_ObjectMethod { get; }
+        public ButtonDefinition<string> FromMethodName_ObjectMethodGeneric { get; }
 
-        public ObjectCommand FromAction_ObjectMethod { get; }
-        public ObjectCommand<String> FromAction_ObjectMethodGeneric { get; }
+        public ButtonDefinition FromAction_ObjectMethod { get; }
+        public ButtonDefinition<string> FromAction_ObjectMethodGeneric { get; }
 
-        public ObjectCommand FromAction_PropertyMethod { get; }
-        public ObjectCommand<String> FromAction_PropertyMethodGeneric { get; }
+        public ButtonDefinition FromAction_PropertyMethod { get; }
+        public ButtonDefinition<string> FromAction_PropertyMethodGeneric { get; }
         
     }
 

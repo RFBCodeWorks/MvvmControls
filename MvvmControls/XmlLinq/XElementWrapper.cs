@@ -66,7 +66,7 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq
                     if (nodes.Any())
                     {
                         nodes.Remove();
-                        ValueChanged?.Invoke(this, new());
+                        ValueChanged?.Invoke(this, EventArgs.Empty);
                     }
                 }
                 else
@@ -101,12 +101,12 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq
                     OnPropertyChanged(nameof(Name));
                     break;
                 case XObjectChangedEventEvaluation.ChangeType.ValueChanged:
-                    ValueChanged?.Invoke(this, new());
+                    ValueChanged?.Invoke(this, EventArgs.Empty);
                     OnPropertyChanged(nameof(Value));
                     break;
                 case XObjectChangedEventEvaluation.ChangeType.DescendantAdded:
                 case XObjectChangedEventEvaluation.ChangeType.DescendantRemoved:
-                    DescendantChanged?.Invoke(this, new());
+                    DescendantChanged?.Invoke(this, EventArgs.Empty);
                     break;
             }
         }

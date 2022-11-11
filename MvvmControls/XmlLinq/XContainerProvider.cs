@@ -46,13 +46,13 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq
                 {
                     XContainer.Changed -= XContainer_Changed;
                     XContainerField = null;
-                    Removed?.Invoke(this, new());
+                    Removed?.Invoke(this, EventArgs.Empty);
                 }
                 if (value != null)
                 {
                     XContainerField = value;
                     XContainer.Changed += XContainer_Changed;
-                    Added?.Invoke(this, new());
+                    Added?.Invoke(this, EventArgs.Empty);
                 }
                 OnPropertyChanged(nameof(XContainer));
             }
@@ -67,7 +67,7 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq
         {
             var result = XObjectChangedEventEvaluation.XElementChanged(sender, e, ProvidedElement, DiscriminateDescendantChanged);
             if (result == XObjectChangedEventEvaluation.ChangeType.DescendantAdded | result == XObjectChangedEventEvaluation.ChangeType.DescendantRemoved)
-                DescendantChanged?.Invoke(this, new());
+                DescendantChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private XContainer XContainerField;

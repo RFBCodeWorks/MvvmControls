@@ -1,9 +1,11 @@
-﻿namespace RFBCodeWorks.MvvmControls
+﻿using System;
+
+namespace RFBCodeWorks.MvvmControls
 {
     /// <summary>
     /// Object designed to alternate between two displayed values based on a boolean property
     /// </summary>
-    public class TwoStateTextProvider : ObservableObject, IDisplayTextProvider
+    public sealed class TwoStateTextProvider : ObservableObject, IDisplayTextProvider
     {
         /// <summary>
         /// Instantiate the command without providing any data.
@@ -32,9 +34,18 @@
         private string altText;
 
         /// <summary>
+        /// Occurs when the DisplayText property is updated
+        /// </summary>
+        public event EventHandler DisplayTextUpdated;
+
+        /// <summary>
         /// Text to display on the button
         /// </summary>
         public string DisplayText => DisplayAlternateText ? AlternateText : DefaultText;
+
+        private static readonly INotifySingletons.INotifyArgSet DisplayAltArgs = new(nameof(DisplayAlternateText));
+        private static readonly INotifySingletons.INotifyArgSet DefaultTextArgs = new(nameof(DefaultText));
+        private static readonly INotifySingletons.INotifyArgSet AlternateTextArgs = new(nameof(AlternateText));
 
         /// <summary>
         /// Default text to display on the button
@@ -44,54 +55,60 @@
             get => defaultText;
             set
             {
-                if (SetProperty(ref defaultText, value, nameof(DefaultText)))
-                    if (!DisplayAlternateText)
-                        OnUpdateButtonText();
+                if (defaultText != value)
+                {
+                    OnPropertyChanging(DefaultTextArgs);
+                    defaultText = value;
+                    if (!DisplayAlternateText) OnUpdateButtonText();
+                    OnPropertyChanged(DefaultTextArgs);
+                }
             }
         }
 
         /// <summary>
         /// Alternate text to display on the button
         /// </summary>
-        public virtual string AlternateText
+        public string AlternateText
         {
             get => altText;
             set
             {
-                if (SetProperty(ref altText, value, nameof(AlternateText)))
-                    if (DisplayAlternateText)
-                        OnUpdateButtonText();
+                if (altText != value)
+                {
+                    OnPropertyChanging(AlternateTextArgs);
+                    altText = value;
+                    if (DisplayAlternateText) OnUpdateButtonText();
+                    OnPropertyChanged(AlternateTextArgs);
+                }
             }
         }
 
         /// <summary>
         /// Raise 'PropertyChanged' event for <see cref="DisplayText"/>
         /// </summary>
-        public void OnUpdateButtonText() => OnPropertyChanged(nameof(DisplayText));
+        public void OnUpdateButtonText()
+        {
+            DisplayTextUpdated?.Invoke(this, System.EventArgs.Empty);
+            OnPropertyChanged(INotifySingletons.DisplayName);
+        }
 
         /// <summary>
         /// Flag that determines which text is returned by <see cref="DisplayText"/>
         /// </summary>
-        public virtual bool DisplayAlternateText
+        public bool DisplayAlternateText
         {
             get => displayAlternateText;
-            set => _ = OnDisplayAlternateTextChanged(value);
-        }
-
-
-        /// <summary>
-        /// Sets the private field to the <paramref name="newValue"/>, then raises the PropertyChanged event if the value was updated
-        /// </summary>
-        /// <param name="newValue"></param>
-        protected bool OnDisplayAlternateTextChanged(bool newValue)
-        {
-            if (SetProperty(ref displayAlternateText, newValue, nameof(DisplayAlternateText)))
+            set
             {
-                OnUpdateButtonText();
-                return true;
+                if (value != displayAlternateText)
+                {
+                    OnPropertyChanging(DisplayAltArgs);
+                    displayAlternateText = value;
+                    OnUpdateButtonText();
+                    OnPropertyChanged(DisplayAltArgs);
+                }
             }
-            return false;
         }
+        
     }
-
 }

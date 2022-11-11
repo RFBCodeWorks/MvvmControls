@@ -225,14 +225,9 @@ namespace RFBCodeWorks.MvvmControls.ViewModels
         #region < DateTimeUpdated >
 
         /// <summary>
-        /// Delegate for the DateTimeUpdated event
-        /// </summary>
-        public delegate void DateTimeUpdatedHandler(DateTimePicker sender, EventArgs e);
-
-        /// <summary>
         /// 
         /// </summary>
-        public event DateTimeUpdatedHandler DateTimeUpdated;
+        public event EventHandler DateTimeUpdated;
 
         /// <summary> Raises the DateTimeUpdated event </summary>
         protected void OnDateTimeUpdated()

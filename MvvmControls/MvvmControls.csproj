@@ -8,6 +8,13 @@
       <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\MVVM Objects.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="AbstractTwoStateButtonDefinition.cs" />
+    <Compile Remove="TwoStateRelayCommand.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Specialized\TwoStateButton.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />

@@ -53,7 +53,7 @@ namespace RFBCodeWorks.MvvmControls
         /// <summary> Raises the SelectedItemsChanged event </summary>
         protected virtual void OnSelectedItemsChanged()
         {
-            SelectedItemsChanged?.Invoke(this, new());
+            SelectedItemsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion
@@ -132,7 +132,7 @@ namespace RFBCodeWorks.MvvmControls
         /// </summary>
         public RefreshableListBoxDefinition()
         {
-            RefreshCommand = new RelayCommand(Refresh, () => CanRefresh());
+            RefreshCommand = new ButtonDefinition(Refresh, () => CanRefresh());
         }
 
         /// <inheritdoc/>

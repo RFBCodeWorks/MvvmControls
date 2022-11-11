@@ -54,13 +54,13 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq
 
                     xAttrField.Changed -= XAttrField_Changed;
                     xAttrField = null;
-                    Removed?.Invoke(this, new());
+                    Removed?.Invoke(this, EventArgs.Empty);
                 }
                 if (value != null)
                 {
                     xAttrField = value;
                     xAttrField.Changed += XAttrField_Changed;
-                    Added?.Invoke(this, new());
+                    Added?.Invoke(this, EventArgs.Empty);
                 }
                 OnValueChange();
                 OnPropertyChanged("");
@@ -134,7 +134,7 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq
         /// </summary>
         protected virtual void OnValueChange()
         {
-            ValueChanged?.Invoke(this, new());
+            ValueChanged?.Invoke(this, EventArgs.Empty);
             OnPropertyChanged(nameof(Value));
         }
 

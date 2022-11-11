@@ -119,13 +119,13 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq
 
                     XElementField.Changed -= XElementChanged;
                     XElementField = null;
-                    Removed?.Invoke(this, new());
+                    Removed?.Invoke(this, EventArgs.Empty);
                 }
                 if (value != null)
                 {
                     XElementField = value;
                     XElementField.Changed += XElementChanged;
-                    Added?.Invoke(this, new());
+                    Added?.Invoke(this, EventArgs.Empty);
                     
                 }
                 OnValueChange();
@@ -181,7 +181,7 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq
         /// </summary>
         protected virtual void OnValueChange()
         {
-            ValueChanged?.Invoke(this, new());
+            ValueChanged?.Invoke(this, EventArgs.Empty);
             OnPropertyChanged(nameof(Value));
         }
 
@@ -239,7 +239,7 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq
                     break;
                 case XObjectChangedEventEvaluation.ChangeType.DescendantAdded:
                 case XObjectChangedEventEvaluation.ChangeType.DescendantRemoved:
-                    DescendantChanged?.Invoke(this, new());
+                    DescendantChanged?.Invoke(this, EventArgs.Empty);
                     break;
             }
         }

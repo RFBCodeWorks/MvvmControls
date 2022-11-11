@@ -81,7 +81,7 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq
             }
             else if (e.ObjectChange == XObjectChange.Remove || e.ObjectChange == XObjectChange.Add)
             {
-                DescendantChanged?.Invoke(this, new());
+                DescendantChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 

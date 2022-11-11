@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace RFBCodeWorks.MvvmControls
 {
-    static class SystemExtensions
+    internal static class SystemExtensions
     {
         /// <summary>
         /// Generic function to check if an object is null

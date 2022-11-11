@@ -19,10 +19,6 @@ namespace RFBCodeWorks.MvvmControls
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface IComboBoxDefinition<T> : ISelector<T>, IComboBoxDefinition { }
-}
-
-namespace RFBCodeWorks.MvvmControls
-{
 
     /// <summary>
     /// The base ComboBoxDefinition
@@ -88,12 +84,6 @@ namespace RFBCodeWorks.MvvmControls
     /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
     public class ComboBoxDefinition<T, V> : ComboBoxDefinition<T, IList<T>, V> { }
 
-    /// <summary>
-    /// A definition for a combox where the ItemSource is a specific type of <see cref="IList{T}"/>
-    /// </summary>
-    /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
-    public class ComboBoxDefinition2<T, E> : ComboBoxDefinition<T, E, object> where E : IList<T> { }
-
     #endregion'
 
     #region < Refreshable >
@@ -112,7 +102,7 @@ namespace RFBCodeWorks.MvvmControls
         /// </summary>
         public RefreshableComboBoxDefinition()
         {
-            RefreshCommand = new RelayCommand(Refresh, () => CanRefresh());
+            RefreshCommand = new ButtonDefinition(Refresh, () => CanRefresh());
         }
 
         /// <inheritdoc/>
