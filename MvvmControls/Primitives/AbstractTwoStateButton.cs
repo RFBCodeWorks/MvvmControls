@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RFBCodeWorks.MvvmControls.Specialized
+namespace RFBCodeWorks.MvvmControls.Primitives
 {
     /// <summary>
     /// Abstract Base class for buttons that update their tooltips and display text between two states dynamically

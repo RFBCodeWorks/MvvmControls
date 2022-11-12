@@ -4,14 +4,14 @@ using System.Windows.Controls;
 using System.Collections.Specialized;
 using System.Collections;
 
-namespace RFBCodeWorks.MvvmControls
+namespace RFBCodeWorks.MvvmControls.Primitives
 {
     /// <summary>
     /// Represents an ItemSource binding
     /// </summary>
     /// <typeparam name="T"> The type of objects within the collection </typeparam>
     /// <typeparam name="E"> The type of collection - must implement <see cref="IEnumerable{T}"/></typeparam>
-    public class ItemSourceDefinition<T,E> : BaseControlDefinition, IItemSource, IItemSource<T,E> 
+    public class ItemSource<T,E> : ControlBase, IItemSource, IItemSource<T,E> 
         where E : IList<T>
     {
 
@@ -20,10 +20,10 @@ namespace RFBCodeWorks.MvvmControls
         /// <summary>
         /// Initialize the ItemSource
         /// </summary>
-        public ItemSourceDefinition() { }
+        public ItemSource() { }
 
 
-        static ItemSourceDefinition()
+        static ItemSource()
         {
             IsINotifyPropertyChanged = typeof(E) is INotifyCollectionChanged;
         }
@@ -81,7 +81,7 @@ namespace RFBCodeWorks.MvvmControls
         /// <summary>
         /// Binding for <see cref="ItemsControl.ItemsSource"/>
         /// </summary>
-        public E ItemSource
+        public E Items
         {
             get { return ItemSourceField; }
             set 
@@ -89,15 +89,15 @@ namespace RFBCodeWorks.MvvmControls
                 if (!(ItemSourceField?.Equals(value) ?? value is null))
                 {
                     UnSubscribe(ItemSourceField);
-                    SetProperty(ref ItemSourceField, value, nameof(ItemSource));
+                    SetProperty(ref ItemSourceField, value, nameof(Items));
                     OnItemSourceChanged();
                     Subscribe(value);
                 }
             }
         }
 
-        IList IItemSource.ItemSource { get => (IList)ItemSource; }
-        IList<T> IItemSource<T>.ItemSource { get => ItemSource; }
+        IList IItemSource.Items { get => (IList)Items; }
+        IList<T> IItemSource<T>.Items { get => Items; }
 
         private E ItemSourceField;
 

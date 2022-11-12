@@ -11,7 +11,7 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
             BindIControlDefinition(obj, def);
 
             //ItemSource
-            SetBinding(obj, ItemsControl.ItemsSourceProperty, nameof(IItemSource.ItemSource), def, BindingMode.OneWay);
+            SetBinding(obj, ItemsControl.ItemsSourceProperty, nameof(IItemSource.Items), def, BindingMode.OneWay);
 
             if (obj.GetValue(ItemsControl.ItemTemplateProperty) == null)
             {

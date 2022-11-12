@@ -9,7 +9,7 @@ namespace RFBCodeWorks.MvvmControls
     /// <summary>
     /// Class that wraps an <see cref="IRelayCommand"/> to provide the remaining implementation of <see cref="IButtonDefinition"/>
     /// </summary>
-    public class ButtonDefinition : AbstractButtonDefinition, IButtonDefinition
+    public class ButtonDefinition : Primitives.AbstractButtonDefinition, IButtonDefinition
     {
         /// <inheritdoc cref="ButtonDefinition.ButtonDefinition(Action, Func{bool})"/>
         public ButtonDefinition(Action execute) : this(execute, ReturnTrue) { }

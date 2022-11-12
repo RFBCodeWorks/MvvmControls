@@ -8,7 +8,7 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq.Controls
     /// <summary>
     /// ComboBox that stores a selected string value into an <see cref="IXValueObject"/>
     /// </summary>
-    public class XComboBox : XComboBox<string>, IComboBoxDefinition<string>
+    public class XComboBox : XComboBox<string>, IComboBox<string>
     {
         /// <inheritdoc/>
         public XComboBox(IXValueObject xValueProvider) : base(xValueProvider) { }
@@ -17,7 +17,7 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq.Controls
     /// <summary>
     /// ComboBox that stores a selected value into an <see cref="IXValueObject"/>
     /// </summary>
-    public class XComboBox<T> : XComboBox<T, object>, IComboBoxDefinition<T>
+    public class XComboBox<T> : XComboBox<T, object>, IComboBox<T>
     {
         /// <inheritdoc/>
         public XComboBox(IXValueObject xValueProvider) : base(xValueProvider) { }
@@ -26,7 +26,7 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq.Controls
     /// <summary>
     /// ComboBox that stores a selected value into an <see cref="IXValueObject"/>
     /// </summary>
-    public class XComboBox<T,V> : XComboBox<T, IList<T>, V>, IComboBoxDefinition<T>
+    public class XComboBox<T,V> : XComboBox<T, IList<T>, V>, IComboBox<T>
     {
         /// <inheritdoc/>
         public XComboBox(IXValueObject xValueProvider) : base(xValueProvider) { }
@@ -90,10 +90,10 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq.Controls
         /// </summary>
         protected virtual void NodeValueSetter_ValueChanged() 
         {
-            if (ItemSource is null) return;
+            if (Items is null) return;
             if (StoreValueAsItemIndex)
             {
-                if (int.TryParse(NodeValueSetter.Value, out int value) && value >= 0 && value < (ItemSource?.Count ?? 0))
+                if (int.TryParse(NodeValueSetter.Value, out int value) && value >= 0 && value < (Items?.Count ?? 0))
                 {
                     SelectedIndex = value;
                 }
@@ -107,7 +107,7 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq.Controls
                 string val = NodeValueSetter.Value;
                 try
                 {
-                    SelectedItem = ItemSource.Single(t => ItemConverter?.Invoke(t) == val);
+                    SelectedItem = Items.Single(t => ItemConverter?.Invoke(t) == val);
                 }
                 catch
                 {

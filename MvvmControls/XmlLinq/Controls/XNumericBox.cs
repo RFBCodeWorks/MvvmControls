@@ -5,9 +5,9 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq.Controls
     /// <summary>
     /// Represents a control that has an integer value within a specified range
     /// </summary>
-    public class XNumericBox : 
-        BaseControlDefinition, IXValueControl,
-        IRangeControlDefinition, 
+    public class XNumericBox :
+        Primitives.ControlBase, IXValueControl,
+        IRangeControl, 
         IDisplayTextProvider,
         IToolTipProvider
     {
@@ -62,9 +62,9 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq.Controls
             }
         }
 
-        /// <inheritdoc cref="IRangeControlDefinition.SmallChange"/>
+        /// <inheritdoc cref="IRangeControl.SmallChange"/>
         public int SmallChange { get; set; }
-        /// <inheritdoc cref="IRangeControlDefinition.LargeChange"/>
+        /// <inheritdoc cref="IRangeControl.LargeChange"/>
         public int LargeChange { get; set; }
 
         /// <summary>
@@ -82,10 +82,10 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq.Controls
         }
 
         string IDisplayTextProvider.DisplayText => throw new NotImplementedException();
-        double IRangeControlDefinition.Minimum { get => Minimum; set => Minimum = (int)value; }
-        double IRangeControlDefinition.Maximum { get => Maximum; set => Maximum = (int)value; }
-        double IRangeControlDefinition.SmallChange { get => SmallChange; set => SmallChange = (int)value; }
-        double IRangeControlDefinition.LargeChange { get => LargeChange; set => LargeChange = (int)value; }
-        double IRangeControlDefinition.Value { get => Value; set => Value = (int)value; }
+        double IRangeControl.Minimum { get => Minimum; set => Minimum = (int)value; }
+        double IRangeControl.Maximum { get => Maximum; set => Maximum = (int)value; }
+        double IRangeControl.SmallChange { get => SmallChange; set => SmallChange = (int)value; }
+        double IRangeControl.LargeChange { get => LargeChange; set => LargeChange = (int)value; }
+        double IRangeControl.Value { get => Value; set => Value = (int)value; }
     }
 }

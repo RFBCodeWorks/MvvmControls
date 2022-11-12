@@ -3,7 +3,7 @@
     /// <summary>
     /// Interface for Radio Button Definitions
     /// </summary>
-    public interface IRadioButtonDefinition : IToggleButtonDefinition
+    public interface IRadioButton : IToggleButton
     {
         /// <inheritdoc cref="MvvmControls.RadioButtonDefinition.GroupName"/>
         public string GroupName { get; set; }
@@ -13,7 +13,7 @@
     /// <summary>
     /// Provides a definition for Radio Button controls
     /// </summary>
-    public class RadioButtonDefinition : ToggleButtonDefinition, IRadioButtonDefinition
+    public class RadioButtonDefinition : Primitives.ToggleButton, IRadioButton
     {
         /// <inheritdoc cref="System.Windows.Controls.RadioButton.GroupName"/>
         public string GroupName

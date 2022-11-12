@@ -19,12 +19,12 @@ namespace ExampleWPF
 
         public ListBoxDefinition<string> ListBoxDefinition { get; } = new ListBoxDefinition<string>()
         {
-            ItemSource = new string[] { "Index0", "Index1", "Index2", "Index3" }
+            Items = new string[] { "Index0", "Index1", "Index2", "Index3" }
         };
 
         public ComboBoxDefinition<string> ComboBoxDefinition { get; } = new ComboBoxDefinition<string>()
         {
-            ItemSource = new string[] { "Index0", "Index1", "Index2", "Index3" }
+            Items = new string[] { "Index0", "Index1", "Index2", "Index3" }
         };
 
         public CheckBoxDefinition EnableDisableListBox { get; } = new CheckBoxDefinition()

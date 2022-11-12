@@ -4,10 +4,10 @@ using System.Windows;
 namespace RFBCodeWorks.MvvmControls
 {
     /// <summary>
-    /// Represents an <see cref="ItemSourceDefinition{T, E}"/> that is an array of type T, 
+    /// Represents an <see cref="Primitives.ItemSource{T, E}"/> that is an array of type T, 
     /// whose collection can be refreshed on demand via the <see cref="RefreshFunc"/>
     /// </summary>
-    /// <inheritdoc cref="ItemSourceDefinition{T, E}"/>
+    /// <inheritdoc cref="Primitives.ItemSource{T, E}"/>
     public interface IRefreshableItemSource<T> : IItemSource<T, T[]>
     { 
 
@@ -41,7 +41,7 @@ namespace RFBCodeWorks.MvvmControls
         public virtual void Refresh()
         {
             if (RefreshFunc != null)
-                ItemSource = RefreshFunc();
+                Items = RefreshFunc();
         }
 
         /// <summary>

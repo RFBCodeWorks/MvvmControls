@@ -7,11 +7,11 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
     public static partial class ControlDefinitions
     {
         /// <summary>
-        /// Assigns an <see cref="IProgressBarDefinition"/> to a <see cref="ProgressBar"/>
+        /// Assigns an <see cref="IProgressBar"/> to a <see cref="ProgressBar"/>
         /// </summary>
         public static readonly DependencyProperty ProgressBarDefinitionProperty =
             DependencyProperty.RegisterAttached("ProgressBarDefinition",
-                typeof(IProgressBarDefinition),
+                typeof(IProgressBar),
                 typeof(ControlDefinitions),
                 new PropertyMetadata(null, ProgressBarDefinitionPropertyChanged)
                 );
@@ -20,7 +20,7 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         {
             if (sender is ProgressBar cmb)
             {
-                if (args.OldValue is IProgressBarDefinition oldDef)
+                if (args.OldValue is IProgressBar oldDef)
                 {
                     UnbindIControlDefinition(cmb, oldDef);
                     UnbindIfBound(cmb, ProgressBar.ValueProperty, oldDef);
@@ -28,7 +28,7 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
                     UnbindIfBound(cmb, ProgressBar.MinimumProperty, oldDef);
                     UnbindIfBound(cmb, ProgressBar.IsIndeterminateProperty, oldDef);
                 }
-                if (args.NewValue is IProgressBarDefinition def)
+                if (args.NewValue is IProgressBar def)
                 {
                     BindIControlDefinition(cmb, def);
                     SetBinding(cmb, ProgressBar.ValueProperty, nameof(def.Value), def, BindingMode.OneWay);
@@ -40,17 +40,17 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         }
 
         /// <summary>
-        /// Gets the assigned <see cref="IProgressBarDefinition"/> from a <see cref="ProgressBar"/>
+        /// Gets the assigned <see cref="IProgressBar"/> from a <see cref="ProgressBar"/>
         /// </summary>
-        public static IProgressBarDefinition GetProgressBarDefinition(DependencyObject obj)
+        public static IProgressBar GetProgressBarDefinition(DependencyObject obj)
         {
-            return (IProgressBarDefinition)obj.GetValue(ProgressBarDefinitionProperty);
+            return (IProgressBar)obj.GetValue(ProgressBarDefinitionProperty);
         }
 
         /// <summary>
-        /// Assigns an <see cref="IComboBoxDefinition"/> to a <see cref="ProgressBar"/>
+        /// Assigns an <see cref="IComboBox"/> to a <see cref="ProgressBar"/>
         /// </summary>
-        public static void SetProgressBarDefinition(DependencyObject obj, IProgressBarDefinition value)
+        public static void SetProgressBarDefinition(DependencyObject obj, IProgressBar value)
         {
             obj.SetValue(ProgressBarDefinitionProperty, value);
         }

@@ -257,7 +257,7 @@ namespace RFBCodeWorks.MvvmControls
             /// <inheritdoc cref="CreateActionFromMethodName(string)"/>
             public ButtonDefinition FromMethodName(string methodName, string toolTip = null, string displayText = null)
             {
-                return FromMethodName(methodName, AbstractCommandBase.ReturnTrue, toolTip, displayText);
+                return FromMethodName(methodName, Primitives.AbstractCommandBase.ReturnTrue, toolTip, displayText);
             }
 
             /// <returns>new <see cref="ButtonDefinition{O}"/></returns>
@@ -280,7 +280,7 @@ namespace RFBCodeWorks.MvvmControls
             /// <inheritdoc cref="CreateActionFromMethodName{O}(string)"/>
             public ButtonDefinition<O> FromMethodName<O>(string methodName, string toolTip = null, string displayText = null)
             {
-                return FromMethodName<O>(methodName, AbstractCommandBase.ReturnTrue, toolTip, displayText);
+                return FromMethodName<O>(methodName, Primitives.AbstractCommandBase.ReturnTrue, toolTip, displayText);
             }
 
             #endregion

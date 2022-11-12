@@ -7,7 +7,7 @@ namespace RFBCodeWorks.MvvmControls
     /// <summary>
     /// Interface all ComboBoxDefinitions should implement to be assignable via AttachedProperty
     /// </summary>
-    public interface IComboBoxDefinition : ISelector
+    public interface IComboBox : ISelector
     {
         /// <inheritdoc cref="System.Windows.Controls.ComboBox.IsDropDownOpen"/>
         /// <remarks>This property can be used to force the drop-down open from the ViewModel</remarks>
@@ -18,13 +18,13 @@ namespace RFBCodeWorks.MvvmControls
     /// Interface all ComboBoxDefinitions of some type implement
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IComboBoxDefinition<T> : ISelector<T>, IComboBoxDefinition { }
+    public interface IComboBox<T> : ISelector<T>, IComboBox { }
 
     /// <summary>
     /// The base ComboBoxDefinition
     /// </summary>
-    /// <inheritdoc cref="SelectorDefinition{T, E, V}"/>
-    public class ComboBoxDefinition<T, E, V> : SelectorDefinition<T, E, V>, IComboBoxDefinition, IComboBoxDefinition<T>
+    /// <inheritdoc cref="Primitives.Selector{T, E, V}"/>
+    public class ComboBoxDefinition<T, E, V> : Primitives.Selector<T, E, V>, IComboBox, IComboBox<T>
         where E : IList<T>
     {
         /// <inheritdoc cref="System.Windows.Controls.ComboBox.Text"/>
@@ -127,7 +127,7 @@ namespace RFBCodeWorks.MvvmControls
         public virtual void Refresh()
         {
             if (RefreshFunc != null && (CanRefresh?.Invoke() ?? true))
-                ItemSource = RefreshFunc();
+                Items = RefreshFunc();
         }
 
         /// <inheritdoc/>

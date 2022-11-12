@@ -12,7 +12,7 @@ namespace RFBCodeWorks.MvvmControls
     /// RelayCommand object that will execute an action that does not require any parameters
     /// </summary>
     /// <inheritdoc/>
-    public class RelayCommand<T> : AbstractCommand<T>, IRelayCommand<T>
+    public class RelayCommand<T> : Primitives.AbstractCommand<T>, IRelayCommand<T>
     {
 
         /// <inheritdoc cref="RelayCommand{T}.RelayCommand(Action{T}, Func{T, bool}, Action{T, Exception})"/>
@@ -48,7 +48,7 @@ namespace RFBCodeWorks.MvvmControls
         /// <summary>
         /// Create a new RelayCommand
         /// </summary>
-        /// <inheritdoc cref="AbstractCommand.AbstractCommand(bool)"/>
+        /// <inheritdoc cref="Primitives.AbstractCommand.AbstractCommand(bool)"/>
         /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.RelayCommand.RelayCommand(Action, Func{bool})"/>
         /// <exception cref="ArgumentNullException"/>
         public RelayCommand(Action<T> execute, Func<T,bool> canExecute, Action<T,Exception> errorHandler) : base(true)

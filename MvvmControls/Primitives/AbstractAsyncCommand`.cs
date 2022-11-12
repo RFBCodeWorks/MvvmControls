@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace RFBCodeWorks.MvvmControls
+namespace RFBCodeWorks.MvvmControls.Primitives
 {
     /// <summary>
     /// Abstract base class for AsyncRelayCommands that do not take parameters

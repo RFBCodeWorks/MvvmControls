@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 
 
-namespace RFBCodeWorks.MvvmControls
+namespace RFBCodeWorks.MvvmControls.Primitives
 {
     /// <summary>
     /// Abstract base class for ICommand objects

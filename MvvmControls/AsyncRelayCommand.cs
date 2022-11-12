@@ -10,14 +10,14 @@ namespace RFBCodeWorks.MvvmControls
     /// <summary>
     /// A RelayCommand that supports Async Functionality, can react to the task generating an error, and can react to a task being cancelled
     /// </summary>
-    public sealed class AsyncRelayCommand : AbstractAsyncCommand
+    public sealed class AsyncRelayCommand : Primitives.AbstractAsyncCommand
     {
         #region < Fire-And-Forget Constructors >
 
         /// <summary>
         /// Create a new AsyncRelayCommand that will execute a cancellable task
         /// </summary>
-        /// <inheritdoc cref="AbstractCommand.AbstractCommand(bool)"/>
+        /// <inheritdoc cref="Primitives.AbstractCommand.AbstractCommand(bool)"/>
         /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.AsyncRelayCommand.AsyncRelayCommand(Func{Task}, Func{bool})"/>
         /// <exception cref="ArgumentNullException"/>
         public AsyncRelayCommand(Func<Task> execute, Func<bool> canExecute) : base(true)
@@ -49,7 +49,7 @@ namespace RFBCodeWorks.MvvmControls
         /// <summary>
         /// Create a new AsyncRelayCommand that will execute a cancellable task
         /// </summary>
-        /// <inheritdoc cref="AbstractCommand.AbstractCommand(bool)"/>
+        /// <inheritdoc cref="Primitives.AbstractCommand.AbstractCommand(bool)"/>
         /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool})"/>
         /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task})"/>
         /// <exception cref="ArgumentNullException"/>

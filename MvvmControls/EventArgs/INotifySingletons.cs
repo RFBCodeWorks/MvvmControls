@@ -11,12 +11,12 @@ namespace RFBCodeWorks.MvvmControls
     {
         public static readonly INotifyArgSet DisplayName = new(nameof(IDisplayTextProvider.DisplayText));
         public static readonly INotifyArgSet ToolTip = new(nameof(IToolTipProvider.ToolTip));
-        public static readonly INotifyArgSet ItemSource = new(nameof(RFBCodeWorks.MvvmControls.ISelector.ItemSource));
+        public static readonly INotifyArgSet ItemSource = new(nameof(RFBCodeWorks.MvvmControls.ISelector.Items));
         public static readonly INotifyArgSet SelectedIndex = new(nameof(RFBCodeWorks.MvvmControls.ISelector.SelectedIndex));
         public static readonly INotifyArgSet SelectedItem = new(nameof(RFBCodeWorks.MvvmControls.ISelector.SelectedItem));
         public static readonly INotifyArgSet SelectedValue = new(nameof(RFBCodeWorks.MvvmControls.ISelector.SelectedValue));
         public static readonly INotifyArgSet IsEnabled = new(nameof(RFBCodeWorks.MvvmControls.ISelector.IsEnabled));
-        public static readonly INotifyArgSet IsDefaultState = new(nameof(RFBCodeWorks.MvvmControls.Specialized.AbstractTwoStateButton.IsDefaultState));
+        public static readonly INotifyArgSet IsDefaultState = new(nameof(RFBCodeWorks.MvvmControls.Primitives.AbstractTwoStateButton.IsDefaultState));
         
 
         public class INotifyArgSet

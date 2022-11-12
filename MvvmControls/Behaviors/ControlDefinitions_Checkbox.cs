@@ -6,11 +6,11 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
     public static partial class ControlDefinitions
     {
         /// <summary>
-        /// Assigns an <see cref="IComboBoxDefinition"/> to a <see cref="CheckBox"/>
+        /// Assigns an <see cref="IComboBox"/> to a <see cref="CheckBox"/>
         /// </summary>
         public static readonly DependencyProperty CheckBoxDefinitionProperty =
             DependencyProperty.RegisterAttached("CheckBoxDefinition",
-                typeof(ICheckBoxDefinition),
+                typeof(ICheckBox),
                 typeof(ControlDefinitions),
                 new PropertyMetadata(null, CheckBoxDefinitionPropertyChanged)
                 );
@@ -19,14 +19,14 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         {
             if (sender is CheckBox cmb)
             {
-                if (args.OldValue is ICheckBoxDefinition oldDef)
+                if (args.OldValue is ICheckBox oldDef)
                 {
                     if (GetToggleButtonDefinition(cmb) == args.OldValue)
                         SetToggleButtonDefinition(cmb, null);
                     else
                         UnbindToggleButtonDefinition(cmb, oldDef);
                 }
-                if (args.NewValue is ICheckBoxDefinition def)
+                if (args.NewValue is ICheckBox def)
                 {
                     SetToggleButtonDefinition(cmb, def);
                 }
@@ -35,17 +35,17 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         }
 
         /// <summary>
-        /// Gets the assigned <see cref="ICheckBoxDefinition"/> from a <see cref="CheckBox"/>
+        /// Gets the assigned <see cref="ICheckBox"/> from a <see cref="CheckBox"/>
         /// </summary>
-        public static ICheckBoxDefinition GetCheckBoxDefinition(DependencyObject obj)
+        public static ICheckBox GetCheckBoxDefinition(DependencyObject obj)
         {
-            return (ICheckBoxDefinition)obj.GetValue(CheckBoxDefinitionProperty);
+            return (ICheckBox)obj.GetValue(CheckBoxDefinitionProperty);
         }
 
         /// <summary>
-        /// Assigns an <see cref="IComboBoxDefinition"/> to a <see cref="CheckBox"/>
+        /// Assigns an <see cref="IComboBox"/> to a <see cref="CheckBox"/>
         /// </summary>
-        public static void SetCheckBoxDefinition(DependencyObject obj, ICheckBoxDefinition value)
+        public static void SetCheckBoxDefinition(DependencyObject obj, ICheckBox value)
         {
             obj.SetValue(CheckBoxDefinitionProperty, value);
         }

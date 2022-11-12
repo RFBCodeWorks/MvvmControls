@@ -7,11 +7,11 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
     public static partial class ControlDefinitions
     {
         /// <summary>
-        /// Assigns an <see cref="IListBoxDefinition"/> to a <see cref="ListBox"/> or <see cref="ListView"/>
+        /// Assigns an <see cref="IListBox"/> to a <see cref="ListBox"/> or <see cref="ListView"/>
         /// </summary>
         public static readonly DependencyProperty ListBoxDefinitionProperty =
             DependencyProperty.RegisterAttached("ListBoxDefinition",
-                typeof(IListBoxDefinition),
+                typeof(IListBox),
                 typeof(ControlDefinitions),
                 new PropertyMetadata(null, ListBoxDefinitionPropertyChanged)
                 );
@@ -20,18 +20,18 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         {
             if (sender is ListBox cntrl)
             {
-                if (args.OldValue is IListBoxDefinition oldDef)
+                if (args.OldValue is IListBox oldDef)
                 {
                     UnbindSelectorDefinition(cntrl, oldDef);
                     UnbindIfBound(cntrl, ListBox.SelectionModeProperty, oldDef);
 
                 }
-                if (args.NewValue is IListBoxDefinition def)
+                if (args.NewValue is IListBox def)
                 {
                     BindSelectorDefinition(cntrl, def);
 
                     //Selection Mode
-                    BindingOperations.SetBinding(cntrl, ListBox.SelectionModeProperty, new Binding(nameof(IListBoxDefinition.SelectionMode))
+                    BindingOperations.SetBinding(cntrl, ListBox.SelectionModeProperty, new Binding(nameof(IListBox.SelectionMode))
                     {
                         Source = def,
                         Mode = BindingMode.OneWay
@@ -41,17 +41,17 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         }
 
         /// <summary>
-        /// Gets the assigned <see cref="IListBoxDefinition"/> from a <see cref="ListBox"/>
+        /// Gets the assigned <see cref="IListBox"/> from a <see cref="ListBox"/>
         /// </summary>
-        public static IListBoxDefinition GetListBoxDefinition(DependencyObject obj)
+        public static IListBox GetListBoxDefinition(DependencyObject obj)
         {
-            return (IListBoxDefinition)obj.GetValue(ListBoxDefinitionProperty);
+            return (IListBox)obj.GetValue(ListBoxDefinitionProperty);
         }
 
         /// <summary>
-        /// Assigns an <see cref="IListBoxDefinition"/> to a <see cref="ListBox"/>
+        /// Assigns an <see cref="IListBox"/> to a <see cref="ListBox"/>
         /// </summary>
-        public static void SetListBoxDefinition(DependencyObject obj, IListBoxDefinition value)
+        public static void SetListBoxDefinition(DependencyObject obj, IListBox value)
         {
             obj.SetValue(ListBoxDefinitionProperty, value);
         }

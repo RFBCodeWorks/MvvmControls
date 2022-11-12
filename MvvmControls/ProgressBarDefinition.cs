@@ -6,7 +6,7 @@ namespace RFBCodeWorks.MvvmControls
     /// <summary>
     /// Interface for an IProgressBar definition
     /// </summary>
-    public interface IProgressBarDefinition : IControlDefinition
+    public interface IProgressBar : IControlDefinition
     {
 
         /// <inheritdoc cref="ProgressBarDefinition.IsIndeterminate"/>
@@ -22,7 +22,7 @@ namespace RFBCodeWorks.MvvmControls
     /// <summary>
     /// Definition for a Progress Bar
     /// </summary>
-    public class ProgressBarDefinition : BaseControlDefinition, IProgressBarDefinition
+    public class ProgressBarDefinition : Primitives.ControlBase, IProgressBar
     {
         /// <inheritdoc cref="System.Windows.Controls.Primitives.RangeBase.ValueChanged"/>
         event EventHandler ValueChanged;

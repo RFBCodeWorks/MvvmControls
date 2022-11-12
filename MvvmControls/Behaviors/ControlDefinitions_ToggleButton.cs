@@ -6,11 +6,11 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
     public static partial class ControlDefinitions
     {
         /// <summary>
-        /// Assigns an <see cref="IToggleButtonDefinition"/> to a <see cref="ToggleButton"/>
+        /// Assigns an <see cref="IToggleButton"/> to a <see cref="ToggleButton"/>
         /// </summary>
         public static readonly DependencyProperty ToggleButtonDefinitionProperty =
             DependencyProperty.RegisterAttached("ToggleButtonDefinition",
-                typeof(IToggleButtonDefinition),
+                typeof(IToggleButton),
                 typeof(ControlDefinitions),
                 new PropertyMetadata(null, ToggleButtonDefinitionPropertyChanged)
                 );
@@ -19,18 +19,18 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         {
             if (sender is ToggleButton btn)
             {
-                if (args.OldValue is IToggleButtonDefinition oldDef)
+                if (args.OldValue is IToggleButton oldDef)
                 {
                     UnbindToggleButtonDefinition(btn, oldDef);
                 }
-                if (args.NewValue is IToggleButtonDefinition def)
+                if (args.NewValue is IToggleButton def)
                 {
                     BindToggleButtonDefinition(btn, def);
                 }
             }
         }
 
-        private static void BindToggleButtonDefinition(ToggleButton btn, IToggleButtonDefinition def)
+        private static void BindToggleButtonDefinition(ToggleButton btn, IToggleButton def)
         {
             BindIControlDefinition(btn, def);
             SetBinding(btn, ToggleButton.IsCheckedProperty, nameof(def.IsChecked), def);
@@ -38,7 +38,7 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
             SetContent(btn, def);
         }
 
-        private static void UnbindToggleButtonDefinition(ToggleButton btn, IToggleButtonDefinition oldDef)
+        private static void UnbindToggleButtonDefinition(ToggleButton btn, IToggleButton oldDef)
         {
             UnbindIControlDefinition(btn, oldDef);
             UnbindIfBound(btn, ToggleButton.IsCheckedProperty, oldDef);
@@ -46,17 +46,17 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         }
 
         /// <summary>
-        /// Gets the assigned <see cref="IToggleButtonDefinition"/> from a <see cref="ToggleButton"/>
+        /// Gets the assigned <see cref="IToggleButton"/> from a <see cref="ToggleButton"/>
         /// </summary>
-        public static IToggleButtonDefinition GetToggleButtonDefinition(DependencyObject obj)
+        public static IToggleButton GetToggleButtonDefinition(DependencyObject obj)
         {
-            return (IToggleButtonDefinition)obj.GetValue(ToggleButtonDefinitionProperty);
+            return (IToggleButton)obj.GetValue(ToggleButtonDefinitionProperty);
         }
 
         /// <summary>
-        /// Assigns an <see cref="IToggleButtonDefinition"/> to a <see cref="ToggleButton"/>
+        /// Assigns an <see cref="IToggleButton"/> to a <see cref="ToggleButton"/>
         /// </summary>
-        public static void SetToggleButtonDefinition(DependencyObject obj, IToggleButtonDefinition value)
+        public static void SetToggleButtonDefinition(DependencyObject obj, IToggleButton value)
         {
             obj.SetValue(ToggleButtonDefinitionProperty, value);
         }

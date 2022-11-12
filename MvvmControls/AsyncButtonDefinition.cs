@@ -67,7 +67,7 @@ namespace RFBCodeWorks.MvvmControls
         new public IAsyncRelayCommand Command { get; }
 
 
-        /// <inheritdoc cref="AbstractAsyncCommand.ExecuteAsync"/>
+        /// <inheritdoc cref="Primitives.AbstractAsyncCommand.ExecuteAsync"/>
         public Task ExecuteAsync() => Command.ExecuteAsync();
 
         /// <summary>Start the asynchronous task - Fire and Forget</summary>

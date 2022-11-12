@@ -17,10 +17,10 @@ namespace RFBCodeWorks.MvvmControls
         /// </summary>
         System.Windows.Visibility Visibility { get; set; }
 
-        /// <inheritdoc cref="BaseControlDefinition.IsVisible" path="*"/>
+        /// <inheritdoc cref="Primitives.ControlBase.IsVisible" path="*"/>
         bool IsVisible { get; set; }
 
-        /// <inheritdoc cref="BaseControlDefinition.IsEnabled"/>
+        /// <inheritdoc cref="Primitives.ControlBase.IsEnabled"/>
         bool IsEnabled { get; }
 
     }

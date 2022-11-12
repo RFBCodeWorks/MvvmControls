@@ -8,7 +8,7 @@ namespace RFBCodeWorks.MvvmControls.Specialized
     /// <summary>
     /// A button that starts a task when in the default state, and changes state to cancel the task while the task is running.
     /// </summary>
-    public sealed class StartCancelTaskButton : AbstractTwoStateButton, IButtonDefinition
+    public sealed class StartCancelTaskButton : Primitives.AbstractTwoStateButton, IButtonDefinition
     {
         /// <inheritdoc cref="StartCancelTaskButton.StartCancelTaskButton(IAsyncRelayCommand)"/>
         /// <inheritdoc cref="AsyncButtonDefinition.AsyncButtonDefinition(Func{CancellationToken, Task})"/>

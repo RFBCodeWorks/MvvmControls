@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RFBCodeWorks.MvvmControls
+namespace RFBCodeWorks.MvvmControls.Primitives
 {
     /// <typeparam name="V">The SelectedValue Type obtained by the SelectedValuePath</typeparam>
-    /// <inheritdoc cref="ItemSourceDefinition{T, E}"/>
+    /// <inheritdoc cref="ItemSource{T, E}"/>
     /// <typeparam name="E"/><typeparam name="T"/>
-    public class SelectorDefinition<T, E, V> : ItemSourceDefinition<T,E>, ISelector, ISelector<T>, ISelector<T, E>
+    public class Selector<T, E, V> : ItemSource<T,E>, ISelector, ISelector<T>, ISelector<T, E>
         where E : IList<T>
     {
         #region < SelectionChangedEvent >
@@ -65,7 +65,7 @@ namespace RFBCodeWorks.MvvmControls
                 if (SetProperty(ref SelectedItemField, value, nameof(SelectedItem)))
                 {
                     UpdatingSelectedItem = true;
-                    SelectedIndex = ItemSource.IndexOf(value);
+                    SelectedIndex = Items.IndexOf(value);
                     UpdatingSelectedItem = false;
                     OnSelectedItemChanged(new(oldValue, value, nameof(SelectedItem)));
                 }
@@ -88,12 +88,12 @@ namespace RFBCodeWorks.MvvmControls
                     SetProperty(ref SelectedIndexField, value, nameof(SelectedIndex));
                 else
                 {
-                    int newValue = ItemSource != null ? value : -1;
+                    int newValue = Items != null ? value : -1;
                     bool changed = SetProperty(ref SelectedIndexField, newValue, nameof(SelectedIndex));
-                    if (!changed || ItemSource is null) return;         // Check if was updated, and if there is an itemsource
-                    if (newValue >= 0 && newValue < ItemSource.Count)   // check if within acceptable range
+                    if (!changed || Items is null) return;         // Check if was updated, and if there is an itemsource
+                    if (newValue >= 0 && newValue < Items.Count)   // check if within acceptable range
                     {
-                        SelectedItem = ItemSource[value];
+                        SelectedItem = Items[value];
                     }
                     else
                     {
@@ -149,8 +149,8 @@ namespace RFBCodeWorks.MvvmControls
         /// <param name="predicate">A function used to determine if the item should be selected.</param>
         public virtual void TrySelectItem(Func<T, bool> predicate, int defaultIndex = -1)
         {
-            var item = ItemSource.FirstOrDefault(o => predicate(o));
-            var index = item is null ? -1 : ItemSource.IndexOf(item);
+            var item = Items.FirstOrDefault(o => predicate(o));
+            var index = item is null ? -1 : Items.IndexOf(item);
             SelectedIndex = index == -1 ? defaultIndex : index;
         }
 

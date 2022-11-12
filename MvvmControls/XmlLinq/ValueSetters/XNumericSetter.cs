@@ -31,7 +31,7 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq.ValueSetters
     }
 
 
-    /// <remarks><br/> - Explicitly implements <see cref="IRangeControlDefinition"/> </remarks>
+    /// <remarks><br/> - Explicitly implements <see cref="IRangeControl"/> </remarks>
     public abstract class XNumericSetterBase<T> : ValueSetterBase<T>
     where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
     {

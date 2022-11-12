@@ -10,13 +10,13 @@ namespace RFBCodeWorks.MvvmControls
     /// </summary>
     public interface IItemSource : IControlDefinition
     {
-        /// <inheritdoc cref="ItemSourceDefinition{T, E}.ItemSourceChanged"/>
+        /// <inheritdoc cref="Primitives.ItemSource{T, E}.ItemSourceChanged"/>
         event EventHandler ItemSourceChanged;
 
-        /// <inheritdoc cref="ItemSourceDefinition{T, E}.ItemSource"/>
-        IList ItemSource { get; }
+        /// <inheritdoc cref="Primitives.ItemSource{T, E}.Items"/>
+        IList Items { get; }
 
-        /// <inheritdoc cref="ItemSourceDefinition{T, E}.DisplayMemberPath"/>
+        /// <inheritdoc cref="Primitives.ItemSource{T, E}.DisplayMemberPath"/>
         string DisplayMemberPath { get; }
     }
 
@@ -25,8 +25,8 @@ namespace RFBCodeWorks.MvvmControls
     /// </summary>
     public interface IItemSource<T> : IItemSource
     {
-        /// <inheritdoc cref="ItemSourceDefinition{T, E}.ItemSource"/>
-        new IList<T> ItemSource { get; }
+        /// <inheritdoc cref="Primitives.ItemSource{T, E}.Items"/>
+        new IList<T> Items { get; }
     }
 
     /// <summary>
@@ -35,8 +35,8 @@ namespace RFBCodeWorks.MvvmControls
     public interface IItemSource<T,E> : IItemSource<T>
         where E : IList<T>
     {
-        /// <inheritdoc cref="ItemSourceDefinition{T, E}.ItemSource"/>
-        new E ItemSource { get; set; }
+        /// <inheritdoc cref="Primitives.ItemSource{T, E}.Items"/>
+        new E Items { get; set; }
     }
 
     

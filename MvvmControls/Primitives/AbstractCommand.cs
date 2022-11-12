@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace RFBCodeWorks.MvvmControls
+namespace RFBCodeWorks.MvvmControls.Primitives
 {
     /// <summary>
     /// Abstract base class for IRelayCommand objects that do not require parameters

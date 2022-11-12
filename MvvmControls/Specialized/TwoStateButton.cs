@@ -5,7 +5,7 @@ namespace RFBCodeWorks.MvvmControls.Specialized
     /// <summary>
     /// This object is comprised of two RelayCommands, but which one is active depends on the state of the object
     /// </summary>
-    public class TwoStateButton : AbstractTwoStateButton, IButtonDefinition
+    public class TwoStateButton : Primitives.AbstractTwoStateButton, IButtonDefinition
     {
         /// <summary>
         /// 
@@ -30,18 +30,16 @@ namespace RFBCodeWorks.MvvmControls.Specialized
             AlternateActionCanExecute = alternateCanExecute;
         }
 
-        private bool defaultEnabled = true;
-
         /// <inheritdoc/>
         public override event EventHandler CanExecuteChanged;
 
         /// <summary>
-        /// The action to perform while <see cref="AbstractTwoStateButton.IsDefaultState"/> == true
+        /// The action to perform while <see cref="Primitives.AbstractTwoStateButton.IsDefaultState"/> == true
         /// </summary>
         public Action DefaultAction { get; init; }
 
         /// <summary>
-        /// The action to perform while <see cref="AbstractTwoStateButton.IsDefaultState"/> == false
+        /// The action to perform while <see cref="Primitives.AbstractTwoStateButton.IsDefaultState"/> == false
         /// </summary>
         public Action AlternateAction { get; init; }
 

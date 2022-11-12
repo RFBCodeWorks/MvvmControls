@@ -6,7 +6,7 @@ namespace RFBCodeWorks.MvvmControls
     /// <summary>
     /// Interface for the definition of a control that interacts with a <see cref="System.Windows.Controls.Primitives.RangeBase"/>
     /// </summary>
-    interface IRangeControlDefinition : IControlDefinition
+    interface IRangeControl : IControlDefinition
     {
         /// <inheritdoc cref="RangeBase.ValueChanged"/>
         event EventHandler ValueChanged;

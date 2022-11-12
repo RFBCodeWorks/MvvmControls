@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
 
-namespace RFBCodeWorks.MvvmControls.ViewModels
+namespace RFBCodeWorks.MvvmControls.Specialized
 {
     /// <summary>
     /// ViewModel
@@ -11,16 +12,16 @@ namespace RFBCodeWorks.MvvmControls.ViewModels
 
         static DateTimePicker()
         {
-            Static12Hours = new int[] { 00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11 };
-            Static24Hours = new int[] { 00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
-            StaticAMPM = new string[] { "AM", "PM" };
-            StaticMinutesSeconds = IntegerPicker.GenerateArray(60);
+            Static12Hours = new ImmutableArray<int> { 00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11 };
+            Static24Hours = new ImmutableArray<int> { 00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
+            StaticAMPM = new ImmutableArray<string> { "AM", "PM" };
+            StaticMinutesSeconds = new ImmutableArray<int>().AddRange(IntegerPicker.GenerateArray(60));
         }
 
-        private static int[] Static24Hours { get; }
-        private static int[] Static12Hours { get; }
-        private static string[] StaticAMPM{ get; }
-        private static int[] StaticMinutesSeconds{ get; }
+        private static ImmutableArray<int> Static24Hours { get; }
+        private static ImmutableArray<int> Static12Hours { get; }
+        private static ImmutableArray<string> StaticAMPM{ get; }
+        private static ImmutableArray<int> StaticMinutesSeconds { get; }
 
         /// <summary> </summary>
         public DateTimePicker() :base() { }
@@ -31,23 +32,23 @@ namespace RFBCodeWorks.MvvmControls.ViewModels
         /// <summary>
         /// 
         /// </summary>
-        public int[] Hours24 => Static24Hours;
+        public ImmutableArray<int> Hours24 => Static24Hours;
 
 
         /// <summary>
         /// 
         /// </summary>
-        public int[] Hours12 => Static12Hours;
+        public ImmutableArray<int> Hours12 => Static12Hours;
 
         /// <summary>
         /// 
         /// </summary>
-        public int[] MinutesSeconds => StaticMinutesSeconds;
+        public ImmutableArray<int> MinutesSeconds => StaticMinutesSeconds;
 
         /// <summary>
         /// 
         /// </summary>
-        public string[] AmPm => StaticAMPM;
+        public ImmutableArray<string> AmPm => StaticAMPM;
 
 
         ///// <summary>

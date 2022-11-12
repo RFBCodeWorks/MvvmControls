@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.MvvmControls
+namespace RFBCodeWorks.MvvmControls.Helpers
 {
     /// <summary>
     /// Implicitly convert between a <see cref="Predicate{T}"/> and a <see cref="Func{T, R}"/> where TResult is <see langword="bool"/>

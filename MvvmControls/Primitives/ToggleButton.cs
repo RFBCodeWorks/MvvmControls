@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Windows.Controls.Primitives;
 
-namespace RFBCodeWorks.MvvmControls
+namespace RFBCodeWorks.MvvmControls.Primitives
 {
     /// <summary>
     /// Base Definition for a CheckBox or other Toggle Button
     /// </summary>
-    public class ToggleButtonDefinition : BaseControlDefinition, IDisplayTextProvider, IToggleButtonDefinition
+    public class ToggleButton : ControlBase, IDisplayTextProvider, IToggleButton
     {
         /// <summary>
         /// Occurs when the value is <see cref="IsChecked"/> is updated to a new value, prior to the corresponding event that is raised based on the actual new value

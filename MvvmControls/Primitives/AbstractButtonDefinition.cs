@@ -4,18 +4,18 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
-namespace RFBCodeWorks.MvvmControls
+namespace RFBCodeWorks.MvvmControls.Primitives
 {
     /// <summary>
     /// Abstract base object that inherits from the following:
-    /// <br/> - <see cref="BaseControlDefinition"/>
+    /// <br/> - <see cref="ControlBase"/>
     /// <br/> - <see cref="IRelayCommand"/>
     /// <br/> - <see cref="ICommand"/> - This is explicitly implemented via the protected abstract methods
     /// <br/> - <see cref="IToolTipProvider"/>
     /// <br/> - <see cref="INotifyPropertyChanged"/>
     /// <br/> - <see cref="IButtonDefinition"/>
     /// </summary>
-    public abstract class AbstractButtonDefinition : BaseControlDefinition, IButtonDefinition
+    public abstract class AbstractButtonDefinition : ControlBase, IButtonDefinition
     {
         /// <summary> Static method that can be used as the default Func{bool} for <see cref="ICommand.CanExecute(object)"/> </summary>
         /// <returns><see langword="true"/></returns>

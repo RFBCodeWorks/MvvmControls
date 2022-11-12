@@ -10,7 +10,7 @@ namespace RFBCodeWorks.MvvmControls
     /// <summary>
     /// Interface all ListBoxDefinitions should implement to be assignable via AttachedProperty
     /// </summary>
-    public interface IListBoxDefinition : ISelector
+    public interface IListBox : ISelector
     {
         /// <inheritdoc cref="ListBox.SelectionMode" path="*"/>
         SelectionMode SelectionMode { get; }
@@ -39,8 +39,8 @@ namespace RFBCodeWorks.MvvmControls
     /// <summary>
     /// The base ListBoxDefinition object
     /// </summary>
-    /// <inheritdoc cref="SelectorDefinition{T, E, V}"/>
-    public class ListBoxDefinition<T, E, V> : SelectorDefinition<T, E, V>, IListBoxDefinition
+    /// <inheritdoc cref="Primitives.Selector{T, E, V}"/>
+    public class ListBoxDefinition<T, E, V> : Primitives.Selector<T, E, V>, IListBox
         where E : IList<T>
     {
         #region < SelectionChangedEvent >
@@ -59,7 +59,7 @@ namespace RFBCodeWorks.MvvmControls
         #endregion
 
         /// <inheritdoc/>
-        public bool HasItems => ItemSource?.Any() ?? false;
+        public bool HasItems => Items?.Any() ?? false;
 
         /// <inheritdoc/>
         public bool HasItemsSelected => SelectedItems?.Any() ?? false;
@@ -82,7 +82,7 @@ namespace RFBCodeWorks.MvvmControls
             }
         }
         private IList<T> SelectedItemsField;
-        IList IListBoxDefinition.SelectedItems => (IList)SelectedItems;
+        IList IListBox.SelectedItems => (IList)SelectedItems;
 
         /// <inheritdoc/>
         public SelectionMode SelectionMode
@@ -157,7 +157,7 @@ namespace RFBCodeWorks.MvvmControls
         public virtual void Refresh()
         {
             if (RefreshFunc != null && (CanRefresh?.Invoke() ?? true))
-                ItemSource = RefreshFunc();
+                Items = RefreshFunc();
         }
 
         /// <inheritdoc/>

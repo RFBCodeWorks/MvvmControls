@@ -6,11 +6,11 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
     public static partial class ControlDefinitions
     {
         /// <summary>
-        /// Assigns an <see cref="IComboBoxDefinition"/> to a <see cref="ComboBox"/>
+        /// Assigns an <see cref="IComboBox"/> to a <see cref="ComboBox"/>
         /// </summary>
         public static readonly DependencyProperty ComboBoxDefinitionProperty =
             DependencyProperty.RegisterAttached("ComboBoxDefinition",
-                typeof(IComboBoxDefinition),
+                typeof(IComboBox),
                 typeof(ControlDefinitions),
                 new PropertyMetadata(null, ComboBoxDefinitionPropertyChanged)
                 );
@@ -19,31 +19,31 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         {
             if (sender is ComboBox cmb)
             {
-                if (args.OldValue is IComboBoxDefinition oldDef)
+                if (args.OldValue is IComboBox oldDef)
                 {
                     UnbindSelectorDefinition(cmb, oldDef);
                     UnbindIfBound(cmb, ComboBox.IsDropDownOpenProperty, oldDef);
                 }
-                if (args.NewValue is IComboBoxDefinition def)
+                if (args.NewValue is IComboBox def)
                 {
                     BindSelectorDefinition(cmb, def);
-                    SetBinding(cmb, ComboBox.IsDropDownOpenProperty, nameof(IComboBoxDefinition.IsDropDownOpen), def);
+                    SetBinding(cmb, ComboBox.IsDropDownOpenProperty, nameof(IComboBox.IsDropDownOpen), def);
                 }
             }
         }
 
         /// <summary>
-        /// Gets the assigned <see cref="IComboBoxDefinition"/> from a <see cref="ComboBox"/>
+        /// Gets the assigned <see cref="IComboBox"/> from a <see cref="ComboBox"/>
         /// </summary>
-        public static IComboBoxDefinition GetComboBoxDefinition(DependencyObject obj)
+        public static IComboBox GetComboBoxDefinition(DependencyObject obj)
         {
-            return (IComboBoxDefinition)obj.GetValue(ComboBoxDefinitionProperty);
+            return (IComboBox)obj.GetValue(ComboBoxDefinitionProperty);
         }
 
         /// <summary>
-        /// Assigns an <see cref="IComboBoxDefinition"/> to a <see cref="ComboBox"/>
+        /// Assigns an <see cref="IComboBox"/> to a <see cref="ComboBox"/>
         /// </summary>
-        public static void SetComboBoxDefinition(DependencyObject obj, IComboBoxDefinition value)
+        public static void SetComboBoxDefinition(DependencyObject obj, IComboBox value)
         {
             obj.SetValue(ComboBoxDefinitionProperty, value);
         }

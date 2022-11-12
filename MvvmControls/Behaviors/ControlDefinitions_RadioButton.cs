@@ -6,11 +6,11 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
     public static partial class ControlDefinitions
     {
         /// <summary>
-        /// Assigns an <see cref="IRadioButtonDefinition"/> to a <see cref="RadioButton"/>
+        /// Assigns an <see cref="IRadioButton"/> to a <see cref="RadioButton"/>
         /// </summary>
         public static readonly DependencyProperty RadioButtonDefinitionProperty =
             DependencyProperty.RegisterAttached("RadioButtonDefinition",
-                typeof(IRadioButtonDefinition),
+                typeof(IRadioButton),
                 typeof(ControlDefinitions),
                 new PropertyMetadata(null, RadioButtonDefinitionPropertyChanged)
                 );
@@ -19,7 +19,7 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         {
             if (sender is RadioButton btn)
             {
-                if (args.OldValue is IRadioButtonDefinition oldDef)
+                if (args.OldValue is IRadioButton oldDef)
                 {
                     if (GetToggleButtonDefinition(btn) == args.OldValue)
                         SetToggleButtonDefinition(btn, null);
@@ -28,7 +28,7 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
                     UnbindIfBound(btn, RadioButton.GroupNameProperty, oldDef);
                 }
                 
-                if (args.NewValue is IRadioButtonDefinition def)
+                if (args.NewValue is IRadioButton def)
                 {
                     SetToggleButtonDefinition(btn, def);
                     SetBinding(btn, RadioButton.GroupNameProperty, nameof(def.GroupName), def);
@@ -38,17 +38,17 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         }
 
         /// <summary>
-        /// Gets the assigned <see cref="IRadioButtonDefinition"/> from a <see cref="ComboBox"/>
+        /// Gets the assigned <see cref="IRadioButton"/> from a <see cref="ComboBox"/>
         /// </summary>
-        public static IRadioButtonDefinition GetRadioButtonDefinition(DependencyObject obj)
+        public static IRadioButton GetRadioButtonDefinition(DependencyObject obj)
         {
-            return (IRadioButtonDefinition)obj.GetValue(RadioButtonDefinitionProperty);
+            return (IRadioButton)obj.GetValue(RadioButtonDefinitionProperty);
         }
 
         /// <summary>
-        /// Assigns an <see cref="IRadioButtonDefinition"/> to a <see cref="ComboBox"/>
+        /// Assigns an <see cref="IRadioButton"/> to a <see cref="ComboBox"/>
         /// </summary>
-        public static void SetRadioButtonDefinition(DependencyObject obj, IRadioButtonDefinition value)
+        public static void SetRadioButtonDefinition(DependencyObject obj, IRadioButton value)
         {
             obj.SetValue(RadioButtonDefinitionProperty, value);
         }

@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 
-namespace RFBCodeWorks.MvvmControls
+namespace RFBCodeWorks.MvvmControls.Primitives
 {
     /// <summary>
     /// Contains the basic bindings all controls have
     /// </summary>
-    public class BaseControlDefinition : ObservableObject,  IControlDefinition, IToolTipProvider
+    public class ControlBase : ObservableObject,  IControlDefinition, IToolTipProvider
     {
         /// <summary>
         /// Subscribe to a component's PropertyChanged event to pass on the args. <see langword="sender"/> will be this control object.
