@@ -6,12 +6,42 @@
       <UseWPF>true</UseWPF>
       <Platforms>AnyCPU;x86;x64</Platforms>
       <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\MVVM Objects.xml</DocumentationFile>
+      <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+      <PackageLicenseFile>LICENSE</PackageLicenseFile>
+      <PackageLicenseExpression></PackageLicenseExpression>
+      <Description>This is a Library designed to ease working within an MVVM framework, and is meant to consolidate boiler-plate ViewModel interactions for common WPF controls into pre-built classes.
+
+## Example - A simplified ComboBox Experience
+ 
+A ComboBoxDefinition has the following properties that the ViewModel may interact with, and are easily bound within the XAML using a single binding.
+ 
+- ItemSource (The items within the drop-down)
+- SelectedItem (The currently selected item)
+- SelectedValue \ SelectedValuePath ( The value of the SelectedItem, as an object, typically a property of the item )
+- SelectedItemChanged event - Occurs and a new item is selected
+- ItemSourceChanged event - Occurs when the itemsource is updated
+- IsEnabled - Enable/Disable a control from within the ViewModel
+- Visibilty / IsVisible - Toggle visibility of an item from within the ViewModel
+
+## XAML: 
+&lt;ComboBox MvvmControls:ControlDefinitions.ComboBoxDefinition="{Binding MyComboBox}" /&gt;</Description>
+      <Copyright></Copyright>
+      <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
+      <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
+      <PackageReleaseNotes>While this has targets for .net472, .net480, and .netCoreApp3.1, this library is set to use C#9.0 for Init-style properties, so your project may have to specify that `<LangVersion>9.0</LangVersion>` to use this. 
+.Net5.0 and beyond natively supports this library.</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,11 +1,25 @@
 ﻿using System;
+using System.Collections;
+using System.ComponentModel;
 
 namespace RFBCodeWorks.MvvmControls
 {
     /// <summary>
+    /// Interface for interacting with a <see cref="System.Windows.Controls.TextBox"/>
+    /// </summary>
+    public interface ITextControl : IControlDefinition
+    {
+        /// <inheritdoc cref="System.Windows.Controls.TextBox.Text"/>
+        public string Text { get; set; }
+
+        /// <inheritdoc cref="System.Windows.Controls.Primitives.TextBoxBase.IsReadOnly"/>
+        public bool IsReadOnly { get; set; }
+    }
+
+    /// <summary>
     /// A definition for a control that displays text
     /// </summary>
-    public class TextControlDefinition : Primitives.ControlBase, IDisplayTextProvider
+    public class TextControlDefinition : Primitives.ControlBase, ITextControl, IDisplayTextProvider
     {
 
         /// <summary>
@@ -49,6 +63,5 @@ namespace RFBCodeWorks.MvvmControls
         /// Public EventHandler method to allow triggering the refresh via another object's event
         /// </summary>
         public virtual void Refresh(object sender, EventArgs e) => Refresh();
-
     }
 }

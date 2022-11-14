@@ -19,15 +19,18 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         {
             if (sender is ComboBox cmb)
             {
+                SetSelectorDefinition(cmb, args.NewValue as ISelector);
                 if (args.OldValue is IComboBox oldDef)
                 {
-                    UnbindSelectorDefinition(cmb, oldDef);
                     UnbindIfBound(cmb, ComboBox.IsDropDownOpenProperty, oldDef);
+                    UnbindIfBound(cmb, ComboBox.IsReadOnlyProperty, oldDef);
+                    UnbindIfBound(cmb, ComboBox.IsEditableProperty, oldDef);
                 }
                 if (args.NewValue is IComboBox def)
                 {
-                    BindSelectorDefinition(cmb, def);
                     SetBinding(cmb, ComboBox.IsDropDownOpenProperty, nameof(IComboBox.IsDropDownOpen), def);
+                    SetBinding(cmb, ComboBox.IsReadOnlyProperty, nameof(IComboBox.IsReadOnly), def);
+                    SetBinding(cmb, ComboBox.IsEditableProperty, nameof(IComboBox.IsEditable), def);
                 }
             }
         }

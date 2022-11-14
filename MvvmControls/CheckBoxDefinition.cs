@@ -11,7 +11,7 @@
     /// <summary>
     /// Provides a definition for Checkbox controls
     /// </summary>
-    public class CheckBoxDefinition : Primitives.ToggleButton, ICheckBox
+    public class CheckBoxDefinition : Primitives.ToggleButtonDefinition, ICheckBox
     {
     }
 }

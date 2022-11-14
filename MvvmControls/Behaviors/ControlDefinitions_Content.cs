@@ -7,6 +7,62 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
 {
     public static partial class ControlDefinitions
     {
+        /// <summary>
+        /// Set the content of the control, as well as its binding mode, and fallback values.
+        /// <br/> Fallback values will use <see cref="FallbackContentProperty"/>
+        /// </summary>
+        /// <param name="cntrl">the control whose property should be set</param>
+        /// <param name="cntrlProperty">the dependency property to bind</param>
+        /// <param name="source">the source to bind to</param>
+        /// <param name="sourceProperty">the name of the source property</param>
+        /// <param name="mode">the binding mode - use null for BindingMode.Default</param>
+        public static void SetContent(FrameworkElement cntrl, DependencyProperty cntrlProperty, object source, string sourceProperty, BindingMode? mode = BindingMode.OneWay)
+        {
+            cntrl.SetValue(BoundContentProperty, cntrlProperty);
+            //Set the Content if the content is null
+            if (cntrl.GetBindingExpression(cntrlProperty) is null)
+            {
+                BindingOperations.SetBinding(cntrl, cntrlProperty, new Binding(sourceProperty)
+                {
+                    Source = source,
+                    Mode = mode ?? BindingMode.Default,
+                    FallbackValue = GetFallbackContent(cntrl),
+                    TargetNullValue = GetFallbackContent(cntrl)
+                });
+            }
+        }
+
+        /// <summary>
+        /// Set the Content binding of a button control to the DisplayText property
+        /// <br/> - Affectes Buttons, CheckBoxes, RadioButtons, etc
+        /// </summary>
+        /// <param name="cntrl"></param>
+        /// <param name="source"></param>
+        public static void SetContent(ButtonBase cntrl, object source)
+        {
+            SetContent(cntrl, ButtonBase.ContentProperty, source, nameof(IButtonDefinition.DisplayText), BindingMode.OneWay);
+        }
+
+        /// <summary>
+        /// Set the Content binding of a TextBlock control to the DisplayText property
+        /// </summary>
+        /// <param name="cntrl"></param>
+        /// <param name="source"></param>
+        public static void SetContent(TextBlock cntrl, object source)
+        {
+            SetContent(cntrl, TextBlock.TextProperty, source, nameof(IDisplayTextProvider.DisplayText), BindingMode.OneWay);
+        }
+
+        /// <summary>
+        /// Set the Content binding of a TextBlock control to the DisplayText property
+        /// </summary>
+        /// <param name="cntrl"></param>
+        /// <param name="source"></param>
+        public static void SetContent(TextBox cntrl, object source)
+        {
+            SetContent(cntrl, TextBox.TextProperty, source, nameof(IDisplayTextProvider.DisplayText), BindingMode.OneWay);
+        }
+
         /// <summary> </summary>
         public static readonly DependencyProperty FallbackContentProperty =
             DependencyProperty.RegisterAttached(
@@ -49,56 +105,13 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
             }
         }
 
-        /// <summary> Helper to facility the FallBackContent property changing </summary>
+        /// <summary> Helper to facilitate the FallBackContent property changing </summary>
         private static readonly DependencyProperty BoundContentProperty =
             DependencyProperty.RegisterAttached(
                 "BoundContent",
                 typeof(DependencyProperty),
                 typeof(ControlDefinitions));
 
-        /// <summary>
-        /// Set the content of the control, as well as its binding mode, and fallback values.
-        /// <br/> Fallback values will use <see cref="FallbackContentProperty"/>
-        /// </summary>
-        /// <param name="cntrl">the control whose property should be set</param>
-        /// <param name="cntrlProperty">the dependency property to bind</param>
-        /// <param name="source">the source to bind to</param>
-        /// <param name="sourceProperty">the name of the source property</param>
-        /// <param name="mode">the binding mode - use null for BindingMode.Default</param>
-        public static void SetContent(FrameworkElement cntrl, DependencyProperty cntrlProperty, object source, string sourceProperty, BindingMode? mode = BindingMode.OneWay)
-        {
-            cntrl.SetValue(BoundContentProperty, cntrlProperty);
-            //Set the Content if the content is null
-            if (cntrl.GetBindingExpression(cntrlProperty) is null)
-            {
-                BindingOperations.SetBinding(cntrl, cntrlProperty, new Binding(sourceProperty)
-                {
-                    Source = source,
-                    Mode = mode ?? BindingMode.Default,
-                    FallbackValue = GetFallbackContent(cntrl),
-                    TargetNullValue = GetFallbackContent(cntrl)
-                });
-            }
-        }
 
-        /// <summary>
-        /// Set the Content binding of a button control to the DisplayText property
-        /// </summary>
-        /// <param name="cntrl"></param>
-        /// <param name="source"></param>
-        public static void SetContent(ButtonBase cntrl, object source)
-        {
-            SetContent(cntrl, ButtonBase.ContentProperty, source, nameof(IButtonDefinition.DisplayText), BindingMode.OneWay);
-        }
-
-        /// <summary>
-        /// Set the Content binding of a TextBlock control to the DisplayText property
-        /// </summary>
-        /// <param name="cntrl"></param>
-        /// <param name="source"></param>
-        public static void SetContent(TextBlock cntrl, object source)
-        {
-            SetContent(cntrl, TextBlock.TextProperty, source, nameof(IDisplayTextProvider.DisplayText), BindingMode.OneWay);
-        }
     }
 }

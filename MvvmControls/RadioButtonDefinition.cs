@@ -13,7 +13,7 @@
     /// <summary>
     /// Provides a definition for Radio Button controls
     /// </summary>
-    public class RadioButtonDefinition : Primitives.ToggleButton, IRadioButton
+    public class RadioButtonDefinition : Primitives.ToggleButtonDefinition, IRadioButton
     {
         /// <inheritdoc cref="System.Windows.Controls.RadioButton.GroupName"/>
         public string GroupName

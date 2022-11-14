@@ -19,18 +19,7 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         {
             if (sender is CheckBox cmb)
             {
-                if (args.OldValue is ICheckBox oldDef)
-                {
-                    if (GetToggleButtonDefinition(cmb) == args.OldValue)
-                        SetToggleButtonDefinition(cmb, null);
-                    else
-                        UnbindToggleButtonDefinition(cmb, oldDef);
-                }
-                if (args.NewValue is ICheckBox def)
-                {
-                    SetToggleButtonDefinition(cmb, def);
-                }
-                SetContent(cmb, args.NewValue);
+                SetToggleButtonDefinition(cmb, args.NewValue as IToggleButton);
             }
         }
 

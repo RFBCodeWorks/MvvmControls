@@ -36,6 +36,14 @@ namespace ExampleWPF
         public RadioButtonDefinition EnableComboBox { get; } = new RadioButtonDefinition() { DisplayText = "Enable ComboBox", GroupName = "EC" };
         public RadioButtonDefinition DisableComboBox { get; } = new RadioButtonDefinition() { DisplayText = "Disable ComboBox", GroupName = "EC" };
 
+        public TextValidationControl TextValidation { get; }
+            = new TextValidationControl(new System.Text.RegularExpressions.Regex("^[0-9]{1,4}$"))
+            {
+                Error = "Text must be a numeric value between 1 and 4 digits long, ex: 0 -> 9999",
+                ToolTip = "Text must be a numeric value between 1 and 4 digits long, ex: 0 -> 9999",
+                Text = "0"
+            };
+
 
         /// <summary>
         /// 

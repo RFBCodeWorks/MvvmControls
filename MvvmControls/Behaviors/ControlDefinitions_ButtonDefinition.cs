@@ -23,11 +23,12 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
                     UnbindIControlDefinition(cntrl, oldDef);
                     UnbindIfBound(cntrl, Button.CommandProperty, oldDef);
                 }
+
                 if (args.NewValue is IButtonDefinition def)
                 {
                     BindIControlDefinition(cntrl, def);
 
-                    //Binding
+                    //Bind the COMMAND property
                     BindingOperations.SetBinding(cntrl, Button.CommandProperty, new Binding()
                     {
                         Source = def,

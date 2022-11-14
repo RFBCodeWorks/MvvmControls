@@ -6,7 +6,7 @@ namespace RFBCodeWorks.MvvmControls.Primitives
     /// <summary>
     /// Base Definition for a CheckBox or other Toggle Button
     /// </summary>
-    public class ToggleButton : ControlBase, IDisplayTextProvider, IToggleButton
+    public class ToggleButtonDefinition : ControlBase, IDisplayTextProvider, IToggleButton
     {
         /// <summary>
         /// Occurs when the value is <see cref="IsChecked"/> is updated to a new value, prior to the corresponding event that is raised based on the actual new value
@@ -25,7 +25,7 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         /// </summary>
         public event EventHandler Indeterminate;
 
-        /// <inheritdoc cref="ToggleButton.IsChecked"/>
+        /// <inheritdoc cref="ToggleButtonDefinition.IsChecked"/>
         public virtual bool? IsChecked
         {
             get
@@ -53,7 +53,7 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         }
         private bool? IsCheckedField;
 
-        /// <inheritdoc cref="ToggleButton.IsThreeState"/>
+        /// <inheritdoc cref="ToggleButtonDefinition.IsThreeState"/>
         public virtual bool IsThreeState
         {
             get { return IsThreeStateField; }

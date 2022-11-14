@@ -1,22 +1,22 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Windows;
 
-namespace RFBCodeWorks.MvvmControls.Tests
+namespace RFBCodeWorks.MvvmControls.Primitives.Tests
 {
     [TestClass()]
-    public class BaseControlDefinitionTests
+    public class ControlBaseTests
     {
-        public BaseControlDefinitionTests() :this(new()) { }
+        public ControlBaseTests() :this(new()) { }
         /// <summary>
         /// Set the ControlDefinition for the test methods
         /// </summary>
         /// <param name="definition"></param>
-        public BaseControlDefinitionTests(BaseControlDefinition definition)
+        public ControlBaseTests(ControlBase definition)
         {
             ControlDefinition = definition;
         }
 
-        protected BaseControlDefinition ControlDefinition { get; }
+        protected ControlBase ControlDefinition { get; }
 
         [TestCleanup]
         public virtual void TestCleanup()

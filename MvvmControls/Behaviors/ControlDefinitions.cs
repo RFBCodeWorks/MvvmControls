@@ -9,6 +9,11 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
     /// </summary>
     public static partial class ControlDefinitions
     {
+        internal static Binding GetBindingInfo(DependencyObject obj, DependencyProperty prop)
+        {
+            return BindingOperations.GetBindingExpression(obj, prop)?.ParentBinding;
+        }
+
         /// <summary>
         /// Unbind the specified dependency property if the source is the same as the binding.source
         /// </summary>
@@ -32,27 +37,20 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         /// <param name="source">The control definition</param>
         /// <param name="propertyName">The name of the bound property. This must be a property of the <typeparamref name="T"/> <paramref name="source"/></param>
         /// <param name="mode">The binding mode - if not specified uses the default for this property</param>
+        /// <param name="trigger">The update trigger</param>
         /// <returns>The binding that was created</returns>
         /// <typeparam name="T">The IControlDefinition interface type</typeparam>
-        internal static void SetBinding<T>(DependencyObject obj, DependencyProperty prop, string propertyName, T source, BindingMode? mode = null)
+        internal static void SetBinding<T>(DependencyObject obj, DependencyProperty prop, string propertyName, T source,
+            BindingMode? mode = null,
+            UpdateSourceTrigger? trigger = null)
         where T : class, IControlDefinition
         {
-            if (mode.HasValue)
+            BindingOperations.SetBinding(obj, prop, new Binding(propertyName)
             {
-                BindingOperations.SetBinding(obj, prop, new Binding(propertyName)
-                {
-                    Source = source,
-                    Mode = mode.Value
-                });
-            }
-            else
-            {
-                BindingOperations.SetBinding(obj, prop, new Binding(propertyName)
-                {
-                    Source = source
-                });
-            }
-            
+                Source = source,
+                Mode = mode ?? BindingMode.Default,
+                UpdateSourceTrigger = trigger ?? UpdateSourceTrigger.Default
+            });
         }
 
         /// <summary>

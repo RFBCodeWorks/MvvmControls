@@ -7,21 +7,21 @@ namespace RFBCodeWorks.MvvmControls
     /// </summary>
     public interface IToggleButton : IDisplayTextProvider, IControlDefinition
     {
-        /// <inheritdoc cref="Primitives.ToggleButton.IsChecked"/>
+        /// <inheritdoc cref="Primitives.ToggleButtonDefinition.IsChecked"/>
         bool? IsChecked { get; set; }
-        /// <inheritdoc cref="Primitives.ToggleButton.IsThreeState"/>
+        /// <inheritdoc cref="Primitives.ToggleButtonDefinition.IsThreeState"/>
         bool IsThreeState { get; set; }
 
-        /// <inheritdoc cref="Primitives.ToggleButton.Checked"/>
+        /// <inheritdoc cref="Primitives.ToggleButtonDefinition.Checked"/>
         event EventHandler Checked;
-        /// <inheritdoc cref="Primitives.ToggleButton.Indeterminate"/>
+        /// <inheritdoc cref="Primitives.ToggleButtonDefinition.Indeterminate"/>
         event EventHandler Indeterminate;
-        /// <inheritdoc cref="Primitives.ToggleButton.StateChange"/>
+        /// <inheritdoc cref="Primitives.ToggleButtonDefinition.StateChange"/>
         event EventHandler StateChange;
-        /// <inheritdoc cref="Primitives.ToggleButton.Unchecked"/>
+        /// <inheritdoc cref="Primitives.ToggleButtonDefinition.Unchecked"/>
         event EventHandler Unchecked;
 
-        /// <inheritdoc cref="Primitives.ToggleButton.Toggle"/>
+        /// <inheritdoc cref="Primitives.ToggleButtonDefinition.Toggle"/>
         void Toggle();
     }
 

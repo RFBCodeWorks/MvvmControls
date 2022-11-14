@@ -1,81 +1,20 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace RFBCodeWorks.MvvmControls.Tests
+namespace RFBCodeWorks.MvvmControls.Primitives.Tests
 {
-    [TestClass()]
-    public class RadioButtonDefinitionTest : ToggleButtonDefinitionTest
-    {
-        public RadioButtonDefinitionTest() : this(new()) { }
-        public RadioButtonDefinitionTest(RadioButtonDefinition controlDef) : base(controlDef) 
-        {
-            ControlDefinition = controlDef;
-        }
-
-        new protected RadioButtonDefinition ControlDefinition { get; }
-
-        [TestMethod]
-        public override void TestToggleButton()
-        {
-            System.Windows.Controls.RadioButton radio= new();
-            Behaviors.ControlDefinitions.SetRadioButtonDefinition(radio, ControlDefinition);
-            TestControlInteraction(radio);
-        }
-
-        public override void TestThreeState()
-        {
-            Assert.IsFalse(ControlDefinition.IsThreeState);
-            ControlDefinition.IsThreeState = true;
-            Assert.IsFalse(ControlDefinition.IsThreeState);
-        }
-
-        protected override void TestControlInteraction(Control cntrl)
-        {
-            base.TestControlInteraction(cntrl);
-            Assert.IsTrue(cntrl is RadioButton);
-            var radioBtn = cntrl as RadioButton;
-
-            ControlDefinition.GroupName = "Group1";
-            Assert.AreEqual("Group1", radioBtn.GroupName);
-
-            ControlDefinition.GroupName = "Group2";
-            Assert.AreEqual("Group2", radioBtn.GroupName);
-        }
-    }
 
     [TestClass()]
-    public class CheckBoxDefinitionTest : ToggleButtonDefinitionTest
-    {
-        public CheckBoxDefinitionTest() : this(new()) { }
-        public CheckBoxDefinitionTest(CheckBoxDefinition controlDef) : base(controlDef)
-        {
-            ControlDefinition = controlDef;
-        }
-
-        new protected CheckBoxDefinition ControlDefinition { get; }
-
-        [TestMethod]
-        public override void TestToggleButton()
-        {
-            System.Windows.Controls.CheckBox chk = new();
-            Behaviors.ControlDefinitions.SetCheckBoxDefinition(chk, ControlDefinition);
-            TestControlInteraction(chk);
-        }
-
-        protected override void TestControlInteraction(Control cntrl)
-        {
-            base.TestControlInteraction(cntrl);
-            Assert.IsTrue(cntrl is CheckBox);
-            var checkbox = cntrl as CheckBox;
-        }
-    }
-
-    [TestClass()]
-    public class ToggleButtonDefinitionTest : BaseControlDefinitionTests
+    public class ToggleButtonDefinitionTest : ControlBaseTests
     {
         public ToggleButtonDefinitionTest() : this(new()) { }
 
-        public ToggleButtonDefinitionTest(ToggleButtonDefinition controlDef) : base(controlDef) 
+        public ToggleButtonDefinitionTest(ToggleButtonDefinition controlDef) : base(controlDef)
         {
             ControlDefinition = controlDef;
         }
@@ -107,8 +46,8 @@ namespace RFBCodeWorks.MvvmControls.Tests
             bool UnCheckedEvent = false;
             bool StateChanged = false;
             bool NullEvent = false;
-            
-            ControlDefinition.Checked+= (o, e) => CheckedEvent= true;
+
+            ControlDefinition.Checked += (o, e) => CheckedEvent = true;
             ControlDefinition.Unchecked += (o, e) => UnCheckedEvent = true;
             ControlDefinition.Indeterminate += (o, e) => NullEvent = true;
             ControlDefinition.StateChange += (o, e) => StateChanged = true;
@@ -134,7 +73,7 @@ namespace RFBCodeWorks.MvvmControls.Tests
             Behaviors.ControlDefinitions.SetToggleButtonDefinition(toggle, ControlDefinition);
             TestControlInteraction(toggle);
         }
-        
+
         protected override void TestControlInteraction(Control cntrl)
         {
             Assert.IsTrue(cntrl is System.Windows.Controls.Primitives.ToggleButton);
@@ -162,9 +101,10 @@ namespace RFBCodeWorks.MvvmControls.Tests
             Assert.IsFalse(ControlDefinition.IsChecked);
             if (ControlDefinition.IsThreeState)
             {
-                toggle.IsChecked= null;
+                toggle.IsChecked = null;
                 Assert.IsNull(ControlDefinition.IsChecked);
             }
         }
     }
 }
+

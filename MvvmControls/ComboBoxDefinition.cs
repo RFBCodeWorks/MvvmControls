@@ -6,16 +6,27 @@ namespace RFBCodeWorks.MvvmControls
 {
     /// <summary>
     /// Interface all ComboBoxDefinitions should implement to be assignable via AttachedProperty
+    /// <br/> Inherits: <see cref="ISelector"/>
     /// </summary>
     public interface IComboBox : ISelector
     {
         /// <inheritdoc cref="System.Windows.Controls.ComboBox.IsDropDownOpen"/>
         /// <remarks>This property can be used to force the drop-down open from the ViewModel</remarks>
-        public bool IsDropDownOpen { get; set; }
+        bool IsDropDownOpen { get; set; }
+
+        /// <inheritdoc cref="ComboBoxDefinition{T, E, V}.IsReadOnly"/>
+        bool IsReadOnly { get; set; }
+
+        /// <inheritdoc cref="ComboBoxDefinition{T, E, V}.IsEditable"/>
+        bool IsEditable { get; set; }
     }
 
     /// <summary>
     /// Interface all ComboBoxDefinitions of some type implement
+    /// <para/>Inherits: 
+    /// <br/>  - <see cref="IComboBox"/>
+    /// <br/>  - <see cref="ISelector"/>
+    /// <br/>  - <see cref="ISelector{T}"/>
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface IComboBox<T> : ISelector<T>, IComboBox { }
@@ -23,8 +34,8 @@ namespace RFBCodeWorks.MvvmControls
     /// <summary>
     /// The base ComboBoxDefinition
     /// </summary>
-    /// <inheritdoc cref="Primitives.Selector{T, E, V}"/>
-    public class ComboBoxDefinition<T, E, V> : Primitives.Selector<T, E, V>, IComboBox, IComboBox<T>
+    /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}"/>
+    public class ComboBoxDefinition<T, E, V> : Primitives.SelectorDefinition<T, E, V>, IComboBox, IComboBox<T>
         where E : IList<T>
     {
         /// <inheritdoc cref="System.Windows.Controls.ComboBox.Text"/>

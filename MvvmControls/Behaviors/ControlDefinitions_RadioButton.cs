@@ -21,19 +21,15 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
             {
                 if (args.OldValue is IRadioButton oldDef)
                 {
-                    if (GetToggleButtonDefinition(btn) == args.OldValue)
-                        SetToggleButtonDefinition(btn, null);
-                    else
-                        UnbindToggleButtonDefinition(btn, oldDef);
                     UnbindIfBound(btn, RadioButton.GroupNameProperty, oldDef);
                 }
-                
+
+                SetToggleButtonDefinition(btn, args.NewValue as IToggleButton);
+
                 if (args.NewValue is IRadioButton def)
                 {
-                    SetToggleButtonDefinition(btn, def);
                     SetBinding(btn, RadioButton.GroupNameProperty, nameof(def.GroupName), def);
                 }
-                SetContent(btn, args.NewValue);
             }
         }
 

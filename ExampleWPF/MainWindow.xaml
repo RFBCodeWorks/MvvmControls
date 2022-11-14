@@ -33,6 +33,11 @@
                 <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding DisableComboBox}"/>
             </StackPanel>
         </GroupBox>
+        <GroupBox Header="Textbox Validation Control" >
+            <StackPanel>
+                <TextBox Behaviors:ControlDefinitions.TextControlDefinition="{Binding TextValidation, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+        </GroupBox>
         <GroupBox Header="ListBox Definition" IsEnabled="{Binding EnableDisableListBox.IsChecked}">
             <Grid>
                 <Grid.RowDefinitions>

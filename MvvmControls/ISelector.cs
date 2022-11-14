@@ -21,13 +21,13 @@ namespace RFBCodeWorks.MvvmControls
         /// </summary>
         object SelectedItem { get; set; }
 
-        /// <inheritdoc cref="Primitives.Selector{T, E, V}.SelectedValue"/>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectedValue"/>
         object SelectedValue { get; set; }
 
-        /// <inheritdoc cref="Primitives.Selector{T, E, V}.SelectedValuePath"/>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectedValuePath"/>
         string SelectedValuePath { get; }
 
-        /// <inheritdoc cref="Primitives.Selector{T, E, V}.SelectedIndex"/>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectedIndex"/>
         int SelectedIndex { get; set; }
     }
 

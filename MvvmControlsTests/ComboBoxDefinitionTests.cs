@@ -1,10 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Windows.Controls;
+using RFBCodeWorks.MvvmControls.Primitives;
+using RFBCodeWorks.MvvmControls.Primitives.Tests;
 
 namespace RFBCodeWorks.MvvmControls.Tests
 {
     [TestClass()]
-    public class ComboBoxDefinitionTests : SelectorDefinitionTests
+    public class ComboBoxDefinitionTests : SelectorTests
     {
         public ComboBoxDefinitionTests() : this(new()) { }
 
@@ -48,7 +50,7 @@ namespace RFBCodeWorks.MvvmControls.Tests
     }
 
     [TestClass()]
-    public class ListBoxDefinitionTests : SelectorDefinitionTests
+    public class ListBoxDefinitionTests : SelectorTests
     {
         public ListBoxDefinitionTests() : this(new()) { }
 

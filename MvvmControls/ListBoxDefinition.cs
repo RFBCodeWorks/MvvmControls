@@ -9,6 +9,8 @@ namespace RFBCodeWorks.MvvmControls
 {
     /// <summary>
     /// Interface all ListBoxDefinitions should implement to be assignable via AttachedProperty
+    /// <para/>Inherits:
+    /// <br/> - <see cref="ISelector"/>
     /// </summary>
     public interface IListBox : ISelector
     {
@@ -37,10 +39,20 @@ namespace RFBCodeWorks.MvvmControls
     }
 
     /// <summary>
+    /// Interface all ComboBoxDefinitions of some type implement
+    /// <para/>Inherits: 
+    /// <br/>  - <see cref="IListBox"/>
+    /// <br/>  - <see cref="ISelector"/>
+    /// <br/>  - <see cref="ISelector{T}"/>
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public interface IListBox<T> : ISelector<T>, IListBox{ }
+
+    /// <summary>
     /// The base ListBoxDefinition object
     /// </summary>
-    /// <inheritdoc cref="Primitives.Selector{T, E, V}"/>
-    public class ListBoxDefinition<T, E, V> : Primitives.Selector<T, E, V>, IListBox
+    /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}"/>
+    public class ListBoxDefinition<T, E, V> : Primitives.SelectorDefinition<T, E, V>, IListBox, IListBox<T>
         where E : IList<T>
     {
         #region < SelectionChangedEvent >

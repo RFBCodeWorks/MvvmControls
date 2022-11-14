@@ -6,7 +6,7 @@ namespace RFBCodeWorks.MvvmControls.DragDrop
     /// <summary>
     /// Static Methods and properties for this implementation
     /// </summary>
-    public static class DragDropProperties
+    public static class DragAndDrop
     {
 
         #region < IsFileDropTarget >
@@ -28,7 +28,7 @@ namespace RFBCodeWorks.MvvmControls.DragDrop
         /// </summary>
         // Using a DependencyProperty as the backing store for IsFileDropTarget.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsFileDropTargetProperty =
-            DependencyProperty.RegisterAttached(nameof(IsFileDropTargetProperty), typeof(bool), typeof(DragDropProperties), new PropertyMetadata(false,OnIsFileDropTargetChanged));
+            DependencyProperty.RegisterAttached(nameof(IsFileDropTargetProperty), typeof(bool), typeof(DragAndDrop), new PropertyMetadata(false,OnIsFileDropTargetChanged));
 
         private static void OnIsFileDropTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -66,7 +66,7 @@ namespace RFBCodeWorks.MvvmControls.DragDrop
         /// </summary>
         // Using a DependencyProperty as the backing store for FileDropTarget.  This enables animation, styling, binding, etc...
         public static DependencyProperty DragHandlerProperty=
-            DependencyProperty.RegisterAttached("DragHandler", typeof(IDragHandler), typeof(DragDropProperties), new PropertyMetadata(null, OnDragHandlerChanged));
+            DependencyProperty.RegisterAttached("DragHandler", typeof(IDragHandler), typeof(DragAndDrop), new PropertyMetadata(null, OnDragHandlerChanged));
 
         private static void OnDragHandlerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -104,7 +104,7 @@ namespace RFBCodeWorks.MvvmControls.DragDrop
         /// </summary>
         // Using a DependencyProperty as the backing store for FileDropTarget.  This enables animation, styling, binding, etc...
         public static DependencyProperty FileDropHandlerProperty =
-            DependencyProperty.RegisterAttached("FileDropHandler", typeof(IFileDropTarget), typeof(DragDropProperties), new PropertyMetadata(null, OnFileDropHandlerChanged));
+            DependencyProperty.RegisterAttached("FileDropHandler", typeof(IFileDropTarget), typeof(DragAndDrop), new PropertyMetadata(null, OnFileDropHandlerChanged));
 
         private static void OnFileDropHandlerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -143,7 +143,7 @@ namespace RFBCodeWorks.MvvmControls.DragDrop
         /// </summary>
         // Using a DependencyProperty as the backing store for FileDropTarget.  This enables animation, styling, binding, etc...
         public static DependencyProperty MultiFileDropHandlerProperty =
-            DependencyProperty.RegisterAttached("MultiFileDropHandler", typeof(IMultiFileDropTarget), typeof(DragDropProperties), new PropertyMetadata(null, OnMultiFileDropHandlerChanged));
+            DependencyProperty.RegisterAttached("MultiFileDropHandler", typeof(IMultiFileDropTarget), typeof(DragAndDrop), new PropertyMetadata(null, OnMultiFileDropHandlerChanged));
 
         private static void OnMultiFileDropHandlerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -206,7 +206,6 @@ namespace RFBCodeWorks.MvvmControls.DragDrop
         }
 
         #endregion
-
 
         #region < Event Handling >
 

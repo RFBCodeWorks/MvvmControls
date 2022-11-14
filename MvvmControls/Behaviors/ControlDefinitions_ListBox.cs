@@ -20,16 +20,14 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
         {
             if (sender is ListBox cntrl)
             {
+                SetSelectorDefinition(cntrl, args.NewValue as ISelector);
+                
                 if (args.OldValue is IListBox oldDef)
                 {
-                    UnbindSelectorDefinition(cntrl, oldDef);
                     UnbindIfBound(cntrl, ListBox.SelectionModeProperty, oldDef);
-
                 }
                 if (args.NewValue is IListBox def)
                 {
-                    BindSelectorDefinition(cntrl, def);
-
                     //Selection Mode
                     BindingOperations.SetBinding(cntrl, ListBox.SelectionModeProperty, new Binding(nameof(IListBox.SelectionMode))
                     {

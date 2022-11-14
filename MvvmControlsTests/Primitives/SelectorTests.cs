@@ -1,19 +1,20 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RFBCodeWorks.MvvmControls.Tests;
 using System.Collections.Generic;
 using System.Windows.Controls;
 
-namespace RFBCodeWorks.MvvmControls.Tests
+namespace RFBCodeWorks.MvvmControls.Primitives.Tests
 {
     [TestClass()]
-    public class SelectorDefinitionTests : ItemSourceDefinitionTests
+    public class SelectorTests : ItemSourceTests
     {
-        public SelectorDefinitionTests() :this(new()) { }
+        public SelectorTests() :this(new()) { }
 
         /// <summary>
         /// Set the ItemSourceDefinitionTests for the test methods
         /// </summary>
         /// <param name="definition"></param>
-        public SelectorDefinitionTests(SelectorDefinition<SelectorTestItem, SelectorTestItem[], string> definition) : base(definition)
+        public SelectorTests(SelectorDefinition<SelectorTestItem, SelectorTestItem[], string> definition) : base(definition)
         {
             ControlDefinition = definition;
         }
@@ -31,7 +32,7 @@ namespace RFBCodeWorks.MvvmControls.Tests
         [TestMethod]
         public void TestSelectionChanged()
         {
-            ControlDefinition.ItemSource = new SelectorTestItem[] { SelectorTestItem.Zero, SelectorTestItem.One, SelectorTestItem.Two, SelectorTestItem.Three, SelectorTestItem.Four, SelectorTestItem.Five};
+            ControlDefinition.Items = new SelectorTestItem[] { SelectorTestItem.Zero, SelectorTestItem.One, SelectorTestItem.Two, SelectorTestItem.Three, SelectorTestItem.Four, SelectorTestItem.Five};
 
             int propChanging = 0;
             int propChanged = 0;
@@ -59,7 +60,7 @@ namespace RFBCodeWorks.MvvmControls.Tests
 
             ControlDefinition.SelectedItem = 4;
             Assert.AreEqual(1, selectedItemChanged, "SelectedItemChanged event raised incorrect number of times");
-            Assert.AreEqual(((IList<SelectorTestItem>)ControlDefinition.ItemSource).IndexOf(ControlDefinition.SelectedItem), ControlDefinition.SelectedIndex, "\nSelectedIndex was not properly updated after setting the SelectedItem");
+            Assert.AreEqual(((IList<SelectorTestItem>)ControlDefinition.Items).IndexOf(ControlDefinition.SelectedItem), ControlDefinition.SelectedIndex, "\nSelectedIndex was not properly updated after setting the SelectedItem");
             Assert.IsTrue(propNameChanging.Contains(nameof(ControlDefinition.SelectedIndex)), "\nPropertyChanging does not contain SelectedIndex");
             Assert.IsTrue(propNameChanged.Contains(nameof(ControlDefinition.SelectedIndex)), "\nPropertyChanged does not contain SelectedIndex");
             Assert.IsTrue(propNameChanging.Contains(nameof(ControlDefinition.SelectedItem)), "\nPropertyChanging does not contain SelectedItem");
@@ -71,7 +72,7 @@ namespace RFBCodeWorks.MvvmControls.Tests
 
             ControlDefinition.SelectedIndex = 2;
             Assert.AreEqual(2, selectedItemChanged, "SelectedItemChanged event raised incorrect number of times");
-            Assert.AreEqual(ControlDefinition.ItemSource[ControlDefinition.SelectedIndex], ControlDefinition.SelectedItem, "\nSelectedItem was not properly updated after setting the SelectedIndex");
+            Assert.AreEqual(ControlDefinition.Items[ControlDefinition.SelectedIndex], ControlDefinition.SelectedItem, "\nSelectedItem was not properly updated after setting the SelectedIndex");
             Assert.IsTrue(propNameChanging.Contains(nameof(ControlDefinition.SelectedIndex)), "\nPropertyChanging does not contain SelectedIndex");
             Assert.IsTrue(propNameChanged.Contains(nameof(ControlDefinition.SelectedIndex)), "\nPropertyChanged does not contain SelectedIndex");
             Assert.IsTrue(propNameChanging.Contains(nameof(ControlDefinition.SelectedItem)), "\nPropertyChanging does not contain SelectedItem");

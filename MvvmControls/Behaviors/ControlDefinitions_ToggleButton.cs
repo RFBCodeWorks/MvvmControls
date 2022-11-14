@@ -21,28 +21,19 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
             {
                 if (args.OldValue is IToggleButton oldDef)
                 {
-                    UnbindToggleButtonDefinition(btn, oldDef);
+                    UnbindIControlDefinition(btn, oldDef);
+                    UnbindIfBound(btn, ToggleButton.IsCheckedProperty, oldDef);
+                    UnbindIfBound(btn, ToggleButton.IsThreeStateProperty, oldDef);
+                    UnbindIfBound(btn, ButtonBase.ContentProperty, oldDef);
                 }
                 if (args.NewValue is IToggleButton def)
                 {
-                    BindToggleButtonDefinition(btn, def);
+                    BindIControlDefinition(btn, def);
+                    SetBinding(btn, ToggleButton.IsCheckedProperty, nameof(def.IsChecked), def);
+                    SetBinding(btn, ToggleButton.IsThreeStateProperty, nameof(def.IsThreeState), def);
+                    SetContent(btn, def);
                 }
             }
-        }
-
-        private static void BindToggleButtonDefinition(ToggleButton btn, IToggleButton def)
-        {
-            BindIControlDefinition(btn, def);
-            SetBinding(btn, ToggleButton.IsCheckedProperty, nameof(def.IsChecked), def);
-            SetBinding(btn, ToggleButton.IsThreeStateProperty, nameof(def.IsThreeState), def);
-            SetContent(btn, def);
-        }
-
-        private static void UnbindToggleButtonDefinition(ToggleButton btn, IToggleButton oldDef)
-        {
-            UnbindIControlDefinition(btn, oldDef);
-            UnbindIfBound(btn, ToggleButton.IsCheckedProperty, oldDef);
-            UnbindIfBound(btn, ToggleButton.IsThreeStateProperty, oldDef);
         }
 
         /// <summary>

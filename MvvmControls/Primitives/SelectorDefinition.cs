@@ -7,7 +7,7 @@ namespace RFBCodeWorks.MvvmControls.Primitives
     /// <typeparam name="V">The SelectedValue Type obtained by the SelectedValuePath</typeparam>
     /// <inheritdoc cref="ItemSource{T, E}"/>
     /// <typeparam name="E"/><typeparam name="T"/>
-    public class Selector<T, E, V> : ItemSource<T,E>, ISelector, ISelector<T>, ISelector<T, E>
+    public class SelectorDefinition<T, E, V> : ItemSource<T,E>, ISelector, ISelector<T>, ISelector<T, E>
         where E : IList<T>
     {
         #region < SelectionChangedEvent >

@@ -1,6 +1,5 @@
 # MvvmControls
- This is a Library designed to ease working within an MVVM framework, and is meant to consolidate boiler-plate ViewModel interactions
- for common WPF controls into pre-built classes. 
+ This is a Library designed to ease working within an MVVM framework, and is meant to consolidate boiler-plate ViewModel interactions for common WPF controls into pre-built classes. 
  This library also includes interfaces and AttachedProperties that allow a ViewModel to be notified and react to various events of a Window, including:
  - Activated/Deactivated
  - Loaded/ContentRendered
@@ -40,9 +39,9 @@ public class MyViewModel {
 ```	
 And the corresponding xaml:
 ```
-	xmlns:Behavaior="clr-namespace:RFBCodeWorks.MvvmControls.Behaviors;assembly=MvvmControls"
+	xmlns:MvvmControls="clr-namespace:RFBCodeWorks.MvvmControls.Behaviors;assembly=MvvmControls"
 
-	<ComboBox Behavaior:ControlDefinitions.ComboBoxDefinition="{Binding ComboBoxDefinition}" />
+	<ComboBox MvvmControls:ControlDefinitions.ComboBoxDefinition="{Binding ComboBoxDefinition}" />
 ```
 
 ### Development Targets
