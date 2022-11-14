@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows;
+using RFBCodeWorks.MvvmControls.DragDrop;
 
-namespace RFBCodeWorks.MvvmControls.DragDrop
+namespace RFBCodeWorks.MvvmControls.Behaviors
 {
     /// <summary>
     /// Static Methods and properties for this implementation
