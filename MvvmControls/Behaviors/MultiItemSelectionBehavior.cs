@@ -41,10 +41,19 @@ namespace RFBCodeWorks.MvvmControls.Behaviors.Base
 {
 
     /// <summary>
-    /// Generic Class that allows two-way binding to the ListBox.SelectedItems property
+    /// Generic Class that allows two-way binding to the ListBox.SelectedItems property 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <remarks><see href="https://tyrrrz.me/blog/wpf-listbox-selecteditems-twoway-binding"/></remarks>
+    /// <remarks>
+    /// <br/>&lt;Interactions:Interaction.Behaviors>
+    ///  <br/>&lt;Behaviors:MultiItemSelectionBehaviorString SelectedItems = "{Binding ListBoxDefinition.SelectedItems}" />
+    ///  <br/>&lt;/Interactions:Interaction.Behaviors>
+    /// </remarks>
+    /*
+        <Interactions:Interaction.Behaviors>
+            <Behaviors:MultiItemSelectionBehaviorString SelectedItems = "{Binding ListBoxDefinition.SelectedItems}" />
+        </ Interactions:Interaction.Behaviors>
+    */
     public class MultiItemSelectionBehavior<T> : Behavior<ListBox>
     {
         /// <summary>
@@ -130,7 +139,9 @@ namespace RFBCodeWorks.MvvmControls.Behaviors.Base
         protected override void OnAttached()
         {
             base.OnAttached();
-
+            if (AssociatedObject.SelectionMode == SelectionMode.Single)
+                AssociatedObject.SelectionMode = SelectionMode.Multiple;
+            
             AssociatedObject.SelectionChanged += OnListBoxSelectionChanged;
             ((INotifyCollectionChanged)AssociatedObject.Items).CollectionChanged += OnListBoxItemsChanged;
         }

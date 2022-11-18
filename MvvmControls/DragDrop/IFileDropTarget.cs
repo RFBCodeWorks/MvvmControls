@@ -25,7 +25,7 @@ namespace RFBCodeWorks.MvvmControls.DragDrop
     public interface IDragHandler : INotifyPropertyChanged
     {
         /// <summary>
-        /// TRUE when DragEnter, False after the DragLeave
+        /// TRUE while something is currently being dragged over the bound control, otherwise false.
         /// </summary>
         public bool IsDragging { get; }
 

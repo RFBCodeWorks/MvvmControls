@@ -94,7 +94,22 @@ namespace RFBCodeWorks.MvvmControls
             }
         }
         private IList<T> SelectedItemsField;
-        IList IListBox.SelectedItems => (IList)SelectedItems;
+        IList IListBox.SelectedItems
+        {
+            get => (IList)SelectedItems;
+            set
+            {
+                if (value is IList<T> list)
+                {
+                    SelectedItems = list;
+                }
+                else if (value is IReadOnlyList<T> rd)
+                {
+                    SelectedItems = rd.ToList();
+                }
+                else
+                {
+                    throw new ArgumentException($"IList passed to the setter is not an IList<{typeof(T)}>");
 
         /// <inheritdoc/>
         public SelectionMode SelectionMode

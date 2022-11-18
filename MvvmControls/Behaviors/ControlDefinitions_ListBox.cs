@@ -28,11 +28,12 @@ namespace RFBCodeWorks.MvvmControls.Behaviors
                 }
                 if (args.NewValue is IListBox def)
                 {
+                    def.SelectionMode = cntrl.SelectionMode;
                     //Selection Mode
                     BindingOperations.SetBinding(cntrl, ListBox.SelectionModeProperty, new Binding(nameof(IListBox.SelectionMode))
                     {
                         Source = def,
-                        Mode = BindingMode.OneWay
+                        Mode = BindingMode.TwoWay
                     });
                 }
             }

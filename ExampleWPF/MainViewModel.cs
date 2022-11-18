@@ -17,9 +17,18 @@ namespace ExampleWPF
 
         }
 
+        public DragDropHandler DragDropHandler { get; } = new DragDropHandler();
+
         public ListBoxDefinition<string> ListBoxDefinition { get; } = new ListBoxDefinition<string>()
         {
-            Items = new string[] { "Index0", "Index1", "Index2", "Index3" }
+            Items = new string[] { "Index0", "Index1", "Index2", "Index3" },
+            SelectionMode = SelectionMode.Multiple
+        };
+
+        public ListBoxDefinition<string> ListBoxDefinition2 { get; } = new ListBoxDefinition<string>()
+        {
+            Items = new string[] { "Howdy", "OhNo", "This is a string", "Hello" },
+            SelectionMode = SelectionMode.Multiple
         };
 
         public ComboBoxDefinition<string> ComboBoxDefinition { get; } = new ComboBoxDefinition<string>()
@@ -29,8 +38,9 @@ namespace ExampleWPF
 
         public CheckBoxDefinition EnableDisableListBox { get; } = new CheckBoxDefinition()
         {
-            IsThreeState = true,
-            DisplayText = "Enable/Disable Listbox"
+            IsThreeState = false,
+            DisplayText = "Enable/Disable Listbox",
+            IsChecked = true
         };
 
         public RadioButtonDefinition EnableComboBox { get; } = new RadioButtonDefinition() { DisplayText = "Enable ComboBox", GroupName = "EC" };

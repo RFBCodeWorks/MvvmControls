@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExampleWPF"
         mc:Ignorable="d"
-        
+        xmlns:cc="clr-namespace:RFBCodeWorks.WPFControls;assembly=MvvmControls"
         x:Name="ThisWindow"
-        xmlns:Behaviors="clr-namespace:RFBCodeWorks.MvvmControls.Behaviors;assembly=MvvmControls"
+        xmlns:Behaviors="clr-namespace:RFBCodeWorks.MvvmControls.Behaviors;assembly=MvvmControls" xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
         Behaviors:WindowBehaviors.IWindowClosingHandler="{Binding ElementName=ThisWindow, Path=DataContext}"
         Behaviors:WindowBehaviors.IWindowLoadingHandler="{Binding ElementName=ThisWindow, Path=DataContext}"
         d:DataContext="{d:DesignInstance Type=local:MainViewModel, IsDesignTimeCreatable=True}"
@@ -34,28 +34,65 @@
             </StackPanel>
         </GroupBox>
         <GroupBox Header="Textbox Validation Control" >
-            <StackPanel>
-                <TextBox Behaviors:ControlDefinitions.TextControlDefinition="{Binding TextValidation, UpdateSourceTrigger=PropertyChanged}"/>
-            </StackPanel>
+            <TextBox Behaviors:ControlDefinitions.TextControlDefinition="{Binding TextValidation, UpdateSourceTrigger=PropertyChanged}"/>
         </GroupBox>
-        <GroupBox Header="ListBox Definition" IsEnabled="{Binding EnableDisableListBox.IsChecked}">
+        <GroupBox Header="File Drag and Drop Handler" 
+                  Behaviors:DragAndDrop.FileDropHandler="{Binding DragDropHandler}"
+                  >
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <ListBox Behaviors:ControlDefinitions.ListBoxDefinition="{Binding ListBoxDefinition}" Grid.ColumnSpan="2"/>
-                <TextBlock Grid.Row="1" Text="Selected Index: " />
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ListBoxDefinition.SelectedIndex}" />
-                <TextBlock Grid.Row="2" Text="Selected Item: " />
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ListBoxDefinition.SelectedItem}" />
+                <StackPanel>
+                    <TextBlock Text="File Name: " />
+                    <TextBox Text="{Binding DragDropHandler.FileName}" />
+                    <TextBlock Text="File Size: " />
+                    <TextBox Text="{Binding DragDropHandler.FileSize, Mode=OneWay}" />
+                    <TextBlock Text="Directory Path: " />
+                    <TextBox Text="{Binding DragDropHandler.DirectoryPath}" />
+                </StackPanel>
+                <!-- 
+                Create a Transparant Rectangle that takes up the entire grid size, but by default is not hit test visible.
+                When a file is being dragged over the grid, the PreviewDrag event wil set IsHitTestVisible property, thereby allowing the entire grid to act as the drop zone.
+                Without this setup, the file would not be allowed to be dropped since textboxes do not allow dropping files onto them.
+                -->
+                <Rectangle Fill="Transparent" IsHitTestVisible="{Binding DragDropHandler.IsHitTestVisible, FallbackValue=False}"/>
             </Grid>
         </GroupBox>
+                <GroupBox Header="ListBox Definition" IsEnabled="{Binding EnableDisableListBox.IsChecked}">
+                    <!-- SimpleGrid that builds itself per the specified Column/Row Counts -->
+                    <cc:SimpleGrid AutoColumnWidth="Auto" AutoRowHeight="Auto"  RowCount="4" ColumnCount="3">
+                        <TextBlock Text="Interact with this listbox     " Grid.Column="0" />
+                        <ListBox 
+                    Behaviors:ControlDefinitions.ListBoxDefinition="{Binding ListBoxDefinition}" Grid.Row="1" Grid.ColumnSpan="2"
+                    Behaviors:DragSelectionHelper.IsDragSelectionEnabled="True"
+                    >
+                            <!-- The following Resources block allows the DragSelect functionality to work, highliting items as they are dragged over -->
+                            <ListBox.Resources>
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <Setter Property="Behaviors:DragSelectionHelper.IsDragSelecting" Value="False" />
+                                    <Style.Triggers>
+                                        <Trigger Property="ListBoxItem.IsMouseOver" Value="True">
+                                            <Setter Property="Behaviors:DragSelectionHelper.IsDragSelecting" Value="True" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListBox.Resources>
+                            <!-- A Multi-Item Selection Behavior will have to be defined to interact with the SelectedItems of a Listbox -->
+                            <!-- This is because a ListBox SelectedItems property is not bindable in xaml without helpers. -->
+                            <Interactions:Interaction.Behaviors>
+                                <Behaviors:MultiItemSelectionBehaviorString SelectedItems="{Binding ListBoxDefinition.SelectedItems}"/>
+                            </Interactions:Interaction.Behaviors>
+                        </ListBox>
+                        <TextBlock Text="This Listbox shows the currently selected items" Grid.Column="2" />
+                        <!-- This listbox will be updated by the other listbox's MutliSelectionBehavior -->
+                        <ListBox 
+                     IsEnabled="False" Grid.Row="1" Grid.Column="2"
+                    ItemsSource="{Binding ListBoxDefinition.SelectedItems}"
+                    />
+                        <TextBlock Grid.Row="2" Text="Selected Index: " />
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ListBoxDefinition.SelectedIndex}" />
+                        <TextBlock Grid.Row="3" Text="Selected Item: " />
+                        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ListBoxDefinition.SelectedItem}" />
+                    </cc:SimpleGrid>
+                </GroupBox>
         <GroupBox Header="ComboBox Definition" IsEnabled="{Binding EnableComboBox.IsChecked}">
             <Grid>
                 <Grid.RowDefinitions>
