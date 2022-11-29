@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace RFBCodeWorks.MvvmControls
+namespace RFBCodeWorks
 {
     internal static class SystemExtensions
     {
