@@ -15,7 +15,7 @@ namespace RFBCodeWorks.MvvmControls
     public interface IListBox : ISelector
     {
         /// <inheritdoc cref="ListBox.SelectionMode" path="*"/>
-        SelectionMode SelectionMode { get; }
+        SelectionMode SelectionMode { get; set; }
 
         /// <inheritdoc cref="ListBoxDefinition{T, E, V}.IsMultiSelect"/>
         bool IsMultiSelect { get; }
@@ -35,7 +35,8 @@ namespace RFBCodeWorks.MvvmControls
         /// <summary>
         /// Enumerate through the Selected Items
         /// </summary>
-        IList SelectedItems { get; }
+        IList SelectedItems { get; set; }
+
     }
 
     /// <summary>
@@ -110,6 +111,9 @@ namespace RFBCodeWorks.MvvmControls
                 else
                 {
                     throw new ArgumentException($"IList passed to the setter is not an IList<{typeof(T)}>");
+                }
+            }
+        }
 
         /// <inheritdoc/>
         public SelectionMode SelectionMode
