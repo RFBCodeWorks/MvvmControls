@@ -1,5 +1,5 @@
 ﻿using RFBCodeWorks.MvvmControls;
-using RFBCodeWorks.MvvmControls.Behaviors;
+using RFBCodeWorks.WPFBehaviors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -42,6 +42,8 @@ namespace ExampleWPF
             DisplayText = "Enable/Disable Listbox",
             IsChecked = true
         };
+
+        public bool TriggerClosingWindowInterface { get; set; }
 
         public RadioButtonDefinition EnableComboBox { get; } = new RadioButtonDefinition() { DisplayText = "Enable ComboBox", GroupName = "EC" };
         public RadioButtonDefinition DisableComboBox { get; } = new RadioButtonDefinition() { DisplayText = "Disable ComboBox", GroupName = "EC" };
@@ -118,11 +120,15 @@ namespace ExampleWPF
 
         public void OnWindowClosed(object sender, EventArgs e)
         {
+            if (TriggerClosingWindowInterface)
             System.Windows.MessageBox.Show("Window Closed", "Window Closed Event");
         }
 
         public void OnWindowClosing(object sender, CancelEventArgs e)
         {
+            if (!TriggerClosingWindowInterface)
+                return;
+
             e.Cancel = System.Windows.MessageBox.Show("This MessageBox was raised from the ViewModel.\n\nAllow window to close?", "Window Closing Event", System.Windows.MessageBoxButton.YesNo) == System.Windows.MessageBoxResult.No;
         }
 

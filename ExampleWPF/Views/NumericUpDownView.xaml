@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="ExampleWPF.Views.NumericUpDownView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ExampleWPF.Views"
+             xmlns:CC="clr-namespace:RFBCodeWorks.WPFControls;assembly=MvvmControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="300">
+    <UserControl.Resources>
+
+    </UserControl.Resources>
+    <StackPanel Background="AliceBlue">
+        <GroupBox Header="Default Setup" Margin="10" Padding=" 10">
+            <StackPanel>
+                <CC:IntegerUpDown Value="50"/>
+                <CC:DecimalUpDown Value="50.555" SmallChange="0.5" LargeChange="3"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Buttons On Right" Margin="10" Padding=" 10">
+            <StackPanel>
+                <CC:IntegerUpDown ButtonOrientation="OnRight" Background="LightGray" Value="50" LargeChange="10" SmallChange="1" ButtonInterval="15" Maximum="1000" 
+                                  DelayBeforeLargeChange="0"/>
+                <CC:DecimalUpDown ButtonOrientation="OnRight" Background="Beige" Value="50.88" SmallChange="0.5" LargeChange="3"/>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Header="Buttons on Sides" Margin="10" Padding=" 10">
+            <StackPanel>
+                <CC:IntegerUpDown ButtonOrientation="OnSides" Background="LightGray" Value="50" LargeChange="5"/>
+                <CC:DecimalUpDown ButtonOrientation="OnSides" Background="Beige" Value="50.555" SmallChange="0.01" LargeChange="3" Maximum="1000"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="No Buttons Setup" Margin="10" Padding=" 10">
+            <StackPanel>
+                <CC:IntegerUpDown ButtonOrientation="NoButtons" Background="LightGray" Value="50"/>
+                <CC:DecimalUpDown ButtonOrientation="NoButtons" Background="Beige" Value="50.555"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Stacked Setup" Margin="10" Padding=" 10">
+            <StackPanel>
+                <CC:IntegerUpDown ButtonOrientation="Stacked" Background="LightGray" Value="50"/>
+                <CC:DecimalUpDown ButtonOrientation="Stacked" Background="Beige" Value="50.555"/>
+            </StackPanel>
+        </GroupBox>
+ 
+    </StackPanel>
+</UserControl>

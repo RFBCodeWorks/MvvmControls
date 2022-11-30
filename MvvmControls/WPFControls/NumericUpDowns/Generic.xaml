@@ -1,0 +1,137 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:RFBCodeWorks.WPFControls"
+    xmlns:Primitives="clr-namespace:RFBCodeWorks.WPFControls.Primitives"
+    >
+    <Style TargetType="RepeatButton" x:Key="NumericButtonStyle">
+        <Setter Property="Padding" Value="3"/>
+    </Style>
+    <Style TargetType="RepeatButton" x:Key="IncreaseButton" BasedOn="{StaticResource NumericButtonStyle}">
+        <Setter Property="Content" Value="▲"/>
+    </Style>
+    <Style TargetType="RepeatButton" x:Key="DecreaseButton" BasedOn="{StaticResource NumericButtonStyle}">
+        <Setter Property="Content" Value="▼"/>
+    </Style>
+    
+    <!-- Define the Control Templates for the NumericUpDowns -->
+    <ControlTemplate x:Key="ButtonsOnRight" TargetType="{x:Type Primitives:UpDownBase}" >
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width ="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox 
+                MinWidth="25"
+                Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Path=Value, FallbackValue=0}"
+                Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=Background}"
+                HorizontalContentAlignment="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Path=HorizontalContentAlignment}"
+                VerticalContentAlignment="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Path=VerticalContentAlignment}"
+                />
+            <StackPanel Grid.Column="1">
+                <RepeatButton 
+                    Margin="2,0,0,1"
+                    Style="{StaticResource IncreaseButton}"
+                    Delay="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=ButtonDelay}"
+                    Interval="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=ButtonInterval}"
+                    Command="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=IncreaseValueCommand}"
+                    />
+                <RepeatButton 
+                    Margin="2,1,0,0"
+                    Style="{StaticResource DecreaseButton}"
+                    Delay="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=ButtonDelay}"
+                    Interval="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=ButtonInterval}"
+                    Command="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=DecreaseValueCommand}"
+                    />
+            </StackPanel>
+        </Grid>
+    </ControlTemplate>
+    
+    <!-- WrapButtons Template -->
+    <ControlTemplate x:Key="WrapButtons" TargetType="{x:Type Primitives:UpDownBase}">
+        <StackPanel Orientation="Horizontal">
+            <RepeatButton 
+                Margin="0,0,2,0"
+                Style="{StaticResource IncreaseButton}"
+                Delay="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=ButtonDelay}"
+                Interval="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=ButtonInterval}"    
+                Command="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=IncreaseValueCommand}"
+                    />
+            <TextBox 
+                MinWidth="25"
+                Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Path=Value, FallbackValue=0}"
+                Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=Background}"
+                HorizontalContentAlignment="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Path=HorizontalContentAlignment}"
+                VerticalContentAlignment="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Path=VerticalContentAlignment}"
+                />
+            <RepeatButton 
+                Margin="2,0,0,0"
+                Style="{StaticResource DecreaseButton}"
+                Delay="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=ButtonDelay}"
+                Interval="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=ButtonInterval}"
+                Command="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=DecreaseValueCommand}"
+                    />
+        </StackPanel>
+    </ControlTemplate>
+    
+    <!-- Stacked Template -->
+    <ControlTemplate x:Key="Stacked" TargetType="{x:Type Primitives:UpDownBase}">
+        <StackPanel Orientation="Vertical">
+            <RepeatButton 
+                Margin="0,0,0,1"
+                Style="{StaticResource IncreaseButton}"
+                Delay="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=ButtonDelay}"
+                Interval="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=ButtonInterval}"
+                Command="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=IncreaseValueCommand}"
+                    />
+            <TextBox 
+                MinWidth="25"
+                Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Path=Value, FallbackValue=0}"
+                Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=Background}"
+                HorizontalContentAlignment="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Path=HorizontalContentAlignment}"
+                VerticalContentAlignment="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Path=VerticalContentAlignment}"
+                />
+            <RepeatButton 
+                Margin="0,1,0,0"
+                Style="{StaticResource DecreaseButton}"
+                Delay="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=ButtonDelay}"
+                Interval="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=ButtonInterval}"    
+                Command="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=DecreaseValueCommand}"
+                    />
+        </StackPanel>
+    </ControlTemplate>
+    
+    <!-- No Buttons Template -->
+    <ControlTemplate x:Key="NoButtons" TargetType="{x:Type Primitives:UpDownBase}">
+        <TextBox 
+                MinWidth="25"
+                Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Path=Value, FallbackValue=0}"
+                Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay, Path=Background}"
+                HorizontalContentAlignment="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Path=HorizontalContentAlignment}"
+                VerticalContentAlignment="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=TwoWay, Path=VerticalContentAlignment}"
+                />
+    </ControlTemplate>
+    
+    <!-- Define the Style that applies the coresponding orientation -->
+    <Style x:Key="NumericUpDownStyle" TargetType="{x:Type Primitives:UpDownBase}">
+        <Setter Property="Template" Value="{StaticResource WrapButtons}" />
+        <Style.Triggers>
+            <Trigger Property="ButtonOrientation" Value="OnRight">
+                <Setter Property="Template" Value="{StaticResource ButtonsOnRight}"/>
+            </Trigger>
+            <Trigger Property="ButtonOrientation" Value="NoButtons">
+                <Setter Property="Template" Value="{StaticResource NoButtons}"/>
+            </Trigger>
+            <Trigger Property="ButtonOrientation" Value="Stacked">
+                <Setter Property="Template" Value="{StaticResource Stacked}"/>
+            </Trigger>
+            <Trigger Property="ButtonOrientation" Value="OnSides">
+                <Setter Property="Template" Value="{StaticResource WrapButtons}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Styles for Numeric UpDowns -->
+    <Style TargetType="{x:Type local:IntegerUpDown}" BasedOn="{StaticResource NumericUpDownStyle}"/>
+    <Style TargetType="{x:Type local:DecimalUpDown}" BasedOn="{StaticResource NumericUpDownStyle}"/>
+</ResourceDictionary>

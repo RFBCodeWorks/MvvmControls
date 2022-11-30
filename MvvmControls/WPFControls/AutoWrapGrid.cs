@@ -40,10 +40,8 @@ namespace RFBCodeWorks.WPFControls
             int curCol = firstCol - 1;
             var lastChild = Children[Children.Count - 1];
 
-
             foreach (System.Windows.UIElement curChild in children)
             {
-
                 curCol++;
                 if (curCol > lastCol)
                 {

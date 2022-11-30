@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using RFBCodeWorks.DragAndDrop;
+using RFBCodeWorks.MvvmControls;
 
 namespace RFBCodeWorks.WPFBehaviors
 {

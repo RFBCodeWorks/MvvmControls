@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using RFBCodeWorks.MvvmControls;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
@@ -9,6 +10,7 @@ namespace RFBCodeWorks.WPFBehaviors
     /// </summary>
     public static partial class ControlDefinitions
     {
+
         internal static Binding GetBindingInfo(DependencyObject obj, DependencyProperty prop)
         {
             return BindingOperations.GetBindingExpression(obj, prop)?.ParentBinding;

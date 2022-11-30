@@ -1,0 +1,11 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:RFBCodeWorks.WPFControls"
+    xmlns:Primitives="clr-namespace:RFBCodeWorks.WPFControls.Primitives"
+    >
+    <ResourceDictionary.MergedDictionaries>
+        <!-- To Do Must figure out how to point to this resource dictioanry!-->
+        <ResourceDictionary Source="Core;component/WPFControls/NumericUpDowns/Generic.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

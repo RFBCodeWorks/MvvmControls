@@ -7,55 +7,60 @@
         mc:Ignorable="d"
         xmlns:cc="clr-namespace:RFBCodeWorks.WPFControls;assembly=MvvmControls"
         x:Name="ThisWindow"
-        xmlns:Behaviors="clr-namespace:RFBCodeWorks.MvvmControls.Behaviors;assembly=MvvmControls" xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:Behaviors="clr-namespace:RFBCodeWorks.WPFBehaviors;assembly=MvvmControls"
+        xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:Views="clr-namespace:ExampleWPF.Views"
         Behaviors:WindowBehaviors.IWindowClosingHandler="{Binding ElementName=ThisWindow, Path=DataContext}"
         Behaviors:WindowBehaviors.IWindowLoadingHandler="{Binding ElementName=ThisWindow, Path=DataContext}"
         d:DataContext="{d:DesignInstance Type=local:MainViewModel, IsDesignTimeCreatable=True}"
         Title="MainWindow" Height="450" Width="800">
-    <StackPanel>
-        <StackPanel.Resources>
-            <!-- Apply the FocusHandler to all GroupBoxes on the page -->
-            <Style TargetType="GroupBox">
-                <Setter Property="Behaviors:WindowBehaviors.IWindowFocusHandler" Value="{Binding ElementName=ThisWindow, Path=DataContext}"/>
-            </Style>
-        </StackPanel.Resources>
-        <GroupBox Header="Various Interface Tests">
+    <TabControl>
+        <TabItem Header="  Control Definitions  ">
             <StackPanel>
-                <CheckBox IsChecked="{Binding WasContentRendered}" Content="IWindowLoadingHandler.OnContentRendered" IsEnabled="False"/>
-                <CheckBox IsChecked="{Binding WasLoaded}" Content="IWindowLoadingHandler.OnWindowLoaded" IsEnabled="False"/>
-            </StackPanel>
-        </GroupBox>
-        <GroupBox Header="Enable / Disable Controls ( via Checkbox / RadioButton Definitions )" >
-            <StackPanel>
-                <CheckBox Behaviors:ControlDefinitions.CheckBoxDefinition="{Binding EnableDisableListBox}"/>
-                <Separator Visibility="Hidden" Height="20"/>
-                <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding EnableComboBox}"/>
-                <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding DisableComboBox}"/>
-            </StackPanel>
-        </GroupBox>
-        <GroupBox Header="Textbox Validation Control" >
-            <TextBox Behaviors:ControlDefinitions.TextControlDefinition="{Binding TextValidation, UpdateSourceTrigger=PropertyChanged}"/>
-        </GroupBox>
-        <GroupBox Header="File Drag and Drop Handler" 
+                <StackPanel.Resources>
+                    <!-- Apply the FocusHandler to all GroupBoxes on the page -->
+                    <Style TargetType="GroupBox">
+                        <Setter Property="Behaviors:WindowBehaviors.IWindowFocusHandler" Value="{Binding ElementName=ThisWindow, Path=DataContext}"/>
+                    </Style>
+                </StackPanel.Resources>
+                <GroupBox Header="Various Interface Tests">
+                    <StackPanel>
+                        <CheckBox IsChecked="{Binding WasContentRendered}" Content="IWindowLoadingHandler.OnContentRendered" IsEnabled="False"/>
+                        <CheckBox IsChecked="{Binding WasLoaded}" Content="IWindowLoadingHandler.OnWindowLoaded" IsEnabled="False"/>
+                        <CheckBox IsChecked="{Binding TriggerClosingWindowInterface}" Content="Enable the IWindowClosingYHandler test" IsThreeState="False"/>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Enable / Disable Controls ( via Checkbox / RadioButton Definitions )" >
+                    <StackPanel>
+                        <CheckBox Behaviors:ControlDefinitions.CheckBoxDefinition="{Binding EnableDisableListBox}"/>
+                        <Separator Visibility="Hidden" Height="20"/>
+                        <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding EnableComboBox}"/>
+                        <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding DisableComboBox}"/>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="Textbox Validation Control" >
+                    <TextBox Behaviors:ControlDefinitions.TextControlDefinition="{Binding TextValidation, UpdateSourceTrigger=PropertyChanged}"/>
+                </GroupBox>
+                <GroupBox Header="File Drag and Drop Handler" 
                   Behaviors:DragAndDrop.FileDropHandler="{Binding DragDropHandler}"
                   >
-            <Grid>
-                <StackPanel>
-                    <TextBlock Text="File Name: " />
-                    <TextBox Text="{Binding DragDropHandler.FileName}" />
-                    <TextBlock Text="File Size: " />
-                    <TextBox Text="{Binding DragDropHandler.FileSize, Mode=OneWay}" />
-                    <TextBlock Text="Directory Path: " />
-                    <TextBox Text="{Binding DragDropHandler.DirectoryPath}" />
-                </StackPanel>
-                <!-- 
+                    <Grid>
+                        <StackPanel>
+                            <TextBlock Text="File Name: " />
+                            <TextBox Text="{Binding DragDropHandler.FileName}" />
+                            <TextBlock Text="File Size: " />
+                            <TextBox Text="{Binding DragDropHandler.FileSize, Mode=OneWay}" />
+                            <TextBlock Text="Directory Path: " />
+                            <TextBox Text="{Binding DragDropHandler.DirectoryPath}" />
+                        </StackPanel>
+                        <!-- 
                 Create a Transparant Rectangle that takes up the entire grid size, but by default is not hit test visible.
                 When a file is being dragged over the grid, the PreviewDrag event wil set IsHitTestVisible property, thereby allowing the entire grid to act as the drop zone.
                 Without this setup, the file would not be allowed to be dropped since textboxes do not allow dropping files onto them.
                 -->
-                <Rectangle Fill="Transparent" IsHitTestVisible="{Binding DragDropHandler.IsHitTestVisible, FallbackValue=False}"/>
-            </Grid>
-        </GroupBox>
+                        <Rectangle Fill="Transparent" IsHitTestVisible="{Binding DragDropHandler.IsHitTestVisible, FallbackValue=False}"/>
+                    </Grid>
+                </GroupBox>
                 <GroupBox Header="ListBox Definition" IsEnabled="{Binding EnableDisableListBox.IsChecked}">
                     <!-- SimpleGrid that builds itself per the specified Column/Row Counts -->
                     <cc:SimpleGrid AutoColumnWidth="Auto" AutoRowHeight="Auto"  RowCount="4" ColumnCount="3">
@@ -93,23 +98,28 @@
                         <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ListBoxDefinition.SelectedItem}" />
                     </cc:SimpleGrid>
                 </GroupBox>
-        <GroupBox Header="ComboBox Definition" IsEnabled="{Binding EnableComboBox.IsChecked}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <ComboBox Behaviors:ControlDefinitions.ComboBoxDefinition="{Binding ComboBoxDefinition}" Grid.ColumnSpan="2"/>
-                <TextBlock Grid.Row="1" Text="Selected Index: " />
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ComboBoxDefinition.SelectedIndex}" />
-                <TextBlock Grid.Row="2" Text="Selected Item: " />
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ComboBoxDefinition.SelectedItem}" />
-            </Grid>
-        </GroupBox>
-    </StackPanel>
+                <GroupBox Header="ComboBox Definition" IsEnabled="{Binding EnableComboBox.IsChecked}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Behaviors:ControlDefinitions.ComboBoxDefinition="{Binding ComboBoxDefinition}" Grid.ColumnSpan="2"/>
+                        <TextBlock Grid.Row="1" Text="Selected Index: " />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ComboBoxDefinition.SelectedIndex}" />
+                        <TextBlock Grid.Row="2" Text="Selected Item: " />
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ComboBoxDefinition.SelectedItem}" />
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="  NumericUpDowns  ">
+            <Views:NumericUpDownView/>
+        </TabItem>
+    </TabControl>
 </Window>

@@ -1,0 +1,75 @@
+﻿<UserControl x:Class="CustomControls.WPF.NumericUpDown_UC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CustomControls.WPF"
+             xmlns:converters="clr-namespace:CustomControls.WPF.ValueConverters"
+             mc:Ignorable="d" 
+             Name="ThisControl"
+             Background="{Binding ElementName=ThisControl, Path=BGHelper, Mode=TwoWay}"
+             BorderBrush="Gray"
+             PreviewKeyDown="KeyDownHandler"
+             >
+    <UserControl.Resources>
+        <!-- 
+        <converters:VisibilityConverterCollapsed x:Key="VisibilityConverter"/>
+        <converters:MathConverter x:Key="MathConverter"/>
+        -->
+        <Style x:Key="SeperatorStyle" TargetType="Rectangle">
+            <Setter Property="Fill" Value="{Binding ElementName=ThisControl, Path=BorderBrush}" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="30"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="NumBox" 
+                 Grid.Column="0"
+                 Text="{Binding ElementName=ThisControl, Path=Value}"
+                 Background="{Binding ElementName=ThisControl, Path=BGHelper, Mode=OneWay}"
+                 TextWrapping="NoWrap"
+                 PreviewTextInput="NumBox_PreviewTextInput"
+                 BorderThickness="0"
+                 IsReadOnly="{Binding ElementName=ThisControl, Path=IsReadOnly}"
+                 />
+        <Grid Grid.Column="1" 
+              Width="15"
+              VerticalAlignment="Stretch" 
+              HorizontalAlignment="Center" 
+              Visibility="{Binding ElementName=ThisControl, Path=ShowButtons, Converter={StaticResource VisibilityConverter}}"
+              TextElement.FontFamily="Garamond"
+              TextElement.FontSize="4"
+                    >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="1"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Rectangle Style="{StaticResource SeperatorStyle}" Grid.Column="0" Grid.RowSpan="3" />
+            <RepeatButton x:Name="Increase" 
+                          Grid.Row="0" Grid.Column="1" 
+                          Content="▲" 
+                          Click="Increase_Click" 
+                          BorderThickness="0" 
+                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                          Delay="{Binding ElementName=ThisControl, Path=ButtonDelay}"
+                          />
+            <Rectangle Grid.Row="1" Grid.Column="1" Style="{StaticResource SeperatorStyle}"/>
+            <RepeatButton x:Name="Decrease" 
+                          Grid.Row="2" Grid.Column="1" 
+                          Content="▼" 
+                          Click="Decrease_Click" 
+                          BorderThickness="0" 
+                          VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                          Delay="{Binding ElementName=ThisControl, Path=ButtonDelay}"
+                          />
+        </Grid>
+    </Grid>
+</UserControl>
