@@ -4,42 +4,80 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ExampleWPF.Views"
-             xmlns:CC="clr-namespace:RFBCodeWorks.WPFControls;assembly=MvvmControls"
+             xmlns:CC="clr-namespace:RFBCodeWorks.WPF.Controls;assembly=MvvmControls"
+             xmlns:Behaviors="clr-namespace:RFBCodeWorks.WPF.Behaviors;assembly=MvvmControls"
+             xmlns:BehaviorHelpers="clr-namespace:RFBCodeWorks.WPF.Behaviors.Helpers;assembly=MvvmControls"
+             xmlns:Converters="clr-namespace:RFBCodeWorks.WPF.Converters;assembly=MvvmControls"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="300">
     <UserControl.Resources>
+        <!-- Dirty Style -->
+        <SetterBaseCollection x:Key="IsDirtySetters">
+            <Setter Property="CC:IntegerUpDown.Background" Value="LightBlue"/>
+            <Setter Property="CC:IntegerUpDown.ToolTip" Value="Value has been changed!" />
+        </SetterBaseCollection>
+        <!-- Invalid Style -->
+        <SetterBaseCollection x:Key="IsInvalidSetters">
+            <Setter Property="CC:IntegerUpDown.Background" Value="Pink"/>
+            <Setter Property="CC:IntegerUpDown.ToolTip" Value="Value is outside accepted range!" />
+        </SetterBaseCollection>
 
+        <Style TargetType="CC:IntegerUpDown" >
+            <Setter Property="Background" Value="LightGray" />
+            <Setter Property="DefaultValue" Value="50" />
+            <Setter Property="Behaviors:ReactiveStyles.IsDirty" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsDirty}"/>
+            <Setter Property="Behaviors:ReactiveStyles.IsDirtySetters" Value="{StaticResource IsDirtySetters}"/>
+            <Setter Property="Behaviors:ReactiveStyles.IsInvalidSetters" Value="{StaticResource IsInvalidSetters}"/>
+        </Style>
     </UserControl.Resources>
     <StackPanel Background="AliceBlue">
         <GroupBox Header="Default Setup" Margin="10" Padding=" 10">
             <StackPanel>
-                <CC:IntegerUpDown Value="50"/>
+                <CC:IntegerUpDown  
+                    x:Name="TestIsDirty"
+                    Value="50"
+                    DefaultValue="50"
+                    Minimum="45"
+                    Maximum="65"
+                    AllowOutsideRange="True"
+                    Behaviors:ReactiveStyles.IsDirty="{Binding ElementName=TestIsDirty, Path=IsDirty}"
+                    Behaviors:ReactiveStyles.IsInvalid="{Binding ElementName=TestIsDirty, Path=IsValid, Converter={x:Static Converters:SingleTons.InverseBooleanConverter}}"  
+                />
                 <CC:DecimalUpDown Value="50.555" SmallChange="0.5" LargeChange="3"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="Buttons On Right" Margin="10" Padding=" 10">
             <StackPanel>
-                <CC:IntegerUpDown ButtonOrientation="OnRight" Background="LightGray" Value="50" LargeChange="10" SmallChange="1" ButtonInterval="15" Maximum="1000" 
-                                  DelayBeforeLargeChange="0"/>
+                <CC:IntegerUpDown 
+                    ButtonOrientation="OnRight"  
+                    LargeChange="10" 
+                    SmallChange="1" 
+                    ButtonInterval="15" 
+                    Maximum="1000" 
+                    DelayBeforeLargeChange="0"
+                    BehaviorHelpers:IsDirtyInt.DefaultValue="0"
+                    BehaviorHelpers:IsDirtyInt.CurrentValue="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value}"
+                    BehaviorHelpers:IsDirtyInt.EnableDirtyComparer="True"
+                    />
                 <CC:DecimalUpDown ButtonOrientation="OnRight" Background="Beige" Value="50.88" SmallChange="0.5" LargeChange="3"/>
             </StackPanel>
         </GroupBox>
 
         <GroupBox Header="Buttons on Sides" Margin="10" Padding=" 10">
             <StackPanel>
-                <CC:IntegerUpDown ButtonOrientation="OnSides" Background="LightGray" Value="50" LargeChange="5"/>
+                <CC:IntegerUpDown ButtonOrientation="OnSides" Value="50" LargeChange="5"/>
                 <CC:DecimalUpDown ButtonOrientation="OnSides" Background="Beige" Value="50.555" SmallChange="0.01" LargeChange="3" Maximum="1000"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="No Buttons Setup" Margin="10" Padding=" 10">
             <StackPanel>
-                <CC:IntegerUpDown ButtonOrientation="NoButtons" Background="LightGray" Value="50"/>
+                <CC:IntegerUpDown ButtonOrientation="NoButtons"  Value="50"/>
                 <CC:DecimalUpDown ButtonOrientation="NoButtons" Background="Beige" Value="50.555"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Header="Stacked Setup" Margin="10" Padding=" 10">
             <StackPanel>
-                <CC:IntegerUpDown ButtonOrientation="Stacked" Background="LightGray" Value="50"/>
+                <CC:IntegerUpDown ButtonOrientation="Stacked" Value="50"/>
                 <CC:DecimalUpDown ButtonOrientation="Stacked" Background="Beige" Value="50.555"/>
             </StackPanel>
         </GroupBox>

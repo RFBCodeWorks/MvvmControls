@@ -1,5 +1,5 @@
 ﻿using RFBCodeWorks.MvvmControls;
-using RFBCodeWorks.WPFBehaviors;
+using RFBCodeWorks.WPF.Behaviors;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

@@ -52,5 +52,29 @@ namespace RFBCodeWorks
             }
             return -1;
         }
+
+        public static int ConvertToInt<T>(this T value)
+            where T : class
+        {
+            if (value is null || value is DBNull) return 0;
+            if (typeof(T) == typeof(string))
+            {
+                if (value?.ToString()?.IsNullOrEmpty() ?? true)
+                    return 0;
+                else
+                    return (int)Math.Round(Convert.ToDouble(value.ToString()));
+            }
+            //Integer/Long
+            else if (
+                typeof(T) == typeof(Int16) | typeof(T) == typeof(Int32) | typeof(T) == typeof(Int64) |
+                typeof(T) == typeof(UInt16) | typeof(T) == typeof(UInt32) | typeof(T) == typeof(UInt64) |
+                typeof(T) == typeof(long) | typeof(T) == typeof(ulong) | typeof(T) == typeof(int)
+                )
+            {
+                return Convert.ToInt32(value);
+            }
+            else
+                return (int)Math.Round(Convert.ToDouble(value.ToString()));
+        }
     }
 }
