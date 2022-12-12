@@ -1,10 +1,14 @@
-﻿<ResourceDictionary
+<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:RFBCodeWorks.WPF.Controls"
     xmlns:Primitives="clr-namespace:RFBCodeWorks.WPF.Controls.Primitives"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="MvvmControls;component/WPF.Controls/NumericUpDowns/Generic.xaml"/>
+        <ResourceDictionary Source="MvvmControls;component/WPF.Controls/IPV4TextBox/Generic.xaml"/>
     </ResourceDictionary.MergedDictionaries>
+
+    
 </ResourceDictionary>

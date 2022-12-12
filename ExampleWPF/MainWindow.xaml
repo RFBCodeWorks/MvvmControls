@@ -121,5 +121,20 @@
         <TabItem Header="  NumericUpDowns  ">
             <Views:NumericUpDownView/>
         </TabItem>
+        <TabItem Header="  Misc.  ">
+            <cc:SimpleGrid RowCount="3">
+                <GroupBox Header="Masked Textbox" Grid.Row="0">
+                    <StackPanel>
+                        <cc:MaskedTextBox Mask="099.099.099.099" Grid.Row="1"/>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="IPV4 Controls" Grid.Row="1">
+                    <StackPanel>
+                        <cc:IPV4TextBox InputFormat="Masked" x:Name="IPBox1"/>
+                        <cc:IPV4TextBox InputFormat="Numeric" x:Name="IPBox2" Text="{Binding ElementName=IPBox1, Path=Text, Mode=TwoWay}"/>
+                    </StackPanel>
+                </GroupBox>
+            </cc:SimpleGrid>
+        </TabItem>
     </TabControl>
 </Window>

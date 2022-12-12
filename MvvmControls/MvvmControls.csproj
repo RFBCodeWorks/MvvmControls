@@ -32,12 +32,6 @@ A ComboBoxDefinition has the following properties that the ViewModel may interac
 .Net5.0 and beyond natively supports this library.</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="WPF.Controls\NumericUpDown_UC.xaml.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Remove="WPF.Controls\NumericUpDown_UC.xaml" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
     <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
@@ -48,15 +42,12 @@ A ComboBoxDefinition has the following properties that the ViewModel may interac
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-    <None Include="WPF.Controls\NumericUpDown_UC.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="WPF.Controls\NumericUpDown_UC.xaml.cs">
-      <SubType>Code</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="WPF.Controls\IPV4TextBox\Generic.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="WPF.Controls\NumericUpDowns\Generic.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
