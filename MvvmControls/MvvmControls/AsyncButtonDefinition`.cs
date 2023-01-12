@@ -66,25 +66,36 @@ namespace RFBCodeWorks.MvvmControls
         /// </summary>
         new public IAsyncRelayCommand<T> Command { get; }
 
+        /// <inheritdoc/>
+        public bool IsRunning => Command.IsRunning;
+
+        /// <inheritdoc/>
+        public bool CanBeCanceled => Command.CanBeCanceled;
+
+        /// <inheritdoc/>
+        public bool IsCancellationRequested => Command.IsCancellationRequested;
+
         /// <inheritdoc cref="Primitives.AbstractAsyncCommand{T}.ExecuteAsync"/>
         public Task ExecuteAsync(T parameter) => Command.ExecuteAsync(parameter);
 
         /// <summary>Start the asynchronous task - Fire and Forget</summary>
-        public override async void Execute(T parameter)
+        public sealed override void Execute(T parameter)
         {
-            await ExecuteAsync(parameter);
+            _ = ExecuteAsync(parameter);
+        }
+
+        /// <inheritdoc/>
+        public void Cancel()
+        {
+            if (Command.CanBeCanceled && !Command.IsCancellationRequested)
+                Command.Cancel();
         }
 
         #region < IAsyncRelayCommand Implementation >
 
         IEnumerable<Task> IAsyncRelayCommand.RunningTasks => Command.RunningTasks;
-        Task IAsyncRelayCommand.ExecuteAsync() => Command.ExecuteAsync(null);
         Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecutionTask => Command.ExecutionTask;
-        bool Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.CanBeCanceled => Command.CanBeCanceled;
-        bool Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.IsCancellationRequested => Command.IsCancellationRequested;
-        bool Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.IsRunning => Command.IsRunning;
-        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => Command.ExecuteAsync(parameter);
-        void Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.Cancel() => Command.Cancel();
+        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync((T)parameter);
 
         #endregion
     }

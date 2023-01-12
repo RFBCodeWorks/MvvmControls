@@ -66,9 +66,17 @@ namespace RFBCodeWorks.MvvmControls
         /// </summary>
         new public IAsyncRelayCommand Command { get; }
 
-
         /// <inheritdoc cref="Primitives.AbstractAsyncCommand.ExecuteAsync"/>
-        public Task ExecuteAsync() => Command.ExecuteAsync();
+        public Task ExecuteAsync() => Command.ExecuteAsync(null);
+
+        /// <inheritdoc/>
+        public bool IsRunning => Command.IsRunning;
+
+        /// <inheritdoc/>
+        public bool CanBeCanceled => Command.CanBeCanceled;
+
+        /// <inheritdoc/>
+        public bool IsCancellationRequested => Command.IsCancellationRequested;
 
         /// <summary>Start the asynchronous task - Fire and Forget</summary>
         public override async void Execute()
@@ -76,15 +84,18 @@ namespace RFBCodeWorks.MvvmControls
             await ExecuteAsync();
         }
 
+        /// <inheritdoc/>
+        public void Cancel()
+        {
+            if (Command.CanBeCanceled && !Command.IsCancellationRequested)
+                Command.Cancel();
+        }
+
         #region < IAsyncRelayCommand Implementation >
 
         IEnumerable<Task> IAsyncRelayCommand.RunningTasks => Command.RunningTasks;
         Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecutionTask => Command.ExecutionTask;
-        bool Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.CanBeCanceled => Command.CanBeCanceled;
-        bool Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.IsCancellationRequested => Command.IsCancellationRequested;
-        bool Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.IsRunning => Command.IsRunning;
-        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => Command.ExecuteAsync(parameter);
-        void Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.Cancel() => Command.Cancel();
+        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync();
 
         #endregion
     }
