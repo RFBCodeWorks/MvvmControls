@@ -50,11 +50,12 @@ namespace RFBCodeWorks.MvvmControls
         public virtual void Execute(T parameter) => Command.Execute(parameter);
 
         /// <inheritdoc/>
-        public override void NotifyCanExecuteChanged() => Command.NotifyCanExecuteChanged();
-        /// <inheritdoc/>
         protected override bool CanExecute(object parameter) => Command.CanExecute(parameter);
         /// <inheritdoc/>
         protected override void Execute(object parameter) => Command.Execute(parameter);
 
+
+        /// <inheritdoc/>
+        public override void NotifyCanExecuteChanged() => Command.NotifyCanExecuteChanged();
     }
 }
