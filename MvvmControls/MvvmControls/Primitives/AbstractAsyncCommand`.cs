@@ -28,19 +28,6 @@ namespace RFBCodeWorks.MvvmControls.Primitives
             runningTasks.CollectionChanged += RunningTasks_CollectionChanged;
         }
 
-        event EventHandler ICommand.CanExecuteChanged
-        {
-            add
-            {
-                throw new NotImplementedException();
-            }
-
-            remove
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         private readonly ObservableCollection<Task> runningTasks;
 
         /// <inheritdoc />
@@ -109,9 +96,9 @@ namespace RFBCodeWorks.MvvmControls.Primitives
             NotifyCanExecuteChanged();
         }
 
-        Task IAsyncRelayCommand.ExecuteAsync() => throw new NotImplementedException("RFBCodeWorks.MvvmControls.IAsyncRelayCommand.ExecuteAsync() is not supported unless explicitly implemented by the dervied class");
-        void IRelayCommand.Execute() => throw new NotImplementedException("RFBCodeWorks.MvvmControls.IRelayCommand.Execute() is not supported unless explicitly implemented by the dervied class");
-        bool IRelayCommand.CanExecute() => ((ICommand)this).CanExecute(null);
+        //Task IAsyncRelayCommand.ExecuteAsync() => throw new NotImplementedException("RFBCodeWorks.MvvmControls.IAsyncRelayCommand.ExecuteAsync() is not supported unless explicitly implemented by the dervied class");
+        //void IRelayCommand.Execute() => throw new NotImplementedException("RFBCodeWorks.MvvmControls.IRelayCommand.Execute() is not supported unless explicitly implemented by the dervied class");
+        //bool IRelayCommand.CanExecute() => ((ICommand)this).CanExecute(null);
 
     }
 }

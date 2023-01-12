@@ -104,7 +104,6 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         protected bool NoneRunning() => !IsRunning;
 
         async void ICommand.Execute(object parameter) => await ExecuteAsync();
-        async void IRelayCommand.Execute() => await ExecuteAsync();
         Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync();
         bool ICommand.CanExecute(object parameter) => CanExecute();
 

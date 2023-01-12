@@ -48,11 +48,9 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         public abstract void Execute(T parameter);
 
         bool ICommand.CanExecute(object parameter) => CanExecute(ThrowExceptionIfInvalidType<T>(parameter));
-
-        bool IRelayCommand.CanExecute() => ((ICommand)this).CanExecute(null);
-
         void ICommand.Execute(object parameter) => Execute(ThrowExceptionIfInvalidType<T>(parameter));
 
-        void IRelayCommand.Execute() => throw new NotImplementedException("RFBCodeWorks.MvvmControls.IRelayCommand.Execute() is not supported unless explicitly implemented by the dervied class");
+        //bool IRelayCommand.CanExecute() => ((ICommand)this).CanExecute(null);
+        //void IRelayCommand.Execute() => throw new NotImplementedException("RFBCodeWorks.MvvmControls.IRelayCommand.Execute() is not supported unless explicitly implemented by the dervied class");
     }
 }

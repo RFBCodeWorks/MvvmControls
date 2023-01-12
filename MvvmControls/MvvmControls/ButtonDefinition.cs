@@ -40,10 +40,10 @@ namespace RFBCodeWorks.MvvmControls
         public IRelayCommand Command { get; }
 
         /// <inheritdoc cref="RelayCommand.CanExecute()"/>
-        public bool CanExecute() => Command.CanExecute();
+        public bool CanExecute() => Command.CanExecute(null);
 
         /// <inheritdoc cref="RelayCommand.Execute()"/>
-        public virtual void Execute() => Command.Execute();
+        public virtual void Execute() => Command.Execute(null);
 
         /// <inheritdoc/>
         public sealed override event EventHandler CanExecuteChanged

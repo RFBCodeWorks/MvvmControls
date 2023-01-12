@@ -15,7 +15,7 @@ namespace RFBCodeWorks.MvvmControls.Primitives
     /// <br/> - <see cref="INotifyPropertyChanged"/>
     /// <br/> - <see cref="IButtonDefinition"/>
     /// </summary>
-    public abstract class AbstractButtonDefinition : ControlBase, IButtonDefinition
+    public abstract class AbstractButtonDefinition : ControlBase, IButtonDefinition, ICommand
     {
         /// <summary> Static method that can be used as the default Func{bool} for <see cref="ICommand.CanExecute(object)"/> </summary>
         /// <returns><see langword="true"/></returns>
@@ -61,9 +61,9 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         public abstract event EventHandler CanExecuteChanged;
         
         void ICommand.Execute(object parameter) => this.Execute(parameter);
-        bool ICommand.CanExecute(object parameter) 
+        bool ICommand.CanExecute(object parameter)
         {
-            SetProperty(ref canExecute, this.CanExecute(parameter), nameof(IsEnabled));
+            _ = SetProperty(ref canExecute, CanExecute(parameter), nameof(IsEnabled));
             return canExecute;
         }
         

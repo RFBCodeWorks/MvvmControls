@@ -56,7 +56,5 @@ namespace RFBCodeWorks.MvvmControls
         /// <inheritdoc/>
         protected override void Execute(object parameter) => Command.Execute(parameter);
 
-        void IRelayCommand.Execute() => throw new NotImplementedException("RFBCodeWorks.MvvmControls.IRelayCommand.Execute() is not supported unless explicitly implemented by the dervied class");
-        bool IRelayCommand.CanExecute() => ((ICommand)this).CanExecute(null);
     }
 }

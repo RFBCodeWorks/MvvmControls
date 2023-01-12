@@ -17,12 +17,6 @@ namespace RFBCodeWorks.MvvmControls
     /// </remarks>
     public interface IRelayCommand : Microsoft.Toolkit.Mvvm.Input.IRelayCommand, ICommand
     {
-        /// <inheritdoc cref="ICommand.Execute(object)"/>
-        void Execute();
-
-        /// <inheritdoc cref="ICommand.CanExecute(object)"/>
-        bool CanExecute();
-
         /// <summary>
         /// Event Handler that allows an external event to raise CanExecuteChanged
         /// </summary>
@@ -38,6 +32,7 @@ namespace RFBCodeWorks.MvvmControls
     /// <br/> - <see cref="Microsoft.Toolkit.Mvvm.Input.IRelayCommand{T}"/>
     /// <br/> - <see cref="ICommand"/>
     /// </remarks>
+    /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.IRelayCommand{T}"/>
     public interface IRelayCommand<in T> : IRelayCommand, Microsoft.Toolkit.Mvvm.Input.IRelayCommand<T>, ICommand
     {
 
@@ -58,13 +53,6 @@ namespace RFBCodeWorks.MvvmControls
         /// Gets all of the tasks that are currently executing
         /// </summary>
         IEnumerable<Task> RunningTasks { get; }
-
-        /// <summary>
-        /// Start an Asynchronous Task
-        /// </summary>
-        /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object?)"/>
-        Task ExecuteAsync();
-
     }
 
     /// <summary>
