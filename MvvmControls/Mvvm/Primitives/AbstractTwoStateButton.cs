@@ -110,12 +110,13 @@ namespace RFBCodeWorks.Mvvvm.Primitives
         protected abstract bool AlternateCanExecute();
 
         /// <inheritdoc/>
-        protected sealed override bool CanExecute(object parameter)
+        public sealed override bool CanExecute()
         {
             return IsDefaultState ? DefaultCanExecute() : AlternateCanExecute();
         }
+
         /// <inheritdoc/>
-        protected sealed override void Execute(object parameter)
+        public sealed override void Execute()
         {
             if (IsDefaultState)
                 DefaultExecute();

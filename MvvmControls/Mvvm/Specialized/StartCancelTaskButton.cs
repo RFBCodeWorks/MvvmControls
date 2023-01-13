@@ -52,7 +52,7 @@ namespace RFBCodeWorks.Mvvvm.Specialized
             try
             {
                 base.IsDefaultState = false;
-                await relayCommand.ExecuteAsync();
+                await relayCommand.ExecuteAsync(null);
             }
             finally
             {
@@ -70,7 +70,7 @@ namespace RFBCodeWorks.Mvvvm.Specialized
 
         protected override bool DefaultCanExecute()
         {
-            return !relayCommand.IsRunning && relayCommand.CanExecute();
+            return !relayCommand.IsRunning && relayCommand.CanExecute(null);
         }
 
         protected override bool AlternateCanExecute()
