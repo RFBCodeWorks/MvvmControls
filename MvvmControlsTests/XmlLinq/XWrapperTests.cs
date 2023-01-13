@@ -2,7 +2,7 @@
 using System;
 using System.Xml.Linq;
 
-namespace RFBCodeWorks.MvvmControls.XmlLinq.Tests
+namespace RFBCodeWorks.Mvvvm.XmlLinq.Tests
 {
 
     [TestClass()]
@@ -25,7 +25,7 @@ namespace RFBCodeWorks.MvvmControls.XmlLinq.Tests
         {
             bool XDocEvent = false;
             bool XElementEvent = false;
-            bool XAttributeEvent = false;
+            //bool XAttributeEvent = false;
 
             var doc = GetXDoc();
             doc.PropertyChanged += Doc_PropertyChanged;

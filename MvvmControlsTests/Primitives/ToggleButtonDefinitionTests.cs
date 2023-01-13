@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using Behaviors = RFBCodeWorks.WPFBehaviors;
 
-namespace RFBCodeWorks.MvvmControls.Primitives.Tests
+namespace RFBCodeWorks.Mvvvm.Primitives.Tests
 {
 
     [TestClass()]

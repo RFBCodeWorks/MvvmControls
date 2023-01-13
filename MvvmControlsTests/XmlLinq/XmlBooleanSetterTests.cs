@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RFBCodeWorks.MvvmControls.XmlLinq.ValueSetters;
+using RFBCodeWorks.Mvvvm.XmlLinq.ValueSetters;
 using System.Xml.Linq;
 
-namespace RFBCodeWorks.MvvmControls.XmlLinq.Tests
+namespace RFBCodeWorks.Mvvvm.XmlLinq.Tests
 {
     [TestClass()]
     public class XmlBooleanSetterTests

@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RFBCodeWorks.MvvmControls.Tests;
+using RFBCodeWorks.Mvvvm.Tests;
 using System.Linq;
 using System.Windows.Controls;
 
-namespace RFBCodeWorks.MvvmControls.Primitives.Tests
+namespace RFBCodeWorks.Mvvvm.Primitives.Tests
 {
     [TestClass()]
     public class ItemSourceTests : ControlBaseTests

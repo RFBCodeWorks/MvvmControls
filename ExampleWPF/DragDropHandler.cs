@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows;
-using RFBCodeWorks.MvvmControls;
-using RFBCodeWorks.DragAndDrop;
+using RFBCodeWorks.Mvvvm;
+using RFBCodeWorks.Mvvm.DragAndDrop;
 
 namespace ExampleWPF
 {
@@ -97,7 +97,7 @@ namespace ExampleWPF
         public void OnPreviewDragEnter(object sender, DragEventArgs e)
         {
             IsHitTestVisible = true;
-            var ef = RFBCodeWorks.DragAndDrop.IDroppedFileFactory.GetDroppedFile(e);
+            var ef = RFBCodeWorks.Mvvm.DragAndDrop.IDroppedFileFactory.GetDroppedFile(e);
             if (ef != null)
             {
                 DragRectangleToolTip = ef.Source;

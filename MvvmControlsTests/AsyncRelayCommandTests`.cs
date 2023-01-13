@@ -1,12 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RFBCodeWorks.MvvmControls;
+using RFBCodeWorks.Mvvvm;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.MvvmControls.Tests
+namespace RFBCodeWorks.Mvvvm.Tests
 {
     [TestClass()]
     public class AsyncRelayCommandTests2

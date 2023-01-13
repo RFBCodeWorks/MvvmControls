@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RFBCodeWorks.WPFBehaviors;
-using RFBCodeWorks.MvvmControls.Tests;
+using RFBCodeWorks.Mvvvm.Tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
-using RFBCodeWorks.DragAndDrop;
-using RFBCodeWorks.MvvmControls;
+using RFBCodeWorks.Mvvm.DragAndDrop;
+using RFBCodeWorks.Mvvvm;
 
 namespace RFBCodeWorks.WPF.Behaviors
 {

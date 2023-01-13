@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace RFBCodeWorks.MvvmControls.XmlLinq.Tests
+namespace RFBCodeWorks.Mvvvm.XmlLinq.Tests
 {
     /// <summary>
     /// ShowCase how the 'Changed' event propogates onto an XElement object

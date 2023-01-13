@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Input;
 
-namespace RFBCodeWorks.MvvmControls.Tests
+namespace RFBCodeWorks.Mvvvm.Tests
 {
     [TestClass()]
     public class ObjectViewModelTests
