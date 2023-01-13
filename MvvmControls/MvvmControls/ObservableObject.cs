@@ -6,10 +6,14 @@ namespace RFBCodeWorks.MvvmControls
     /// <inheritdoc cref="BaseObj"/>
     public abstract class ObservableObject: BaseObj 
     {
-        /// <summary> <see cref="PropertyChangedEventArgs"/> that provide <see cref="string.Empty"/> </summary>
+        /// <summary>
+        /// Event Args for PropertyChangedEvent that indicates all properties have changed.
+        /// </summary>
         public static readonly PropertyChangedEventArgs AllPropertiesChangedArgs = new(string.Empty);
-        
-        /// <summary> <see cref="PropertyChangingEventArgs"/> that provide <see cref="string.Empty"/> </summary>
+
+        /// <summary>
+        /// Event Args for PropertyChangingEvent that indicates all properties have changed.
+        /// </summary>
         public static readonly PropertyChangingEventArgs AllPropertiesChangingArgs = new(string.Empty);
 
         /// <inheritdoc cref="BaseObj.OnPropertyChanging(string?)"/>

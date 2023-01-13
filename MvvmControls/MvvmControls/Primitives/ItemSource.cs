@@ -73,7 +73,16 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         public string DisplayMemberPath
         {
             get { return DisplayMemberPathField; }
-            set { SetProperty(ref DisplayMemberPathField, value, nameof(DisplayMemberPath)); }
+            set
+            {
+                if (DisplayMemberPathField != value)
+                {
+                    OnPropertyChanging(EventArgSingletons.ItemSourceDisplayMemberChanging);
+                    DisplayMemberPathField = value;
+                    OnPropertyChanged(EventArgSingletons.ItemSourceDisplayMemberChanged);
+                }
+
+            }
         }
         private string DisplayMemberPathField = DefaultDisplayMemberPath;
 
@@ -89,7 +98,9 @@ namespace RFBCodeWorks.MvvmControls.Primitives
                 if (!(ItemSourceField?.Equals(value) ?? value is null))
                 {
                     UnSubscribe(ItemSourceField);
-                    SetProperty(ref ItemSourceField, value, nameof(Items));
+                    OnPropertyChanging(EventArgSingletons.ItemSourceItemsChanging);
+                    ItemSourceField = value;
+                    OnPropertyChanged(EventArgSingletons.ItemSourceItemsChanged);
                     OnItemSourceChanged();
                     Subscribe(value);
                 }

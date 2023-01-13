@@ -6,14 +6,29 @@ namespace RFBCodeWorks.MvvmControls.Primitives
     /// <summary>
     /// Contains the basic bindings all controls have
     /// </summary>
-    public class ControlBase : ObservableObject,  IControlDefinition, IToolTipProvider
+    public class ControlBase : ObservableObject, IControlDefinition, IToolTipProvider
     {
-        /// <summary>
-        /// Subscribe to a component's PropertyChanged event to pass on the args. <see langword="sender"/> will be this control object.
-        /// </summary>
-        /// <param name="sender">The sender - this value is thrown out and is only present to conform as an EventHandler method</param>
-        /// <param name="e">These ares will be passed directly to this object's PropertyChanged event</param>
-        protected void OnPropertyChanged(object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
+        #region < Event Arg Singletons >
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        public static readonly PropertyChangingEventArgs TooltipChangingArgs = new(nameof(ToolTip));
+        public static readonly PropertyChangedEventArgs TooltipChangedArgs = new(nameof(ToolTip));
+
+        public static readonly PropertyChangingEventArgs IsEnabledChangingArgs = new(nameof(IsEnabled));        
+        public static readonly PropertyChangedEventArgs IsEnabledChangedArgs = new(nameof(IsEnabled));
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
+        private static readonly PropertyChangingEventArgs IsVisibleChangingArgs = new(nameof(IsVisible));
+        private static readonly PropertyOfTypeChangedEventArgs<bool> IsVisibleNowTRUE = new PropertyOfTypeChangedEventArgs<bool>(false, true, nameof(IsVisible));
+        private static readonly PropertyOfTypeChangedEventArgs<bool> IsVisibleNowFALSE = new PropertyOfTypeChangedEventArgs<bool>(true, false, nameof(IsVisible));
+
+        private static readonly PropertyChangingEventArgs HiddenModeChangingArgs = new(nameof(HiddenMode));
+        private static readonly PropertyChangedEventArgs HiddenModeChangedArgs = new(nameof(HiddenMode));
+
+        private static readonly PropertyChangingEventArgs VisibilityChangingArgs = new(nameof(Visibility));
+        private static readonly PropertyChangedEventArgs VisibilityChangedArgs = new(nameof(Visibility));
+
+        #endregion
 
         #region < OnVisibilityChanged >
 
@@ -22,16 +37,16 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         /// </summary>
         public event PropertyOfTypeChangedEventHandler<bool> VisibilityChanged;
 
-        /// <summary> Raises the OnVisibilityChanged event </summary>
-        protected virtual void OnOnVisibilityChanged(bool oldValue, bool newValue)
+        /// <summary> Raises the OnVisibilityChanged event, then raises the PropertyChanged event with the same args.</summary>
+        /// <param name="isVisible">set TRUE if the visibility is changing to TRUE, set to false if the control is becoming hidden or collapsed.</param>
+        protected virtual void OnOnVisibilityChanged(bool isVisible)
         {
-            var e = new PropertyOfTypeChangedEventArgs<bool>(oldValue, newValue, nameof(IsVisible));
+            var e = isVisible ? IsVisibleNowTRUE : IsVisibleNowFALSE;
             VisibilityChanged?.Invoke(this, e);
             OnPropertyChanged(e);
         }
 
         #endregion
-
 
         /// <summary>
         /// Enable/Disable a control
@@ -39,7 +54,14 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         public virtual bool IsEnabled
         {
             get { return IsEnabledField; }
-            set { SetProperty(ref IsEnabledField, value, nameof(IsEnabled)); }
+            set {
+                if (IsEnabledField != value)
+                {
+                    OnPropertyChanging(IsEnabledChangingArgs);
+                    IsEnabledField = value;
+                    OnPropertyChanged(IsEnabledChangedArgs);
+                }
+            }
         }
         private bool IsEnabledField = true;
 
@@ -49,7 +71,14 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         public virtual string ToolTip
         {
             get => toolTip;
-            set => base.SetProperty(ref toolTip, value, nameof(ToolTip));
+            set { 
+                if (toolTip != value)
+                {
+                    OnPropertyChanging(TooltipChangingArgs);
+                    toolTip = value;
+                    OnPropertyChanged(TooltipChangedArgs);
+                }
+            }
         }
         private string toolTip;
 
@@ -66,7 +95,7 @@ namespace RFBCodeWorks.MvvmControls.Primitives
             {
                 if (value != IsVisible)
                 {
-                    OnPropertyChanging(nameof(IsVisible));
+                    OnPropertyChanging(IsVisibleChangingArgs);
                     if (value)
                     {
                         Visibility = Visibility.Visible;
@@ -87,14 +116,17 @@ namespace RFBCodeWorks.MvvmControls.Primitives
             get { return VisibilityField; }
             set
             {
-                var oldValue = VisibilityField;
-                bool changed = SetProperty(ref VisibilityField, value, nameof(Visibility));
-                if (changed)
+                if (Visibility != value)
                 {
+                    OnPropertyChanging(VisibilityChangingArgs);
+                    var oldValue = VisibilityField;
+                    OnPropertyChanged(VisibilityChangedArgs);
+
                     if (oldValue == Visibility.Visible)
-                        OnOnVisibilityChanged(true, false);
+                        OnOnVisibilityChanged(false);
                     else if (value == Visibility.Visible)
-                        OnOnVisibilityChanged(false, true);
+                        OnOnVisibilityChanged(true);
+                    
                 }
             }
         }
@@ -111,12 +143,24 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         public Visibility HiddenMode
         {
             get { return HiddenModeField; }
-            set { 
-                SetProperty(ref HiddenModeField, value, nameof(HiddenMode));
-                if (!IsVisible) Visibility = value;
+            set
+            {
+                if (HiddenMode != value)
+                {
+                    OnPropertyChanging(HiddenModeChangingArgs);
+                    HiddenModeField = value;
+                    if (!IsVisible) Visibility = value;
+                    OnPropertyChanged(HiddenModeChangedArgs);
+                }
             }
         }
         private Visibility HiddenModeField = Visibility.Collapsed;
 
+        /// <summary>
+        /// Subscribe to a component's PropertyChanged event to pass on the args. <see langword="sender"/> will be this control object.
+        /// </summary>
+        /// <param name="sender">The sender - this value is thrown out and is only present to conform as an EventHandler method</param>
+        /// <param name="e">These ares will be passed directly to this object's PropertyChanged event</param>
+        protected void OnPropertyChanged(object sender, PropertyChangedEventArgs e) => OnPropertyChanged(e);
     }
 }
