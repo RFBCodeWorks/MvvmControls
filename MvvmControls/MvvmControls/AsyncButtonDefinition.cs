@@ -11,7 +11,7 @@ namespace RFBCodeWorks.MvvmControls
     /// <summary>
     /// Class that wraps an <see cref="IAsyncRelayCommand"/> to provide the remaining implementation of <see cref="IButtonDefinition"/>
     /// </summary>
-    public class AsyncButtonDefinition : ButtonDefinition, IAsyncRelayCommand
+    public sealed class AsyncButtonDefinition : Primitives.AbstractAsyncButtonDefinition, IAsyncRelayCommand
     {
         /// <summary>
         /// Create a new ButtonDefinition that wraps a Fire-And-Forget task
@@ -56,7 +56,7 @@ namespace RFBCodeWorks.MvvmControls
         /// </summary>
         /// <param name="command">the command to wrap</param>
         /// <exception cref="ArgumentNullException"/>
-        public AsyncButtonDefinition(IAsyncRelayCommand command) : base(command)
+        public AsyncButtonDefinition(IAsyncRelayCommand command) : base()
         {
             Command = command ?? throw new ArgumentNullException(nameof(command));
         }
@@ -64,10 +64,10 @@ namespace RFBCodeWorks.MvvmControls
         /// <summary>
         /// The IAsyncRelayCommand object through which the <see cref="ICommand"/> interface is implemented
         /// </summary>
-        new public IAsyncRelayCommand Command { get; }
+        public IAsyncRelayCommand Command { get; }
 
         /// <inheritdoc cref="Primitives.AbstractAsyncCommand.ExecuteAsync"/>
-        public Task ExecuteAsync() => Command.ExecuteAsync(null);
+        public override Task ExecuteAsync() => Command.ExecuteAsync(null);
 
         /// <inheritdoc/>
         public bool IsRunning => Command.IsRunning;
@@ -78,20 +78,27 @@ namespace RFBCodeWorks.MvvmControls
         /// <inheritdoc/>
         public bool IsCancellationRequested => Command.IsCancellationRequested;
 
-        /// <summary>Start the asynchronous task - Fire and Forget</summary>
-        public override async void Execute()
-        {
-            await ExecuteAsync();
-        }
-
         /// <inheritdoc/>
-        public void Cancel()
+        public override void Cancel()
         {
             if (Command.CanBeCanceled && !Command.IsCancellationRequested)
                 Command.Cancel();
         }
 
         #region < IAsyncRelayCommand Implementation >
+
+        /// <inheritdoc/>
+        public override event EventHandler CanExecuteChanged
+        {
+            add => Command.CanExecuteChanged += value;
+            remove => Command.CanExecuteChanged -= value;
+        }
+
+        /// <inheritdoc/>
+        public override void NotifyCanExecuteChanged() => Command?.NotifyCanExecuteChanged();
+
+        /// <inheritdoc/>
+        public override bool CanExecute() => Command?.CanExecute(null) ?? false;
 
         IEnumerable<Task> IAsyncRelayCommand.RunningTasks => Command.RunningTasks;
         Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecutionTask => Command.ExecutionTask;

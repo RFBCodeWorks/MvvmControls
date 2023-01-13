@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RFBCodeWorks.MvvmControls.Primitives
@@ -15,12 +16,12 @@ namespace RFBCodeWorks.MvvmControls.Primitives
     /// <br/> - <see cref="INotifyPropertyChanged"/>
     /// <br/> - <see cref="IButtonDefinition"/>
     /// </summary>
-    public abstract class AbstractButtonDefinition : ControlBase, IButtonDefinition, ICommand
+    public abstract class AbstractAsyncButtonDefinition<T> : ControlBase, IButtonDefinition, ICommand
     {
         /// <summary> Static method that can be used as the default Func{bool} for <see cref="ICommand.CanExecute(object)"/> </summary>
         /// <returns><see langword="true"/></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected static bool ReturnTrue() => true;
+        protected static bool ReturnTrue(T ignoredParameter) => true;
 
         /// <inheritdoc/>
         public virtual string DisplayText
@@ -36,12 +37,15 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         /// </summary>
         public override bool IsEnabled { get => base.IsEnabled; set { } }
 
-        /// <summary> The method through which the abstract base object implements <see cref="ICommand.CanExecute(object)"/> </summary>
         /// <inheritdoc cref="ICommand.CanExecute(object)"/>
-        public abstract bool CanExecute();
+        public abstract bool CanExecute(T parameter);
 
-        /// <summary> The method through which the abstract base object implements <see cref="ICommand.Execute(object)"/> </summary>
-        public abstract void Execute();
+        ///<summary> Start a task that accepts an input of type <typeparamref name="T"/></summary>
+        /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand{T}.ExecuteAsync(T)"/>
+        public abstract Task ExecuteAsync(T parameter);
+
+        /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.Cancel"/>
+        public abstract void Cancel();
 
         /// <inheritdoc/>
         public abstract void NotifyCanExecuteChanged();
@@ -54,10 +58,17 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         /// <inheritdoc/>
         public abstract event EventHandler CanExecuteChanged;
         
-        void ICommand.Execute(object parameter) => this.Execute();
+        async void ICommand.Execute(object parameter) => await this.ExecuteAsync(AbstractCommand<T>.ThrowIfInvalidParameter(parameter));
         bool ICommand.CanExecute(object parameter)
         {
-            base.IsEnabled = CanExecute();
+            // Special case a null value for a value type argument type.
+            // This ensures that no exceptions are thrown during initialization.
+            //https://github.com/CommunityToolkit/dotnet/blob/e8969781afe537ea41a964a15b4ccfee32e095df/src/CommunityToolkit.Mvvm/Input/RelayCommand%7BT%7D.cs#L87
+            if (parameter is null && default(T) is not null)
+            {
+                return false;
+            }
+            base.IsEnabled = CanExecute(AbstractCommand<T>.ThrowIfInvalidParameter(parameter));
             return base.IsEnabled;
         }
         

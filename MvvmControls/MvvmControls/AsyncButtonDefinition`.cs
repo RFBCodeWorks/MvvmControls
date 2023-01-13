@@ -11,7 +11,7 @@ namespace RFBCodeWorks.MvvmControls
     /// <summary>
     /// Class that wraps an <see cref="IAsyncRelayCommand"/> to provide the remaining implementation of <see cref="IButtonDefinition"/>
     /// </summary>
-    public class AsyncButtonDefinition<T> : ButtonDefinition<T>, IAsyncRelayCommand<T>
+    public sealed class AsyncButtonDefinition<T> : Primitives.AbstractAsyncButtonDefinition<T>, IAsyncRelayCommand<T>
     {
         /// <summary>
         /// Create a new ButtonDefinition that wraps a Fire-And-Forget task
@@ -56,7 +56,7 @@ namespace RFBCodeWorks.MvvmControls
         /// </summary>
         /// <param name="command">the command to wrap</param>
         /// <exception cref="ArgumentNullException"/>
-        public AsyncButtonDefinition(IAsyncRelayCommand<T> command) : base(command)
+        public AsyncButtonDefinition(IAsyncRelayCommand<T> command) : base()
         {
             Command = command ?? throw new ArgumentNullException(nameof(command));
         }
@@ -64,7 +64,7 @@ namespace RFBCodeWorks.MvvmControls
         /// <summary>
         /// The IAsyncRelayCommand object through which the <see cref="ICommand"/> interface is implemented
         /// </summary>
-        new public IAsyncRelayCommand<T> Command { get; }
+        public IAsyncRelayCommand<T> Command { get; }
 
         /// <inheritdoc/>
         public bool IsRunning => Command.IsRunning;
@@ -75,17 +75,14 @@ namespace RFBCodeWorks.MvvmControls
         /// <inheritdoc/>
         public bool IsCancellationRequested => Command.IsCancellationRequested;
 
-        /// <inheritdoc cref="Primitives.AbstractAsyncCommand{T}.ExecuteAsync"/>
-        public Task ExecuteAsync(T parameter) => Command.ExecuteAsync(parameter);
-
-        /// <summary>Start the asynchronous task - Fire and Forget</summary>
-        public sealed override void Execute(T parameter)
-        {
-            _ = ExecuteAsync(parameter);
-        }
+        /// <inheritdoc/>
+        public override Task ExecuteAsync(T parameter) => Command.ExecuteAsync(parameter);
 
         /// <inheritdoc/>
-        public void Cancel()
+        public override bool CanExecute(T parameter) => Command.CanExecute(parameter);
+
+        /// <inheritdoc/>
+        public override void Cancel()
         {
             if (Command.CanBeCanceled && !Command.IsCancellationRequested)
                 Command.Cancel();
@@ -93,9 +90,20 @@ namespace RFBCodeWorks.MvvmControls
 
         #region < IAsyncRelayCommand Implementation >
 
+        /// <inheritdoc/>
+        public override event EventHandler CanExecuteChanged
+        {
+            add => Command.CanExecuteChanged += value;
+            remove => Command.CanExecuteChanged -= value;
+        }
+
+        /// <inheritdoc/>
+        public override void NotifyCanExecuteChanged() => Command?.NotifyCanExecuteChanged();
+
         IEnumerable<Task> IAsyncRelayCommand.RunningTasks => Command.RunningTasks;
         Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecutionTask => Command.ExecutionTask;
-        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync((T)parameter);
+        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync(Primitives.AbstractCommand<T>.ThrowIfInvalidParameter(parameter));
+        async void Microsoft.Toolkit.Mvvm.Input.IRelayCommand<T>.Execute(T parameter)=> await ExecuteAsync(parameter);
 
         #endregion
     }

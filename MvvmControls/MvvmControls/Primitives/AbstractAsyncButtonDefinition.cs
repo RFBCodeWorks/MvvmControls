@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RFBCodeWorks.MvvmControls.Primitives
@@ -15,7 +16,7 @@ namespace RFBCodeWorks.MvvmControls.Primitives
     /// <br/> - <see cref="INotifyPropertyChanged"/>
     /// <br/> - <see cref="IButtonDefinition"/>
     /// </summary>
-    public abstract class AbstractButtonDefinition : ControlBase, IButtonDefinition, ICommand
+    public abstract class AbstractAsyncButtonDefinition : ControlBase, IButtonDefinition, ICommand
     {
         /// <summary> Static method that can be used as the default Func{bool} for <see cref="ICommand.CanExecute(object)"/> </summary>
         /// <returns><see langword="true"/></returns>
@@ -36,12 +37,14 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         /// </summary>
         public override bool IsEnabled { get => base.IsEnabled; set { } }
 
-        /// <summary> The method through which the abstract base object implements <see cref="ICommand.CanExecute(object)"/> </summary>
-        /// <inheritdoc cref="ICommand.CanExecute(object)"/>
+        /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.RelayCommand{T}.CanExecute(T)"/>
         public abstract bool CanExecute();
 
         /// <summary> The method through which the abstract base object implements <see cref="ICommand.Execute(object)"/> </summary>
-        public abstract void Execute();
+        public abstract Task ExecuteAsync();
+
+        /// <summary> Cancel the task </summary>
+        public abstract void Cancel();
 
         /// <inheritdoc/>
         public abstract void NotifyCanExecuteChanged();
@@ -54,7 +57,7 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         /// <inheritdoc/>
         public abstract event EventHandler CanExecuteChanged;
         
-        void ICommand.Execute(object parameter) => this.Execute();
+        async void ICommand.Execute(object parameter) => await this.ExecuteAsync();
         bool ICommand.CanExecute(object parameter)
         {
             base.IsEnabled = CanExecute();
