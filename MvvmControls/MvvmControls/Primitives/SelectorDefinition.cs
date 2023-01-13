@@ -84,20 +84,37 @@ namespace RFBCodeWorks.MvvmControls.Primitives
             get { return SelectedIndexField; }
             set
             {
-                if (UpdatingSelectedItem)
-                    SetProperty(ref SelectedIndexField, value, nameof(SelectedIndex));
+                if (SelectedIndexField == value)
+                {
+                    return; // no change;
+                }
+                else if (UpdatingSelectedItem) // value is retrieved while SelectedItem is being updated - this value should always be valid, and is the expected way for this to be set.
+                {
+                    OnPropertyChanging(EventArgSingletons.SelectedIndexChanging);
+                    SelectedIndexField = value;
+                    OnPropertyChanged(EventArgSingletons.SelectedIndexChanged);
+                }
+                else if (Items is null || !Items.Any())
+                {
+                    // No items in collection
+                    if (value != -1) throw new ArgumentOutOfRangeException($"Cannot set the index of a selector when the collection has no items", nameof(SelectedIndex));
+                }
                 else
                 {
-                    int newValue = Items != null ? value : -1;
-                    bool changed = SetProperty(ref SelectedIndexField, newValue, nameof(SelectedIndex));
-                    if (!changed || Items is null) return;         // Check if was updated, and if there is an itemsource
-                    if (newValue >= 0 && newValue < Items.Count)   // check if within acceptable range
+                    //collection has items - check valid index
+                    if (value == -1)
+                    {
+                        // This may be a bad choice if the <T> is a struct, and the default resides within the list. Ex: 5,4,3,2,1,0 -> index 5 will become selected.
+                        // If this is an issue, a consumer can always use T = int? in place of it, allowing for actual null values.
+                        SelectedItem = default; 
+                    }
+                    else if (value < Items.Count)
                     {
                         SelectedItem = Items[value];
                     }
                     else
                     {
-                        SelectedItem = default;
+                        throw new ArgumentOutOfRangeException($"SelectedIndex property was set to a value outside the valid range (expected value between -1 and number of items in the collection ( currently: {Items.Count} )", nameof(SelectedIndex));
                     }
                 }
             }
