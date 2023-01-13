@@ -43,9 +43,9 @@ namespace RFBCodeWorks.Mvvvm
         /// </summary>
         public string DisplayText => DisplayAlternateText ? AlternateText : DefaultText;
 
-        private static readonly INotifySingletons.INotifyArgs DisplayAltArgs = new(nameof(DisplayAlternateText));
-        private static readonly INotifySingletons.INotifyArgs DefaultTextArgs = new(nameof(DefaultText));
-        private static readonly INotifySingletons.INotifyArgs AlternateTextArgs = new(nameof(AlternateText));
+        private static readonly INotifyArgs DisplayAltArgs = new(nameof(DisplayAlternateText));
+        private static readonly INotifyArgs DefaultTextArgs = new(nameof(DefaultText));
+        private static readonly INotifyArgs AlternateTextArgs = new(nameof(AlternateText));
 
         /// <summary>
         /// Default text to display on the button
@@ -89,7 +89,7 @@ namespace RFBCodeWorks.Mvvvm
         public void OnUpdateButtonText()
         {
             DisplayTextUpdated?.Invoke(this, System.EventArgs.Empty);
-            OnPropertyChanged(INotifySingletons.DisplayName);
+            OnPropertyChanged(EventArgSingletons.DisplayName);
         }
 
         /// <summary>
