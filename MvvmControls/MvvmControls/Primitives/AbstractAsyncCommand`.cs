@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,23 +13,90 @@ namespace RFBCodeWorks.MvvmControls.Primitives
     /// <summary>
     /// Abstract base class for AsyncRelayCommands that do not take parameters
     /// </summary>
-    public abstract class AbstractAsyncCommand<T> : AbstractCommandBase, IAsyncRelayCommand<T>
+    public abstract class AbstractAsyncCommand<T> : ObservableObject, IAsyncRelayCommand<T>
     {
         //Adapted from :
         // https://www.youtube.com/watch?v=F7hRmbdE9eY
         // https://dev.azure.com/dcomengineering/FaultTrack/_git/FaultTrack/commit/6dcaa6a5de96507f0cfcacb33802bd732bf2787d?refName=refs/heads/master&path=/Code/Desktop%20Client/FaultTrack.Shell/Windows/AsyncCommand.cs
 
+        #region < Event Arg Singletons >
+
+        /// <summary> Event Args for when IsRunning is changed </summary>
+        public static readonly PropertyChangedEventArgs IsRunningChangedArgs = AbstractAsyncCommand.IsRunningChangedArgs;
+        /// <summary> Event Args for when CanBeCanceled is changed </summary>
+        public static readonly PropertyChangedEventArgs CanBeCanceledChangedArgs = AbstractAsyncCommand.CanBeCanceledChangedArgs;
+        /// <summary> Event Args for when IsCancellationRequested is changed </summary>
+        public static readonly PropertyChangedEventArgs IsCancellationRequestedChangedArgs = AbstractAsyncCommand.IsCancellationRequestedChangedArgs;
+        /// <summary> Event Args for when RunningTasks is changed </summary>
+        public static readonly PropertyChangedEventArgs RunningTasksChangedArgs = AbstractAsyncCommand.RunningTasksChangedArgs;
+        /// <summary> Event Args for when RunningTasks is changing </summary>
+        public static readonly PropertyChangedEventArgs ExecutionTaskChangedArgs = AbstractAsyncCommand.ExecutionTaskChangedArgs;
+
+        /// <summary> Event Args for when IsRunning is changing </summary>
+        public static readonly PropertyChangingEventArgs IsRunningChangingArgs = AbstractAsyncCommand.IsRunningChangingArgs;
+        /// <summary> Event Args for when CanBeCanceled is changing </summary>
+        public static readonly PropertyChangingEventArgs CanBeCanceledChangingArgs = AbstractAsyncCommand.CanBeCanceledChangingArgs;
+        /// <summary> Event Args for when IsCancellationRequested is changing </summary>
+        public static readonly PropertyChangingEventArgs IsCancellationRequestedChangingArgs = AbstractAsyncCommand.IsCancellationRequestedChangingArgs;
+        /// <summary> Event Args for when RunningTasks is changing </summary>
+        public static readonly PropertyChangingEventArgs RunningTasksChangingArgs = AbstractAsyncCommand.RunningTasksChangingArgs;
+        /// <summary> Event Args for when RunningTasks is changing </summary>
+        public static readonly PropertyChangingEventArgs ExecutionTaskChangingArgs = AbstractAsyncCommand.ExecutionTaskChangingArgs;
+
+        #endregion
+
+        #region < Static Methods >
+
+        /// <summary>
+        /// Static method to be used in place of Func{bool} methods to always return true
+        /// </summary>
+        /// <returns><see langword="true"/></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected static bool ReturnTrue(T parameter) => true;
+
+        /// <inheritdoc cref="AbstractCommand{T}.ThrowIfInvalidParameter(object)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected static T ThrowIfInvalidParameter(object parameter)
+            => AbstractCommand<T>.ThrowIfInvalidParameter(parameter);
+
+        #endregion
+
+        #region < Constructors >
+
         /// <inheritdoc/>
         protected AbstractAsyncCommand() : this(true) { }
 
         /// <inheritdoc/>
-        protected AbstractAsyncCommand(bool subscribeToCommandManager) : base(subscribeToCommandManager)
+        protected AbstractAsyncCommand(bool subscribeToCommandManager) : base()
         {
+            SubscribeToCommandManager = subscribeToCommandManager;
             runningTasks = new ObservableCollection<Task>();
             runningTasks.CollectionChanged += RunningTasks_CollectionChanged;
         }
 
+        #endregion
+
+        #region < Properties and Events >
+
         private readonly ObservableCollection<Task> runningTasks;
+
+        /// <inheritdoc/>
+        public event EventHandler CanExecuteChanged;
+
+        /// <inheritdoc cref="AbstractCommand.SubscribeToCommandManager"/>
+        public bool SubscribeToCommandManager
+        {
+            get => SubscribeToCommandManagerField;
+            set
+            {
+                if (value)
+                    CommandManager.RequerySuggested += CanExecuteChanged;
+                else
+                    CommandManager.RequerySuggested -= CanExecuteChanged;
+                SubscribeToCommandManagerField = value;
+            }
+        }
+        private bool SubscribeToCommandManagerField;
 
         /// <inheritdoc />
         public IEnumerable<Task> RunningTasks => runningTasks;
@@ -44,6 +112,8 @@ namespace RFBCodeWorks.MvvmControls.Primitives
 
         /// <inheritdoc/>
         public abstract bool IsCancellationRequested { get; }
+
+        #endregion
 
         /// <summary>
         /// Start the task, and add it to the collection of currently running tasks
@@ -75,16 +145,19 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         /// <inheritdoc/>
         public abstract void Cancel();
 
+        /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void NotifyCanExecuteChanged(object sender, EventArgs e) => NotifyCanExecuteChanged();
+
+        /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+
         /// <summary> Check if any tasks are running, then return the inverse </summary>
         /// <returns> The inverse of <see cref="IsRunning"/> </returns>
         protected bool NoneRunning() => !IsRunning;
 
-        async void ICommand.Execute(object parameter) => await ExecuteAsync(ThrowExceptionIfInvalidType<T>(parameter));
-        async void Microsoft.Toolkit.Mvvm.Input.IRelayCommand<T>.Execute(T parameter) => await ExecuteAsync(parameter);
-        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand<T>.ExecuteAsync(T parameter) => ExecuteAsync(parameter);
-        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync(ThrowExceptionIfInvalidType<T>(parameter));
-        bool ICommand.CanExecute(object parameter) => CanExecute(ThrowExceptionIfInvalidType<T>(parameter));
-
+        /// <summary> Notify that a new task has started / completed </summary>
         private void RunningTasks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
@@ -92,13 +165,28 @@ namespace RFBCodeWorks.MvvmControls.Primitives
                 ExecutionTask = runningTasks.Last();
             }
             OnPropertyChanged(AllPropertiesChangedArgs);
-            OnPropertyChanged(AbstractAsyncCommand.ExecutionTaskChangedArgs);
             NotifyCanExecuteChanged();
         }
 
-        //Task IAsyncRelayCommand.ExecuteAsync() => throw new NotImplementedException("RFBCodeWorks.MvvmControls.IAsyncRelayCommand.ExecuteAsync() is not supported unless explicitly implemented by the dervied class");
-        //void IRelayCommand.Execute() => throw new NotImplementedException("RFBCodeWorks.MvvmControls.IRelayCommand.Execute() is not supported unless explicitly implemented by the dervied class");
-        //bool IRelayCommand.CanExecute() => ((ICommand)this).CanExecute(null);
+        #region < Interface Implementations >
 
+        bool ICommand.CanExecute(object parameter)
+        {
+            // Special case a null value for a value type argument type.
+            // This ensures that no exceptions are thrown during initialization.
+            //https://github.com/CommunityToolkit/dotnet/blob/e8969781afe537ea41a964a15b4ccfee32e095df/src/CommunityToolkit.Mvvm/Input/RelayCommand%7BT%7D.cs#L87
+            if (parameter is null && default(T) is not null)
+            {
+                return false;
+            }
+            return CanExecute(ThrowIfInvalidParameter(parameter));
+        }
+
+        async void ICommand.Execute(object parameter) => await ExecuteAsync(ThrowIfInvalidParameter(parameter));
+        async void Microsoft.Toolkit.Mvvm.Input.IRelayCommand<T>.Execute(T parameter) => await ExecuteAsync(parameter);
+        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand<T>.ExecuteAsync(T parameter) => ExecuteAsync(parameter);
+        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync(ThrowIfInvalidParameter(parameter));
+        
+        #endregion
     }
 }
