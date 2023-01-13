@@ -35,7 +35,7 @@ namespace RFBCodeWorks.MvvmControls.Primitives
         /// <exception cref="ArgumentNullException"/> // throws if null object but type is not nullable (such as value type)
         /// <exception cref="ArgumentException"/> // throws if object is incompatible type
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public internal static T ThrowIfInvalidParameter(object parameter)
+        public static T ThrowIfInvalidParameter(object parameter)
         {
             //adapted from: 
             //https://github.com/CommunityToolkit/dotnet/blob/e8969781afe537ea41a964a15b4ccfee32e095df/src/CommunityToolkit.Mvvm/Input/RelayCommand%7BT%7D.cs#L125
