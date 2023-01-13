@@ -9,8 +9,9 @@ namespace RFBCodeWorks.MvvmControls
     /// <summary>
     /// Class that wraps an <see cref="IRelayCommand"/> to provide the remaining implementation of <see cref="IButtonDefinition"/>
     /// </summary>
-    public class ButtonDefinition : Primitives.AbstractButtonDefinition, IButtonDefinition
+    public sealed class ButtonDefinition : Primitives.AbstractButtonDefinition, IButtonDefinition, IRelayCommand
     {
+
         /// <inheritdoc cref="ButtonDefinition.ButtonDefinition(Action, Func{bool})"/>
         public ButtonDefinition(Action execute) : this(execute, ReturnTrue) { }
 
@@ -40,10 +41,10 @@ namespace RFBCodeWorks.MvvmControls
         public IRelayCommand Command { get; }
 
         /// <inheritdoc cref="RelayCommand.CanExecute()"/>
-        public bool CanExecute() => Command.CanExecute(null);
+        public override bool CanExecute() => Command.CanExecute(null);
 
         /// <inheritdoc cref="RelayCommand.Execute()"/>
-        public virtual void Execute() => Command.Execute(null);
+        public override void Execute() => Command.Execute(null);
 
         /// <inheritdoc/>
         public sealed override event EventHandler CanExecuteChanged
@@ -51,12 +52,10 @@ namespace RFBCodeWorks.MvvmControls
             add => Command.CanExecuteChanged += value;
             remove => Command.CanExecuteChanged -= value;
         }
+
         /// <inheritdoc/>
         public override void NotifyCanExecuteChanged() => Command.NotifyCanExecuteChanged();
-        /// <inheritdoc/>
-        protected override bool CanExecute(object parameter) => Command.CanExecute(parameter);
-        /// <inheritdoc/>
-        protected override void Execute(object parameter) => Command.Execute(parameter);
+
     }
 
 }
