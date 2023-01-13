@@ -6,35 +6,46 @@ using System.Threading.Tasks;
 
 namespace RFBCodeWorks.Mvvvm
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    internal static class INotifySingletons
+    /// <summary>
+    /// Represents a pair of arguments that can be used for the <see cref="System.ComponentModel.INotifyPropertyChanged"/> interface.
+    /// <br/> Implicitly converts to:
+    /// <br/> - <see cref="System.ComponentModel.PropertyChangedEventArgs"/>
+    /// <br/> - <see cref="System.ComponentModel.PropertyChangingEventArgs"/>
+    /// </summary>
+    public class INotifyArgs
     {
-        public static readonly INotifyArgSet DisplayName = new(nameof(IDisplayTextProvider.DisplayText));
-        public static readonly INotifyArgSet ToolTip = new(nameof(IToolTipProvider.ToolTip));
-        public static readonly INotifyArgSet ItemSource = new(nameof(RFBCodeWorks.Mvvvm.ISelector.Items));
-        public static readonly INotifyArgSet SelectedIndex = new(nameof(RFBCodeWorks.Mvvvm.ISelector.SelectedIndex));
-        public static readonly INotifyArgSet SelectedItem = new(nameof(RFBCodeWorks.Mvvvm.ISelector.SelectedItem));
-        public static readonly INotifyArgSet SelectedValue = new(nameof(RFBCodeWorks.Mvvvm.ISelector.SelectedValue));
-        public static readonly INotifyArgSet IsEnabled = new(nameof(RFBCodeWorks.Mvvvm.ISelector.IsEnabled));
-        public static readonly INotifyArgSet IsDefaultState = new(nameof(RFBCodeWorks.Mvvvm.Primitives.AbstractTwoStateButton.IsDefaultState));
-        
+        /// <summary>
+        /// The Empty args signal to <see cref="System.ComponentModel.INotifyPropertyChanged"/> that ALL properties are changing.
+        /// </summary>
+        public static readonly INotifyArgs Empty = new INotifyArgs(string.Empty);
 
-        public class INotifyArgSet
+        /// <summary>
+        /// Create a new pair of event args
+        /// </summary>
+        /// <param name="propertyName">The property name that is changing / has changed</param>
+        public INotifyArgs(string propertyName)
         {
-            public INotifyArgSet(string propertyName)
+            if (string.IsNullOrWhiteSpace(propertyName))
+            {
+                PropertyName = Empty.PropertyName;
+                PropertyChangedArgs = Empty.PropertyChangedArgs;
+                PropertyChangingArgs = Empty.PropertyChangingArgs;
+            }
+            else
             {
                 PropertyName = propertyName;
                 PropertyChangedArgs = new(propertyName);
                 PropertyChangingArgs = new(propertyName);
             }
-
-            public readonly string PropertyName;
-            public readonly System.ComponentModel.PropertyChangedEventArgs PropertyChangedArgs;
-            public readonly System.ComponentModel.PropertyChangingEventArgs PropertyChangingArgs;
-            public static implicit operator INotifyArgSet(string propertyName) => new INotifyArgSet(propertyName);
-            public static implicit operator System.ComponentModel.PropertyChangedEventArgs(INotifyArgSet  args) => args.PropertyChangedArgs;
-            public static implicit operator System.ComponentModel.PropertyChangingEventArgs(INotifyArgSet args) => args.PropertyChangingArgs;
         }
-    }
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        public readonly string PropertyName;
+        public readonly System.ComponentModel.PropertyChangedEventArgs PropertyChangedArgs;
+        public readonly System.ComponentModel.PropertyChangingEventArgs PropertyChangingArgs;
+        public static implicit operator INotifyArgs(string propertyName) => string.IsNullOrWhiteSpace(propertyName) ? Empty : new INotifyArgs(propertyName);
+        public static implicit operator System.ComponentModel.PropertyChangedEventArgs(INotifyArgs args) => args.PropertyChangedArgs;
+        public static implicit operator System.ComponentModel.PropertyChangingEventArgs(INotifyArgs args) => args.PropertyChangingArgs;
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }
