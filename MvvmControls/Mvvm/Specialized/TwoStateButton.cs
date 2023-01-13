@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RFBCodeWorks.Mvvvm.Specialized
+namespace RFBCodeWorks.Mvvm.Specialized
 {
     /// <summary>
     /// This object is comprised of two RelayCommands, but which one is active depends on the state of the object

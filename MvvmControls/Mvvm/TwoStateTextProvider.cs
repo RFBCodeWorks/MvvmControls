@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// Object designed to alternate between two displayed values based on a boolean property

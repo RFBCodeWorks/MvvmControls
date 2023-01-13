@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// Interface all ListBoxDefinitions should implement to be assignable via AttachedProperty

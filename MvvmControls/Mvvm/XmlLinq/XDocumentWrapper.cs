@@ -2,7 +2,7 @@
 using System.Xml.Linq;
 using System.ComponentModel;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq
+namespace RFBCodeWorks.Mvvm.XmlLinq
 {
     /// <summary>
     /// Wraps an XDocument to implement INotifyPropertyChanged

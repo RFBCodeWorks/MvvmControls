@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Linq;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq
+namespace RFBCodeWorks.Mvvm.XmlLinq
 {
     /// <summary>
     /// Contains helper methods to process the <see cref="XObject.Changed"/> method

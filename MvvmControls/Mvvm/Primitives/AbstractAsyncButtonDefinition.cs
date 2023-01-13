@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace RFBCodeWorks.Mvvvm.Primitives
+namespace RFBCodeWorks.Mvvm.Primitives
 {
     /// <summary>
     /// Abstract base object that inherits from the following:

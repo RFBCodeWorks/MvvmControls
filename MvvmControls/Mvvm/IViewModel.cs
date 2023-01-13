@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// Interface implemented by the <see cref="ViewModelBase"/> class

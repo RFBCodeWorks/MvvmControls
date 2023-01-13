@@ -5,7 +5,7 @@
 //using System.Threading.Tasks;
 //using System.ComponentModel;
 
-//namespace RFBCodeWorks.Mvvvm.XmlLinq
+//namespace RFBCodeWorks.Mvvm.XmlLinq
 //{
 //    /// <summary>
 //    /// Wraps an XAttribute to implement INotifyPropertyChanged

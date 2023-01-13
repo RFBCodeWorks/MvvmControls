@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq.ValueSetters
+namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
 {
     /// <summary>
     /// Provides a way to interact with an <see cref="IXValueObject"/> to set it to an <see cref="int"/> value

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Controls.Primitives;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// Interface for the definition of a control that interacts with a <see cref="System.Windows.Controls.Primitives.RangeBase"/>

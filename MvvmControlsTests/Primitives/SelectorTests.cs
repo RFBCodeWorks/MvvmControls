@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RFBCodeWorks.Mvvvm.Tests;
+using RFBCodeWorks.Mvvm.Tests;
 using System.Collections.Generic;
 using System.Windows.Controls;
 
-namespace RFBCodeWorks.Mvvvm.Primitives.Tests
+namespace RFBCodeWorks.Mvvm.Primitives.Tests
 {
     [TestClass()]
     public class SelectorTests : ItemSourceTests

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using RFBCodeWorks.Mvvvm.XmlLinq.ValueSetters;
+using RFBCodeWorks.Mvvm.XmlLinq.ValueSetters;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq.Controls
+namespace RFBCodeWorks.Mvvm.XmlLinq.Controls
 {
     /// <summary>
     /// Extends the <see cref="TextControlDefinition"/> to update an <see cref="IXValueObject"/>

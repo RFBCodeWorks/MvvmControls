@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// Interface for Selectors

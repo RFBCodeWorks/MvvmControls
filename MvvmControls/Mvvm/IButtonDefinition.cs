@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Windows.Input;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// Provide the details about a Button

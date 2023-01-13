@@ -39,7 +39,7 @@ public class MyViewModel {
 ```	
 And the corresponding xaml:
 ```
-	xmlns:MvvmControls="clr-namespace:RFBCodeWorks.Mvvvm.Behaviors;assembly=MvvmControls"
+	xmlns:MvvmControls="clr-namespace:RFBCodeWorks.Mvvm.Behaviors;assembly=MvvmControls"
 
 	<ComboBox MvvmControls:ControlDefinitions.ComboBoxDefinition="{Binding ComboBoxDefinition}" />
 ```

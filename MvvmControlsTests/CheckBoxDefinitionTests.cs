@@ -1,10 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Windows.Controls;
-using RFBCodeWorks.Mvvvm.Primitives;
-using RFBCodeWorks.Mvvvm.Primitives.Tests;
+using RFBCodeWorks.Mvvm.Primitives;
+using RFBCodeWorks.Mvvm.Primitives.Tests;
 using Behaviors = RFBCodeWorks.WPFBehaviors;
 
-namespace RFBCodeWorks.Mvvvm.Tests
+namespace RFBCodeWorks.Mvvm.Tests
 {
     [TestClass()]
     public class CheckBoxDefinitionTest : ToggleButtonDefinitionTest

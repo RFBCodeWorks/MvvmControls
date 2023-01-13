@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Linq;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq
+namespace RFBCodeWorks.Mvvm.XmlLinq
 {
     /// <summary>
     /// Class that is doesn't diffentiate between an XDocument and an XElement, and allows updating the reference to a new xml tree on the fly

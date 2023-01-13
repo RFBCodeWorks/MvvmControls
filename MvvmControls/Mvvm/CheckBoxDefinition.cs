@@ -1,4 +1,4 @@
-﻿namespace RFBCodeWorks.Mvvvm
+﻿namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// Interface for CheckBox Definitions

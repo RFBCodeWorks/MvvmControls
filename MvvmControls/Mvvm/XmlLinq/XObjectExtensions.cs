@@ -2,7 +2,7 @@
 
 #nullable enable
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq
+namespace RFBCodeWorks.Mvvm.XmlLinq
 {
     /// <summary>
     /// Extensions for working with the XmlLinq objects easier

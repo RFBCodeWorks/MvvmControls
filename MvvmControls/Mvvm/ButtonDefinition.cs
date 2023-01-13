@@ -3,7 +3,7 @@ using System;
 using System.Windows.Input;
 using RelayCmd = Microsoft.Toolkit.Mvvm.Input.RelayCommand;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
 
     /// <summary>

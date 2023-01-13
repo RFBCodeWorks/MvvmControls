@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// EventArgs object that provides the value that caused the event to be raised

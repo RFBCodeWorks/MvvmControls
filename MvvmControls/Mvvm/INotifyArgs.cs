@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// Represents a pair of arguments that can be used for the <see cref="System.ComponentModel.INotifyPropertyChanged"/> interface.

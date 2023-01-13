@@ -2,7 +2,7 @@
 using System.Windows.Input;
 using System.Windows.Threading;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// Contains helper methods for UI, so far just one for showing a waitcursor

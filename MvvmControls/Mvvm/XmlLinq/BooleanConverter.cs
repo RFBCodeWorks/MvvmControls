@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Windows.Data;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq
+namespace RFBCodeWorks.Mvvm.XmlLinq
 {
     /// <summary>
     /// Interface that facilitates converting between a string and a boolean

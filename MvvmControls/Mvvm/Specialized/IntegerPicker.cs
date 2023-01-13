@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace RFBCodeWorks.Mvvvm.Specialized
+namespace RFBCodeWorks.Mvvm.Specialized
 {
     /// <summary>
     /// ViewModel for a ComboBox that is filled with integers

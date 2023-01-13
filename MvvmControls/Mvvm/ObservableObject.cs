@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using BaseObj = Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
     /// <inheritdoc cref="BaseObj"/>
     public abstract class ObservableObject: BaseObj 

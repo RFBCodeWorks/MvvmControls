@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq.ValueSetters
+namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
 {
     /// <summary>
     /// Provides a way to interact with an <see cref="IXValueObject"/> to set it to a string value

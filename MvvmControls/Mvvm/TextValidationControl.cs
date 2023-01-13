@@ -3,7 +3,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// Interface for interacting with a <see cref="System.Windows.Controls.TextBox"/>

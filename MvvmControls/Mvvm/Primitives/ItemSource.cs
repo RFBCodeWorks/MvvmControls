@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Collections.Specialized;
 using System.Collections;
 
-namespace RFBCodeWorks.Mvvvm.Primitives
+namespace RFBCodeWorks.Mvvm.Primitives
 {
     /// <summary>
     /// Represents an ItemSource binding

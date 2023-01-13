@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq.ValueSetters
+namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
 {
     /// <summary>
     /// Abstract Base class for any XmlValueSetters 

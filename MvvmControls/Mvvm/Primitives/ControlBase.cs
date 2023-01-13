@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 
-namespace RFBCodeWorks.Mvvvm.Primitives
+namespace RFBCodeWorks.Mvvm.Primitives
 {
     /// <summary>
     /// Contains the basic bindings all controls have

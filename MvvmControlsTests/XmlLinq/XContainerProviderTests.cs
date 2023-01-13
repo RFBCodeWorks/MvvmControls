@@ -2,7 +2,7 @@
 using System;
 using System.Xml.Linq;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq.Tests
+namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 {
     [TestClass()]
     public class XContainerProviderTests

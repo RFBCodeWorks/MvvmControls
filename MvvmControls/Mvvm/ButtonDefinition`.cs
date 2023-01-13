@@ -3,7 +3,7 @@ using System;
 using System.Windows.Input;
 using RelayCmd = Microsoft.Toolkit.Mvvm.Input.RelayCommand;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// Class that wraps an <see cref="IRelayCommand"/> to provide the remaining implementation of <see cref="IButtonDefinition"/>

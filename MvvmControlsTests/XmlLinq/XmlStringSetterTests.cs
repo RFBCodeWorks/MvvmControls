@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RFBCodeWorks.Mvvvm.XmlLinq.ValueSetters;
+using RFBCodeWorks.Mvvm.XmlLinq.ValueSetters;
 using System.Xml.Linq;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq.Tests
+namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 {
     [TestClass()]
     public class XmlStringSetterTests

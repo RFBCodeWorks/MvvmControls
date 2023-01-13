@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Xml.Linq;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq
+namespace RFBCodeWorks.Mvvm.XmlLinq
 {
 #nullable enable
 

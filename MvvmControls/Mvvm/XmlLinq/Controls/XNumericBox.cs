@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq.Controls
+namespace RFBCodeWorks.Mvvm.XmlLinq.Controls
 {
     /// <summary>
     /// Represents a control that has an integer value within a specified range

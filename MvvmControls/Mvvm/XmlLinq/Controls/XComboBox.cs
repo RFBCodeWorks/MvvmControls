@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq.Controls
+namespace RFBCodeWorks.Mvvm.XmlLinq.Controls
 {
 
     /// <summary>

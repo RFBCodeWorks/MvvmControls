@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// base interface for control binding definitions

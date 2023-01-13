@@ -4,7 +4,7 @@ using System.Xml.Linq;
 using System.ComponentModel;
 using System.Linq;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq
+namespace RFBCodeWorks.Mvvm.XmlLinq
 {
     /// <summary>
     /// Directly wraps an XElement to implement INotifyPropertyChanged

@@ -2,7 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace RFBCodeWorks.Mvvvm.Specialized
+namespace RFBCodeWorks.Mvvm.Specialized
 {
     /// <summary>
     /// ViewModel

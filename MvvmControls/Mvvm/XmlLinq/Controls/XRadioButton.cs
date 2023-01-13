@@ -1,7 +1,7 @@
 ﻿using System;
-using RFBCodeWorks.Mvvvm.XmlLinq.ValueSetters;
+using RFBCodeWorks.Mvvm.XmlLinq.ValueSetters;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq.Controls
+namespace RFBCodeWorks.Mvvm.XmlLinq.Controls
 {
     /// <summary>
     /// Combines the <see cref="CheckBoxDefinition"/> with an <see cref="XBooleanSetter"/>

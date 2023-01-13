@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Controls.Primitives;
 
-namespace RFBCodeWorks.Mvvvm.Primitives
+namespace RFBCodeWorks.Mvvm.Primitives
 {
     /// <summary>
     /// Base Definition for a CheckBox or other Toggle Button

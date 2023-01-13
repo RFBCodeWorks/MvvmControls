@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// Represents an <see cref="Primitives.ItemSource{T, E}"/> that is an array of type T, 

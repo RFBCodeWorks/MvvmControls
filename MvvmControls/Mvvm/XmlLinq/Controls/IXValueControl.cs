@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq.Controls
+namespace RFBCodeWorks.Mvvm.XmlLinq.Controls
 {
     /// <summary>
-    /// Interface to provide requirements and descriptions for Controls that rely on the <see cref="RFBCodeWorks.Mvvvm.XmlLinq.ValueSetters"/> objects
+    /// Interface to provide requirements and descriptions for Controls that rely on the <see cref="RFBCodeWorks.Mvvm.XmlLinq.ValueSetters"/> objects
     /// </summary>
     internal interface IXValueControl
     {

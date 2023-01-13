@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RFBCodeWorks.Mvvvm.Tests;
+using RFBCodeWorks.Mvvm.Tests;
 using System.Windows.Controls;
 
-namespace RFBCodeWorks.Mvvvm.XmlLinq.Controls.Tests
+namespace RFBCodeWorks.Mvvm.XmlLinq.Controls.Tests
 {
     [TestClass()]
     public class XCheckBoxElementProviderTests : XCheckBoxElementWrapperTests

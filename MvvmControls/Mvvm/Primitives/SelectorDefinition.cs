@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RFBCodeWorks.Mvvvm.Primitives
+namespace RFBCodeWorks.Mvvm.Primitives
 {
     /// <typeparam name="V">The SelectedValue Type obtained by the SelectedValuePath</typeparam>
     /// <inheritdoc cref="ItemSource{T, E}"/>

@@ -4,7 +4,7 @@ using System.Windows.Input;
 //using Microsoft.Toolkit.Mvvm;
 //using Microsoft.Toolkit.Mvvm.ComponentModel;
 
-namespace RFBCodeWorks.Mvvvm
+namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// Base class for a ViewModel object that provides a view for a single object.

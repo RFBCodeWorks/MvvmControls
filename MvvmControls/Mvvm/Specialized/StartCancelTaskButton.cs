@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using RFBCodeWorks.Mvvvm;
+using RFBCodeWorks.Mvvm;
 
-namespace RFBCodeWorks.Mvvvm.Specialized
+namespace RFBCodeWorks.Mvvm.Specialized
 {
     /// <summary>
     /// A button that starts a task when in the default state, and changes state to cancel the task while the task is running.
