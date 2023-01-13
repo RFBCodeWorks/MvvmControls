@@ -12,7 +12,7 @@ namespace RFBCodeWorks.MvvmControls
     /// RelayCommand object that will execute an action that does not require any parameters
     /// </summary>
     /// <inheritdoc/>
-    public class RelayCommand<T> : Primitives.AbstractCommand<T>, IRelayCommand<T>
+    public sealed class RelayCommand<T> : Primitives.AbstractCommand<T>, IRelayCommand<T>
     {
 
         /// <inheritdoc cref="RelayCommand{T}.RelayCommand(Action{T}, Func{T, bool}, Action{T, Exception})"/>

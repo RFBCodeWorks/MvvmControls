@@ -146,7 +146,7 @@ namespace RFBCodeWorks.MvvmControls
         {
             if (!CanBeCanceled | IsCancellationRequested) return;
             IsCancellationRequestedField = true; 
-            OnPropertyChanged(nameof(IsCancellationRequested));
+            OnPropertyChanged(IsCancellationRequestedChangedArgs);
 
             foreach (var source in CancellationTokens.Values)
             {
@@ -186,7 +186,7 @@ namespace RFBCodeWorks.MvvmControls
                 if (IsCancellationRequested)
                 {
                     IsCancellationRequestedField = false;
-                    OnPropertyChanged(nameof(IsCancellationRequested));
+                    OnPropertyChanged(IsCancellationRequestedChangedArgs);
                 }
 
                 //Generate the cancellable task
