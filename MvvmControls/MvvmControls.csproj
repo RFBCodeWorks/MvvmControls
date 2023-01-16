@@ -4,6 +4,7 @@
         <RootNamespace>RFBCodeWorks</RootNamespace>
         <LangVersion>9.0</LangVersion>
         <Platforms>AnyCPU</Platforms>
+        <UseWPF>true</UseWPF>
 
         <!-- Nuget Stuff -->
         <GeneratePackageOnBuild Condition="$(Configuration)=='Release'">true</GeneratePackageOnBuild>
@@ -22,7 +23,7 @@
         <!--<PackageReadmeFile>Readme.md</PackageReadmeFile>-->
         <PackageReleaseNotes></PackageReleaseNotes>
 
-        <UseWPF>true</UseWPF>
+        
 
         <Description>
             This is a Library designed to ease working within an MVVM framework, and is meant to consolidate boiler-plate ViewModel interactions for common WPF controls into pre-built classes.

@@ -11,12 +11,13 @@ namespace RFBCodeWorks.Mvvm.DragAndDrop
     /// <summary>
     /// Base class that consumers can utilize for custom implementations
     /// </summary>
-    public class DragHandlerBase : ObservableObject, IDragHandler
+    public class DragHandler : ObservableObject, IDragHandler
     {
+        private static readonly INotifyArgs IsDraggingArg = new(nameof(IsDragging));
 
         /// <inheritdoc/>
         /// <remarks>
-        /// Set a control's IsHitTestVisible property when dragging
+        /// Can be used to set a rectangle's IsHitTestVisible property when dragging to have a rectangle overlay represent the drop zone
         /// </remarks>
         public bool IsDragging
         {
@@ -25,14 +26,13 @@ namespace RFBCodeWorks.Mvvm.DragAndDrop
             {
                 if (IsDraggingField != value)
                 {
-                    OnPropertyChanging(IsDraggingArg);
+                    OnPropertyChanging(IsDraggingArg.PropertyChangingArgs);
                     IsDraggingField = value;
-                    OnPropertyChanged(IsDraggingArg);
+                    OnPropertyChanged(IsDraggingArg.PropertyChangedArgs);
                 }
             }
         }
         private bool IsDraggingField;
-        private static readonly INotifyArgs IsDraggingArg = new(nameof(IsDragging));
 
         /// <inheritdoc/>
         public virtual void OnDragEnter(object sender, DragEventArgs e)

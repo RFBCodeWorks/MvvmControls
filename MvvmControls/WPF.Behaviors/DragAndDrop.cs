@@ -78,7 +78,7 @@ namespace RFBCodeWorks.WPF.Behaviors
 
                 UnregisterDragDropEvents(uiElement);
 
-                if (e.NewValue.IsNotNull())
+                if (e.NewValue is not null)
                 {
                     RegisterDragDropEvents(uiElement);
                 }
@@ -117,7 +117,7 @@ namespace RFBCodeWorks.WPF.Behaviors
 
                 UnregisterDragDropEvents(uiElement);
 
-                if (e.NewValue.IsNotNull())
+                if (e.NewValue is not null)
                 {
                     RegisterDragDropEvents(uiElement);
                 }
@@ -155,7 +155,7 @@ namespace RFBCodeWorks.WPF.Behaviors
 
                 UnregisterDragDropEvents(uiElement);
 
-                if (e.NewValue.IsNotNull())
+                if (e.NewValue is not null)
                 {
                     RegisterDragDropEvents(uiElement);
                 }
@@ -173,7 +173,7 @@ namespace RFBCodeWorks.WPF.Behaviors
         /// <see href="https://github.com/punker76/gong-wpf-dragdrop/blob/44eedd7acb2a4d200bb13ba782afa375552587d2/src/GongSolutions.WPF.DragDrop/DragDrop.cs"/>
         private static void RegisterDragDropEvents(UIElement uiElement)
         {
-            if (GetDragHandler(uiElement).IsNotNull())
+            if (GetDragHandler(uiElement) is not null)
             {
                 uiElement.PreviewGiveFeedback += OnPreviewGiveFeedback;
                 uiElement.GiveFeedback += OnGiveFeedback;
@@ -185,7 +185,7 @@ namespace RFBCodeWorks.WPF.Behaviors
                 uiElement.DragLeave += OnDragLeave;
             }
 
-            if (GetFileDropHandler(uiElement).IsNotNull() || GetMultiFileDropHandler(uiElement).IsNotNull())
+            if (GetFileDropHandler(uiElement) is not null || GetMultiFileDropHandler(uiElement) is not null)
             {
                 uiElement.PreviewDrop += OnDropPreview;
                 uiElement.Drop += OnDrop;
@@ -259,14 +259,14 @@ namespace RFBCodeWorks.WPF.Behaviors
         private static void OnDropPreview(object sender, DragEventArgs e)
         {
             var multiDrop = GetMultiDropTarget(sender, e);
-            if (multiDrop.IsNotNull())
+            if (multiDrop is not null)
             {
                 multiDrop.Item1.OnPreviewFileDrop(sender, multiDrop.Item2);
                 //return;
             }
 
             var drop = GetDropTarget(sender, e);
-            if (drop.IsNotNull())
+            if (drop is not null)
             {
                 drop.Item1.OnPreviewFileDrop(sender, drop.Item2);
                 //return;
@@ -277,7 +277,7 @@ namespace RFBCodeWorks.WPF.Behaviors
         private static void OnDrop(object sender, DragEventArgs e)
         {
             var multiDrop = GetMultiDropTarget(sender, e);
-            if (multiDrop.IsNotNull())
+            if (multiDrop is not null)
             {
                 UIServices.SetBusyState();
                 multiDrop.Item1.OnFileDrop(sender, multiDrop.Item2);
@@ -285,7 +285,7 @@ namespace RFBCodeWorks.WPF.Behaviors
             }
 
             var drop = GetDropTarget(sender, e);
-            if (drop.IsNotNull())
+            if (drop is not null)
             {
                 UIServices.SetBusyState();
                 drop.Item1.OnFileDrop(sender, drop.Item2);

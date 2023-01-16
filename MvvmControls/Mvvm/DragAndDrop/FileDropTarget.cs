@@ -6,7 +6,7 @@ namespace RFBCodeWorks.Mvvm.DragAndDrop
     /// <summary>
     /// Base class for a FileDrop Target portion of a ViewModel
     /// </summary>
-    public abstract class FileDropTarget : DragHandlerBase, IFileDragDropTarget, IFileDropTarget
+    public abstract class FileDropTarget : DragHandler, IFileDragDropTarget, IFileDropTarget
     {
         /// <inheritdoc/>
         public virtual void OnPreviewFileDrop(object sender, IDroppedFile e)
@@ -24,7 +24,7 @@ namespace RFBCodeWorks.Mvvm.DragAndDrop
     /// <summary>
     /// Base class for a FileDrop Target portion of a ViewModel
     /// </summary>
-    public abstract class MultiFileDropTarget : DragHandlerBase, IMultiFileDragDropTarget, IMultiFileDropTarget
+    public abstract class MultiFileDropTarget : DragHandler, IMultiFileDragDropTarget, IMultiFileDropTarget
     {
         /// <inheritdoc/>
         public virtual void OnPreviewFileDrop(object sender, IDroppedFile[] e)
