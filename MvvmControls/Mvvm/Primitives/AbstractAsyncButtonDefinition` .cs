@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -41,10 +41,10 @@ namespace RFBCodeWorks.Mvvm.Primitives
         public abstract bool CanExecute(T parameter);
 
         ///<summary> Start a task that accepts an input of type <typeparamref name="T"/></summary>
-        /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand{T}.ExecuteAsync(T)"/>
+        /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.IAsyncRelayCommand{T}.ExecuteAsync(T)"/>
         public abstract Task ExecuteAsync(T parameter);
 
-        /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.Cancel"/>
+        /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.Cancel"/>
         public abstract void Cancel();
 
         /// <inheritdoc/>

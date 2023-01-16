@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -36,7 +36,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// </summary>
         public override bool IsEnabled { get => base.IsEnabled; set { } }
 
-        /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.RelayCommand{T}.CanExecute(T)"/>
+        /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.RelayCommand{T}.CanExecute(T)"/>
         public abstract bool CanExecute(T parameter);
 
         /// <summary> The method through which the abstract base object implements <see cref="ICommand.Execute(object)"/> </summary>

@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Data;
+using System.Windows;
 
-namespace System.Windows
+namespace RFBCodeWorks.WPF
 {
     /// <summary>
     /// Contains Extension Methods for Dependency Objects
     /// </summary>
     public static class WpfExtensions
     {
-        private static readonly DependencyObject DesignModeTester = new();
+        //private static readonly DependencyObject DesignModeTester = new();
         
         /// <summary>
         /// Detect if in in the VS designer or not

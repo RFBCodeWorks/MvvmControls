@@ -1,27 +1,33 @@
 ﻿using System.ComponentModel;
-using BaseObj = Microsoft.Toolkit.Mvvm.ComponentModel.ObservableObject;
+using BaseObj = CommunityToolkit.Mvvm.ComponentModel.ObservableObject;
 
 namespace RFBCodeWorks.Mvvm
 {
     /// <inheritdoc cref="BaseObj"/>
-    public abstract class ObservableObject: BaseObj 
-    {
+    /// <remarks>This class is directly derived from <see cref="BaseObj"/> to localize it to this namespace.</remarks>
+    public abstract class ObservableObject : BaseObj
+    { 
         /// <summary>
-        /// Event Args for PropertyChangedEvent that indicates all properties have changed.
+        /// Event Args for PropertyChangedEvent that indicates all properties have changed / are changing.
         /// </summary>
-        public static readonly PropertyChangedEventArgs AllPropertiesChangedArgs = new(string.Empty);
+        public static INotifyArgs INotifyAllProperties => INotifyArgs.Empty;
 
         /// <summary>
-        /// Event Args for PropertyChangingEvent that indicates all properties have changed.
+        /// Raise <see cref="BaseObj.PropertyChanging"/> to notify that all properties are changing.
         /// </summary>
-        public static readonly PropertyChangingEventArgs AllPropertiesChangingArgs = new(string.Empty);
+        protected void OnPropertyChanging() => base.OnPropertyChanging(INotifyArgs.Empty);
+
+        /// <summary>
+        /// Raise <see cref="BaseObj.PropertyChanged"/> to notify that all properties have been updated.
+        /// </summary>
+        protected void OnPropertyChanged() => base.OnPropertyChanged(INotifyArgs.Empty);
 
         /// <inheritdoc cref="BaseObj.OnPropertyChanging(string?)"/>
-        new protected void OnPropertyChanging(string propertyName = null)
+        new protected void OnPropertyChanging(string propertyName)
         {
             if (string.IsNullOrWhiteSpace(propertyName))
             {
-                base.OnPropertyChanging(AllPropertiesChangingArgs);
+                base.OnPropertyChanging(INotifyArgs.Empty);
             }
             else
             {
@@ -30,11 +36,11 @@ namespace RFBCodeWorks.Mvvm
         }
 
         /// <inheritdoc cref="BaseObj.OnPropertyChanged(string?)"/>
-        new protected void OnPropertyChanged(string propertyName = null)
+        new protected void OnPropertyChanged(string propertyName)
         {
             if (string.IsNullOrWhiteSpace(propertyName))
             {
-                base.OnPropertyChanged(AllPropertiesChangedArgs);
+                base.OnPropertyChanged(INotifyArgs.Empty);
             }
             else
             {

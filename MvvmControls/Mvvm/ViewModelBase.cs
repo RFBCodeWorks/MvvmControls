@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace RFBCodeWorks.Mvvm
 {
@@ -12,7 +13,7 @@ namespace RFBCodeWorks.Mvvm
         /// Create a new instance of the ViewModelBase
         /// </summary>
         /// <param name="parent">The <see cref="IViewModel"/> object that owns this ViewModel </param>
-        public ViewModelBase(IViewModel parent = null) : base() 
+        public ViewModelBase(IViewModel parent = null) : base()
         {
             ParentViewModel = parent;
         }

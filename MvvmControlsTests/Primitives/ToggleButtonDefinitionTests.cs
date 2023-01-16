@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using Behaviors = RFBCodeWorks.WPFBehaviors;
+using Behaviors = RFBCodeWorks.WPF.Behaviors;
 
 namespace RFBCodeWorks.Mvvm.Primitives.Tests
 {

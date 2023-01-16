@@ -11,7 +11,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
     /// <summary>
     /// Abstract base class for IRelayCommand objects that do not require parameters
     /// </summary>
-    /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.RelayCommand"/>
+    /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.RelayCommand"/>
     public abstract class AbstractCommand : ObservableObject, IRelayCommand
     {
 

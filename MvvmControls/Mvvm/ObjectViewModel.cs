@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Input;
-//using Microsoft.Toolkit.Mvvm;
-//using Microsoft.Toolkit.Mvvm.ComponentModel;
+//using CommunityToolkit.Mvvm;
+//using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace RFBCodeWorks.Mvvm
 {

@@ -1,7 +1,7 @@
-﻿using Microsoft.Toolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Windows.Input;
-using RelayCmd = Microsoft.Toolkit.Mvvm.Input.RelayCommand;
+using RelayCmd = CommunityToolkit.Mvvm.Input.RelayCommand;
 
 namespace RFBCodeWorks.Mvvm
 {

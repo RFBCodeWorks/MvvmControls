@@ -101,8 +101,8 @@ namespace RFBCodeWorks.Mvvm
         public override bool CanExecute() => Command?.CanExecute(null) ?? false;
 
         IEnumerable<Task> IAsyncRelayCommand.RunningTasks => Command.RunningTasks;
-        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecutionTask => Command.ExecutionTask;
-        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync();
+        Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecutionTask => Command.ExecutionTask;
+        Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync();
 
         #endregion
     }

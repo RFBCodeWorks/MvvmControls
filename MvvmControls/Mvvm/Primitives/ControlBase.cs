@@ -113,6 +113,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
                 {
                     OnPropertyChanging(VisibilityChangingArgs);
                     var oldValue = VisibilityField;
+                    VisibilityField = value;
                     OnPropertyChanged(VisibilityChangingArgs);
 
                     if (oldValue == Visibility.Visible)

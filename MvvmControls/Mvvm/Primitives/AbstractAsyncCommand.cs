@@ -149,7 +149,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
             {
                 ExecutionTask = runningTasks.Last();
             }
-            OnPropertyChanged(AllPropertiesChangedArgs);
+            OnPropertyChanged(INotifyAllProperties);
             NotifyCanExecuteChanged();
         }
 
@@ -157,7 +157,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
 
         bool ICommand.CanExecute(object parameter) => CanExecute();
         async void ICommand.Execute(object parameter) => await ExecuteAsync();
-        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync();
+        Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync();
 
         #endregion
     }

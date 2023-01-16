@@ -18,7 +18,7 @@ namespace RFBCodeWorks.Mvvm
         /// Create a new AsyncRelayCommand that will execute a cancellable task
         /// </summary>
         /// <inheritdoc cref="Primitives.AbstractCommand.AbstractCommand(bool)"/>
-        /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.AsyncRelayCommand.AsyncRelayCommand(Func{Task}, Func{bool})"/>
+        /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.AsyncRelayCommand.AsyncRelayCommand(Func{Task}, Func{bool})"/>
         /// <exception cref="ArgumentNullException"/>
         public AsyncRelayCommand(Func<Task> execute, Func<bool> canExecute) : base(true)
         {
@@ -50,7 +50,7 @@ namespace RFBCodeWorks.Mvvm
         /// Create a new AsyncRelayCommand that will execute a cancellable task
         /// </summary>
         /// <inheritdoc cref="Primitives.AbstractCommand.AbstractCommand(bool)"/>
-        /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool})"/>
+        /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool})"/>
         /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task})"/>
         /// <exception cref="ArgumentNullException"/>
         public AsyncRelayCommand(Func<CancellationToken, Task> cancelableExecute, Func<bool> canExecute) 

@@ -11,7 +11,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
     /// <summary>
     /// Abstract base class for IRelayCommand objects that accept a parameter of a specified type
     /// </summary>
-    /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.RelayCommand{T}"/>
+    /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.RelayCommand{T}"/>
     public abstract class AbstractCommand<T> : ObservableObject, IRelayCommand<T>
     {
 

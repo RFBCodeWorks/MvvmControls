@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using RFBCodeWorks.Mvvm.Primitives;
 using RFBCodeWorks.Mvvm.Primitives.Tests;
-using Behaviors = RFBCodeWorks.WPFBehaviors;
+using Behaviors = RFBCodeWorks.WPF.Behaviors;
 
 namespace RFBCodeWorks.Mvvm.Tests
 {

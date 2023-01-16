@@ -130,7 +130,7 @@ namespace RFBCodeWorks.Mvvm.Tests
 
     }
 
-    public class TestViewModel : MvvmControls.ObjectViewModel<ObjectModel>
+    public class TestViewModel : Mvvm.ObjectViewModel<ObjectModel>
     {
         public static TestViewModel ViewModel { get; } = new TestViewModel();
 

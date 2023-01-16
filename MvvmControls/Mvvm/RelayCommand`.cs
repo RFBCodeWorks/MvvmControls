@@ -49,7 +49,7 @@ namespace RFBCodeWorks.Mvvm
         /// Create a new RelayCommand
         /// </summary>
         /// <inheritdoc cref="Primitives.AbstractCommand.AbstractCommand(bool)"/>
-        /// <inheritdoc cref="Microsoft.Toolkit.Mvvm.Input.RelayCommand.RelayCommand(Action, Func{bool})"/>
+        /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.RelayCommand.RelayCommand(Action, Func{bool})"/>
         /// <exception cref="ArgumentNullException"/>
         public RelayCommand(Action<T> execute, Func<T,bool> canExecute, Action<T,Exception> errorHandler) : base(true)
         {

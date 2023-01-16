@@ -153,7 +153,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
             {
                 ExecutionTask = runningTasks.Last();
             }
-            OnPropertyChanged(AllPropertiesChangedArgs);
+            OnPropertyChanged(INotifyAllProperties);
             NotifyCanExecuteChanged();
         }
 
@@ -172,9 +172,9 @@ namespace RFBCodeWorks.Mvvm.Primitives
         }
 
         async void ICommand.Execute(object parameter) => await ExecuteAsync(ThrowIfInvalidParameter(parameter));
-        async void Microsoft.Toolkit.Mvvm.Input.IRelayCommand<T>.Execute(T parameter) => await ExecuteAsync(parameter);
-        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand<T>.ExecuteAsync(T parameter) => ExecuteAsync(parameter);
-        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync(ThrowIfInvalidParameter(parameter));
+        async void CommunityToolkit.Mvvm.Input.IRelayCommand<T>.Execute(T parameter) => await ExecuteAsync(parameter);
+        Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand<T>.ExecuteAsync(T parameter) => ExecuteAsync(parameter);
+        Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync(ThrowIfInvalidParameter(parameter));
         
         #endregion
     }

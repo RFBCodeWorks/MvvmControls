@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RFBCodeWorks.WPFControls;
+using RFBCodeWorks.WPF.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace RFBCodeWorks.WPFControls.Tests
+namespace RFBCodeWorks.WPF.Controls.Tests
 {
     [TestClass()]
     public class AutoStackGridTests
@@ -21,7 +21,7 @@ namespace RFBCodeWorks.WPFControls.Tests
             var btn4 = new Button();
             var btn5 = new Button();
 
-            var grid = new RFBCodeWorks.WPFControls.AutoWrapGrid();
+            var grid = new RFBCodeWorks.WPF.Controls.AutoWrapGrid();
             
             grid.ColumnCount = 4;
 

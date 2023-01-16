@@ -101,9 +101,9 @@ namespace RFBCodeWorks.Mvvm
         public override void NotifyCanExecuteChanged() => Command?.NotifyCanExecuteChanged();
 
         IEnumerable<Task> IAsyncRelayCommand.RunningTasks => Command.RunningTasks;
-        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecutionTask => Command.ExecutionTask;
-        Task Microsoft.Toolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync(Primitives.AbstractCommand<T>.ThrowIfInvalidParameter(parameter));
-        async void Microsoft.Toolkit.Mvvm.Input.IRelayCommand<T>.Execute(T parameter)=> await ExecuteAsync(parameter);
+        Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecutionTask => Command.ExecutionTask;
+        Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync(Primitives.AbstractCommand<T>.ThrowIfInvalidParameter(parameter));
+        async void CommunityToolkit.Mvvm.Input.IRelayCommand<T>.Execute(T parameter)=> await ExecuteAsync(parameter);
 
         #endregion
     }

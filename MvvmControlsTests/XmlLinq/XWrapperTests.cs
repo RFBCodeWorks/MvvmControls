@@ -25,7 +25,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
         {
             bool XDocEvent = false;
             bool XElementEvent = false;
-            //bool XAttributeEvent = false;
+            bool XAttributeEvent = false;
 
             var doc = GetXDoc();
             doc.PropertyChanged += Doc_PropertyChanged;
