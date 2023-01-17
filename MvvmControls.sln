@@ -19,10 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mvvm.IViewModel", "Mvvm.Vie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mvvm.Dialogs", "Mvvm.Dialogs\Mvvm.Dialogs.csproj", "{F2070053-83E2-4EAF-A80F-54AEC844D0C0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmDialogs", "..\..\mvvm-dialogs\src\MvvmDialogs.csproj", "{53E38390-5B8E-4FB4-849E-61A9055E9CF8}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Repos", "External Repos", "{BF658802-331C-4FA0-A3DB-21A47259B483}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,24 +89,9 @@ Global
 		{F2070053-83E2-4EAF-A80F-54AEC844D0C0}.Release|x64.Build.0 = Release|Any CPU
 		{F2070053-83E2-4EAF-A80F-54AEC844D0C0}.Release|x86.ActiveCfg = Release|Any CPU
 		{F2070053-83E2-4EAF-A80F-54AEC844D0C0}.Release|x86.Build.0 = Release|Any CPU
-		{53E38390-5B8E-4FB4-849E-61A9055E9CF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{53E38390-5B8E-4FB4-849E-61A9055E9CF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{53E38390-5B8E-4FB4-849E-61A9055E9CF8}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{53E38390-5B8E-4FB4-849E-61A9055E9CF8}.Debug|x64.Build.0 = Debug|Any CPU
-		{53E38390-5B8E-4FB4-849E-61A9055E9CF8}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{53E38390-5B8E-4FB4-849E-61A9055E9CF8}.Debug|x86.Build.0 = Debug|Any CPU
-		{53E38390-5B8E-4FB4-849E-61A9055E9CF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{53E38390-5B8E-4FB4-849E-61A9055E9CF8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{53E38390-5B8E-4FB4-849E-61A9055E9CF8}.Release|x64.ActiveCfg = Release|Any CPU
-		{53E38390-5B8E-4FB4-849E-61A9055E9CF8}.Release|x64.Build.0 = Release|Any CPU
-		{53E38390-5B8E-4FB4-849E-61A9055E9CF8}.Release|x86.ActiveCfg = Release|Any CPU
-		{53E38390-5B8E-4FB4-849E-61A9055E9CF8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{53E38390-5B8E-4FB4-849E-61A9055E9CF8} = {BF658802-331C-4FA0-A3DB-21A47259B483}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D35D29CE-2CAD-4BB1-8DF0-F0C534F3F865}
