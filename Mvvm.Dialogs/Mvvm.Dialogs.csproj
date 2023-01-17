@@ -19,10 +19,10 @@
         <Authors>Robert Brenckman</Authors>
         <Company />
         <Copyright>Copyright 2023</Copyright>
-        <Version>1.0.0.1</Version>
+        <Version>1.0.0.2</Version>
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
         <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
-        <PackageReleaseNotes></PackageReleaseNotes>
+        <PackageReleaseNotes>Fixed DialogService constructor ambiguity</PackageReleaseNotes>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
     </PropertyGroup>
 
@@ -65,9 +65,7 @@ MvvmDialogs Dependency Notes:
         <!-- Official -->
         <PackageReference Include="MvvmDialogs" Version="9.1.0" Condition="$(UseOfficialPackage.Contains('$(TargetFramework)'))" />
         <!-- Deprecated package - Maintained by RFBCodeworks -->
-        <ProjectReference Include="..\..\..\mvvm-dialogs\src\MvvmDialogs.csproj" Condition="$(DeprecatedPackage.Contains('$(TargetFramework)'))">
-          <Private>true</Private>
-        </ProjectReference>
+        <PackageReference Include="MvvmDialogs_.NetCore" Condition="$(DeprecatedPackage.Contains('$(TargetFramework)'))"/>
     </ItemGroup>
     
     <ItemGroup>
