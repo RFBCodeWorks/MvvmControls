@@ -9,34 +9,31 @@ namespace RFBCodeWorks.Mvvm.DialogServices
     /// </summary>
     public class DialogService : MvvmDialogs.DialogService
     {
+        /// <inheritdoc cref="DialogService.DialogService(string, MvvmDialogs.DialogFactories.IDialogFactory, MvvmDialogs.DialogTypeLocators.IDialogTypeLocator, MvvmDialogs.FrameworkDialogs.IFrameworkDialogFactory)"/>
+        public DialogService() : this(null, null, null, null) { }
+
+        /// <inheritdoc cref="DialogService.DialogService(string, MvvmDialogs.DialogFactories.IDialogFactory, MvvmDialogs.DialogTypeLocators.IDialogTypeLocator, MvvmDialogs.FrameworkDialogs.IFrameworkDialogFactory)"/>
+        public DialogService(
+            MvvmDialogs.DialogFactories.IDialogFactory dialogFactory = null,
+            MvvmDialogs.DialogTypeLocators.IDialogTypeLocator dialogTypeLocator = null,
+            MvvmDialogs.FrameworkDialogs.IFrameworkDialogFactory frameworkDialogFactory = null)
+            : this(string.Empty, dialogFactory, dialogTypeLocator, frameworkDialogFactory)
+        { }
 
         /// <summary>
         /// Create the Dialog Service, and register it to the <see cref="DialogServiceLocator"/>
         /// </summary>
-        /// <inheritdoc cref="MvvmDialogs.DialogService.DialogService(MvvmDialogs.DialogFactories.IDialogFactory?, MvvmDialogs.DialogTypeLocators.IDialogTypeLocator?, MvvmDialogs.FrameworkDialogs.IFrameworkDialogFactory?)" />
-        public DialogService(
-            MvvmDialogs.DialogTypeLocators.IDialogTypeLocator dialogTypeLocator = null,
+        /// <inheritdoc cref="MvvmDialogs.DialogService.DialogService(MvvmDialogs.DialogFactories.IDialogFactory, MvvmDialogs.DialogTypeLocators.IDialogTypeLocator, MvvmDialogs.FrameworkDialogs.IFrameworkDialogFactory)" />
+        /// <param name="name"><inheritdoc cref="Name" path="*"/></param>
+        /// <param name="dialogFactory"/><param name="dialogTypeLocator"/><param name="frameworkDialogFactory"/>
+        public DialogService(string name,
             MvvmDialogs.DialogFactories.IDialogFactory dialogFactory = null,
+            MvvmDialogs.DialogTypeLocators.IDialogTypeLocator dialogTypeLocator = null,
             MvvmDialogs.FrameworkDialogs.IFrameworkDialogFactory frameworkDialogFactory = null)
             : base(dialogFactory, dialogTypeLocator, frameworkDialogFactory)
         {
-            DialogServiceLocator.RegisterDialogService(this);
-        }
-
-        /// <inheritdoc cref="DialogService.DialogService(MvvmDialogs.DialogTypeLocators.IDialogTypeLocator, MvvmDialogs.DialogFactories.IDialogFactory, MvvmDialogs.FrameworkDialogs.IFrameworkDialogFactory, string)"/>
-        public DialogService(string name = null) : this(null, null, null) { Name = name ?? string.Empty; }
-
-        /// <inheritdoc cref="DialogService.DialogService(MvvmDialogs.DialogTypeLocators.IDialogTypeLocator, MvvmDialogs.DialogFactories.IDialogFactory, MvvmDialogs.FrameworkDialogs.IFrameworkDialogFactory)"/>
-        /// <param name="name"><inheritdoc cref="Name" path="*"/></param>
-        /// <param name="dialogFactory"/><param name="dialogTypeLocator"/><param name="frameworkDialogFactory"/>
-        public DialogService(
-            MvvmDialogs.DialogTypeLocators.IDialogTypeLocator dialogTypeLocator = null,
-            MvvmDialogs.DialogFactories.IDialogFactory dialogFactory = null,
-            MvvmDialogs.FrameworkDialogs.IFrameworkDialogFactory frameworkDialogFactory = null,
-            string name = null) 
-            : this(dialogTypeLocator, dialogFactory, frameworkDialogFactory)
-        {
             Name = name ?? string.Empty;
+            DialogServiceLocator.RegisterDialogService(this);
         }
 
         /// <summary>
