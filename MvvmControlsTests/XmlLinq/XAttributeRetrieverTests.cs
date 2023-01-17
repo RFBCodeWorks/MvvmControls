@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace RFBCodeWorks.MvvmControls.XmlLinq.Tests
+namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 {
     [TestClass()]
     public class XAttributeRetrieverTests

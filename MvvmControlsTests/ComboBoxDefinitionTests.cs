@@ -1,10 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Windows.Controls;
-using RFBCodeWorks.MvvmControls.Primitives;
-using RFBCodeWorks.MvvmControls.Primitives.Tests;
-using Behaviors = RFBCodeWorks.WPFBehaviors;
+using RFBCodeWorks.Mvvm.Primitives;
+using RFBCodeWorks.Mvvm.Primitives.Tests;
+using Behaviors = RFBCodeWorks.WPF.Behaviors;
 
-namespace RFBCodeWorks.MvvmControls.Tests
+namespace RFBCodeWorks.Mvvm.Tests
 {
     [TestClass()]
     public class ComboBoxDefinitionTests : SelectorTests

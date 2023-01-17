@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Windows;
 
-namespace RFBCodeWorks.MvvmControls.Primitives.Tests
+namespace RFBCodeWorks.Mvvm.Primitives.Tests
 {
     [TestClass()]
     public class ControlBaseTests

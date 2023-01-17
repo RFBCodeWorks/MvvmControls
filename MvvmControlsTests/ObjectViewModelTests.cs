@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Input;
 
-namespace RFBCodeWorks.MvvmControls.Tests
+namespace RFBCodeWorks.Mvvm.Tests
 {
     [TestClass()]
     public class ObjectViewModelTests
@@ -130,7 +130,7 @@ namespace RFBCodeWorks.MvvmControls.Tests
 
     }
 
-    public class TestViewModel : MvvmControls.ObjectViewModel<ObjectModel>
+    public class TestViewModel : Mvvm.ObjectViewModel<ObjectModel>
     {
         public static TestViewModel ViewModel { get; } = new TestViewModel();
 

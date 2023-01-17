@@ -2,10 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>.NETFramework,Version=v4.7.2</TargetFramework>
-    <RootNamespace>RFBCodeWorks.MvvmControls.Tests</RootNamespace>
+    <RootNamespace>RFBCodeWorks.Mvvm.Tests</RootNamespace>
       <LangVersion>9.0</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />

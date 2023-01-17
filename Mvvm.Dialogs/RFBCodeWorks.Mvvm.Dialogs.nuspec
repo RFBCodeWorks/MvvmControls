@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <dependencies>
+      <group targetFramework=".NETFramework4.7.2">
+        <dependency id="RFBCodeWorks.Mvvm.IViewModel" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="MvvmDialogs" version="9.1.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETCoreApp3.1">
+        <dependency id="MvvmDialogs_.NetCore_.Net5" version="9.1.0" exclude="Build,Analyzers" />
+        <dependency id="RFBCodeWorks.Mvvm.IViewModel" version="1.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net5.0-windows">
+        <dependency id="MvvmDialogs_.NetCore_.Net5" version="9.1.0" exclude="Build,Analyzers" />
+        <dependency id="RFBCodeWorks.Mvvm.IViewModel" version="1.0.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework=".NETCoreApp3.1">
+        <frameworkReference name="Microsoft.WindowsDesktop.App.WPF" />
+      </group>
+      <group targetFramework="net5.0-windows">
+        <frameworkReference name="Microsoft.WindowsDesktop.App.WPF" />
+      </group>
+      <group targetFramework=".NETFramework4.7.2" />
+    </frameworkReferences>
+  </metadata>
+</package>

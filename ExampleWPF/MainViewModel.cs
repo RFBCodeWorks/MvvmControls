@@ -1,4 +1,4 @@
-﻿using RFBCodeWorks.MvvmControls;
+﻿using RFBCodeWorks.Mvvm;
 using RFBCodeWorks.WPF.Behaviors;
 using System;
 using System.Collections.Generic;

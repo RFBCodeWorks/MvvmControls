@@ -1,4 +1,4 @@
-﻿using RFBCodeWorks.MvvmControls;
+﻿using RFBCodeWorks.Mvvm;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;

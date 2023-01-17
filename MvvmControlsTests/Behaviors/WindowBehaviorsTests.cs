@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RFBCodeWorks.WPFBehaviors;
-using RFBCodeWorks.MvvmControls.Tests;
+using RFBCodeWorks.WPF.Behaviors;
+using RFBCodeWorks.Mvvm.Tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace RFBCodeWorks.WPFBehaviors.Tests
+namespace RFBCodeWorks.WPF.Behaviors.Tests
 {
     [TestClass()]
     public class WindowBehaviorsTests

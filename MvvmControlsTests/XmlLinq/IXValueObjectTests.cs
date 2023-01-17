@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace RFBCodeWorks.MvvmControls.XmlLinq.Tests
+namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 {
     [TestClass()]
     public class IXValueObjectTests

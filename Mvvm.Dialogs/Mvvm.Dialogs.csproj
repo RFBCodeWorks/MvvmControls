@@ -1,0 +1,90 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net472;netcoreapp3.1;net5.0-windows</TargetFrameworks>
+        <UseWpf>true</UseWpf>
+        <RootNamespace>RFBCodeWorks.Mvvm.Dialogs</RootNamespace>
+        <AssemblyName>RFBCodeWorks.Mvvm.Dialogs</AssemblyName>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>StrongName.pfx</AssemblyOriginatorKeyFile>
+
+        <!-- Nuget Stuff -->
+        <GeneratePackageOnBuild Condition="$(Configuration)=='Release'">true</GeneratePackageOnBuild>
+        <PackageId>$(AssemblyName)</PackageId>
+        <Product>$(AssemblyName)</Product>
+        <PackageOutputPath>..\_OutputPackages\</PackageOutputPath>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <PackageLicenseExpression></PackageLicenseExpression>
+        <DocumentationFile>bin\$(Configuration)\\$(AssemblyName).xml</DocumentationFile>
+        <Authors>Robert Brenckman</Authors>
+        <Company />
+        <Copyright>Copyright 2023</Copyright>
+        <Version>1.0.0.1</Version>
+        <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
+        <PackageReleaseNotes></PackageReleaseNotes>
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <!-- Decide which nuget package to utilize -->
+    <PropertyGroup>
+        <!-- Custom Property UseOfficalPackage is used to determine when the official package vs the nuget package from RFBCodeworks should be used -->
+        <UseOfficialPackage>net462|net472|net48|net480|net6.0-windows|net7.0-windows</UseOfficialPackage>
+        <DeprecatedPackage>netcoreapp3.1|net5.0-windows</DeprecatedPackage>
+        <Description>This dll relies on MvvmDialogs.IDialogService 
+
+            This dll provides the following:
+
+            DialogServiceLocator / IDialogServiceLocator
+            - Provides a way to locate an appropriate DialogService for a given owner window
+            - Allows registering / unregistering dialogservices to a collection.
+            - Allows specifying a default IDialogServiceLocator to select the appropriate DialogService from the collection.
+            - If a customer locator is not specified, this library will use a default implementation that selects the first registered IDialogService.
+            - The extension methods will use this locator to open a window if those methods are called.
+
+            DialogService - Derived from MvvmDialogs.DialogService
+            - Overrides the FindOwner method to allow traversing up a RFBCodeWorks.Mvvm.IViewModel chain until an owner window is located.
+            - All instances are registered automatically to the DialogServiceLocator.RegisteredServices collection.
+
+            DialogServiceExtensions
+            - Various extension methods to avoid having to dive into the full namespace hierarchy of MvvmDialogs to generate the various objects, such as OpenFileDialog
+
+            FileFilter
+            - This class allows creation of file filters for the Open/Save file dialogs.
+
+            MessageBoxSettings - Derived from MvvmDialogs.FrameworkDialogs.MessageBox.MessageBoxSettings
+            - Provides several static methods for easier creation of common-use dialogs
+            - Provides additional constructors
+            - Provides a virtual 'Show(IViewModel)' dialog that can be used to show the MessageBox
+
+MvvmDialogs Dependency Notes:
+- Where Possible, this will target the latest release of the original maintainer's package. (.NetFramework, .Net6.0, etc)
+- Since this package also targets .NetCoreApp3.1 and .Net5, which have been deprecate by the original maintainer, these will depend on a seperate nuget package that retains the required functionality for this library. (Clone of main repo, just updated targets)</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <!-- Official -->
+        <PackageReference Include="MvvmDialogs" Version="9.1.0" Condition="$(UseOfficialPackage.Contains('$(TargetFramework)'))" />
+        <!-- Deprecated package - Maintained by RFBCodeworks -->
+        <ProjectReference Include="..\..\..\mvvm-dialogs\src\MvvmDialogs.csproj" Condition="$(DeprecatedPackage.Contains('$(TargetFramework)'))">
+          <Private>true</Private>
+        </ProjectReference>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\Mvvm.ViewModel\Mvvm.IViewModel.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="Readme.md">
+            <PackagePath></PackagePath>
+            <Pack>True</Pack>
+        </None>
+        <None Include="..\LICENSE.txt" Link="LICENSE.txt">
+            <PackagePath></PackagePath>
+            <Pack>True</Pack>
+        </None>
+        <None Include="RFBCodeWorks.Mvvm.Dialogs.nuspec">
+            <PackagePath></PackagePath>
+            <Pack>True</Pack>
+        </None>
+    </ItemGroup>
+</Project>

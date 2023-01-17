@@ -1,0 +1,62 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <!--<LangVersion>9.0</LangVersion>-->
+        <Platforms>AnyCPU</Platforms>
+        <AssemblyName>RFBCodeWorks.Mvvm.IViewModel</AssemblyName>
+
+        <!-- Nuget Stuff -->
+        <GeneratePackageOnBuild Condition="$(Configuration)=='Release'">true</GeneratePackageOnBuild>
+        <PackageId>$(AssemblyName)</PackageId>
+        <Product>$(AssemblyName)</Product>
+        <PackageOutputPath>..\_OutputPackages\</PackageOutputPath>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <PackageLicenseExpression></PackageLicenseExpression>
+        <DocumentationFile>bin\$(Configuration)\\$(AssemblyName).xml</DocumentationFile>
+        <Authors>Robert Brenckman</Authors>
+        <Company />
+        <Copyright>Copyright 2023</Copyright>
+        <Version>1.0.0.1</Version>
+        <PackageReadmeFile>Readme.md</PackageReadmeFile>
+        <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
+        <!--<PackageReadmeFile>Readme.md</PackageReadmeFile>-->
+        <PackageReleaseNotes></PackageReleaseNotes>
+
+        <Description>
+            Library that includes the following:
+            
+            IViewModel - Interface Inherits from INotifyPropertyChanged
+            - Basic Interface for ViewModels
+            - Has a 'ParentViewModel' property to allow viewmodels to be retain a reference to the ViewModel that created it
+            
+            INotifyArgs - Sealed class
+            - Simplifies creation of static objects for use with the INotifyPropertyChanging and INotifyPropertyChanged events
+            - On construction, stores the property name, and creates an instance of the args for both INotifyPropertyChanged and INotifyPropertyChanging events
+            - Implicitly converts to the event args
+            - Contains the default 'Empty' property args to indicate all properties are changing.
+            
+        </Description>
+        <PackageTags>Mvvm, ViewModel</PackageTags>
+        <SignAssembly>true</SignAssembly>
+        <DelaySign>false</DelaySign>
+        <AssemblyOriginatorKeyFile>StrongName.pfx</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Include="..\LICENSE.txt" Link="LICENSE.txt">
+        <PackagePath></PackagePath>
+        <Pack>True</Pack>
+      </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Readme.md">
+        <PackagePath></PackagePath>
+        <Pack>True</Pack>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+</Project>
