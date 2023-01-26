@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using RFBCodeWorks.Mvvm.Primitives;
 using RFBCodeWorks.Mvvm.Primitives.Tests;
 using Behaviors = RFBCodeWorks.WPF.Behaviors;
+using RFBCodeWorks.Mvvm.Tests.Helpers;
 
 namespace RFBCodeWorks.Mvvm.Tests
 {
