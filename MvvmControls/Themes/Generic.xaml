@@ -6,8 +6,8 @@
     xmlns:ui="using:CommunityToolkit.Uwp.UI"
     >
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="MvvmControls;component/WPF.Controls/NumericUpDowns/Generic.xaml"/>
-        <ResourceDictionary Source="MvvmControls;component/WPF.Controls/IPV4TextBox/Generic.xaml"/>
+        <ResourceDictionary Source="RFBCodeWorks.Mvvm.Controls;component/WPF.Controls/NumericUpDowns/Generic.xaml"/>
+        <ResourceDictionary Source="RFBCodeWorks.Mvvm.Controls;component/WPF.Controls/IPV4TextBox/Generic.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     
