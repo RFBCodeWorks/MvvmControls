@@ -12,7 +12,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
     /// Abstract base class for IRelayCommand objects that accept a parameter of a specified type
     /// </summary>
     /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.RelayCommand{T}"/>
-    public abstract class AbstractCommand<T> : ObservableObject, IRelayCommand<T>
+    public abstract class AbstractCommand<T> : CommandBase, IRelayCommand<T>
     {
 
         #region < Static Methods >
@@ -53,36 +53,9 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <inheritdoc/>
         protected AbstractCommand() : this(true) { }
 
-        /// <summary>
-        /// Initialize the <see cref="AbstractAsyncCommand"/> object
-        /// </summary>
-        /// <param name="subscribeToCommandManager"><inheritdoc cref="SubscribeToCommandManager" path="*"/></param>
-        protected AbstractCommand(bool subscribeToCommandManager) : base()
-        {
-            SubscribeToCommandManager = subscribeToCommandManager;
-        }
-
-        #endregion
-
-        #region < Properties and Events >
-
+        /// <summary> Initialize the object </summary>
         /// <inheritdoc/>
-        public event EventHandler CanExecuteChanged;
-
-        /// <inheritdoc cref="AbstractCommand.SubscribeToCommandManager"/>
-        public bool SubscribeToCommandManager
-        {
-            get => SubscribeToCommandManagerField;
-            set
-            {
-                if (value)
-                    CommandManager.RequerySuggested += CanExecuteChanged;
-                else
-                    CommandManager.RequerySuggested -= CanExecuteChanged;
-                SubscribeToCommandManagerField = value;
-            }
-        }
-        private bool SubscribeToCommandManagerField;
+        protected AbstractCommand(bool subscribeToCommandManager) : base(subscribeToCommandManager) { }
 
         #endregion
 
@@ -91,12 +64,6 @@ namespace RFBCodeWorks.Mvvm.Primitives
 
         /// <inheritdoc/>
         public abstract void Execute(T parameter);
-
-        /// <inheritdoc/>
-        public void NotifyCanExecuteChanged(object sender, EventArgs e) => NotifyCanExecuteChanged();
-
-        /// <inheritdoc/>
-        public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 
         #region < Interface Implementations >
 

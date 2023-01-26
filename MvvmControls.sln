@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.32630.194
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmControlsTests", "MvvmControlsTests\MvvmControlsTests.csproj", "{70F1F67C-BDE4-40DA-8493-273235C6A2F8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmControls", "MvvmControls\MvvmControls.csproj", "{759021FE-B314-45EC-8133-44AE65EB839B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mvvm", "MvvmControls\Mvvm.csproj", "{759021FE-B314-45EC-8133-44AE65EB839B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleWPF", "ExampleWPF\ExampleWPF.csproj", "{BD3C4277-A7B6-4110-88F4-D22850412685}"
 EndProject

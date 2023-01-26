@@ -22,7 +22,7 @@
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
         <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
-        <PackageReleaseNotes></PackageReleaseNotes>
+        <PackageReleaseNotes>Fixed ICommand objects not reacting to CommandManager.RequerySuggested event</PackageReleaseNotes>
 
         
 

@@ -13,7 +13,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
     /// <summary>
     /// Abstract base class for AsyncRelayCommands that do not take parameters
     /// </summary>
-    public abstract class AbstractAsyncCommand : ObservableObject, IAsyncRelayCommand
+    public abstract class AbstractAsyncCommand : CommandBase, IAsyncRelayCommand
     {
         //Adapted from :
         // https://www.youtube.com/watch?v=F7hRmbdE9eY
@@ -48,10 +48,10 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <inheritdoc/>
         protected AbstractAsyncCommand() : this(true) { }
 
+        /// <summary> Initialize the object </summary>
         /// <inheritdoc/>
-        protected AbstractAsyncCommand(bool subscribeToCommandManager) : base()
+        protected AbstractAsyncCommand(bool subscribeToCommandManager) : base(subscribeToCommandManager)
         {
-            SubscribeToCommandManager = subscribeToCommandManager;
             runningTasks = new ObservableCollection<Task>();
             runningTasks.CollectionChanged += RunningTasks_CollectionChanged;
         }
@@ -61,24 +61,6 @@ namespace RFBCodeWorks.Mvvm.Primitives
         #region < Properties and Events >
 
         private readonly ObservableCollection<Task> runningTasks;
-
-        /// <inheritdoc/>
-        public event EventHandler CanExecuteChanged;
-
-        /// <inheritdoc cref="AbstractCommand.SubscribeToCommandManager"/>
-        public bool SubscribeToCommandManager
-        {
-            get => SubscribeToCommandManagerField;
-            set
-            {
-                if (value)
-                    CommandManager.RequerySuggested += CanExecuteChanged;
-                else
-                    CommandManager.RequerySuggested -= CanExecuteChanged;
-                SubscribeToCommandManagerField = value;
-            }
-        }
-        private bool SubscribeToCommandManagerField;
 
         /// <inheritdoc />
         public IEnumerable<Task> RunningTasks => runningTasks;
@@ -129,14 +111,6 @@ namespace RFBCodeWorks.Mvvm.Primitives
 
         /// <inheritdoc/>
         public abstract void Cancel();
-
-        /// <inheritdoc/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void NotifyCanExecuteChanged(object sender, EventArgs e) => NotifyCanExecuteChanged();
-
-        /// <inheritdoc/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 
         /// <summary> Check if any tasks are running, then return the inverse </summary>
         /// <returns> The inverse of <see cref="IsRunning"/> </returns>

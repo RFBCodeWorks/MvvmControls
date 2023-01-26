@@ -12,7 +12,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
     /// Abstract base class for IRelayCommand objects that do not require parameters
     /// </summary>
     /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.RelayCommand"/>
-    public abstract class AbstractCommand : ObservableObject, IRelayCommand
+    public abstract class AbstractCommand : CommandBase, IRelayCommand
     {
 
         /// <summary>
@@ -27,42 +27,9 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <inheritdoc/>
         protected AbstractCommand() : this(true) { }
 
-        /// <summary>
-        /// Initialize the <see cref="AbstractAsyncCommand"/> object
-        /// </summary>
-        /// <param name="subscribeToCommandManager"><inheritdoc cref="SubscribeToCommandManager" path="*"/></param>
-        protected AbstractCommand(bool subscribeToCommandManager) : base()
-        {
-            SubscribeToCommandManager = subscribeToCommandManager;
-        }
-
-        #endregion
-
-        #region < Properties and Events >
-
+        /// <summary> Initialize the object </summary>
         /// <inheritdoc/>
-        public event EventHandler CanExecuteChanged;
-
-        /// <summary>
-        /// While <see langword="true"/>, <see cref="CanExecuteChanged"/> will be raised as determined by the <see cref="CommandManager.RequerySuggested"/> event.
-        /// <br/><br/>Set this to <see langword="false"/> to only allow explicitly raising the CanExecuteChanged event.
-        /// </summary>
-        /// <remarks>
-        /// This is set <see langword="true"/> by default in the constructor.
-        /// </remarks>
-        public bool SubscribeToCommandManager
-        {
-            get => SubscribeToCommandManagerField;
-            set
-            {
-                if (value)
-                    CommandManager.RequerySuggested += CanExecuteChanged;
-                else
-                    CommandManager.RequerySuggested -= CanExecuteChanged;
-                SubscribeToCommandManagerField = value;
-            }
-        }
-        private bool SubscribeToCommandManagerField;
+        protected AbstractCommand(bool subscribeToCommandManager) : base(subscribeToCommandManager) { }
 
         #endregion
 
@@ -71,14 +38,6 @@ namespace RFBCodeWorks.Mvvm.Primitives
         
         /// <inheritdoc/>
         public abstract void Execute();
-
-        /// <inheritdoc/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void NotifyCanExecuteChanged(object sender, EventArgs e) => NotifyCanExecuteChanged();
-
-        /// <inheritdoc/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 
         #region < Interface Implementations >
 
