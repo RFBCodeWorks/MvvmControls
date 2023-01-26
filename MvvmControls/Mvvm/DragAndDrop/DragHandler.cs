@@ -11,7 +11,7 @@ namespace RFBCodeWorks.Mvvm.DragAndDrop
     /// <summary>
     /// Base class that consumers can utilize for custom implementations
     /// </summary>
-    public class DragHandler : ObservableObject, IDragHandler
+    public class DragHandler : ObservableObject, IDragHandler, IViewModel
     {
         private static readonly INotifyArgs IsDraggingArg = new(nameof(IsDragging));
 
@@ -33,6 +33,10 @@ namespace RFBCodeWorks.Mvvm.DragAndDrop
             }
         }
         private bool IsDraggingField;
+
+        /// <inheritdoc/>
+        public IViewModel ParentViewModel { get; set; }
+        
 
         /// <inheritdoc/>
         public virtual void OnDragEnter(object sender, DragEventArgs e)
