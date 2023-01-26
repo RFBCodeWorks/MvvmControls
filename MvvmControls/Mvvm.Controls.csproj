@@ -14,11 +14,11 @@
         <PackageOutputPath>..\_OutputPackages\</PackageOutputPath>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
         <PackageLicenseExpression></PackageLicenseExpression>
-        <DocumentationFile>bin\$(Configuration)\\$(AssemblyName).xml</DocumentationFile>
+        <DocumentationFile>bin\$(Configuration)\\$(TargetFramework)\\$(AssemblyName).xml</DocumentationFile>
         <Authors>Robert Brenckman</Authors>
         <Company />
         <Copyright>Copyright 2023</Copyright>
-        <Version>1.0.0.0</Version>
+        <Version>1.0.0.1</Version>
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
         <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
@@ -45,14 +45,14 @@
             &lt;ComboBox MvvmControls:ControlDefinitions.ComboBoxDefinition="{Binding MyComboBox}" /&gt;
         </Description>
 
-        <PackageReleaseNotes>
-            While this has targets for .net472, .net480, and .netCoreApp3.1, this library is set to use C#9.0 for Init-style properties, so your project may have to specify that `<LangVersion>9.0</LangVersion>` to use this.
-            .Net5.0 and beyond natively supports this library.
-        </PackageReleaseNotes>
+        <PackageReleaseNotes>Various Fixes for the RelayCommand objects and dependency properties.</PackageReleaseNotes>
 
         <SignAssembly>true</SignAssembly>
 
         <AssemblyOriginatorKeyFile>StrongName.pfx</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
+      <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     </PropertyGroup>
 
     <ItemGroup>
@@ -65,29 +65,11 @@
             <Pack>True</Pack>
         </None>
     </ItemGroup>
-    
     <ItemGroup>
-        <Compile Remove="WPF.Controls\OLD\IPV4Textbox.xaml.cs" />
-        <Compile Remove="WPF.Controls\OLD\TextBoxHelper.cs" />
-        <Compile Remove="WPF.Controls\OLD\TextboxValidation.xaml.cs" />
-        <Compile Remove="WPF.Controls\OLD\ValidationRuleProperty.cs" />
-    </ItemGroup>
-    <ItemGroup>
-        <Page Remove="WPF.Controls\OLD\IPV4Textbox.xaml" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="7.0.1" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
-        <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
-        <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
-    </ItemGroup>
-    <ItemGroup>
-
-        <None Include="WPF.Controls\OLD\IPV4Textbox.xaml" />
-        <None Include="WPF.Controls\OLD\IPV4Textbox.xaml.cs" />
-        <None Include="WPF.Controls\OLD\TextBoxHelper.cs" />
-        <None Include="WPF.Controls\OLD\TextboxValidation.xaml.cs" />
-        <None Include="WPF.Controls\OLD\ValidationRuleProperty.cs" />
+        <PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
+        <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Mvvm.ViewModel\Mvvm.IViewModel.csproj" />
