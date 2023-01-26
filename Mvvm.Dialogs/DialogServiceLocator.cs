@@ -5,12 +5,21 @@ using System.Linq;
 
 namespace RFBCodeWorks.Mvvm.DialogServices
 {
+    /// <summary>
+    /// <inheritdoc cref="DefaultLocator"/>
+    /// </summary>
     public class DialogServiceLocator : IDialogServiceLocator
     {
+        
+        /// <summary>
+        /// The constructor used for derived classes.
+        /// </summary>
+        protected DialogServiceLocator() { }
+
         /// <summary>
         /// Gets the Default DialogServiceLocator built in with the library.
         /// </summary>
-        private static DialogServiceLocator Default { get; } = new DialogServices.DialogServiceLocator(null);
+        private static DialogServiceLocator Default { get; } = new DialogServices.DialogServiceLocator();
 
         /// <summary>
         /// Represents a service that can be used to locate an appropriate <see cref="IDialogService"/> 
@@ -59,13 +68,8 @@ namespace RFBCodeWorks.Mvvm.DialogServices
             services.Remove(service);
         }
 
-        private DialogServiceLocator(object n) { }
 
-        /// <summary>
-        /// The constructor used for derived classes.
-        /// </summary>
-        protected DialogServiceLocator() { }
-
+        /// <inheritdoc/>
         public virtual IDialogService GetDialogService(INotifyPropertyChanged ownerViewModel = null)
         {
             return services.FirstOrDefault() ?? throw new System.Exception("No MvvmDialogs.IDialogServices have been registered to the locator.");

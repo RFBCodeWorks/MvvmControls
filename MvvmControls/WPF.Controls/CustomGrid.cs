@@ -29,7 +29,7 @@ namespace RFBCodeWorks.WPF.Controls
         /// <inheritdoc/>
         protected override void OnRender(DrawingContext dc)
         {
-            ///This allows the render to update in design mode, but prevents constant recalculating while not in design mode
+            //This allows the render to update in design mode, but prevents constant recalculating while not in design mode
             if (!firstRenderComplete)
             {
                 OnVisualChildrenChanged(null, null);

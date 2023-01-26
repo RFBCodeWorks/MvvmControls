@@ -15,11 +15,13 @@ namespace RFBCodeWorks.WPF.Converters
     [ValueConversion(typeof(bool), typeof(bool))]
     public sealed class InverseBooleanConverter : BaseConverter
     {
+        /// <inheritdoc/>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value is null ? false : !(bool)value;
         }
 
+        /// <inheritdoc/>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value is null ? false : !(bool)value;
@@ -42,11 +44,13 @@ namespace RFBCodeWorks.WPF.Converters
 
         private System.Windows.Controls.BooleanToVisibilityConverter converter { get; }
 
+        /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return ((IValueConverter)converter).Convert(value, targetType, parameter, culture);
         }
 
+        /// <inheritdoc/>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return ((IValueConverter)converter).ConvertBack(value, targetType, parameter, culture);
@@ -69,6 +73,7 @@ namespace RFBCodeWorks.WPF.Converters
 
         private System.Windows.Controls.BooleanToVisibilityConverter converter { get; }
 
+        /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             Visibility ret = (Visibility)((IValueConverter)converter).Convert(value, targetType, parameter, culture);
@@ -76,6 +81,7 @@ namespace RFBCodeWorks.WPF.Converters
             return ret;
         }
 
+        /// <inheritdoc/>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if ((Visibility)value == Visibility.Hidden) value = Visibility.Collapsed;

@@ -74,7 +74,10 @@ namespace ExampleWPF
         public bool WasLoaded
         {
             get { return WasLoadedField; }
-            set { SetProperty(ref WasLoadedField, value, nameof(WasLoaded)); }
+            set { 
+                SetProperty(ref WasLoadedField, value, nameof(WasLoaded));
+                //RFBCodeWorks.Mvvm.DialogServices.DialogServiceLocator.DefaultLocator.GetDialogService(this).ShowMessageBox(this, "Loaded!");
+            }
         }
         private bool WasLoadedField;
 

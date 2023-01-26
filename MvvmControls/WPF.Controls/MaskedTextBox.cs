@@ -72,6 +72,9 @@ namespace RFBCodeWorks.WPF.Controls
             e.CancelCommand();
         }
 
+        /// <summary>
+        /// The raw text value (unmasked) text
+        /// </summary>
         public string RawText
         {
             get { return (string)GetValue(RawTextProperty); }

@@ -65,7 +65,7 @@ MvvmDialogs Dependency Notes:
         <!-- Official -->
         <PackageReference Include="MvvmDialogs" Version="9.1.0" Condition="$(UseOfficialPackage.Contains('$(TargetFramework)'))" />
         <!-- Deprecated package - Maintained by RFBCodeworks -->
-        <PackageReference Include="MvvmDialogs_.NetCore" Condition="$(DeprecatedPackage.Contains('$(TargetFramework)'))"/>
+        <PackageReference Include="MvvmDialogs_.NetCore" Version="9.1.0" Condition="$(DeprecatedPackage.Contains('$(TargetFramework)'))"/>
     </ItemGroup>
     
     <ItemGroup>

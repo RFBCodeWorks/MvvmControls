@@ -83,7 +83,7 @@ namespace RFBCodeWorks.Mvvm
         public bool IsMultiSelect => SelectionMode != SelectionMode.Single;
 
         /// <summary>
-        /// Allows binding to the SelectedItems property of a listbox via the <see cref="Behaviors.Base.MultiItemSelectionBehavior{T}"/> behavior
+        /// Allows binding to the SelectedItems property of a listbox via the <see cref="RFBCodeWorks.WPF.Behaviors.Base.MultiItemSelectionBehavior{T}"/> behavior
         /// </summary>
         public IList<T> SelectedItems
         {

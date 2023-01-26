@@ -88,6 +88,7 @@ namespace RFBCodeWorks.WPF.Behaviors
 
         /// <summary>
         /// Enable/Disable the 'Dirty' Style for the control
+        /// <br/> When <see langword="true"/>, this would indicate that the value has been changed but has not yet been saved. (This should be set false after the value has been saved)
         /// </summary>
         public static readonly DependencyProperty IsDirtyProperty =
             DependencyProperty.RegisterAttached("IsDirty", typeof(bool), typeof(ReactiveStyles), new PropertyMetadata(false, UpdateElement));

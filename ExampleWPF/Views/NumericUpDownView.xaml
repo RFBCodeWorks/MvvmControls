@@ -55,9 +55,9 @@
                     ButtonInterval="15" 
                     Maximum="1000" 
                     DelayBeforeLargeChange="0"
-                    BehaviorHelpers:IsDirtyInt.DefaultValue="0"
+                    BehaviorHelpers:IsDirtyInt.OriginalValue="0"
                     BehaviorHelpers:IsDirtyInt.CurrentValue="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value}"
-                    BehaviorHelpers:IsDirtyInt.EnableDirtyComparer="True"
+                    BehaviorHelpers:IsDirtyInt.EnableComparer="True"
                     />
                 <CC:DecimalUpDown ButtonOrientation="OnRight" Background="Beige" Value="50.88" SmallChange="0.5" LargeChange="3"/>
             </StackPanel>

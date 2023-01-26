@@ -32,7 +32,8 @@ namespace RFBCodeWorks.Mvvm
         /// Create a new pair of event args
         /// </summary>
         /// <param name="propertyName">The property name that is changing / has changed</param>
-        /// <param name="registerArgs">When TRUE, registers the args to recall later via the <see cref="GetArgs(string)"/> method</param>
+        /// <param name="registerArgs"></param>
+        /////When TRUE, registers the args to recall later via the <see cref="GetArgs(string)"/> method</param>
         private INotifyArgs(string propertyName, bool registerArgs)
         {
             if (string.IsNullOrWhiteSpace(propertyName))

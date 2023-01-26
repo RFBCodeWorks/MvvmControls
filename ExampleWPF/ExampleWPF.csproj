@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+      <LangVersion>9.0</LangVersion>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
@@ -12,7 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MvvmControls\Mvvm.csproj" />
+    <ProjectReference Include="..\Mvvm.Dialogs\Mvvm.Dialogs.csproj" />
+    <ProjectReference Include="..\MvvmControls\Mvvm.Controls.csproj" />
   </ItemGroup>
 
 </Project>

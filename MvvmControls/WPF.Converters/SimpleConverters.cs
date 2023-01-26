@@ -15,11 +15,13 @@ namespace RFBCodeWorks.WPF.Converters
     [ValueConversion(typeof(bool), typeof(string))]
     public sealed class ToStringConverter : BaseConverter
     {
+        /// <inheritdoc/>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value?.ToString() ?? string.Empty;
         }
 
+        /// <inheritdoc/>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value?.ToString() ?? string.Empty;
@@ -32,11 +34,13 @@ namespace RFBCodeWorks.WPF.Converters
     [ValueConversion(typeof(int), typeof(string))]
     public sealed class StringToInt : BaseConverter
     {
+        /// <inheritdoc/>
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return System.Convert.ToInt32(value);
         }
 
+        /// <inheritdoc/>
         public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value?.ToString();

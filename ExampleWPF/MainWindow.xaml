@@ -10,9 +10,11 @@
         xmlns:Behaviors="clr-namespace:RFBCodeWorks.WPF.Behaviors;assembly=RFBCodeWorks.Mvvm.Controls"
         xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:Views="clr-namespace:ExampleWPF.Views"
+        d:DataContext="{d:DesignInstance Type=local:MainViewModel, IsDesignTimeCreatable=True}"
         Behaviors:WindowBehaviors.IWindowClosingHandler="{Binding ElementName=ThisWindow, Path=DataContext}"
         Behaviors:WindowBehaviors.IWindowLoadingHandler="{Binding ElementName=ThisWindow, Path=DataContext}"
-        d:DataContext="{d:DesignInstance Type=local:MainViewModel, IsDesignTimeCreatable=True}"
+        xmlns:md="clr-namespace:MvvmDialogs;assembly=MvvmDialogs"
+        md:DialogServiceViews.IsRegistered="True"
         Title="MainWindow" Height="450" Width="800">
     <TabControl>
         <TabItem Header="  Control Definitions  ">

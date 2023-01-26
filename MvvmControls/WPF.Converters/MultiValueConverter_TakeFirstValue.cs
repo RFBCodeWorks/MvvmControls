@@ -14,6 +14,7 @@ namespace RFBCodeWorks.WPF.Converters
     [ValueConversion(typeof(object), typeof(object))]
     public class MultiValueConverter_TakeFirstValue : BaseMultiConverter
     {
+        /// <inheritdoc/>
         public override object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             foreach (object i in values)
@@ -22,6 +23,7 @@ namespace RFBCodeWorks.WPF.Converters
             return default;
         }
 
+        /// <inheritdoc/>
         public override object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             return new object[] { value };
