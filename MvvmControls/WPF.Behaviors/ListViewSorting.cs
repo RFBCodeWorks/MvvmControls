@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Documents;
 using System.Windows.Data;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace CustomControls.WPF.Behaviors
 {
     /// <summary>
@@ -14,6 +15,7 @@ namespace CustomControls.WPF.Behaviors
     public class GridViewSort
     {
         #region Public attached properties
+
 
         public static ICommand GetCommand(DependencyObject obj)
         {
@@ -367,3 +369,4 @@ namespace CustomControls.WPF.Behaviors
         #endregion
     }
 }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

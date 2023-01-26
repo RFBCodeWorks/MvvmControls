@@ -19,7 +19,7 @@ namespace RFBCodeWorks.WPF.Converters
 	/// value converter's type is not decorated with the ValueConversionAttribute, an InvalidOperationException will be
 	/// thrown when the converter is added to the Converters collection.
 	/// </summary>
-	/// <see cref="https://www.codeproject.com/Articles/15061/Piping-Value-Converters-in-WPF"/>
+	/// <remarks><see href="https://www.codeproject.com/Articles/15061/Piping-Value-Converters-in-WPF"/></remarks>
 	[System.Windows.Markup.ContentProperty("Converters")]
 	public class ValueConverterGroup : IValueConverter
 	{

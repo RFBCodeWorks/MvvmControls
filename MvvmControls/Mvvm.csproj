@@ -82,10 +82,7 @@
         <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     </ItemGroup>
     <ItemGroup>
-        <None Include="..\LICENSE.txt" Link="LICENSE.txt">
-            <PackagePath></PackagePath>
-            <Pack>True</Pack>
-        </None>
+
         <None Include="WPF.Controls\OLD\IPV4Textbox.xaml" />
         <None Include="WPF.Controls\OLD\IPV4Textbox.xaml.cs" />
         <None Include="WPF.Controls\OLD\TextBoxHelper.cs" />

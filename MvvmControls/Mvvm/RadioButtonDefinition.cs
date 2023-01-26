@@ -5,7 +5,7 @@
     /// </summary>
     public interface IRadioButton : IToggleButton
     {
-        /// <inheritdoc cref="MvvmControls.RadioButtonDefinition.GroupName"/>
+        /// <inheritdoc cref="Mvvm.RadioButtonDefinition.GroupName"/>
         public string GroupName { get; set; }
     }
 

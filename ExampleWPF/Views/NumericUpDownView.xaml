@@ -55,7 +55,7 @@
                     ButtonInterval="15" 
                     Maximum="1000" 
                     DelayBeforeLargeChange="0"
-                    BehaviorHelpers:IsDirtyInt.DefaultValue="0"
+                    BehaviorHelpers:IsDirtyInt.OriginalValue="0"
                     BehaviorHelpers:IsDirtyInt.CurrentValue="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value}"
                     BehaviorHelpers:IsDirtyInt.EnableDirtyComparer="True"
                     />
