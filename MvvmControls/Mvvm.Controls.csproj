@@ -22,10 +22,6 @@
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
         <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
-        <PackageReleaseNotes>Fixed ICommand objects not reacting to CommandManager.RequerySuggested event</PackageReleaseNotes>
-
-        
-
         <Description>
             This is a Library designed to ease working within an MVVM framework, and is meant to consolidate boiler-plate ViewModel interactions for common WPF controls into pre-built classes.
 
@@ -44,12 +40,10 @@
             ## XAML:
             &lt;ComboBox MvvmControls:ControlDefinitions.ComboBoxDefinition="{Binding MyComboBox}" /&gt;
         </Description>
-
-        <PackageReleaseNotes>Various Fixes for the RelayCommand objects and dependency properties.</PackageReleaseNotes>
-
         <SignAssembly>true</SignAssembly>
-
         <AssemblyOriginatorKeyFile>StrongName.pfx</AssemblyOriginatorKeyFile>
+        <PackageReleaseNotes>Moved ListViewSort into correct namespace</PackageReleaseNotes>
+        
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
       <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
