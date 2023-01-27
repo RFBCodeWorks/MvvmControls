@@ -7,32 +7,42 @@ using System.Windows.Documents;
 using System.Windows.Data;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-namespace CustomControls.WPF.Behaviors
+namespace RFBCodeWorks.WPF.Behaviors
 {
     /// <summary>
-    /// <see href="https://thomaslevesque.com/2009/08/04/wpf-automatically-sort-a-gridview-continued/"/>
+    /// Class to adorn a ListView with sorting functionality
     /// </summary>
-    public class GridViewSort
+    /// <remarks>
+    /// <see href="https://thomaslevesque.com/2009/08/04/wpf-automatically-sort-a-gridview-continued/"/>
+    /// </remarks>
+    public class ListViewSort
     {
         #region Public attached properties
 
-
+        /// <summary>
+        /// Get the <see cref="CommandProperty"/>
+        /// </summary>
         public static ICommand GetCommand(DependencyObject obj)
         {
             return (ICommand)obj.GetValue(CommandProperty);
         }
 
+        /// <summary>
+        /// Set the <see cref="CommandProperty"/>
+        /// </summary>
         public static void SetCommand(DependencyObject obj, ICommand value)
         {
             obj.SetValue(CommandProperty, value);
         }
 
-        // Using a DependencyProperty as the backing store for Command.  This enables animation, styling, binding, etc...
+        /// <summary>
+        /// ICommand object to trigger the GridView to sort the items
+        /// </summary>
         public static readonly DependencyProperty CommandProperty =
             DependencyProperty.RegisterAttached(
                 "Command",
                 typeof(ICommand),
-                typeof(GridViewSort),
+                typeof(ListViewSort),
                 new UIPropertyMetadata(
                     null,
                     (o, e) =>
@@ -56,22 +66,30 @@ namespace CustomControls.WPF.Behaviors
                 )
             );
 
+        /// <summary>
+        /// Get the <see cref="AutoSortProperty"/>
+        /// </summary>
         public static bool GetAutoSort(DependencyObject obj)
         {
             return (bool)obj.GetValue(AutoSortProperty);
         }
 
+        /// <summary>
+        /// Set the <see cref="AutoSortProperty"/>
+        /// </summary>
         public static void SetAutoSort(DependencyObject obj, bool value)
         {
             obj.SetValue(AutoSortProperty, value);
         }
 
-        // Using a DependencyProperty as the backing store for AutoSort.  This enables animation, styling, binding, etc...
+        /// <summary>
+        /// Enable/Disable automatically sorting the list when items are added to the collection
+        /// </summary>
         public static readonly DependencyProperty AutoSortProperty =
             DependencyProperty.RegisterAttached(
                 "AutoSort",
                 typeof(bool),
-                typeof(GridViewSort),
+                typeof(ListViewSort),
                 new UIPropertyMetadata(
                     false,
                     (o, e) =>
@@ -97,66 +115,99 @@ namespace CustomControls.WPF.Behaviors
                 )
             );
 
+        /// <summary>
+        /// Get the <see cref="PropertyNameProperty"/>
+        /// </summary>
         public static string GetPropertyName(DependencyObject obj)
         {
             return (string)obj.GetValue(PropertyNameProperty);
         }
 
+        /// <summary>
+        /// Set the <see cref="PropertyNameProperty"/>
+        /// </summary>
         public static void SetPropertyName(DependencyObject obj, string value)
         {
             obj.SetValue(PropertyNameProperty, value);
         }
 
-        // Using a DependencyProperty as the backing store for PropertyName.  This enables animation, styling, binding, etc...
+        /// <summary>
+        /// Sort according to the specified property name
+        /// </summary>
         public static readonly DependencyProperty PropertyNameProperty =
             DependencyProperty.RegisterAttached(
                 "PropertyName",
                 typeof(string),
-                typeof(GridViewSort),
+                typeof(ListViewSort),
                 new UIPropertyMetadata(null)
             );
 
+        /// <summary>
+        /// Get the <see cref="ShowSortGlyphProperty"/>
+        /// </summary>
         public static bool GetShowSortGlyph(DependencyObject obj)
         {
             return (bool)obj.GetValue(ShowSortGlyphProperty);
         }
 
+        /// <summary>
+        /// Set the <see cref="ShowSortGlyphProperty"/>
+        /// </summary>
         public static void SetShowSortGlyph(DependencyObject obj, bool value)
         {
             obj.SetValue(ShowSortGlyphProperty, value);
         }
 
-        // Using a DependencyProperty as the backing store for ShowSortGlyph.  This enables animation, styling, binding, etc...
+        /// <summary>
+        /// Show/Hide the images showing the current sorting
+        /// </summary>
         public static readonly DependencyProperty ShowSortGlyphProperty =
-            DependencyProperty.RegisterAttached("ShowSortGlyph", typeof(bool), typeof(GridViewSort), new UIPropertyMetadata(true));
+            DependencyProperty.RegisterAttached("ShowSortGlyph", typeof(bool), typeof(ListViewSort), new UIPropertyMetadata(true));
 
+
+        /// <summary>
+        /// Get the <see cref="SortGlyphAscendingProperty"/>
+        /// </summary>
         public static ImageSource GetSortGlyphAscending(DependencyObject obj)
         {
             return (ImageSource)obj.GetValue(SortGlyphAscendingProperty);
         }
 
+        /// <summary>
+        /// Set the <see cref="SortGlyphAscendingProperty"/>
+        /// </summary>
         public static void SetSortGlyphAscending(DependencyObject obj, ImageSource value)
         {
             obj.SetValue(SortGlyphAscendingProperty, value);
         }
 
-        // Using a DependencyProperty as the backing store for SortGlyphAscending.  This enables animation, styling, binding, etc...
+        /// <summary>
+        /// The image to use for the sorting by ascending
+        /// </summary>
         public static readonly DependencyProperty SortGlyphAscendingProperty =
-            DependencyProperty.RegisterAttached("SortGlyphAscending", typeof(ImageSource), typeof(GridViewSort), new UIPropertyMetadata(null));
+            DependencyProperty.RegisterAttached("SortGlyphAscending", typeof(ImageSource), typeof(ListViewSort), new UIPropertyMetadata(null));
 
+        /// <summary>
+        /// Get the <see cref="SortGlyphDescendingProperty"/>
+        /// </summary>
         public static ImageSource GetSortGlyphDescending(DependencyObject obj)
         {
             return (ImageSource)obj.GetValue(SortGlyphDescendingProperty);
         }
 
+        /// <summary>
+        /// Set the <see cref="SortGlyphDescendingProperty"/>
+        /// </summary>
         public static void SetSortGlyphDescending(DependencyObject obj, ImageSource value)
         {
             obj.SetValue(SortGlyphDescendingProperty, value);
         }
 
-        // Using a DependencyProperty as the backing store for SortGlyphDescending.  This enables animation, styling, binding, etc...
+        /// <summary>
+        /// The image to use for the sorting by descending
+        /// </summary>
         public static readonly DependencyProperty SortGlyphDescendingProperty =
-            DependencyProperty.RegisterAttached("SortGlyphDescending", typeof(ImageSource), typeof(GridViewSort), new UIPropertyMetadata(null));
+            DependencyProperty.RegisterAttached("SortGlyphDescending", typeof(ImageSource), typeof(ListViewSort), new UIPropertyMetadata(null));
 
         #endregion
 
@@ -174,7 +225,7 @@ namespace CustomControls.WPF.Behaviors
 
         // Using a DependencyProperty as the backing store for SortedColumn.  This enables animation, styling, binding, etc...
         private static readonly DependencyProperty SortedColumnHeaderProperty =
-            DependencyProperty.RegisterAttached("SortedColumnHeader", typeof(GridViewColumnHeader), typeof(GridViewSort), new UIPropertyMetadata(null));
+            DependencyProperty.RegisterAttached("SortedColumnHeader", typeof(GridViewColumnHeader), typeof(ListViewSort), new UIPropertyMetadata(null));
 
         #endregion
 
