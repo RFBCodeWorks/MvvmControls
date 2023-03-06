@@ -47,8 +47,9 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
 
     /// <remarks><br/> - Explicitly implements <see cref="IRangeControl"/> </remarks>
     public abstract class XNumericSetterBase<T> : ValueSetterBase<T>
-    where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
+        where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
     {
+
         /// <summary>
         /// Create the XML Numeric Setter
         /// </summary>
@@ -75,7 +76,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
             }
             set
             {
-                if (ValueField != null &&  ValueField.Equals(value)) return;
+                if (ValueField != null && ValueField.Equals(value)) return;
                 base.IsSettingValue = true;
                 if (IsWithinRange(value))
                 {
@@ -83,7 +84,8 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
                     ValueField = value;
                     OnPropertyChanged(nameof(Value));
                     OnValueChanged();
-                }else
+                }
+                else
                 {
                     InvalidValueSubmitted?.Invoke(this, new(value));
                 }
