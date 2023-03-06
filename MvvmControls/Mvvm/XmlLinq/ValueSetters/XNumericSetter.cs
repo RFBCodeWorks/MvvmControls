@@ -30,6 +30,20 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
         protected override bool TryParse(string text, out double result) => double.TryParse(text, out result);
     }
 
+    /// <summary>
+    /// Provides a way to interact with an <see cref="IXValueObject"/> to set it to a <see cref="long"/> value
+    /// </summary>
+    /// <inheritdoc/>
+    public class XLongSetter : XNumericSetterBase<long>
+    {
+        /// <inheritdoc/>
+        public XLongSetter(IXValueObject xValueProvider) : base(xValueProvider) { Maximum = long.MaxValue; }
+        /// <inheritdoc/>
+        protected override bool IsWithinRange(long value) => value <= Maximum && value >= Minimum;
+        /// <inheritdoc/>
+        protected override bool TryParse(string text, out long result) => long.TryParse(text, out result);
+    }
+
 
     /// <remarks><br/> - Explicitly implements <see cref="IRangeControl"/> </remarks>
     public abstract class XNumericSetterBase<T> : ValueSetterBase<T>
