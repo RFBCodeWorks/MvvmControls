@@ -27,7 +27,7 @@
 //            {
 //                case XObjectChange.Value:
 //                    ValueChanged?.Invoke(this, new EventArgs());
-//                    OnPropertyChanged(nameof(Value));
+//                    OnPropertyChanged(EventArgSingletons.ValueChangedArgs);
 //                    break;
 //                default:
 //                    throw new NotImplementedException($"Unexepected XObjectChangeEventArg value of type: {e.ObjectChange}");

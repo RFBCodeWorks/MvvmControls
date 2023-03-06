@@ -9,7 +9,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
     public class XIntegerSetter : XNumericSetterBase<int>
     {
         /// <inheritdoc/>
-        public XIntegerSetter(IXValueObject xValueProvider) : base(xValueProvider) { Maximum = int.MaxValue; }
+        public XIntegerSetter(IXValueObject xValueProvider) : base(xValueProvider) { Maximum = int.MaxValue; Minimum = int.MinValue; }
         /// <inheritdoc/>
         protected override bool IsWithinRange(int value) => value <= Maximum && value >= Minimum;
         /// <inheritdoc/>
@@ -23,7 +23,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
     public class XDoubleSetter : XNumericSetterBase<double>
     {
         /// <inheritdoc/>
-        public XDoubleSetter(IXValueObject xValueProvider) : base(xValueProvider) { Maximum = double.MaxValue; }
+        public XDoubleSetter(IXValueObject xValueProvider) : base(xValueProvider) { Maximum = double.MaxValue; Minimum = double.MinValue; }
         /// <inheritdoc/>
         protected override bool IsWithinRange(double value) => value <= Maximum && value >= Minimum;
         /// <inheritdoc/>
@@ -37,7 +37,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
     public class XLongSetter : XNumericSetterBase<long>
     {
         /// <inheritdoc/>
-        public XLongSetter(IXValueObject xValueProvider) : base(xValueProvider) { Maximum = long.MaxValue; }
+        public XLongSetter(IXValueObject xValueProvider) : base(xValueProvider) { Maximum = long.MaxValue; Minimum = long.MinValue; }
         /// <inheritdoc/>
         protected override bool IsWithinRange(long value) => value <= Maximum && value >= Minimum;
         /// <inheritdoc/>
@@ -80,9 +80,9 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
                 base.IsSettingValue = true;
                 if (IsWithinRange(value))
                 {
+                    OnPropertyChanging(ValueChangedArgs);
                     XValueProvider.Value = ConvertToString(value);
                     ValueField = value;
-                    OnPropertyChanged(nameof(Value));
                     OnValueChanged();
                 }
                 else
@@ -97,12 +97,40 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
         /// <summary>
         /// The minimum value to accept
         /// </summary>
-        public virtual T Minimum { get; set; }
+        public virtual T Minimum 
+        { 
+            get => Min;
+            set
+            {
+                if (!Min.Equals(value))
+                {
+                    if (Min.CompareTo(Min) > 0) throw new ArgumentException("Minimum value cannot be greater than Maximum value");
+                    OnPropertyChanging(EventArgSingletons.MinimumChangedArgs);
+                    Min = value;
+                    OnPropertyChanged(EventArgSingletons.MinimumChangedArgs);
+                }
+            } 
+        }
+        private T Min;
 
         /// <summary>
         /// The Maximum value to accept
         /// </summary>
-        public virtual T Maximum { get; set; }
+        public virtual T Maximum 
+        { 
+            get => Max;
+            set
+            {
+                if (!Max.Equals(value))
+                {
+                    if (Max.CompareTo(Min) < 0) throw new ArgumentException("Maximum value cannot be lower than Minimum value");
+                    OnPropertyChanging(EventArgSingletons.MaximumChangedArgs);
+                    Max = value;
+                    OnPropertyChanged(EventArgSingletons.MaximumChangedArgs);
+                }
+            } 
+        }
+        private T Max;
 
         /// <summary>
         /// Converts the value to a string for saving to the XObject

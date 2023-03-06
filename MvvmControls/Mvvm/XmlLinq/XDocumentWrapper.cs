@@ -89,9 +89,15 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// Raise the <see cref="PropertyChanged"/> event
         /// </summary>
         /// <param name="propertyName"></param>
-        protected virtual void OnPropertyChanged(string propertyName = "")
+        protected void OnPropertyChanged(string propertyName = "")
         {
-            PropertyChanged?.Invoke(this, new(propertyName));
+            OnPropertyChanged(string.IsNullOrWhiteSpace(propertyName) ? ObservableObject.INotifyAllProperties : new(propertyName));
+        }
+
+        /// <inheritdoc cref="OnPropertyChanged(string)"/>
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e ?? Mvvm.ObservableObject.INotifyAllProperties);
         }
 
         private void SubScribe()
