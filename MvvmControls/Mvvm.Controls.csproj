@@ -18,7 +18,7 @@
         <Authors>Robert Brenckman</Authors>
         <Company />
         <Copyright>Copyright 2023</Copyright>
-        <Version>1.0.0.2</Version>
+        <Version>1.0.0.3</Version>
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
         <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
@@ -42,7 +42,7 @@
         </Description>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>StrongName.pfx</AssemblyOriginatorKeyFile>
-        <PackageReleaseNotes>Moved ListViewSort into correct namespace</PackageReleaseNotes>
+        <PackageReleaseNotes>Reverted update for CommunityToolkit.Mvvm dependency. Now requires 7.1.2 minimum instead of 8.10</PackageReleaseNotes>
         
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
@@ -60,10 +60,9 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="7.1.2" />
         <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
-        <PackageReference Include="System.Collections.Immutable" Version="7.0.0" />
-        <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+        <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Mvvm.ViewModel\Mvvm.IViewModel.csproj" />
