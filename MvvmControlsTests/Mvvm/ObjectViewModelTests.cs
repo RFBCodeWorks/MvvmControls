@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RFBCodeWorks.Mvvm.Tests
@@ -16,7 +17,7 @@ namespace RFBCodeWorks.Mvvm.Tests
         /// <summary>
         /// Run through the various tests for this ICommand
         /// </summary>
-        private void GenericCommandTests(TestViewModel ViewModel, ICommand TestCommand)
+        private void GenericCommandTests(TestViewModel ViewModel, IRelayCommand<string> TestCommand)
         {
             ViewModel.ObjectModel = new ObjectModel(false);
 
@@ -33,7 +34,7 @@ namespace RFBCodeWorks.Mvvm.Tests
         /// <summary>
         /// Run through the various tests for this ICommand
         /// </summary>
-        private void CommandTests(TestViewModel ViewModel, ICommand TestCommand)
+        private void CommandTests(TestViewModel ViewModel, IRelayCommand TestCommand)
         {
             //Command should not be able to execute without the object being set
             ViewModel.ObjectModel = null;
@@ -127,6 +128,19 @@ namespace RFBCodeWorks.Mvvm.Tests
             GenericCommandTests(ViewModel, ViewModel.FromAction_PropertyMethodGeneric);
         }
 
+        [TestMethod]
+        public void CommandFactory_FromMethodNameAsync()
+        {
+            var ViewModel = new TestViewModel();
+            CommandTests(ViewModel, ViewModel.FromTaskMethod);
+        }
+
+        [TestMethod]
+        public void CommandFactory_FromMethodNameAsyncGeneric()
+        {
+            var ViewModel = new TestViewModel();
+            GenericCommandTests(ViewModel, ViewModel.FromTaskMethod2);
+        }
 
     }
 
@@ -145,6 +159,8 @@ namespace RFBCodeWorks.Mvvm.Tests
             FromAction_PropertyMethod = this.CommandFactory.FromAction(new Action(() => ObjectModel.TestProperty.TestState.SetState()));
             FromAction_PropertyMethodGeneric = this.CommandFactory.FromAction<string>(new Action<string>((s) => this.ObjectModel.TestProperty.TestState.SetState(s)));
 
+            FromTaskMethod = this.CommandFactory.FromMethodNameAsync(nameof(ObjectModel.TaskMethod));
+            FromTaskMethod2 = this.CommandFactory.FromMethodNameAsync<string>(nameof(ObjectModel.TaskMethod));
         }
 
         public ButtonDefinition FromMethodName_ObjectMethod { get; }
@@ -155,7 +171,10 @@ namespace RFBCodeWorks.Mvvm.Tests
 
         public ButtonDefinition FromAction_PropertyMethod { get; }
         public ButtonDefinition<string> FromAction_PropertyMethodGeneric { get; }
-        
+
+        public AsyncButtonDefinition FromTaskMethod { get; }
+        public AsyncButtonDefinition<string> FromTaskMethod2 { get; }
+
     }
 
     public class ObjectModel
@@ -167,6 +186,9 @@ namespace RFBCodeWorks.Mvvm.Tests
         public bool? CommandResult { get; private set; } = null;
         public void SetResult() => CommandResult = ExpectedCommandResult;
         public void SetResult(string test) => CommandResult = ExpectedCommandResult;
+
+        public Task TaskMethod() => Task.CompletedTask;
+        public Task TaskMethod(string test) => Task.CompletedTask;
     }
 
     public class PropClass2
