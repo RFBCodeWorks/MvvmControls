@@ -296,7 +296,6 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
             {
                 e.Handled = t2.SelectedText.Length == 0;
             }
-            isPreviewingKey = false;
         }
 
         /// <inheritdoc/>
