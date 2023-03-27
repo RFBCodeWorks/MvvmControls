@@ -12,7 +12,7 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class UpDownBase<T> : UpDownBase
+    public abstract class UpDownBase<T> : UpDownBase, IUpDown
         where T : struct, IComparable<T>, IEquatable<T>, IFormattable
     {
         /// <summary>
@@ -286,6 +286,12 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
             get { return (T)GetValue(DefaultValueProperty); }
             set { SetValue(DefaultValueProperty, value); }
         }
+
+        object IUpDown.Value { get => this.Value; set { if (value is T val) this.Value = val; else throw new ArgumentException($"Cannot set Value property - expected value of type {typeof(T)}"); } }
+        object IUpDown.Minimum { get => this.Minimum; set { if (value is T val) this.Minimum = val; else throw new ArgumentException($"Cannot set Minimum property - expected value of type {typeof(T)}"); } }
+        object IUpDown.Maximum { get => this.Maximum; set { if (value is T val) this.Maximum = val; else throw new ArgumentException($"Cannot set Maximum property - expected value of type {typeof(T)}"); } }
+        object IUpDown.SmallChange { get => this.SmallChange; set { if (value is T val) this.SmallChange = val; else throw new ArgumentException($"Cannot set SmallChange property - expected value of type {typeof(T)}"); } }
+        object IUpDown.LargeChange { get => this.LargeChange; set { if (value is T val) this.LargeChange = val; else throw new ArgumentException($"Cannot set LargeChange property - expected value of type {typeof(T)}"); } }
 
         /// <inheritdoc cref="DefaultValue"/>
         public static readonly DependencyProperty DefaultValueProperty =
