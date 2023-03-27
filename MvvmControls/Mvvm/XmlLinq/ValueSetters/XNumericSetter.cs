@@ -14,6 +14,9 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
         protected override bool IsWithinRange(int value) => value <= Maximum && value >= Minimum;
         /// <inheritdoc/>
         protected override bool TryParse(string text, out int result) => int.TryParse(text, out result);
+        /// <inheritdoc/>
+        protected sealed override int ConvertDouble(double value) => Convert.ToInt32(value);
+
     }
 
     /// <summary>
@@ -28,6 +31,8 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
         protected override bool IsWithinRange(double value) => value <= Maximum && value >= Minimum;
         /// <inheritdoc/>
         protected override bool TryParse(string text, out double result) => double.TryParse(text, out result);
+        /// <inheritdoc/>
+        protected sealed override double ConvertDouble(double value) => value;
     }
 
     /// <summary>
@@ -42,11 +47,13 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
         protected override bool IsWithinRange(long value) => value <= Maximum && value >= Minimum;
         /// <inheritdoc/>
         protected override bool TryParse(string text, out long result) => long.TryParse(text, out result);
+        /// <inheritdoc/>
+        protected sealed override long ConvertDouble(double value) => Convert.ToInt64(value);
     }
 
 
     /// <remarks><br/> - Explicitly implements <see cref="IRangeControl"/> </remarks>
-    public abstract class XNumericSetterBase<T> : ValueSetterBase<T>
+    public abstract class XNumericSetterBase<T> : ValueSetterBase<T>, IXNumericSetter
         where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
     {
 
@@ -55,6 +62,19 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
         /// </summary>
         /// <param name="xValueProvider">The object that will provide the node whose value needs to be set</param>
         public XNumericSetterBase(IXValueObject xValueProvider) : base(xValueProvider) { }
+
+        event EventHandler IXNumericSetter.InvalidValueSubmitted
+        {
+            add
+            {
+                throw new NotImplementedException();
+            }
+
+            remove
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         /// <summary>
         /// Occurs when an invalid value has been submitted
@@ -130,6 +150,11 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
                 }
             } 
         }
+
+        double IXNumericSetter.Maximum { get => Convert.ToDouble(Maximum); set => Maximum = ConvertDouble(value); }
+        double IXNumericSetter.Minimum { get => Convert.ToDouble(Minimum); set => Minimum = ConvertDouble(value); }
+        double IXNumericSetter.Value { get => Convert.ToDouble(Value); set => Value = ConvertDouble(value); }
+
         private T Max;
 
         /// <summary>
@@ -144,6 +169,11 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
         /// </summary>
         /// <inheritdoc cref="int.TryParse(string, out int)"/>
         protected abstract bool TryParse(string text, out T result);
+
+        /// <summary>
+        /// This converts a double value to the corresponding <typeparamref name="T"/> value - used by the <see cref="IXNumericSetter" /> interface.
+        /// </summary>
+        protected abstract T ConvertDouble(double value);
 
         /// <summary>
         /// Check if the value is between the Min and Max values
