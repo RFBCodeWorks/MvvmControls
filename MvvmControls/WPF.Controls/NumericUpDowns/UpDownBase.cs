@@ -161,9 +161,15 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
 
         #endregion
 
-        private bool? ShouldDoLargeChange()
+        /// <summary>
+        /// TRUE = INCREASE \ FALSE = DECREASE
+        /// </summary>
+        private bool? LastPressedButton;
+
+        private bool? ShouldDoLargeChange(bool buttonID)
         {
-            bool isHeld = LastTick == default || LastTick.AddMilliseconds(5 * ButtonInterval) >= DateTime.Now;
+            bool isHeld = LastPressedButton == buttonID && LastTick.AddMilliseconds(5 * ButtonInterval) >= DateTime.Now;
+            LastPressedButton = buttonID;
             LastTick = DateTime.Now;
 
             //Number of ticks while held
@@ -212,7 +218,7 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         /// </summary>
         protected void IncreaseValueAction()
         {
-            bool? change = ShouldDoLargeChange();
+            bool? change = ShouldDoLargeChange(true);
             if (change is null)
                 return;
             else if (change is true)
@@ -221,13 +227,13 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
                 SmallIncrement();
         }
 
-        
+
         /// <summary>
         /// Action to perform when the DECREASE command is executed
         /// </summary>
         protected void DecreaseValueAction()
         {
-            bool? change = ShouldDoLargeChange();
+            bool? change = ShouldDoLargeChange(false);
             if (change is null)
                 return;
             else if (change is true)
@@ -240,17 +246,17 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         /// Increase the value when the button is pressed
         /// </summary>
         protected abstract void SmallIncrement();
-        
+
         /// <summary>
         /// Increase the value when the button is pressed
         /// </summary>
         protected abstract void LargeIncrement();
-        
+
         /// <summary>
         /// Decrease the value when the button is pressed
         /// </summary>
         protected abstract void SmallDecrement();
-        
+
         /// <summary>
         /// Decrease the value when the button is pressed
         /// </summary>
@@ -265,14 +271,14 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
                 e.Handled = true;
                 return;
             }
-            if (e.Key == Key.Up || e.Key == Key.OemPlus)
+            if (e.Key == Key.Up)
             {
-                IncreaseValueAction();
+                this.IncreaseValueCommand.Execute(null);
                 e.Handled = true;
             }
-            else if (e.Key == Key.Down || e.Key == Key.OemMinus)
+            else if (e.Key == Key.Down)
             {
-                DecreaseValueAction();
+                this.DecreaseValueCommand.Execute(null);
                 e.Handled = true;
             }
             else if (e.Key == Key.Enter)
@@ -282,13 +288,21 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
                     t.Focus();
                 e.Handled = true;
             }
+            else if (e.Key == Key.OemMinus && e.OriginalSource is TextBox t ) // Allow only typing one instance of the negative sign
+            {
+                e.Handled = t.CaretIndex != 0 && !t.Text.Contains("-");
+            }
+            else if (e.OriginalSource is TextBox t2 &&  t2.CaretIndex == 0 && t2.Text.Contains("-")) // Disallow text in front of the negative sign, but allow replacing it.
+            {
+                e.Handled = t2.SelectedText.Length == 0;
+            }
+            isPreviewingKey = false;
         }
 
         /// <inheritdoc/>
         protected override void OnPreviewTextInput(TextCompositionEventArgs e)
         {
-            bool isNum = double.TryParse(e.Text, out _);
-            e.Handled = !isNum;
+            e.Handled = e.Text != "-" && !double.TryParse(e.Text, out _);
         }
     }
 
