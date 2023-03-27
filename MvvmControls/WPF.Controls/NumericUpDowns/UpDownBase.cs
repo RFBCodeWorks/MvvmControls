@@ -306,5 +306,5 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         }
     }
 
-    
+
 }
