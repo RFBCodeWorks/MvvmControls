@@ -123,6 +123,9 @@
         <TabItem Header="  NumericUpDowns  ">
             <Views:NumericUpDownView/>
         </TabItem>
+        <TabItem Header="  XML.Linq  ">
+            <Views:XmlLinqView DataContext="{Binding XmlLinqViewModel}"/>
+        </TabItem>
         <TabItem Header="  Misc.  ">
             <cc:SimpleGrid RowCount="3">
                 <GroupBox Header="Masked Textbox" Grid.Row="0">

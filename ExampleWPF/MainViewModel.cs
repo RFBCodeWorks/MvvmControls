@@ -48,6 +48,8 @@ namespace ExampleWPF
         public RadioButtonDefinition EnableComboBox { get; } = new RadioButtonDefinition() { DisplayText = "Enable ComboBox", GroupName = "EC" };
         public RadioButtonDefinition DisableComboBox { get; } = new RadioButtonDefinition() { DisplayText = "Disable ComboBox", GroupName = "EC" };
 
+        public Models.XmlLinqModel XmlLinqViewModel { get; } = new();
+
         public TextValidationControl TextValidation { get; }
             = new TextValidationControl(new System.Text.RegularExpressions.Regex("^[0-9]{1,4}$"))
             {
