@@ -39,7 +39,10 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Controls
         public XmlLinq.ValueSetters.XIntegerSetter NodeValueSetter { get; }
 
         /// <inheritdoc cref="ValueSetters.XNumericSetterBase{T}.Value"/>
-        public int Value { get => NodeValueSetter.Value; set => NodeValueSetter.Value = value; }
+        public int Value { 
+            get => NodeValueSetter.Value; 
+            set => NodeValueSetter.Value = value; 
+        }
         
         /// <inheritdoc cref="ValueSetters.XNumericSetterBase{T}.Minimum"/>
         public int Minimum
