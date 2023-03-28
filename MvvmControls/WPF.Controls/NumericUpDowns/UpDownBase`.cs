@@ -199,7 +199,16 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         /// Set the Value of the control
         /// </summary>
         public static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register(nameof(Value), typeof(T), typeof(UpDownBase<T>), new PropertyMetadata(default(T)));
+            DependencyProperty.Register(nameof(Value), typeof(T), typeof(UpDownBase<T>),
+                new FrameworkPropertyMetadata(
+                    defaultValue: default(T),
+                    flags: FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                    propertyChangedCallback: HandleValueChanged,
+                    coerceValueCallback: null,
+                    isAnimationProhibited: default,
+                    defaultUpdateSourceTrigger: System.Windows.Data.UpdateSourceTrigger.Explicit
+                    )
+                );
 
         #endregion
 
@@ -309,6 +318,9 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         /// </summary>
         private static void DoNothingCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e) { }
 
+        /// <summary>
+        /// Coerce the Value to be within the Min/Max range, then return the coerced value.
+        /// </summary>
         private static object CoerceValue(DependencyObject d, object baseValue)
         {
             var obj = (UpDownBase<T>)d;
@@ -330,11 +342,21 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         }
 
         /// <summary>
-        /// Compares the Default Value to the Current Value and sets IsDirty
+        /// Compares the Default Value to the Current Value and sets IsDirty property.
         /// </summary>
-        private static void EvaluateIsDirty(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void HandleValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var obj = d as UpDownBase<T>;
+
+            // This block of code performs the coercion of the value in a way that propogates it to the bound object - This resolves issue #4 where bound object can be set to value outside the range while holding a button for increment/decrement
+            var coercedValue = CoerceValue(d, e.NewValue);
+            if (!coercedValue.Equals(e.NewValue))
+            {
+                obj.Value = (T)coercedValue;
+                return;
+            }
+            obj.GetBindingExpression(ValueProperty)?.UpdateSource();
+            
             obj.IsDirty = !EqualityComparer<T>.Default.Equals(obj.DefaultValue, obj.Value);
             obj.DecreaseValueCommand.NotifyCanExecuteChanged();
             obj.IncreaseValueCommand.NotifyCanExecuteChanged();
