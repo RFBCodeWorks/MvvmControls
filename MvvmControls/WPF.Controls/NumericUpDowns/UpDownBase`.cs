@@ -26,9 +26,11 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool IsGreaterThan(T reference, T value) => value.CompareTo(reference) > 0;
+        private static bool IsGreaterThan(T reference, T value) => value.CompareTo(reference) > 0;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool IsLessThan(T reference, T value) => value.CompareTo(reference) < 0;
+        private static bool IsLessThan(T reference, T value) => value.CompareTo(reference) < 0;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsNotEqual(T oldValue, T newValue) => !oldValue.Equals(newValue);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool IsGreaterThanMax(T value) => value.CompareTo(Maximum) > 0;
@@ -38,8 +40,6 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         private bool IsLessThanMin(T value) => value.CompareTo(Minimum) < 0;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool IsLessOrEqualToMin(T value) => value.CompareTo(Minimum) <= 0;
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool NotEqual(T oldValue, T newValue) => !oldValue.Equals(newValue);
 
         /// <summary>
         /// Overrides the MetaData for the derived class
@@ -52,12 +52,10 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         protected static void OverrideMetaData(Type type, T smallChange, T largeChange, T minValue, T maxValue)
         {
             DefaultStyleKeyProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(type));
-            MinimumProperty.OverrideMetadata(type, new PropertyMetadata(minValue, RangeUpdated, CoerceMinimum));
-            MaximumProperty.OverrideMetadata(type, new PropertyMetadata(maxValue, RangeUpdated, CoerceMaximum));
-            ValueProperty.OverrideMetadata(type, new PropertyMetadata(default(T), EvaluateIsDirty, CoerceValue));
-            DefaultValueProperty.OverrideMetadata(type, new PropertyMetadata(default(T), EvaluateIsDirty));
-            SmallChangeProperty.OverrideMetadata(type, new PropertyMetadata(smallChange, DoNothingCallBack, CoerceIncrements));
-            LargeChangeProperty.OverrideMetadata(type, new PropertyMetadata(largeChange, DoNothingCallBack, CoerceIncrements));
+            MinimumProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(minValue, RangeUpdated, CoerceMinimum));
+            MaximumProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(maxValue, RangeUpdated, CoerceMaximum));
+            SmallChangeProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(smallChange, DoNothingCallBack, CoerceIncrements));
+            LargeChangeProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(largeChange, DoNothingCallBack, CoerceIncrements));
 
             HorizontalContentAlignmentProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(HorizontalAlignment.Center));
             VerticalContentAlignmentProperty.OverrideMetadata(type, new FrameworkPropertyMetadata(VerticalAlignment.Center));
@@ -121,7 +119,7 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
             set
             {
                 var oldVal = Minimum;
-                if (NotEqual(oldVal, value))
+                if (IsNotEqual(oldVal, value))
                 {
                     if (IsGreaterThanMax(value)) throw new ArgumentException("Minimum cannot be greater than Maximum!");
                     SetValue(MinimumProperty, value);
@@ -133,13 +131,13 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         /// Set the Minimum value for this control
         /// </summary>
         public static readonly DependencyProperty MinimumProperty =
-            DependencyProperty.Register(nameof(Minimum), typeof(T), typeof(UpDownBase<T>), new PropertyMetadata(default));
+            DependencyProperty.Register(nameof(Minimum), typeof(T), typeof(UpDownBase<T>), new FrameworkPropertyMetadata(default(T)));
 
         private static object CoerceMinimum(DependencyObject d, object baseValue)
         {
             var obj = (UpDownBase<T>)d;
             var value = (T)baseValue;
-            if (obj.IsLessThan(obj.Maximum, value))
+            if (IsLessThan(obj.Maximum, value))
                 return value;
             else
             {
@@ -149,6 +147,7 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         #endregion
 
         #region < Maximum >
+
         /// <summary>
         /// The maximum value the control allows
         /// </summary>
@@ -158,7 +157,7 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
             set
             {
                 var oldVal = Maximum;
-                if (NotEqual(oldVal, value))
+                if (IsNotEqual(oldVal, value))
                 {
                     if (IsLessThanMin(value)) throw new ArgumentException("Maximum cannot be lower than minimum!");
                     SetValue(MaximumProperty, value);
@@ -170,13 +169,13 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         /// Set the Maximum value for this control
         /// </summary>
         public static readonly DependencyProperty MaximumProperty =
-            DependencyProperty.Register(nameof(Maximum), typeof(T), typeof(UpDownBase<T>), new PropertyMetadata(default));
+            DependencyProperty.Register(nameof(Maximum), typeof(T), typeof(UpDownBase<T>), new FrameworkPropertyMetadata(default(T)));
 
         private static object CoerceMaximum(DependencyObject d, object baseValue)
         {
             var obj = (UpDownBase<T>)d;
             var value = (T)baseValue;
-            if (obj.IsGreaterThan(obj.Minimum, value))
+            if (IsGreaterThan(obj.Minimum, value))
                 return value;
             else
             {
@@ -186,6 +185,7 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         #endregion
 
         #region < Value >
+
         /// <summary>
         /// The T value of the control
         /// </summary>
@@ -214,9 +214,9 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
             set
             {
                 var oldVal = SmallChange;
-                if (NotEqual(oldVal, value))
+                if (IsNotEqual(oldVal, value))
                 {
-                    if (IsGreaterThanMax(value)) throw new ArgumentException("Increment value cannot be greater than Maximum Value!");
+                    if (IsGreaterThanMax(value)) throw new ArgumentException("SmallChange Increment value cannot be greater than Maximum Value!");
                     SetValue(SmallChangeProperty, value);
                 }
             }
@@ -224,7 +224,7 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
 
         /// <inheritdoc cref="SmallChange"/>
         public static readonly DependencyProperty SmallChangeProperty =
-            DependencyProperty.Register(nameof(SmallChange), typeof(T), typeof(UpDownBase<T>), new PropertyMetadata(default));
+            DependencyProperty.Register(nameof(SmallChange), typeof(T), typeof(UpDownBase<T>), new FrameworkPropertyMetadata(default(T), DoNothingCallBack, CoerceIncrements));
 
         /// <summary>
         /// The value to increment/decrement the control by when pressing a button
@@ -235,9 +235,9 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
             set
             {
                 var oldVal = SmallChange;
-                if (NotEqual(oldVal, value))
+                if (IsNotEqual(oldVal, value))
                 {
-                    if (IsGreaterThanMax(value)) throw new ArgumentException("Increment value cannot be greater than Maximum Value!");
+                    if (IsGreaterThanMax(value)) throw new ArgumentException("LargeChange Increment value cannot be greater than Maximum Value!");
                     SetValue(LargeChangeProperty, value);
                 }
             }
@@ -245,7 +245,7 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
 
         /// <inheritdoc cref="LargeChange"/>
         public static readonly DependencyProperty LargeChangeProperty =
-            DependencyProperty.Register(nameof(LargeChange), typeof(T), typeof(UpDownBase<T>), new PropertyMetadata(default));
+            DependencyProperty.Register(nameof(LargeChange), typeof(T), typeof(UpDownBase<T>), new FrameworkPropertyMetadata(default(T), DoNothingCallBack, CoerceIncrements));
 
         private static object CoerceIncrements(DependencyObject d, object baseValue)
         {
@@ -287,17 +287,22 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
             set { SetValue(DefaultValueProperty, value); }
         }
 
+        /// <inheritdoc cref="DefaultValue"/>
+        public static readonly DependencyProperty DefaultValueProperty =
+            DependencyProperty.Register(nameof(DefaultValue), typeof(T), typeof(UpDownBase<T>), new FrameworkPropertyMetadata(default(T), HandleValueChanged));
+
+        #endregion
+
+        #region < IUpDown Interface >
+
         object IUpDown.Value { get => this.Value; set { if (value is T val) this.Value = val; else throw new ArgumentException($"Cannot set Value property - expected value of type {typeof(T)}"); } }
         object IUpDown.Minimum { get => this.Minimum; set { if (value is T val) this.Minimum = val; else throw new ArgumentException($"Cannot set Minimum property - expected value of type {typeof(T)}"); } }
         object IUpDown.Maximum { get => this.Maximum; set { if (value is T val) this.Maximum = val; else throw new ArgumentException($"Cannot set Maximum property - expected value of type {typeof(T)}"); } }
         object IUpDown.SmallChange { get => this.SmallChange; set { if (value is T val) this.SmallChange = val; else throw new ArgumentException($"Cannot set SmallChange property - expected value of type {typeof(T)}"); } }
         object IUpDown.LargeChange { get => this.LargeChange; set { if (value is T val) this.LargeChange = val; else throw new ArgumentException($"Cannot set LargeChange property - expected value of type {typeof(T)}"); } }
 
-        /// <inheritdoc cref="DefaultValue"/>
-        public static readonly DependencyProperty DefaultValueProperty =
-            DependencyProperty.Register(nameof(DefaultValue), typeof(T), typeof(UpDownBase<T>), new PropertyMetadata(default(T), EvaluateIsDirty));
-
         #endregion
+
 
         /// <summary>
         /// PropertyChangedCallback that does nothing
