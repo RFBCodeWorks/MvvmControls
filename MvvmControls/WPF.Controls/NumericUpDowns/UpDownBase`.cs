@@ -366,6 +366,11 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         {
             var obj = d as UpDownBase<T>;
             EvaluateIsValid(obj, obj.Value);
+            if (!obj.IsValid && !obj.AllowOutsideRange)
+            {
+                if (IsLessThan(obj.Minimum, obj.Value)) obj.Value = obj.Minimum;
+                else if (IsGreaterThan(obj.Maximum, obj.Value)) obj.Value = obj.Maximum;
+            }
         }
 
         /// <summary>
