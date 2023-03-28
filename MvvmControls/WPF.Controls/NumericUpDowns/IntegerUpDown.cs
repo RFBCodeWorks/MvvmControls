@@ -54,15 +54,20 @@ namespace RFBCodeWorks.WPF.Controls
         }
 
         /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)] 
         protected override void LargeDecrement() => Value -= LargeChange;
         /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override void LargeIncrement() => Value += LargeChange;
         /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override void SmallDecrement() => Value -= SmallChange;
         /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override void SmallIncrement() => Value += SmallChange;
 
         /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected sealed override bool TryParse(string pastedValue, out int value) => int.TryParse(pastedValue, out value);
     }
 

@@ -28,15 +28,7 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         /// </summary>
         public RelayCommand DecreaseValueCommand { get; init; }
 
-        /// <summary>
-        /// The time that the button was initially pressed 
-        /// </summary>
-        DateTime InitialPress;
-        /// <summary>
-        /// The time the last button press was accepted
-        /// </summary>
-        DateTime LastTick;
-
+        
         #region < IsReadOnly >
         /// <summary>Determine if the value of the control can be changed by the user interacting with the buttons</summary>
         public bool IsReadOnly
@@ -83,6 +75,7 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         #endregion
 
         #region < Button Delay>
+
         /// <inheritdoc cref="System.Windows.Controls.Primitives.RepeatButton.Delay"/>
         public int ButtonDelay
         {
@@ -97,6 +90,7 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         #endregion
 
         #region < Button Interval >
+
         /// <inheritdoc cref="System.Windows.Controls.Primitives.RepeatButton.Delay"/>
         public int ButtonInterval
         {
@@ -161,10 +155,12 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
 
         #endregion
 
-        /// <summary>
-        /// TRUE = INCREASE \ FALSE = DECREASE
-        /// </summary>
+        /// <summary> The time the last button press was accepted </summary>
+        private DateTime LastTick;
+        /// <summary> TRUE = INCREASE \ FALSE = DECREASE </summary>
         private bool? LastPressedButton;
+        private int totalTicks;
+        private int tickCount;
 
         private bool? ShouldDoLargeChange(bool buttonID)
         {
@@ -175,7 +171,6 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
             //Number of ticks while held
             if (!isHeld)
             {
-                InitialPress = LastTick;
                 tickCount = 1;
                 totalTicks = 1;
                 return false;
@@ -210,8 +205,6 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
                 return true;
             }
         }
-        int totalTicks;
-        int tickCount;
 
         /// <summary>
         /// Action to perform when the INCREASE command is executed
