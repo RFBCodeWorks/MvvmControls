@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 //using CommunityToolkit.Mvvm;
 //using CommunityToolkit.Mvvm.ComponentModel;
@@ -192,6 +194,87 @@ namespace RFBCodeWorks.Mvvm
 
             #endregion
 
+
+            #region < FromTask >
+
+            /// <summary>
+            /// Create a new <see cref="ButtonDefinition"/> that executes an execute that does not require any parameters
+            /// </summary>
+            /// <inheritdoc cref="ButtonDefinition.ButtonDefinition(Action, Func{bool})" path="*"/>
+            public virtual AsyncButtonDefinition FromTask(Func<Task> execute, Func<bool> canExecute = null, string toolTip = null, string displayText = null)
+            {
+                if (execute is null) throw new ArgumentNullException(nameof(execute));
+                var cmd = new AsyncButtonDefinition(
+                    execute,
+                    canExecute ?? DefaultCanExecuteFunction
+                    )
+                {
+                    DisplayText = displayText,
+                    ToolTip = toolTip,
+                };
+                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                return cmd;
+            }
+
+            /// <summary>
+            /// Create a new <see cref="ButtonDefinition"/> that executes an execute that does not require any parameters
+            /// </summary>
+            /// <inheritdoc cref="ButtonDefinition.ButtonDefinition(Action, Func{bool})" path="*"/>
+            public virtual AsyncButtonDefinition FromTask(Func<CancellationToken, Task> execute, Func<bool> canExecute = null, string toolTip = null, string displayText = null)
+            {
+                if (execute is null) throw new ArgumentNullException(nameof(execute));
+                var cmd = new AsyncButtonDefinition(
+                    execute,
+                    canExecute ?? DefaultCanExecuteFunction
+                    )
+                {
+                    DisplayText = displayText,
+                    ToolTip = toolTip,
+                };
+                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                return cmd;
+            }
+
+            /// <summary>
+            /// Create a new <see cref="RelayCommand{O}"/>
+            /// </summary>
+            /// <inheritdoc cref="ButtonDefinition{T}.ButtonDefinition(Action{T}, Func{T, bool})" path="*"/>
+            public virtual AsyncButtonDefinition<O> FromTask<O>(Func<O, CancellationToken, Task> execute, Func<O, bool> canExecute = null, string toolTip = null, string displayText = null)
+            {
+                if (execute is null) throw new ArgumentNullException(nameof(execute));
+                var cmd = new AsyncButtonDefinition<O>(
+                    execute,
+                    canExecute ?? DefaultCanExecuteFunction
+                    )
+                {
+                    DisplayText = displayText,
+                    ToolTip = toolTip,
+                };
+                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                return cmd;
+            }
+
+            /// <summary>
+            /// Create a new <see cref="RelayCommand{O}"/>
+            /// </summary>
+            /// <inheritdoc cref="ButtonDefinition{T}.ButtonDefinition(Action{T}, Func{T, bool})" path="*"/>
+            public virtual AsyncButtonDefinition<O> FromTask<O>(Func<O, Task> execute, Func<O, bool> canExecute = null, string toolTip = null, string displayText = null)
+            {
+                if (execute is null) throw new ArgumentNullException(nameof(execute));
+                var cmd = new AsyncButtonDefinition<O>(
+                    execute,
+                    canExecute ?? DefaultCanExecuteFunction
+                    )
+                {
+                    DisplayText = displayText,
+                    ToolTip = toolTip,
+                };
+                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                return cmd;
+            }
+
+            #endregion
+
             #region < FromMethodName >
 
             /// <summary>
@@ -209,10 +292,8 @@ namespace RFBCodeWorks.Mvvm
                 var t = typeof(T);
                 var m = t.GetMethod(methodName.Trim(), Array.Empty<Type>());
 
-                return new Action(() =>
-                {
-                    m.Invoke(ViewModel.ObjectModel, null);
-                });
+                void Invoker() => m.Invoke(ViewModel.ObjectModel, null);
+                return Invoker;
             }
 
             /// <summary>
@@ -230,10 +311,8 @@ namespace RFBCodeWorks.Mvvm
                 var t = typeof(T);
                 var m = t.GetMethod(methodName, new Type[1] { typeof(O) });
 
-                return new Action<O>((o) =>
-                {
-                    m.Invoke(ViewModel.ObjectModel, new object[] { o });
-                });
+                void Invoker(O obj) => m.Invoke(ViewModel.ObjectModel, new object[] { obj });
+                return Invoker;
             }
 
 
@@ -284,7 +363,108 @@ namespace RFBCodeWorks.Mvvm
             }
 
             #endregion
-            
+
+            #region < FromMethodNameAsync >
+
+            /// <summary>
+            /// Use reflection to retrieve a parameterless method by its method name, then create an execute to invoke against the <see cref="ObjectViewModel{T}.ObjectModel"/>
+            /// </summary>
+            /// <param name="methodName">
+            /// use the 'nameof()' function to retrieve the method name. Ex: <Br/>
+            /// nameof(ViewModel.ObjectModel.MethodToCall)
+            /// </param>
+            protected Func<Task> CreateTaskFromMethodName(string methodName)
+            {
+                if (methodName is null) throw new ArgumentNullException(nameof(methodName));
+                if (string.IsNullOrWhiteSpace(methodName)) throw new ArgumentException("Method Name must not be empty", nameof(methodName));
+
+                var t = typeof(T);
+                var m = t.GetMethod(methodName.Trim(), Array.Empty<Type>());
+                if (!(m.ReturnType == typeof(Task) || m.ReturnType.IsSubclassOf(typeof(Task)))) // Check IF NOT a type of task
+                {
+                    throw new ArgumentException($"The method retrieved by the name of '{m.Name}' does not return a Task.", nameof(methodName));
+                }
+                async Task Invoker()
+                {
+                    await (m.Invoke(ViewModel.ObjectModel, null) as Task);
+                }
+                return Invoker;
+            }
+
+            /// <summary>
+            /// Use reflection to retrieve a method by its method name, then create an execute to invoke against the <see cref="ObjectViewModel{T}.ObjectModel"/>
+            /// </summary>
+            /// <param name="methodName">
+            /// use the 'nameof()' function to retrieve the method name. Ex: <Br/>
+            /// nameof(ViewModel.ObjectModel.MethodToCall(<typeparamref name="O"/>)
+            /// </param>
+            protected Func<O,Task> CreateTaskFromMethodName<O>(string methodName)
+            {
+                if (methodName is null) throw new ArgumentNullException(nameof(methodName));
+                if (string.IsNullOrWhiteSpace(methodName)) throw new ArgumentException("Method Name must not be empty", nameof(methodName));
+
+                var t = typeof(T);
+                var m = t.GetMethod(methodName, new Type[1] { typeof(O) });
+                if (!(m.ReturnType == typeof(Task) || m.ReturnType.IsSubclassOf(typeof(Task)))) // Check IF NOT a type of task
+                {
+                    throw new ArgumentException($"The method retrieved by the name of '{m.Name}' does not return a Task.", nameof(methodName));
+                }
+                async Task Invoker(O obj)
+                {
+                    await (m.Invoke(ViewModel.ObjectModel, new object[] { obj }) as Task);
+                }
+                return Invoker;
+            }
+
+
+            /// <returns>new <see cref="ButtonDefinition"/></returns>
+            /// <inheritdoc cref="CreateTaskFromMethodName(string)"/>
+            public virtual AsyncButtonDefinition FromMethodNameAsync(string methodName, Func<bool> canExecute, string toolTip = null, string displayText = null)
+            {
+                var cmd = new AsyncButtonDefinition(
+                    this.CreateTaskFromMethodName(methodName),
+                    CanBeInvoked(canExecute ?? throw new ArgumentNullException(nameof(canExecute)))
+                    )
+                {
+                    ToolTip = toolTip,
+                    DisplayText = displayText
+                };
+                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                return cmd;
+            }
+
+            /// <returns>new <see cref="ButtonDefinition"/></returns>
+            /// <inheritdoc cref="CreateTaskFromMethodName(string)"/>
+            public AsyncButtonDefinition FromMethodNameAsync(string methodName, string toolTip = null, string displayText = null)
+            {
+                return FromMethodNameAsync(methodName, Primitives.AbstractCommand.ReturnTrue, toolTip, displayText);
+            }
+
+            /// <returns>new <see cref="ButtonDefinition{O}"/></returns>
+            /// <inheritdoc cref="CreateTaskFromMethodName{O}(string)"/>
+            public virtual AsyncButtonDefinition<O> FromMethodNameAsync<O>(string methodName, Func<O, bool> canExecute, string toolTip = null, string displayText = null)
+            {
+                var cmd = new AsyncButtonDefinition<O>(
+                    this.CreateTaskFromMethodName<O>(methodName),
+                    CanBeInvoked(canExecute ?? throw new ArgumentNullException(nameof(canExecute)))
+                    )
+                {
+                    ToolTip = toolTip,
+                    DisplayText = displayText
+                };
+                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                return cmd;
+            }
+
+            /// <returns>new <see cref="ButtonDefinition{O}"/></returns>
+            /// <inheritdoc cref="CreateTaskFromMethodName{O}(string)"/>
+            public AsyncButtonDefinition<O> FromMethodNameAsync<O>(string methodName, string toolTip = null, string displayText = null)
+            {
+                return FromMethodNameAsync<O>(methodName, Primitives.AbstractCommand<O>.ReturnTrue, toolTip, displayText);
+            }
+
+            #endregion
+
             /// <summary>
             /// Create a Two-State button
             /// </summary>

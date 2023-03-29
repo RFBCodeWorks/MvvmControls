@@ -135,7 +135,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         protected virtual void OnValueChange()
         {
             ValueChanged?.Invoke(this, EventArgs.Empty);
-            OnPropertyChanged(nameof(Value));
+            OnPropertyChanged(EventArgSingletons.ValueChangedArgs);
         }
 
         private void XAttrField_Changed(object sender, XObjectChangeEventArgs e)

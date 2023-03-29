@@ -49,10 +49,16 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// <summary>
         /// Raise the <see cref="PropertyChanged"/> event
         /// </summary>
-        /// <param name="propertyName"></param>
-        protected virtual void OnPropertyChanged(string propertyName = "")
+        /// <param name="propertyName">name of the property that changed</param>
+        protected void OnPropertyChanged(string propertyName = "")
         {
-            PropertyChanged?.Invoke(this, new(propertyName));
+            OnPropertyChanged(string.IsNullOrWhiteSpace(propertyName) ? ObservableObject.INotifyAllProperties : new(propertyName));
+        }
+
+        /// <inheritdoc cref="OnPropertyChanged(string)"/>
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, e ?? Mvvm.ObservableObject.INotifyAllProperties);
         }
 
         /// <inheritdoc cref="XElement.Value"/>
@@ -102,7 +108,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
                     break;
                 case XObjectChangedEventEvaluation.ChangeType.ValueChanged:
                     ValueChanged?.Invoke(this, EventArgs.Empty);
-                    OnPropertyChanged(nameof(Value));
+                    OnPropertyChanged(EventArgSingletons.ValueChangedArgs);
                     break;
                 case XObjectChangedEventEvaluation.ChangeType.DescendantAdded:
                 case XObjectChangedEventEvaluation.ChangeType.DescendantRemoved:

@@ -19,10 +19,10 @@
         <Authors>Robert Brenckman</Authors>
         <Company />
         <Copyright>Copyright 2023</Copyright>
-        <Version>1.0.0.2</Version>
+        <Version>1.0.0.3</Version>
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
         <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
-        <PackageReleaseNotes>Fixed DialogService constructor ambiguity</PackageReleaseNotes>
+        <PackageReleaseNotes>Fixed warning regarding the package dependencies</PackageReleaseNotes>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
     </PropertyGroup>
 

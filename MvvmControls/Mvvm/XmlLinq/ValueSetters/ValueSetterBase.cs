@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
 {
@@ -41,12 +42,17 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.ValueSetters
         protected bool IsSettingValue { get; set; }
 
         /// <summary>
-        /// Raises the ValueChanged event
+        /// Args to be used with <see cref="INotifyPropertyChanged"/> and <see cref="INotifyPropertyChanging"/>
+        /// </summary>
+        protected static INotifyArgs ValueChangedArgs => EventArgSingletons.ValueChangedArgs;
+
+        /// <summary>
+        /// Raises the ValueChanged event, then raises the <see cref="System.ComponentModel.INotifyPropertyChanged"/> event.
         /// </summary>
         protected virtual void OnValueChanged(EventArgs e = null)
         {
-            ValueChanged?.Invoke(this, e ?? new());
-            OnPropertyChanged(nameof(Value));
+            ValueChanged?.Invoke(this, e ?? EventArgs.Empty);
+            OnPropertyChanged(ValueChangedArgs);
         }
 
         private void XValueProvider_ValueChanged(object sender, EventArgs e)

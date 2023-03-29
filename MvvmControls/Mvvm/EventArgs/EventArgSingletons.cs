@@ -25,5 +25,14 @@ namespace RFBCodeWorks.Mvvm
         public static readonly INotifyArgs ItemSourceItems = new(nameof(IItemSource.Items));
         public static readonly INotifyArgs DisplayMemberPath = new(nameof(IItemSource.DisplayMemberPath));
 
+        /// <summary> Value </summary>
+        public static readonly INotifyArgs ValueChangedArgs = new INotifyArgs(nameof(Mvvm.IRangeControl.Value));
+
+        /// <summary> Minimum </summary>
+        public static readonly INotifyArgs MinimumChangedArgs = new INotifyArgs(nameof(Mvvm.IRangeControl.Minimum));
+
+        /// <summary> Maximum </summary>
+        public static readonly INotifyArgs MaximumChangedArgs = new INotifyArgs(nameof(Mvvm.IRangeControl.Maximum));
+
     }
 }
