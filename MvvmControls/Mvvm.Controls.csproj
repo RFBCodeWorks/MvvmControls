@@ -18,7 +18,7 @@
         <Authors>Robert Brenckman</Authors>
         <Company />
         <Copyright>Copyright 2023</Copyright>
-        <Version>1.0.0.3</Version>
+        <Version>1.0.0.4</Version>
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
         <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
@@ -42,7 +42,8 @@
         </Description>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>StrongName.pfx</AssemblyOriginatorKeyFile>
-        <PackageReleaseNotes>Reverted update for CommunityToolkit.Mvvm dependency. Now requires 7.1.2 minimum instead of 8.10</PackageReleaseNotes>
+        <PackageReleaseNotes>Various bugfixes, optimizations.
+</PackageReleaseNotes>
         
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
