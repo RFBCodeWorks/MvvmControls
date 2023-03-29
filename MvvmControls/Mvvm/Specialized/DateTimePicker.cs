@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-#if NETCOREAPP3_0_OR_GREATER
-using System.Collections.Immutable;
-#endif
 using System.Linq;
 
 namespace RFBCodeWorks.Mvvm.Specialized
