@@ -14,7 +14,7 @@ namespace ExampleWPF
     {
         public MainViewModel()
         {
-
+            ResetTextboxBtn = new ButtonDefinition(this.TextCBoxDef.Refresh) { DisplayText = "Reset Text"};
         }
 
         public DragDropHandler DragDropHandler { get; } = new DragDropHandler();
@@ -57,6 +57,15 @@ namespace ExampleWPF
                 ToolTip = "Text must be a numeric value between 1 and 4 digits long, ex: 0 -> 9999",
                 Text = "0"
             };
+
+        public RFBCodeWorks.Mvvm.TextControlDefinition TextCBoxDef { get; }
+            = new TextControlDefinition()
+            {
+                IsReadOnly = false,
+                GetText = () => "This textbox has been reset to its default value"
+            };
+
+        public ButtonDefinition ResetTextboxBtn { get; }
 
 
         /// <summary>
