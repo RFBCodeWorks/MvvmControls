@@ -165,6 +165,25 @@ namespace RFBCodeWorks.Mvvm
         {
             RefreshCommand = new ButtonDefinition(Refresh, () => CanRefresh());
         }
+        /// <inheritdoc/>
+        public override T[] Items
+        {
+            get
+            {
+                if (base.Items is null && !itemsInitialized)
+                {
+                    Refresh();
+                    itemsInitialized = true;
+                }
+                return base.Items;
+            }
+            set
+            {
+                base.Items = value;
+                itemsInitialized = true;
+            }
+        }
+        private bool itemsInitialized;
 
         /// <inheritdoc/>
         public Func<T[]> RefreshFunc { get; init; }

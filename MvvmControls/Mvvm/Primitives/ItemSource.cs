@@ -90,7 +90,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <summary>
         /// Binding for <see cref="ItemsControl.ItemsSource"/>
         /// </summary>
-        public E Items
+        public virtual E Items
         {
             get { return ItemSourceField; }
             set 
