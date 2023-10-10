@@ -20,6 +20,100 @@
         >
 
     <TabControl >
+        <TabItem Header="ListBoxes" DataContext="{Binding ListBoxTester}">
+            <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" >
+                <StackPanel >
+                    <GroupBox Header="ListBox Definition" IsEnabled="{Binding EnableDisableListBox.IsChecked}">
+            <!-- SimpleGrid that builds itself per the specified Column/Row Counts -->
+            <cc:SimpleGrid AutoColumnWidth="Auto" AutoRowHeight="Auto"  RowCount="4" ColumnCount="3">
+                <TextBlock Text="Interact with this listbox     " Grid.Column="0" />
+                <ListBox 
+                    Behaviors:ControlDefinitions.ListBoxDefinition="{Binding ListBoxDefinition}" Grid.Row="1" Grid.ColumnSpan="2"
+                    Behaviors:DragSelectionHelper.IsDragSelectionEnabled="True"
+                    >
+                    <!-- The following Resources block allows the DragSelect functionality to work, highliting items as they are dragged over -->
+                    <ListBox.Resources>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="Behaviors:DragSelectionHelper.IsDragSelecting" Value="False" />
+                            <Style.Triggers>
+                                <Trigger Property="ListBoxItem.IsMouseOver" Value="True">
+                                    <Setter Property="Behaviors:DragSelectionHelper.IsDragSelecting" Value="True" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.Resources>
+                    <!-- A Multi-Item Selection Behavior will have to be defined to interact with the SelectedItems of a Listbox -->
+                    <!-- This is because a ListBox SelectedItems property is not bindable in xaml without helpers. -->
+                    <Interactions:Interaction.Behaviors>
+                        <Behaviors:MultiItemSelectionBehaviorString SelectedItems="{Binding ListBoxDefinition.SelectedItems}"/>
+                    </Interactions:Interaction.Behaviors>
+                </ListBox>
+                <TextBlock Text="This Listbox shows the currently selected items" Grid.Column="2" />
+                <!-- This listbox will be updated by the other listbox's MutliSelectionBehavior -->
+                <ListBox 
+                     IsEnabled="False" Grid.Row="1" Grid.Column="2"
+                    ItemsSource="{Binding ListBoxDefinition.SelectedItems}"
+                    />
+                <TextBlock Grid.Row="2" Text="Selected Index: " />
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ListBoxDefinition.SelectedIndex}" />
+                <TextBlock Grid.Row="3" Text="Selected Item: " />
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ListBoxDefinition.SelectedItem}" />
+            </cc:SimpleGrid>
+            </GroupBox>
+
+            </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+        <TabItem Header="ComboBoxes" DataContext="{Binding ComboxTester}">
+            <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" >
+                <StackPanel >
+                    <GroupBox Header="Enable / Disable Controls ( via Checkbox / RadioButton Definitions )" >
+                        <StackPanel>
+                            <CheckBox Behaviors:ControlDefinitions.CheckBoxDefinition="{Binding EnableDisableListBox}"/>
+                            <Separator Visibility="Hidden" Height="20"/>
+                            <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding EnableComboBox}"/>
+                            <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding DisableComboBox}"/>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="ComboBox Definition" IsEnabled="{Binding EnableComboBox.IsChecked}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Behaviors:ControlDefinitions.ComboBoxDefinition="{Binding ComboBoxDefinition}" Grid.ColumnSpan="2"/>
+                            <TextBlock Grid.Row="1" Text="Selected Index: " />
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ComboBoxDefinition.SelectedIndex}" />
+                            <TextBlock Grid.Row="2" Text="Selected Item: " />
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ComboBoxDefinition.SelectedItem}" />
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Refreshable ComboBox">
+                        <ComboBox Behaviors:ControlDefinitions.ComboBoxDefinition="{Binding RefreshableCmb}"/>
+                    </GroupBox>
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+        <TabItem Header="TextBoxes" DataContext="{Binding TextBoxTester}">
+            <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" >
+                <StackPanel >
+                    <GroupBox Header="Textbox with 'GetText' function utilized" >
+                        <cc:SimpleGrid ColumnCount="2" AutoColumnWidth="*" Margin="15">
+            <TextBox Behaviors:ControlDefinitions.TextControlDefinition="{Binding TextCBoxDef}" Grid.Column="0"/>
+            <Button Behaviors:ControlDefinitions.ButtonDefinition="{Binding ResetTextboxBtn}" Margin="25,0" Grid.Column="1"/>
+            </cc:SimpleGrid>
+            </GroupBox>
+            <GroupBox Header="Textbox Validation Control" >
+                <TextBox Behaviors:ControlDefinitions.TextControlDefinition="{Binding TextValidation, UpdateSourceTrigger=PropertyChanged}"/>
+            </GroupBox>
+            </StackPanel>
+            </ScrollViewer>
+        </TabItem>
         <TabItem Header="  Control Definitions  " >
             <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" >
                 <StackPanel >
@@ -35,23 +129,6 @@
                             <CheckBox IsChecked="{Binding WasLoaded}" Content="IWindowLoadingHandler.OnWindowLoaded" IsEnabled="False"/>
                             <CheckBox IsChecked="{Binding TriggerClosingWindowInterface}" Content="Enable the IWindowClosingYHandler test" IsThreeState="False"/>
                         </StackPanel>
-                    </GroupBox>
-                    <GroupBox Header="Textbox with 'GetText' function utilized" >
-                        <cc:SimpleGrid ColumnCount="2" AutoColumnWidth="*" Margin="15">
-                            <TextBox Behaviors:ControlDefinitions.TextControlDefinition="{Binding TextCBoxDef}" Grid.Column="0"/>
-                            <Button Behaviors:ControlDefinitions.ButtonDefinition="{Binding ResetTextboxBtn}" Margin="25,0" Grid.Column="1"/>
-                        </cc:SimpleGrid>
-                    </GroupBox>
-                    <GroupBox Header="Enable / Disable Controls ( via Checkbox / RadioButton Definitions )" >
-                        <StackPanel>
-                            <CheckBox Behaviors:ControlDefinitions.CheckBoxDefinition="{Binding EnableDisableListBox}"/>
-                            <Separator Visibility="Hidden" Height="20"/>
-                            <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding EnableComboBox}"/>
-                            <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding DisableComboBox}"/>
-                        </StackPanel>
-                    </GroupBox>
-                    <GroupBox Header="Textbox Validation Control" >
-                        <TextBox Behaviors:ControlDefinitions.TextControlDefinition="{Binding TextValidation, UpdateSourceTrigger=PropertyChanged}"/>
                     </GroupBox>
                     <GroupBox Header="File Drag and Drop Handler" 
                   Behaviors:DragAndDrop.FileDropHandler="{Binding DragDropHandler}"
@@ -73,60 +150,15 @@
                             <Rectangle Fill="Transparent" IsHitTestVisible="{Binding DragDropHandler.IsHitTestVisible, FallbackValue=False}"/>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="ListBox Definition" IsEnabled="{Binding EnableDisableListBox.IsChecked}">
-                        <!-- SimpleGrid that builds itself per the specified Column/Row Counts -->
-                        <cc:SimpleGrid AutoColumnWidth="Auto" AutoRowHeight="Auto"  RowCount="4" ColumnCount="3">
-                            <TextBlock Text="Interact with this listbox     " Grid.Column="0" />
-                            <ListBox 
-                    Behaviors:ControlDefinitions.ListBoxDefinition="{Binding ListBoxDefinition}" Grid.Row="1" Grid.ColumnSpan="2"
-                    Behaviors:DragSelectionHelper.IsDragSelectionEnabled="True"
-                    >
-                                <!-- The following Resources block allows the DragSelect functionality to work, highliting items as they are dragged over -->
-                                <ListBox.Resources>
-                                    <Style TargetType="{x:Type ListBoxItem}">
-                                        <Setter Property="Behaviors:DragSelectionHelper.IsDragSelecting" Value="False" />
-                                        <Style.Triggers>
-                                            <Trigger Property="ListBoxItem.IsMouseOver" Value="True">
-                                                <Setter Property="Behaviors:DragSelectionHelper.IsDragSelecting" Value="True" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ListBox.Resources>
-                                <!-- A Multi-Item Selection Behavior will have to be defined to interact with the SelectedItems of a Listbox -->
-                                <!-- This is because a ListBox SelectedItems property is not bindable in xaml without helpers. -->
-                                <Interactions:Interaction.Behaviors>
-                                    <Behaviors:MultiItemSelectionBehaviorString SelectedItems="{Binding ListBoxDefinition.SelectedItems}"/>
-                                </Interactions:Interaction.Behaviors>
-                            </ListBox>
-                            <TextBlock Text="This Listbox shows the currently selected items" Grid.Column="2" />
-                            <!-- This listbox will be updated by the other listbox's MutliSelectionBehavior -->
-                            <ListBox 
-                     IsEnabled="False" Grid.Row="1" Grid.Column="2"
-                    ItemsSource="{Binding ListBoxDefinition.SelectedItems}"
-                    />
-                            <TextBlock Grid.Row="2" Text="Selected Index: " />
-                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ListBoxDefinition.SelectedIndex}" />
-                            <TextBlock Grid.Row="3" Text="Selected Item: " />
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ListBoxDefinition.SelectedItem}" />
-                        </cc:SimpleGrid>
-                    </GroupBox>
-                    <GroupBox Header="ComboBox Definition" IsEnabled="{Binding EnableComboBox.IsChecked}">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <ComboBox Behaviors:ControlDefinitions.ComboBoxDefinition="{Binding ComboBoxDefinition}" Grid.ColumnSpan="2"/>
-                            <TextBlock Grid.Row="1" Text="Selected Index: " />
-                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ComboBoxDefinition.SelectedIndex}" />
-                            <TextBlock Grid.Row="2" Text="Selected Item: " />
-                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ComboBoxDefinition.SelectedItem}" />
-                        </Grid>
+                    <GroupBox Header="Button Definition">
+                        <StackPanel>
+                            <Button 
+                                Content="This Button Content is specified in XAML"
+                                ToolTip="This Button Tooltip is specified in XAML"
+                                Behaviors:ControlDefinitions.ButtonDefinition="{Binding ButtonContentTest}"
+                                />
+                            <Button Behaviors:ControlDefinitions.ButtonDefinition="{Binding ButtonContentTest}"/>
+                        </StackPanel>
                     </GroupBox>
                 </StackPanel>
             </ScrollViewer>

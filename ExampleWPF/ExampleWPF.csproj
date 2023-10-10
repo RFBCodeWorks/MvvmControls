@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Mvvm.Dialogs\Mvvm.Dialogs.csproj" />
     <ProjectReference Include="..\MvvmControls\Mvvm.Controls.csproj" />
   </ItemGroup>
