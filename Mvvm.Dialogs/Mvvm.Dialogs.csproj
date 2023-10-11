@@ -19,7 +19,7 @@
         <Authors>Robert Brenckman</Authors>
         <Company />
         <Copyright>Copyright 2023</Copyright>
-        <Version>1.0.0.3</Version>
+        <Version>1.0.0.5</Version>
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
         <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
         <PackageReleaseNotes>Fixed warning regarding the package dependencies</PackageReleaseNotes>
