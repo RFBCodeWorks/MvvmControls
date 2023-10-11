@@ -19,5 +19,7 @@ namespace ExampleWPF.ViewModels
             Items = new string[] { "Howdy", "OhNo", "This is a string", "Hello" },
             SelectionMode = SelectionMode.Multiple
         };
+
+        public CheckBoxDefinition ListBoxEnabler { get; } = new CheckBoxDefinition();
     }
 }

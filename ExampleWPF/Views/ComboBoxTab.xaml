@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="ExampleWPF.Views.ComboBoxTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ExampleWPF"
+             mc:Ignorable="d" 
+             xmlns:Behaviors="clr-namespace:RFBCodeWorks.WPF.Behaviors;assembly=RFBCodeWorks.Mvvm.Controls"
+        xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:Views="clr-namespace:ExampleWPF.Views"
+             xmlns:ViewModels="clr-namespace:ExampleWPF.ViewModels"
+        d:DataContext="{d:DesignInstance Type=ViewModels:ComboBoxTester, IsDesignTimeCreatable=True}"
+        xmlns:md="clr-namespace:MvvmDialogs;assembly=MvvmDialogs"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" Background="AliceBlue" >
+        <StackPanel >
+            <GroupBox Header="Enable / Disable Controls ( via Checkbox / RadioButton Definitions )" >
+                <StackPanel>
+                    <CheckBox Behaviors:ControlDefinitions.CheckBoxDefinition="{Binding EnableDisableListBox}"/>
+                    <Separator Visibility="Hidden" Height="20"/>
+                    <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding EnableComboBox}"/>
+                    <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding DisableComboBox}"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="ComboBox Definition" IsEnabled="{Binding EnableComboBox.IsChecked}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox Behaviors:ControlDefinitions.ComboBoxDefinition="{Binding ComboBoxDefinition}" Grid.ColumnSpan="2"/>
+                    <TextBlock Grid.Row="1" Text="Selected Index: " />
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ComboBoxDefinition.SelectedIndex}" />
+                    <TextBlock Grid.Row="2" Text="Selected Item: " />
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ComboBoxDefinition.SelectedItem}" />
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="Refreshable ComboBox">
+                <ComboBox Behaviors:ControlDefinitions.ComboBoxDefinition="{Binding RefreshableCmb}"/>
+            </GroupBox>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

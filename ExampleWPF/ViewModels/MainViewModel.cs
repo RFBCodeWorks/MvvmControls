@@ -24,7 +24,6 @@ namespace ExampleWPF
         public ViewModels.ComboBoxTester ComboxTester { get; } = new();
         public ViewModels.ListboxTester ListBoxTester { get; } = new();
         public ViewModels.TextBoxTester TextBoxTester { get; } = new();
-
         public Models.XmlLinqModel XmlLinqViewModel { get; } = new();
  
 

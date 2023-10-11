@@ -11,7 +11,7 @@
              xmlns:Converters="clr-namespace:RFBCodeWorks.WPF.Converters;assembly=RFBCodeWorks.Mvvm.Controls"
              xmlns:Model="clr-namespace:ExampleWPF.Models"
              d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type=Model:XmlLinqModel}">
-    <Grid>
+    <Grid Background="AliceBlue">
         <StackPanel>
             <GroupBox Header="IntegerUpDown">
                 <StackPanel>
