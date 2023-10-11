@@ -5,6 +5,25 @@ using System.Linq;
 
 namespace RFBCodeWorks.Mvvm.XmlLinq
 {
+
+    /// <summary>
+    /// A function that searches up the tree for the appropriate XElement node to be provided by the provider.
+    /// </summary>
+    /// <remarks>Func&lt;<see cref="IXElementProvider"/>, <see cref="string"/>, <see cref="XElement"/>&gt;</remarks>
+    /// <param name="parent">The object that provides the parent node within the XML Tree.</param>
+    /// <param name="elementName">The element name to search for. This should be a child of the element provided by the parent.</param>
+    /// <returns>An XElement node located within the tree. <br/> If an element was not located, return null.</returns>
+    public delegate XElement XElementLocatorDelegate(IXElementProvider parent, string elementName);
+
+    /// <summary>
+    /// A function that creates a new XElement object with the specified name. <br/>
+    /// This will be used to generate the XElement when <see cref="XElementProvider.CreateXElement()"/> is called.
+    /// </summary>
+    /// <remarks>Func&lt;<see cref="string"/>, <see cref="XElement"/>&gt;</remarks>
+    /// <param name="elementName">The name of the XElement node</param>
+    /// <returns>A new XElement object to be added to the tree.</returns>
+    public delegate XElement CreateElementDelegate(string elementName);
+
     /// <summary>
     /// Class that implements <see cref="IXElementProvider"/> <br/>
     /// Can be set up to use LINQ to get the first matching element from the parent IXElementProvider.
@@ -12,6 +31,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
     /// <remarks>Explicitly implements <see cref="IXValueObject"/></remarks>
     public class XElementProvider : ObservableObject, IXElementProvider, IXValueObject, IXObjectProvider
     {
+
         /// <summary>
         /// Create a new XElementProvider that will get an XElement that is a descendant of the XElement provided by the <paramref name="parent"/>
         /// </summary>
@@ -19,18 +39,19 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// <param name="parent">The object that provides the parent XElement to this object's XElement</param>
         /// <param name="getElement">
         /// A function to get an XElement from the <paramref name="parent"/> <br/>
-        /// If null, it will get the first element from the parent that has a matching <paramref name="elementName"/>
+        /// If not provided, uses <see cref="LocateByName(IXElementProvider, string)"/>
         /// </param>
         /// <param name="createElement">
-        /// <inheritdoc cref="CreateElementFunc" path="*"/>
+        /// A function that creates an XElement object to be added to the tree.
+        /// If not provided, uses <see cref="CreateXElement(string)"/>
         /// </param>
-        public XElementProvider(string elementName, IXElementProvider parent, Func<string, XElement> getElement, Func<XElement> createElement = null)
+        public XElementProvider(string elementName, IXElementProvider parent, XElementLocatorDelegate getElement = default, CreateElementDelegate createElement = default)
         {
             Parent = parent ?? throw new ArgumentNullException(nameof(parent));
-            SearchName = elementName.IsNotEmpty() ? elementName.Trim() : throw new ArgumentException("elementName is Empty!");
-            GetElementFunc = getElement ?? throw new ArgumentNullException(nameof(getElement));
-            CreateElementFunc = createElement;
-            CanBeCreated = createElement != null;
+            NameField = elementName.IsNotEmpty() ? elementName.Trim() : throw new ArgumentException("elementName is Empty!");
+            GetElementFunc = getElement ?? LocateByName;
+            CreateElementFunc = createElement ?? CreateXElement;
+            CanBeCreated = true;
 
             Parent.DescendantChanged += Parent_DescendantChanged;
             Parent.Added += Parent_Added;
@@ -41,39 +62,20 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// <summary>
         /// Create a new XElementProvider that will get the first child with a matching <paramref name="elementName"/> from the <paramref name="parent"/>
         /// </summary>
-        /// <inheritdoc cref="XElementProvider.XElementProvider(string, IXElementProvider, Func{string, XElement}, Func{XElement})"/>
+        /// <inheritdoc cref="XElementProvider.XElementProvider(string, IXElementProvider, XElementLocatorDelegate, CreateElementDelegate)"/>
         public XElementProvider(string elementName, IXElementProvider parent)
-        {
-            Parent = parent ?? throw new ArgumentNullException(nameof(parent));
-            SearchName = elementName.IsNotEmpty() ? elementName.Trim() : throw new ArgumentException("elementName is Empty!");
-            GetElementFunc = GetElementFromParent;
-            CreateElementFunc = DefaultCreateNew;
-            CanBeCreated = true;
-            
-            Parent.DescendantChanged += Parent_DescendantChanged;
-            Parent.Added += Parent_Added;
-            Parent.Removed += Parent_Removed;
-            Refresh();
-        }
+            : this(elementName, parent, LocateByName, CreateXElement) { }
+
 
         private XElement XElementField;
-        private readonly string SearchName;
-        private XElement ParentElement => Parent.XObject;
-
-        /// <summary>
-        /// The function to get the XElement from the parent node
-        /// </summary>
-        private readonly Func<string, XElement> GetElementFunc;
+        private readonly string NameField;
+        /// <inheritdoc cref="XElementLocatorDelegate"/>
+        private readonly XElementLocatorDelegate GetElementFunc;
+        /// <inheritdoc cref="CreateElementDelegate"/>
+        private readonly CreateElementDelegate CreateElementFunc;        
         
-        /// <summary>
-        /// Function that can be used to generate the XElement object within the tree. <br/>
-        /// The returned XElement object will be added as a child of the parent node.
-        /// </summary>
-        private readonly Func<XElement> CreateElementFunc;
-
         /// <inheritdoc/>
         public IXElementProvider Parent { get; }
-
         /// <inheritdoc/>
         public event EventHandler ValueChanged;
         /// <inheritdoc/>
@@ -91,7 +93,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// <summary>
         /// The name of the XElement
         /// </summary>
-        public string Name => XElementField?.Name?.LocalName ?? SearchName;
+        public string Name => XElementField?.Name?.LocalName ?? NameField;
 
         /// <inheritdoc/>
         public bool IsNodeAvailable => this.XElement != null;
@@ -100,7 +102,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// <remarks>The XElementProvider also takes its parent nodes into consideration</remarks>
         public bool CanBeCreated
         {
-            get => IsNodeAvailable || (CanBeCreatedField && CreateElementFunc != null && (Parent.IsNodeAvailable || Parent.CanBeCreated));
+            get => IsNodeAvailable || (CanBeCreatedField && (Parent.IsNodeAvailable || Parent.CanBeCreated));
             set => CanBeCreatedField = value;
         }
         private bool CanBeCreatedField;
@@ -171,8 +173,6 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
             }
         }
 
-
-        private XElement GetElementFromParent(string searchTerm) => Parent.XObject?.Element(searchTerm);
         XElement IXElementProvider.XObject => XElement;
         XObject IXObjectProvider.XObject => XElement;
 
@@ -204,7 +204,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// <inheritdoc/>
         public void Refresh()
         {
-            XElement = GetElementFunc?.Invoke(SearchName);
+            XElement = GetElementFunc(Parent, NameField);
         }
 
         /// <inheritdoc/>
@@ -218,12 +218,10 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         {
             if (XElement != null) return XElement;
             if (!CanBeCreated) return null;
-            var x = CreateElementFunc();
+            var x = CreateElementFunc(NameField);
             Parent.CreateXElement()?.Add(x);
             return XElement;
         }
-
-        private XElement DefaultCreateNew() => new XElement(SearchName);
 
         private void XElementChanged(object sender, XObjectChangeEventArgs e)
         {
@@ -245,43 +243,88 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         }
 
         /// <summary>
-        /// Create a new XElementProvider object that provide an XElement of a specified name that has a specific attribute value.
-        /// <br/> Generates the requires function to get the XElement from the parent node, and also the method to create the node as a child of the parent.
-        /// </summary>
-        /// <inheritdoc cref="XElementProvider.XElementProvider(string, IXElementProvider, Func{string, XElement}, Func{XElement})"/>
-        /// <param name="attributeName">The name of the required attribute</param>
-        /// <param name="attributeValue">The value of the required attribute</param>
-        /// <param name="parent"/> <param name="elementName"/>
-        /// <returns>A new XElement Provider</returns>
-        public static XElementProvider GetXElementProvider(IXElementProvider parent, string elementName, string attributeName, string attributeValue)
-        {
-            if (parent is null) throw new ArgumentNullException(nameof(parent));
-            if (elementName.IsNullOrEmpty()) throw new ArgumentException(nameof(elementName) + " Cannot be empty!");
-            if (attributeName.IsNullOrEmpty()) throw new ArgumentException(nameof(attributeName) + " Cannot be empty!");
-            if (attributeValue.IsNullOrEmpty()) throw new ArgumentException(nameof(attributeValue) + " Cannot be empty!");
-
-            XElement GetElement(string name) => parent.XObject?.Elements(elementName).SingleOrDefault(n => n.Attribute(attributeName).Value == attributeValue);
-            XElement CreateElement() => CreateXElement(elementName, attributeName, attributeValue);
-            return new XElementProvider(elementName, parent, GetElement, CreateElement);
-        }
-
-        private static XElement CreateXElement(string elementName, string attributeName, string attributeValue)
-        {
-            //if (elementName.IsNullOrEmpty()) throw new ArgumentException(nameof(elementName) + " Cannot be empty!");
-            //if (attributeName.IsNullOrEmpty()) throw new ArgumentException(nameof(attributeName) + " Cannot be empty!");
-            //if (attributeValue.IsNullOrEmpty()) throw new ArgumentException(nameof(attributeValue) + " Cannot be empty!");
-            var x = new XElement(elementName);
-            x.SetAttributeValue(attributeName, attributeValue);
-            return x;
-        }
-
-        /// <summary>
         /// Write out the contents of the <see cref="XElement"/>
         /// </summary>
         /// <inheritdoc/>
         public override string ToString()
         {
             return XElement?.ToString() ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Create a new XElementProvider using the default locator and creator delegators.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="elementName"></param>
+        /// <returns></returns>
+        public static XElementProvider GetXElementProvider(IXElementProvider parent, string elementName)
+        {
+            if (parent is null) throw new ArgumentNullException(nameof(parent));
+            if (string.IsNullOrWhiteSpace(elementName)) throw new ArgumentException(nameof(elementName) + " Cannot be empty!");
+            return new XElementProvider(elementName, parent, LocateByName, CreateXElement);
+        }
+
+        /// <summary>
+        /// Create a new XElementProvider object that provide an XElement of a specified name that has a specific attribute value.
+        /// <br/> Generates the requires function to get the XElement from the parent node, and also the method to create the node as a child of the parent.
+        /// </summary>
+        /// <inheritdoc cref="XElementProvider.XElementProvider(string, IXElementProvider, XElementLocatorDelegate, CreateElementDelegate)"/>
+        /// <inheritdoc cref="CreateWithAttribute(string, string)"/>
+        /// <returns>A new XElement Provider</returns>
+        public static XElementProvider GetXElementProvider(IXElementProvider parent, string elementName, string attributeName, string attributeValue)
+        {
+            if (parent is null) throw new ArgumentNullException(nameof(parent));
+            if (string.IsNullOrWhiteSpace(elementName)) throw new ArgumentException(nameof(elementName) + " Cannot be empty!");
+            if (string.IsNullOrWhiteSpace(attributeName)) throw new ArgumentException(nameof(attributeName) + " Cannot be empty!");
+            if (string.IsNullOrWhiteSpace(attributeValue)) throw new ArgumentException(nameof(attributeValue) + " Cannot be empty!");
+            return new XElementProvider(elementName, parent, LocateByAttribute(attributeName, attributeValue), CreateWithAttribute(attributeName, attributeValue));
+        }
+
+        /// <summary> 
+        /// Search the <paramref name="parent"/> node and retrieve the first XElement with a matching <paramref name="elementName"/></summary>
+        /// <remarks>The default <see cref="XElementLocatorDelegate"/>.<br/></remarks>
+        /// <inheritdoc cref="XElementLocatorDelegate"/>
+        public static XElement LocateByName(IXElementProvider parent, string elementName) => parent?.XObject?.Element(elementName);
+
+        /// <summary>
+        /// Create a new <see cref="XElementLocatorDelegate"/> delegate that searches for an XElement of a specified name that has a specific attribute value.
+        /// </summary>
+        /// <param name="attributeName">The name of the required attribute</param>
+        /// <param name="attributeValue">The value of the required attribute</param>
+        /// <returns>A new <see cref="XElementLocatorDelegate"/></returns>
+        /// <exception cref="ArgumentException"/>
+        public static XElementLocatorDelegate LocateByAttribute(string attributeName, string attributeValue)
+        {
+            if (string.IsNullOrWhiteSpace(attributeName)) throw new ArgumentException(nameof(attributeName) + " can not be empty.", nameof(attributeName));
+            attributeValue ??= string.Empty;
+            XElement GetElement(IXElementProvider parent, string elementName) => parent.XObject?.Elements(elementName).FirstOrDefault(n => n.Attribute(attributeName).Value == attributeValue);
+            return GetElement;
+        }
+
+        /// <summary>
+        /// The default function used to create an XElement for the <see cref="XElementProvider"/>
+        /// </summary>
+        /// <remarks>Default <see cref="CreateElementDelegate"/></remarks>
+        /// <param name="elementName">the name of the element to create</param>
+        /// <returns>A new XElement object</returns>
+        public static XElement CreateXElement(string elementName) => new XElement(elementName);
+
+        /// <summary>
+        /// Create a new <see cref="CreateElementDelegate"/> that generates a new XElement with the specified name, <paramref name="attributeName"/>, and <paramref name="attributeValue"/>.
+        /// </summary>
+        /// <param name="attributeName">The name of the attribute to apply</param>
+        /// <param name="attributeValue">The value of the attribute to apply</param>
+        /// <returns>A new <see cref="CreateElementDelegate"/></returns>
+        public static CreateElementDelegate CreateWithAttribute(string attributeName, string attributeValue)
+        {
+            if (string.IsNullOrWhiteSpace(attributeName)) throw new ArgumentException(nameof(attributeName) + " can not be empty.", nameof(attributeName));
+            XElement Create(string elementName)
+            {
+                var x = new XElement(elementName);
+                x.SetAttributeValue(attributeName, attributeValue ?? string.Empty);
+                return x;
+            }
+            return Create;
         }
     }
 

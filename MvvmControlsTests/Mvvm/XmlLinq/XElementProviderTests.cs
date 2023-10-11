@@ -7,28 +7,14 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
     [TestClass()]
     public class XElementProviderTests
     {
-        [TestMethod()]
-        [DataRow(data1: true)]
-        [DataRow(data1: false)]
-        public void XElementProviderTest(bool discriminate)
+        [TestMethod]
+        public void XElementProviderTest()
         {
-            var p = new XElementWrapper("parent") { DiscriminateDescendantChanged = discriminate };
+            var p = new XElementWrapper("parent");
             Assert.IsNotNull(new XElementProvider("name", p));
             Assert.ThrowsException<ArgumentNullException>(() => new XElementProvider("name", null));
             Assert.ThrowsException<ArgumentException>(() => new XElementProvider("", p));
-        }
-
-        [TestMethod()]
-        [DataRow(data1: true)]
-        [DataRow(data1: false)]
-        public void XElementProviderTest1(bool discriminate)
-        {
-            var p = new XElementWrapper("parent") { DiscriminateDescendantChanged = discriminate };
-            XElement GetElement(string s)=> new XElement(s);
-            Assert.IsNotNull(new XElementProvider("name", p, GetElement));
-            Assert.ThrowsException<ArgumentNullException>(() => new XElementProvider("name", null, GetElement));
-            Assert.ThrowsException<ArgumentNullException>(() => new XElementProvider("name", p, null));
-            Assert.ThrowsException<ArgumentException>(() => new XElementProvider("", p, null));
+            Assert.IsNotNull(new XElementProvider("name", p, null, null));
         }
 
         [TestMethod()]

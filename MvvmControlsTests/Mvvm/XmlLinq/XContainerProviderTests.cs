@@ -111,6 +111,44 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 
         }
 
+
+        [TestMethod]
+        public void LoadXDocumentTest()
+        {
+            // Write a document to disk
+            XDocument doc = new XDocument(new XElement("DocRoot"));
+            string group = nameof(group);
+            string name = nameof(name);
+            var x = new XElement(group); x.SetAttributeValue(name, "Element1");
+            var y = new XElement(group); y.SetAttributeValue(name, "Element2");
+            var z = new XElement(group); z.SetAttributeValue(name, "Element3");
+            var val = new XElement("value"); val.Value = "100";
+            doc.Root.Add(x);
+            x.Add(y);
+            y.Add(z);
+            z.Add(val);
+            string fp = System.IO.Path.Combine(AppContext.BaseDirectory, "TestXml.xml");
+            doc.Save(fp);
+
+            // Create providers
+            XContainerProvider root = new XContainerProvider(new XDocument(new XElement("Sample")));
+            XElementProvider el1 = root.CreateChildProvider(group, name, "Element1");
+            XElementProvider el2 = el1.CreateChildProvider(group, name, "Element2");
+            XElementProvider el3 = el2.CreateChildProvider(group, name, "Element3");
+
+            // Test
+            Assert.IsTrue(el3.CanBeCreated);
+            Assert.IsInstanceOfType(el3.CreateXElement(), typeof(XElement));
+
+            root.XContainer = null;
+            Assert.IsFalse(el3.CanBeCreated, "Should not be able to be created when no XDocument is provided.");
+            Assert.IsNull(el3.CreateXElement());
+
+            root.XContainer = XDocument.Load(fp);
+            Assert.IsTrue(el3.CanBeCreated, "Cannot be created after loading XDocument");
+            Assert.IsInstanceOfType(el3.CreateXElement(), typeof(XElement));
+        }
+
         [TestMethod()]
         public void RemoveTest()
         {

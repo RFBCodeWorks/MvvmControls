@@ -15,7 +15,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// <param name="parent">The parent that provides the XElement the attribute resides within</param>
         public XAttributeRetriever(string attributeName, IXElementProvider parent)
         {
-            AttrName = attributeName.IsNotEmpty() ? attributeName.Trim() : throw new ArgumentException("attributeName is empty");
+            AttrName = attributeName.IsNotEmpty() ? attributeName.Trim() : throw new ArgumentException($"{nameof(attributeName)} is empty");
             Parent = parent ?? throw new ArgumentNullException(nameof(parent));
             CanBeCreated = true;
             CanBeRemoved = true;
