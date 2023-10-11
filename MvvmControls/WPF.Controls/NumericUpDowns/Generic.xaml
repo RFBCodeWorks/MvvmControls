@@ -7,6 +7,7 @@
     >
     <Style TargetType="RepeatButton" x:Key="NumericButtonStyle">
         <Setter Property="Padding" Value="3"/>
+        <Setter Property="Focusable" Value="False"/>
     </Style>
     <Style TargetType="RepeatButton" x:Key="IncreaseButton" BasedOn="{StaticResource NumericButtonStyle}">
         <Setter Property="Content" Value="▲"/>

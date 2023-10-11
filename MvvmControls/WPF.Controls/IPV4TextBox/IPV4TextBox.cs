@@ -40,6 +40,9 @@ namespace RFBCodeWorks.WPF.Controls
         static IPV4TextBox()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(IPV4TextBox), new FrameworkPropertyMetadata(typeof(IPV4TextBox)));
+
+            // This prevents the back panel from taking focus, but doesn't prevent the textbox receiving focus.
+            FocusableProperty.OverrideMetadata(typeof(IPV4TextBox), new FrameworkPropertyMetadata(defaultValue: false));
         }
 
 

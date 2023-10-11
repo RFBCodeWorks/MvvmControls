@@ -13,6 +13,12 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
     /// </summary>
     public abstract class UpDownBase : Control
     {
+        static UpDownBase()
+        {
+            // This prevents the back panel from taking focus, but doesn't prevent the textbox receiving focus.
+            FocusableProperty.OverrideMetadata(typeof(UpDownBase), new FrameworkPropertyMetadata(defaultValue: false));
+        }
+
         /// <summary>
         /// Initialize the control
         /// </summary>
@@ -27,7 +33,6 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         /// Command to assign the button that decreases the value
         /// </summary>
         public RelayCommand DecreaseValueCommand { get; init; }
-
         
         #region < IsReadOnly >
         /// <summary>Determine if the value of the control can be changed by the user interacting with the buttons</summary>
