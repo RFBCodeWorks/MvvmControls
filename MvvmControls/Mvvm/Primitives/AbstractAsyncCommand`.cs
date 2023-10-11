@@ -41,6 +41,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// </summary>
         /// <returns><see langword="true"/></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Delegate")]
         protected static bool ReturnTrue(T parameter) => true;
 
         /// <inheritdoc cref="AbstractCommand{T}.ThrowIfInvalidParameter(object)"/>
@@ -52,13 +53,15 @@ namespace RFBCodeWorks.Mvvm.Primitives
 
         #region < Constructors >
 
-        /// <inheritdoc/>
-        protected AbstractAsyncCommand() : this(true) { }
+        /// <inheritdoc cref="AbstractAsyncCommand.AbstractAsyncCommand(bool, Action{Exception})"/>
+        protected AbstractAsyncCommand(Action<Exception> errorHandler = null) : this(true, errorHandler) { }
 
         /// <summary> Initialize the object </summary>
-        /// <inheritdoc/>
-        protected AbstractAsyncCommand(bool subscribeToCommandManager) : base(subscribeToCommandManager)
+        /// <param name="subscribeToCommandManager"><inheritdoc cref="CommandBase.SubscribeToCommandManager" path="*"/></param>
+        /// <param name="errorHandler">The error handler to use if an error occurs when executing via <see cref="ICommand.Execute(object)"/> interface method</param>
+        protected AbstractAsyncCommand(bool subscribeToCommandManager, Action<Exception> errorHandler = null) : base(subscribeToCommandManager)
         {
+            ErrorHandler = errorHandler;
             runningTasks = new ObservableCollection<Task>();
             runningTasks.CollectionChanged += RunningTasks_CollectionChanged;
         }
@@ -67,6 +70,8 @@ namespace RFBCodeWorks.Mvvm.Primitives
 
         #region < Properties and Events >
 
+        /// <summary>An action that will take place if the task throws an exception</summary>
+        protected readonly Action<Exception> ErrorHandler;
         private readonly ObservableCollection<Task> runningTasks;
 
         /// <inheritdoc />
@@ -145,8 +150,8 @@ namespace RFBCodeWorks.Mvvm.Primitives
             return CanExecute(ThrowIfInvalidParameter(parameter));
         }
 
-        async void ICommand.Execute(object parameter) => await ExecuteAsync(ThrowIfInvalidParameter(parameter));
-        async void CommunityToolkit.Mvvm.Input.IRelayCommand<T>.Execute(T parameter) => await ExecuteAsync(parameter);
+        void ICommand.Execute(object parameter) => ExecuteAsync(ThrowIfInvalidParameter(parameter)).FireAndForgetErrorHandling(ErrorHandler);
+        void CommunityToolkit.Mvvm.Input.IRelayCommand<T>.Execute(T parameter) => ExecuteAsync(parameter).FireAndForgetErrorHandling(ErrorHandler);
         Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand<T>.ExecuteAsync(T parameter) => ExecuteAsync(parameter);
         Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync(ThrowIfInvalidParameter(parameter));
         

@@ -161,7 +161,7 @@ namespace RFBCodeWorks.Mvvm.Tests
         [TestMethod("Cancelleable Task + CanExecuteValidation + Cancellation Handling")]
         public void AsyncRelayCommandTest6()
         {
-            AsyncRelayCommand<int> cmd = new AsyncRelayCommand<int>(cancelableExecute: GetTask, CanExecute, HandleCancellation);
+            AsyncRelayCommand<int> cmd = new AsyncRelayCommand<int>(cancelableExecute: GetTask, CanExecute, null, HandleCancellation);
             TestCanExecute(cmd, true).Wait();
             
             TestExceptionThrowing(cmd, hasErrorHandler: false, hasCancellationHandler: true).Wait();

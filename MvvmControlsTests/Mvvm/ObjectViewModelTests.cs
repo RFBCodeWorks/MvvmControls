@@ -20,9 +20,9 @@ namespace RFBCodeWorks.Mvvm.Tests
         private void GenericCommandTests(TestViewModel ViewModel, IRelayCommand<string> TestCommand)
         {
             ViewModel.ObjectModel = new ObjectModel(false);
-
+            void Run() => TestCommand.Execute(false);
             //Verify an exception declaring an invalid type was passed into the method that took a parameter
-            Assert.ThrowsException<ArgumentException>(() => TestCommand.Execute(new ObjectModel(false)));
+            Assert.ThrowsException<ArgumentException>(Run);
             
             //Verify No Exceptions Thrown for Valid Input
             TestCommand.Execute(null);
@@ -187,8 +187,15 @@ namespace RFBCodeWorks.Mvvm.Tests
         public void SetResult() => CommandResult = ExpectedCommandResult;
         public void SetResult(string test) => CommandResult = ExpectedCommandResult;
 
-        public Task TaskMethod() => Task.CompletedTask;
-        public Task TaskMethod(string test) => Task.CompletedTask;
+        public Task TaskMethod() => PerformTask();
+        public Task TaskMethod(string test) => PerformTask();
+
+        private Task PerformTask()
+        {
+            SetResult();
+            return Task.CompletedTask;
+        }
+
     }
 
     public class PropClass2

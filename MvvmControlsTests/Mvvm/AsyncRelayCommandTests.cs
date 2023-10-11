@@ -191,7 +191,7 @@ namespace RFBCodeWorks.Mvvm.Tests
         [TestMethod("Cancelleable Task + Error Handling")]
         public void AsyncRelayCommandTest2()
         {
-            AsyncRelayCommand cmd = new AsyncRelayCommand(cancelableExecute: GetTask, HandleError);
+            AsyncRelayCommand cmd = new AsyncRelayCommand(GetTask, errorHandler: HandleError);
             TestCanExecute(cmd).Wait();
 
             TestExceptionThrowing(cmd, hasErrorHandler: true, hasCancellationHandler: false).Wait();
@@ -200,7 +200,7 @@ namespace RFBCodeWorks.Mvvm.Tests
         [TestMethod("Cancelleable Task + Cancellation Handling")]
         public void AsyncRelayCommandTest3()
         {
-            AsyncRelayCommand cmd = new AsyncRelayCommand(cancelableExecute: GetTask, HandleCancellation);
+            AsyncRelayCommand cmd = new AsyncRelayCommand(cancelableExecute: GetTask, cancelReaction: HandleCancellation);
             TestCanExecute(cmd).Wait();
 
             TestExceptionThrowing(cmd, hasErrorHandler: false, hasCancellationHandler: true).Wait();
@@ -226,7 +226,7 @@ namespace RFBCodeWorks.Mvvm.Tests
         [TestMethod("Cancelleable Task + CanExecuteValidation + Cancellation Handling")]
         public void AsyncRelayCommandTest6()
         {
-            AsyncRelayCommand cmd = new AsyncRelayCommand(cancelableExecute: GetTask, CanExecute, HandleCancellation);
+            AsyncRelayCommand cmd = new AsyncRelayCommand(cancelableExecute: GetTask, CanExecute, cancelReaction: HandleCancellation);
             TestCanExecute(cmd, true).Wait();
 
             TestExceptionThrowing(cmd, hasErrorHandler: false, hasCancellationHandler: true).Wait();
@@ -261,7 +261,7 @@ namespace RFBCodeWorks.Mvvm.Tests
         [TestMethod("Non-Cancellable Task + Error Handling")]
         public void AsyncRelayCommandTest8()
         {
-            AsyncRelayCommand cmd = new AsyncRelayCommand(execute: GetTask, HandleError);
+            AsyncRelayCommand cmd = new AsyncRelayCommand(execute: GetTask, errorHandler: HandleError);
             TestCanExecute(cmd, false).Wait();
 
             TestExceptionThrowing(cmd, hasErrorHandler: true, hasCancellationHandler: false, isCancellable: false).Wait();

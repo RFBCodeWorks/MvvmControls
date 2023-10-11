@@ -45,13 +45,15 @@ namespace RFBCodeWorks.Mvvm.Primitives
 
         #region < Constructors >
 
-        /// <inheritdoc/>
-        protected AbstractAsyncCommand() : this(true) { }
+        /// <inheritdoc cref="AbstractAsyncCommand.AbstractAsyncCommand(bool, Action{Exception})"/>
+        protected AbstractAsyncCommand(Action<Exception> errorHandler = null) : this(true, errorHandler) { }
 
         /// <summary> Initialize the object </summary>
-        /// <inheritdoc/>
-        protected AbstractAsyncCommand(bool subscribeToCommandManager) : base(subscribeToCommandManager)
+        /// <param name="subscribeToCommandManager"><inheritdoc cref="CommandBase.SubscribeToCommandManager" path="*"/></param>
+        /// <param name="errorHandler">The error handler to use if an error occurs when executing via <see cref="ICommand.Execute(object)"/> interface method</param>
+        protected AbstractAsyncCommand(bool subscribeToCommandManager, Action<Exception> errorHandler = null) : base(subscribeToCommandManager)
         {
+            ErrorHandler = errorHandler;
             runningTasks = new ObservableCollection<Task>();
             runningTasks.CollectionChanged += RunningTasks_CollectionChanged;
         }
@@ -59,7 +61,9 @@ namespace RFBCodeWorks.Mvvm.Primitives
         #endregion
 
         #region < Properties and Events >
-
+        
+        /// <summary>An action that will take place if the task throws an exception</summary>
+        protected readonly Action<Exception> ErrorHandler;
         private readonly ObservableCollection<Task> runningTasks;
 
         /// <inheritdoc />
@@ -130,7 +134,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         #region < Interface Implementations >
 
         bool ICommand.CanExecute(object parameter) => CanExecute();
-        async void ICommand.Execute(object parameter) => await ExecuteAsync();
+        void ICommand.Execute(object parameter) => ExecuteAsync().FireAndForgetErrorHandling(ErrorHandler);
         Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync();
 
         #endregion

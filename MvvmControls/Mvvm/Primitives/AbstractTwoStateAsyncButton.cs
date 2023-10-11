@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace RFBCodeWorks.Mvvm.Primitives
 {
     /// <summary>
     /// Abstract Base class for buttons that update their tooltips and display text between two states dynamically
     /// </summary>
-    public abstract class AbstractTwoStateButton : AbstractButtonDefinition, IDisplayTextProvider
+    public abstract class AbstractTwoStateAsyncButton : AbstractAsyncButtonDefinition, IDisplayTextProvider
     {
         /// <summary>
         /// Instantiate the object
         /// </summary>
-        protected AbstractTwoStateButton()
+        protected AbstractTwoStateAsyncButton() : base()
         {
             DisplayTextProvider = new();
             DisplayTextProvider.DisplayTextUpdated += DisplayTextProvider_PropertyChanged;
@@ -73,6 +74,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// Button Text  to display while <see cref="IsDefaultState"/> == true
         /// </summary>
         public string DefaultDisplayText { get => DisplayTextProvider.DefaultText; set => DisplayTextProvider.DefaultText = value; }
+        
         /// <summary>
         /// Button Text  to display while <see cref="IsDefaultState"/> == false
         /// </summary>
@@ -92,12 +94,12 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <summary>
         /// Actions to perform when <see cref="IsDefaultState"/> is <see langword="true"/>
         /// </summary>
-        protected abstract void DefaultExecute();
+        protected abstract Task DefaultExecute();
         
         /// <summary>
         /// Actions to perform when <see cref="IsDefaultState"/> is <see langword="false"/>
         /// </summary>
-        protected abstract void AlternateExecute();
+        protected abstract Task AlternateExecute();
         
         /// <summary>
         /// Check if able to perform the <see cref="DefaultExecute"/>
@@ -116,14 +118,14 @@ namespace RFBCodeWorks.Mvvm.Primitives
         }
 
         /// <summary>
-        /// Calls either <see cref="DefaultExecute"/> or <see cref="AlternateExecute"/> based on the value of <see cref="IsDefaultState"/>
+        /// Calls either DefaultExecute or AlternateExecute based on the value of IsDefaultState
         /// </summary>
-        public sealed override void Execute()
+        public sealed override async Task ExecuteAsync()
         {
             if (IsDefaultState)
-                DefaultExecute();
+                await DefaultExecute();
             else
-                AlternateExecute();
+                await AlternateExecute();
         }
     }
 }

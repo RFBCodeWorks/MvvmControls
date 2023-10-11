@@ -11,7 +11,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
     /// Abstract base object that inherits from the following:
     /// <br/> - <see cref="ControlBase"/>
     /// <br/> - <see cref="IRelayCommand"/>
-    /// <br/> - <see cref="ICommand"/> - This is explicitly implemented via the protected abstract methods
+    /// <br/> - <see cref="ICommand"/> - Explicitly implemented. <see cref="ICommand.Execute(object)"/> will execute synchronously unless derived class overrides the ICommand.Execute(object) implementation.
     /// <br/> - <see cref="IToolTipProvider"/>
     /// <br/> - <see cref="INotifyPropertyChanged"/>
     /// <br/> - <see cref="IButtonDefinition"/>
@@ -21,6 +21,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <summary> Static method that can be used as the default Func{bool} for <see cref="ICommand.CanExecute(object)"/> </summary>
         /// <returns><see langword="true"/></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Delegate")]
         protected static bool ReturnTrue(T ignoredParameter) => true;
 
         /// <inheritdoc/>
@@ -57,8 +58,8 @@ namespace RFBCodeWorks.Mvvm.Primitives
 
         /// <inheritdoc/>
         public abstract event EventHandler CanExecuteChanged;
-        
-        async void ICommand.Execute(object parameter) => await this.ExecuteAsync(AbstractCommand<T>.ThrowIfInvalidParameter(parameter));
+
+        void ICommand.Execute(object parameter) => this.ExecuteAsync(AbstractCommand<T>.ThrowIfInvalidParameter(parameter)).Wait();
         bool ICommand.CanExecute(object parameter)
         {
             // Special case a null value for a value type argument type.

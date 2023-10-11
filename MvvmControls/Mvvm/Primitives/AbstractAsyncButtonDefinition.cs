@@ -11,7 +11,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
     /// Abstract base object that inherits from the following:
     /// <br/> - <see cref="ControlBase"/>
     /// <br/> - <see cref="IRelayCommand"/>
-    /// <br/> - <see cref="ICommand"/> - This is explicitly implemented via the protected abstract methods
+    /// <br/> - <see cref="ICommand"/> - Explicitly implemented. <see cref="ICommand.Execute(object)"/> will execute synchronously unless derived class overrides the ICommand.Execute(object) implementation.
     /// <br/> - <see cref="IToolTipProvider"/>
     /// <br/> - <see cref="INotifyPropertyChanged"/>
     /// <br/> - <see cref="IButtonDefinition"/>
@@ -56,8 +56,8 @@ namespace RFBCodeWorks.Mvvm.Primitives
 
         /// <inheritdoc/>
         public abstract event EventHandler CanExecuteChanged;
-        
-        async void ICommand.Execute(object parameter) => await this.ExecuteAsync();
+
+        void ICommand.Execute(object parameter) => this.ExecuteAsync().Wait();
         bool ICommand.CanExecute(object parameter)
         {
             base.IsEnabled = CanExecute();

@@ -11,45 +11,28 @@ namespace RFBCodeWorks.Mvvm
     /// <summary>
     /// Class that wraps an <see cref="IAsyncRelayCommand"/> to provide the remaining implementation of <see cref="IButtonDefinition"/>
     /// </summary>
-    public sealed class AsyncButtonDefinition<T> : Primitives.AbstractAsyncButtonDefinition<T>, IAsyncRelayCommand<T>
+    public sealed class AsyncButtonDefinition<T> : Primitives.AbstractAsyncButtonDefinition<T>, IAsyncRelayCommand<T>, ICommand
     {
         /// <summary>
         /// Create a new ButtonDefinition that wraps a Fire-And-Forget task
         /// </summary>
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{Task})"/>
-        public AsyncButtonDefinition(Func<T,Task> execute)
-            : this(new AsyncRelayCommand<T>(execute)) { }
-
-        /// <summary>
-        /// Create a new ButtonDefinition that wraps a Fire-And-Forget task
-        /// </summary>
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{Task}, Func{bool})"/>
-        public AsyncButtonDefinition(Func<T,Task> execute, Func<T,bool> canExecute)
-            :this(new AsyncRelayCommand<T>(execute, canExecute)) { }
-
+        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{Task}, Func{bool}, Action{Exception})"/>
+        public AsyncButtonDefinition(
+            Func<T, Task> execute,
+            Func<T, bool> canExecute = null,
+            Action<Exception> errorHandler = null
+            ) : this(new AsyncRelayCommand<T>(execute, canExecute, errorHandler)) { }
 
         /// <summary>
         /// Create a new ButtonDefinition that wraps a Cancellable Task
         /// </summary>
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task})"/>
-        public AsyncButtonDefinition(Func<T,CancellationToken, Task> execute)
-            : this(new AsyncRelayCommand<T>(execute)) { }
-
-        /// <summary>
-        /// Create a new ButtonDefinition that wraps a Cancellable Task
-        /// </summary>
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool})"/>
-        public AsyncButtonDefinition(Func<T, CancellationToken,Task> cancelableExecute, Func<T,bool> canExecute)
-            : this(new AsyncRelayCommand<T>(cancelableExecute, canExecute)) { }
-
-        /// <summary>
-        /// Create a new ButtonDefinition from the specified <paramref name="asyncRelayCommand"/>
-        /// </summary>
-        /// <param name="asyncRelayCommand">the command to wrap</param>
-        /// <inheritdoc/>
-        /// <exception cref="ArgumentNullException"/>
-        public AsyncButtonDefinition(AsyncRelayCommand<T> asyncRelayCommand) 
-            : this(command: asyncRelayCommand ?? throw new ArgumentNullException(nameof(asyncRelayCommand))) { }
+        /// <inheritdoc cref="AsyncRelayCommand{T}.AsyncRelayCommand(Func{T, CancellationToken, Task}, Func{T, bool}, Action{Exception}, Action{T})"/>
+        public AsyncButtonDefinition(
+            Func<T, CancellationToken,Task> cancelableExecute, 
+            Func<T,bool> canExecute = null, 
+            Action<Exception> errorHandler = null,
+            Action<T> cancelReaction= null
+            ) : this(new AsyncRelayCommand<T>(cancelableExecute, canExecute, errorHandler, cancelReaction)) { }
 
         /// <summary>
         /// Create a new ButtonDefinition from the specified <paramref name="command"/>
@@ -103,7 +86,8 @@ namespace RFBCodeWorks.Mvvm
         IEnumerable<Task> IAsyncRelayCommand.RunningTasks => Command.RunningTasks;
         Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecutionTask => Command.ExecutionTask;
         Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync(Primitives.AbstractCommand<T>.ThrowIfInvalidParameter(parameter));
-        async void CommunityToolkit.Mvvm.Input.IRelayCommand<T>.Execute(T parameter)=> await ExecuteAsync(parameter);
+        void CommunityToolkit.Mvvm.Input.IRelayCommand<T>.Execute(T parameter) => Command.Execute(parameter);
+        void ICommand.Execute(object parameter) => Command.Execute(parameter);
 
         #endregion
     }

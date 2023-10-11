@@ -12,103 +12,61 @@ namespace RFBCodeWorks.Mvvm
     /// </summary>
     public sealed class AsyncRelayCommand : Primitives.AbstractAsyncCommand
     {
-        #region < Fire-And-Forget Constructors >
 
         /// <summary>
-        /// Create a new AsyncRelayCommand that will execute a cancellable task
+        /// Create a new AsyncRelayCommand that will execute a Fire-And-Forget task
         /// </summary>
-        /// <inheritdoc cref="Primitives.AbstractCommand.AbstractCommand(bool)"/>
+        /// <inheritdoc cref="Primitives.AbstractAsyncCommand{T}.AbstractAsyncCommand(bool, Action{Exception})"/>
         /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.AsyncRelayCommand.AsyncRelayCommand(Func{Task}, Func{bool})"/>
         /// <exception cref="ArgumentNullException"/>
-        public AsyncRelayCommand(Func<Task> execute, Func<bool> canExecute) : base(true)
+        public AsyncRelayCommand(
+            Func<Task> execute,
+            Func<bool> canExecute = null,
+            Action<Exception> errorHandler = null
+            ) : base(true, errorHandler)
         {
             ExecuteAction = execute ?? throw new ArgumentNullException(nameof(execute));
-            CanExecuteFunction = canExecute ?? throw new ArgumentNullException(nameof(canExecute));
-        }
-
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{Task}, Func{bool})"/>
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool}, Action{Exception}, Action)"/>
-        public AsyncRelayCommand(Func<Task> execute, Func<bool> canExecute, Action<Exception> errorHandler) 
-            : this(execute, canExecute)
-        {
-            ErrorHandler = errorHandler ?? throw new ArgumentNullException(nameof(errorHandler));
+            CanExecuteFunction = canExecute ?? ReturnTrue;
         }
 
         /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{Task}, Func{bool}, Action{Exception})"/>
-        public AsyncRelayCommand(Func<Task> execute, Action<Exception> errorHandler) 
-            : this(execute, ReturnTrue, errorHandler) { }
-
+        public AsyncRelayCommand(Func<Task> execute, Action<Exception> errorHandler) : this(execute, null, errorHandler) { }
+        
         /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{Task}, Func{bool}, Action{Exception})"/>
-        public AsyncRelayCommand(Func<Task> execute)
-            : this(execute, ReturnTrue) { }
-
-        #endregion
-
-        #region < Cancellable Constructors >
+        public AsyncRelayCommand(Func<Task> execute) : this(execute, null, null) { }
 
         /// <summary>
         /// Create a new AsyncRelayCommand that will execute a cancellable task
         /// </summary>
-        /// <inheritdoc cref="Primitives.AbstractCommand.AbstractCommand(bool)"/>
+        /// <param name="cancelReaction"><inheritdoc cref="CancelReaction" path="*"/></param>
         /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool})"/>
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task})"/>
+        /// <inheritdoc cref="Primitives.AbstractAsyncCommand.AbstractAsyncCommand(bool, Action{Exception})"/>
+        /// <param name="errorHandler"/><param name="canExecute"/><param name="cancelableExecute"/>
         /// <exception cref="ArgumentNullException"/>
-        public AsyncRelayCommand(Func<CancellationToken, Task> cancelableExecute, Func<bool> canExecute) 
-            : base(true)
+        public AsyncRelayCommand(
+            Func<CancellationToken, Task> cancelableExecute,
+            Func<bool> canExecute = null,
+            Action<Exception> errorHandler = null,
+            Action cancelReaction = null
+            ) : base(true, errorHandler)
         {
-            CanExecuteFunction = canExecute ?? throw new ArgumentNullException(nameof(canExecute));
+            CanExecuteFunction = canExecute ?? ReturnTrue;
             CancellableExecuteAction = cancelableExecute ?? throw new ArgumentNullException(nameof(cancelableExecute));
             CancellationTokens = new Dictionary<Task, CancellationTokenSource>();
+            CancelReaction = cancelReaction;
+            SwallowCancellations = cancelReaction != null;
         }
 
         /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool}, Action{Exception}, Action)"/>
-        public AsyncRelayCommand(Func<CancellationToken, Task> cancelableExecute, Func<bool> canExecute, Action<Exception> errorHandler) 
-            : this(cancelableExecute, canExecute)
-        {
-            ErrorHandler = errorHandler ?? throw new ArgumentNullException(nameof(errorHandler));
-        }
-
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task}, Action{Exception})"/>
-        /// <param name="cancelableExecute"/><param name="canExecute"/>
-        /// <param name="errorHandler"><inheritdoc cref="ErrorHandler" path="*"/></param>
-        /// <param name="cancelReaction"><inheritdoc cref="CancelReaction" path="*"/></param>
-        public AsyncRelayCommand(Func<CancellationToken, Task> cancelableExecute, Func<bool> canExecute, Action<Exception> errorHandler, Action cancelReaction) 
-            : this(cancelableExecute, canExecute, errorHandler)
-        {
-            CancelReaction = cancelReaction ?? throw new ArgumentNullException(nameof(cancelReaction));
-            //SwallowCancellations = true;
-        }
+        public AsyncRelayCommand(Func<CancellationToken, Task> cancelableExecute, Action<Exception> errorHandler, Action cancelReaction = null) : this(cancelableExecute, null, errorHandler, cancelReaction) { }
 
         /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool}, Action{Exception}, Action)"/>
-        public AsyncRelayCommand(Func<CancellationToken, Task> cancelableExecute, Func<bool> canExecute, Action cancelReaction) : this(cancelableExecute, canExecute)
-        {
-            CancelReaction = cancelReaction ?? throw new ArgumentNullException(nameof(cancelReaction));
-            //SwallowCancellations = true;
-        }
-
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool}, Action{Exception}, Action)"/>
-        public AsyncRelayCommand(Func<CancellationToken, Task> cancelableExecute, Action cancelReaction)
-            : this(cancelableExecute, ReturnTrue, cancelReaction) { }
-
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task},Func{bool})"/>
-        public AsyncRelayCommand(Func<CancellationToken, Task> cancelableExecute) 
-            : this(cancelableExecute, ReturnTrue) { }
-
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool}, Action{Exception}, Action)"/>
-        public AsyncRelayCommand(Func<CancellationToken, Task> cancelableExecute, Action<Exception> errorHandler) 
-            : this(cancelableExecute, ReturnTrue)
-        {
-            ErrorHandler = errorHandler ?? throw new ArgumentNullException(nameof(errorHandler));
-        }
-
-        #endregion
+        public AsyncRelayCommand(Func<CancellationToken, Task> cancelableExecute) : this(cancelableExecute, null, null, null) { }
 
         private readonly Func<bool> CanExecuteFunction;
         private readonly Func<Task> ExecuteAction;
         private readonly Func<CancellationToken, Task> CancellableExecuteAction;
         private readonly Dictionary<Task, CancellationTokenSource> CancellationTokens;
-        /// <summary>An action that will take place if the task throws an exception</summary>
-        private readonly Action<Exception> ErrorHandler;
         /// <summary>An action that will take place if the task throws an <see cref="OperationCanceledException"/></summary>
         private readonly Action CancelReaction;
 

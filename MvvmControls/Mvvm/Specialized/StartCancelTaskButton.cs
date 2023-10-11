@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using RFBCodeWorks.Mvvm;
 
 namespace RFBCodeWorks.Mvvm.Specialized
@@ -8,22 +10,17 @@ namespace RFBCodeWorks.Mvvm.Specialized
     /// <summary>
     /// A button that starts a task when in the default state, and changes state to cancel the task while the task is running.
     /// </summary>
-    public sealed class StartCancelTaskButton : Primitives.AbstractTwoStateButton, IButtonDefinition
+    public sealed class StartCancelTaskButton : Primitives.AbstractTwoStateAsyncButton, IButtonDefinition, ICommand, IAsyncRelayCommand
     {
-        /// <inheritdoc cref="StartCancelTaskButton.StartCancelTaskButton(IAsyncRelayCommand)"/>
-        /// <inheritdoc cref="AsyncButtonDefinition.AsyncButtonDefinition(Func{CancellationToken, Task})"/>
-        public StartCancelTaskButton(Func<CancellationToken, Task> cancelableExecute)
-            : this(new AsyncRelayCommand(cancelableExecute)) { }
 
         /// <inheritdoc cref="StartCancelTaskButton.StartCancelTaskButton(IAsyncRelayCommand)"/>
-        /// <inheritdoc cref="AsyncButtonDefinition.AsyncButtonDefinition(Func{CancellationToken, Task}, Func{bool})"/>
-        public StartCancelTaskButton(Func<CancellationToken,Task> cancelableExecute, Func<bool> canExecute) 
-            : this(new AsyncRelayCommand(cancelableExecute, canExecute)) { }
-
-        /// <inheritdoc cref="StartCancelTaskButton.StartCancelTaskButton(IAsyncRelayCommand)"/>
-        /// <inheritdoc cref="AsyncButtonDefinition.AsyncButtonDefinition(AsyncRelayCommand)"/>
-        public StartCancelTaskButton(AsyncRelayCommand asyncRelayCommand) 
-            :this(command: asyncRelayCommand ?? throw new ArgumentNullException(nameof(asyncRelayCommand))) { }
+        /// <inheritdoc cref="AsyncButtonDefinition.AsyncButtonDefinition(Func{CancellationToken, Task}, Func{bool}, Action{Exception}, Action)"/>
+        public StartCancelTaskButton(
+            Func<CancellationToken,Task> cancelableExecute, 
+            Func<bool> canExecute = null, 
+            Action<Exception> errorHandler = null, 
+            Action cancelReaction = null
+            ) : this(new AsyncRelayCommand(cancelableExecute, canExecute, errorHandler, cancelReaction)) { }
 
         /// <summary>
         /// Create a new ButtonDefinition that will change between two states, where the default state can start a task and the secondary state will cancel the task
@@ -36,7 +33,13 @@ namespace RFBCodeWorks.Mvvm.Specialized
             AlternateToolTip = null;
         }
 
-        private IAsyncRelayCommand relayCommand;
+        private readonly IAsyncRelayCommand relayCommand;
+
+        IEnumerable<Task> IAsyncRelayCommand.RunningTasks => relayCommand.RunningTasks;
+        Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecutionTask => relayCommand.ExecutionTask;
+        bool CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.CanBeCanceled => relayCommand.CanBeCanceled;
+        bool CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.IsCancellationRequested => relayCommand.IsCancellationRequested;
+        bool CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.IsRunning => relayCommand.IsRunning;
 
         /// <inheritdoc/>
         public override event EventHandler CanExecuteChanged
@@ -47,7 +50,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        protected sealed override async void DefaultExecute()
+        protected sealed override async Task DefaultExecute()
         {
             try
             {
@@ -63,10 +66,13 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// <summary>
         /// Invokes the 'Cancel' method fore the <see cref="IAsyncRelayCommand"/>
         /// </summary>
-        protected sealed override void AlternateExecute()
+        protected sealed override Task AlternateExecute()
         {
             relayCommand.Cancel();
+            return Task.CompletedTask;
         }
+
+        public override void Cancel() => relayCommand.Cancel();
 
         protected override bool DefaultCanExecute()
         {
@@ -82,6 +88,9 @@ namespace RFBCodeWorks.Mvvm.Specialized
         {
             relayCommand.NotifyCanExecuteChanged();
         }
+
+        Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => relayCommand.ExecuteAsync(parameter);
+        async void ICommand.Execute(object parameter) => await base.ExecuteAsync();
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }
