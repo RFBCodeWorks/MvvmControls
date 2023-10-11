@@ -11,6 +11,28 @@ namespace RFBCodeWorks.WPF.Behaviors
     public static partial class ControlDefinitions
     {
 
+        /// <summary>
+        /// Check if the property has been specified in xaml, or if it is already bound to something
+        /// </summary>
+        /// <param name="obj">The object to evaluate</param>
+        /// <param name="prop">The property to evaluate</param>
+        /// <returns><see langword="true"/> if a value was found, otherwise <see langword="false"/></returns>
+        public static bool IsPropertySetInXaml(DependencyObject obj, DependencyProperty prop)
+        {
+            return obj.ReadLocalValue(prop) != DependencyProperty.UnsetValue;
+        }
+
+        /// <summary>
+        /// Check if the property has been specified in xaml, or if it is already bound to something
+        /// </summary>
+        /// <param name="obj">The object to evaluate</param>
+        /// <param name="prop">The property to evaluate</param>
+        /// <returns><see langword="true"/> if the value is not set, otherwise <see langword="false"/></returns>
+        public static bool ShouldSetProperty(DependencyObject obj, DependencyProperty prop)
+        {
+            return obj.ReadLocalValue(prop) == DependencyProperty.UnsetValue;
+        }
+
         internal static Binding GetBindingInfo(DependencyObject obj, DependencyProperty prop)
         {
             return BindingOperations.GetBindingExpression(obj, prop)?.ParentBinding;
@@ -32,7 +54,7 @@ namespace RFBCodeWorks.WPF.Behaviors
         }
 
         /// <summary>
-        /// Create a new binding for the specified dependency property.
+        /// Create a new binding for the specified dependency property. Only binds the value if it was not already specified.
         /// </summary>
         /// <param name="obj">the bound control</param>
         /// <param name="prop">the bound dependencyproperty</param>
@@ -47,12 +69,15 @@ namespace RFBCodeWorks.WPF.Behaviors
             UpdateSourceTrigger? trigger = null)
         where T : class, IControlDefinition
         {
-            _ = BindingOperations.SetBinding(obj, prop, new Binding(propertyName)
+            if (ShouldSetProperty(obj, prop))
             {
-                Source = source,
-                Mode = mode ?? BindingMode.Default,
-                UpdateSourceTrigger = trigger ?? UpdateSourceTrigger.Default
-            });
+                _ = BindingOperations.SetBinding(obj, prop, new Binding(propertyName)
+                {
+                    Source = source,
+                    Mode = mode ?? BindingMode.Default,
+                    UpdateSourceTrigger = trigger ?? UpdateSourceTrigger.Default
+                });
+            }
         }
 
         /// <summary>

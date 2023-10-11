@@ -30,13 +30,15 @@ namespace RFBCodeWorks.WPF.Behaviors
                     BindIControlDefinition(cntrl, def);
 
                     //Bind the COMMAND property
-                    _ = BindingOperations.SetBinding(cntrl, Button.CommandProperty, new Binding()
+                    if (ShouldSetProperty(cntrl, Button.CommandProperty))
                     {
-                        Source = def,
-                        Mode = BindingMode.OneWay,
+                        _ = BindingOperations.SetBinding(cntrl, Button.CommandProperty, new Binding()
+                        {
+                            Source = def,
+                            Mode = BindingMode.OneWay,
 
-                    });
-
+                        });
+                    }
                 }
                 SetContent(cntrl, args.NewValue);
             }

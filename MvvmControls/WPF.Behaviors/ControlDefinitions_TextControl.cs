@@ -29,6 +29,9 @@ namespace RFBCodeWorks.WPF.Behaviors
                 if (args.NewValue is ITextControl def)
                 {
                     BindIControlDefinition(cntrl, def);
+
+                    if (IsPropertySetInXaml(cntrl, TextBlock.TextProperty)) return;
+                    
                     var bind = GetBindingInfo(cntrl, TextControlDefinitionProperty);
                     if (def is System.ComponentModel.INotifyDataErrorInfo)
                     {

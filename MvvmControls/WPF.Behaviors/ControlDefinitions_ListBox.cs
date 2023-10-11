@@ -27,10 +27,9 @@ namespace RFBCodeWorks.WPF.Behaviors
                 {
                     UnbindIfBound(cntrl, ListBox.SelectionModeProperty, oldDef);
                 }
-                if (args.NewValue is IListBox def)
+                if (args.NewValue is IListBox def && ShouldSetProperty(cntrl, ListBox.SelectionModeProperty))
                 {
                     def.SelectionMode = cntrl.SelectionMode;
-                    //Selection Mode
                     _ = BindingOperations.SetBinding(cntrl, ListBox.SelectionModeProperty, new Binding(nameof(IListBox.SelectionMode))
                     {
                         Source = def,

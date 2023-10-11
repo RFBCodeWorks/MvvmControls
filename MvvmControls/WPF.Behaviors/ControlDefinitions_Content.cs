@@ -20,7 +20,7 @@ namespace RFBCodeWorks.WPF.Behaviors
         public static void SetContent(FrameworkElement cntrl, DependencyProperty cntrlProperty, object source, string sourceProperty, BindingMode? mode = BindingMode.OneWay)
         {
             //Set the Content if the content has no binding expression, and also have no value from the xaml itself
-            if (cntrl.GetBindingExpression(cntrlProperty) is null)
+            if (ShouldSetProperty(cntrl, cntrlProperty))
             {
                 cntrl.SetValue(BoundContentProperty, cntrlProperty);
                 _ = BindingOperations.SetBinding(cntrl, cntrlProperty, new Binding(sourceProperty)
