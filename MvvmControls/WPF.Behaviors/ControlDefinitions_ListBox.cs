@@ -31,7 +31,7 @@ namespace RFBCodeWorks.WPF.Behaviors
                 {
                     def.SelectionMode = cntrl.SelectionMode;
                     //Selection Mode
-                    BindingOperations.SetBinding(cntrl, ListBox.SelectionModeProperty, new Binding(nameof(IListBox.SelectionMode))
+                    _ = BindingOperations.SetBinding(cntrl, ListBox.SelectionModeProperty, new Binding(nameof(IListBox.SelectionMode))
                     {
                         Source = def,
                         Mode = BindingMode.TwoWay

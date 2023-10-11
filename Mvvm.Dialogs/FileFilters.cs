@@ -139,8 +139,6 @@ namespace RFBCodeWorks.Mvvm.DialogServices
 
         /// <summary>
         /// The Concatenated File Filter for use with standard windows file browser dialogs in the following format: <br/> All files (*.*)|*.*
-        /// <br/>Applies to:
-        /// <br/><see cref="System.Windows."/>
         /// </summary>
         /// <remarks>Creates the filter from the <see cref="Name"/> and <see cref="SearchPattern"/></remarks>
         public string DialogFilter

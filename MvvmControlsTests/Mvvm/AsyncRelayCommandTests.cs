@@ -173,11 +173,11 @@ namespace RFBCodeWorks.Mvvm.Tests
         /// <param name="cmd"></param>
         internal static void TestIAsyncRelayCommand(IAsyncRelayCommand cmd)
         {
-            var x = cmd.CanBeCanceled;
-            var y = cmd.ExecutionTask;
-            var z = cmd.IsCancellationRequested;
-            var a = cmd.IsRunning;
-            var b = cmd.RunningTasks;
+            _ = cmd.CanBeCanceled;
+            _ = cmd.ExecutionTask;
+            _ = cmd.IsCancellationRequested;
+            _ = cmd.IsRunning;
+            _ = cmd.RunningTasks;
         }
 
         [TestMethod("Cancelleable Task")]

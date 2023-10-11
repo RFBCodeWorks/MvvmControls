@@ -21,7 +21,6 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <summary> Static method that can be used as the default Func{bool} for <see cref="ICommand.CanExecute(object)"/> </summary>
         /// <returns><see langword="true"/></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Delegate")]
         protected static bool ReturnTrue(T ignoredParameter) => true;
 
         /// <inheritdoc/>

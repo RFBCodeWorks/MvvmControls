@@ -30,7 +30,7 @@ namespace RFBCodeWorks.WPF.Behaviors
                     BindIControlDefinition(cntrl, def);
 
                     //Bind the COMMAND property
-                    BindingOperations.SetBinding(cntrl, Button.CommandProperty, new Binding()
+                    _ = BindingOperations.SetBinding(cntrl, Button.CommandProperty, new Binding()
                     {
                         Source = def,
                         Mode = BindingMode.OneWay,

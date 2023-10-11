@@ -19,11 +19,11 @@ namespace RFBCodeWorks.WPF.Behaviors
         /// <param name="mode">the binding mode - use null for BindingMode.Default</param>
         public static void SetContent(FrameworkElement cntrl, DependencyProperty cntrlProperty, object source, string sourceProperty, BindingMode? mode = BindingMode.OneWay)
         {
-            cntrl.SetValue(BoundContentProperty, cntrlProperty);
-            //Set the Content if the content is null
+            //Set the Content if the content has no binding expression, and also have no value from the xaml itself
             if (cntrl.GetBindingExpression(cntrlProperty) is null)
             {
-                BindingOperations.SetBinding(cntrl, cntrlProperty, new Binding(sourceProperty)
+                cntrl.SetValue(BoundContentProperty, cntrlProperty);
+                _ = BindingOperations.SetBinding(cntrl, cntrlProperty, new Binding(sourceProperty)
                 {
                     Source = source,
                     Mode = mode ?? BindingMode.Default,
@@ -93,8 +93,7 @@ namespace RFBCodeWorks.WPF.Behaviors
             else if (sender is FrameworkElement el)
             {
                 // Update the binding's fallback values
-                var dp = sender.GetValue(BoundContentProperty) as DependencyProperty;
-                if (dp != null)
+                if (sender.GetValue(BoundContentProperty) is DependencyProperty dp)
                 {
                     var binding = el.GetBindingExpression(dp);
                     if (binding != null)

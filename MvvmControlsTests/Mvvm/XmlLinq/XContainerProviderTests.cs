@@ -103,8 +103,8 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             var obj = new XContainerProvider(doc);
 
             var node2 = obj.CreateChildProvider("level2");
-            var node3 = obj.CreateChildProvider("level3");
-            var node4 = obj.CreateChildProvider("level4");
+            var node3 = node2.CreateChildProvider("level3");
+            var node4 = node3.CreateChildProvider("level4");
             Assert.IsTrue(node4.CanBeCreated);
             node4.Value = "Test";
             Assert.IsTrue(node4.IsNodeAvailable);
@@ -122,7 +122,10 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             var x = new XElement(group); x.SetAttributeValue(name, "Element1");
             var y = new XElement(group); y.SetAttributeValue(name, "Element2");
             var z = new XElement(group); z.SetAttributeValue(name, "Element3");
-            var val = new XElement("value"); val.Value = "100";
+            var val = new XElement("value")
+            {
+                Value = "100"
+            }; 
             doc.Root.Add(x);
             x.Add(y);
             y.Add(z);

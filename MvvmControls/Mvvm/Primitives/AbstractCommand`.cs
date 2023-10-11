@@ -18,13 +18,6 @@ namespace RFBCodeWorks.Mvvm.Primitives
         #region < Static Methods >
 
         /// <summary>
-        /// Static method to be used in place of Func{bool} methods to always return true
-        /// </summary>
-        /// <returns><see langword="true"/></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool ReturnTrue(T parameter) => true;
-
-        /// <summary>
         /// Evaluates the <paramref name="parameter"/> to check if it is a valid object of type <typeparamref name="T"/>
         /// </summary>
         /// <param name="parameter">The input parameter.</param>

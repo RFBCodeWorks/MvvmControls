@@ -30,18 +30,18 @@ namespace RFBCodeWorks.WPF.Behaviors
                 {
                     BindIControlDefinition(cntrl, def);
                     var bind = GetBindingInfo(cntrl, TextControlDefinitionProperty);
-                    if (def is System.ComponentModel.INotifyDataErrorInfo IDN)
+                    if (def is System.ComponentModel.INotifyDataErrorInfo)
                     {
-                        BindingOperations.SetBinding(cntrl, TextBox.TextProperty, new Binding(nameof(def.Text))
+                        _ = BindingOperations.SetBinding(cntrl, TextBox.TextProperty, new Binding(nameof(def.Text))
                         {
                             Source = def,
                             UpdateSourceTrigger = bind.UpdateSourceTrigger,
                             ValidatesOnNotifyDataErrors = true
                         });
                     }
-                    else if (def is System.ComponentModel.IDataErrorInfo IDE)
+                    else if (def is System.ComponentModel.IDataErrorInfo)
                     {
-                        BindingOperations.SetBinding(cntrl, TextBox.TextProperty, new Binding(nameof(def.Text))
+                        _ = BindingOperations.SetBinding(cntrl, TextBox.TextProperty, new Binding(nameof(def.Text))
                         {
                             Source = def,
                             UpdateSourceTrigger = bind.UpdateSourceTrigger,

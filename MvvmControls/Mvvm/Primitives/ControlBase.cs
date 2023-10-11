@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace RFBCodeWorks.Mvvm.Primitives
@@ -8,6 +9,16 @@ namespace RFBCodeWorks.Mvvm.Primitives
     /// </summary>
     public class ControlBase : ObservableObject, IControlDefinition, IToolTipProvider
     {
+        /// <summary> Static method that can be used as the default Func{T, bool}</summary>
+        /// <returns><see langword="true"/></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected static bool ReturnTrue<T>(T ignoredParameter) => true;
+
+        /// <summary> Static method that can be used as the default Func{bool}</summary>
+        /// <returns><see langword="true"/></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        protected static bool ReturnTrue() => true;
+
         #region < Event Arg Singletons >
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

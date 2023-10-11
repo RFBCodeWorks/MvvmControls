@@ -39,14 +39,15 @@ namespace RFBCodeWorks.WPF.Controls.Tests
         [TestMethod()]
         public void AssignPadding()
         {
-            var g = new SimpleGrid();
+            var g = new SimpleGrid
+            {
+                AutoColumnWidth = new(24),
+                AutoRowHeight = new(38),
 
-            g.AutoColumnWidth = new(24);
-            g.AutoRowHeight = new(38);
-
-            g.Padding = "5";
-            g.ColumnCount = 5;
-            g.RowCount = 5;
+                Padding = "5",
+                ColumnCount = 5,
+                RowCount = 5
+            };
             Assert.AreEqual(5, g.ColumnDefinitions[0].Width.Value, "\n\n Width was not set for first column!");
             Assert.AreEqual(5, g.RowDefinitions[0].Height.Value, "\n\n Height was not set for first row!");
             Assert.AreEqual(5, g.ColumnDefinitions[4].Width.Value, "\n\n Width was not set for last column!");

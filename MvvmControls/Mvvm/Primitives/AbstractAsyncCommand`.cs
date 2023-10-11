@@ -34,24 +34,9 @@ namespace RFBCodeWorks.Mvvm.Primitives
 
         #endregion
 
-        #region < Static Methods >
-
-        /// <summary>
-        /// Static method to be used in place of Func{bool} methods to always return true
-        /// </summary>
-        /// <returns><see langword="true"/></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Delegate")]
-        protected static bool ReturnTrue(T parameter) => true;
-
         /// <inheritdoc cref="AbstractCommand{T}.ThrowIfInvalidParameter(object)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected static T ThrowIfInvalidParameter(object parameter)
-            => AbstractCommand<T>.ThrowIfInvalidParameter(parameter);
-
-        #endregion
-
-        #region < Constructors >
+        protected static T ThrowIfInvalidParameter(object parameter) => AbstractCommand<T>.ThrowIfInvalidParameter(parameter);
 
         /// <inheritdoc cref="AbstractAsyncCommand.AbstractAsyncCommand(bool, Action{Exception})"/>
         protected AbstractAsyncCommand(Action<Exception> errorHandler = null) : this(true, errorHandler) { }
@@ -65,8 +50,6 @@ namespace RFBCodeWorks.Mvvm.Primitives
             runningTasks = new ObservableCollection<Task>();
             runningTasks.CollectionChanged += RunningTasks_CollectionChanged;
         }
-
-        #endregion
 
         #region < Properties and Events >
 

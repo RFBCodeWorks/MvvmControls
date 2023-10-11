@@ -14,6 +14,16 @@ namespace RFBCodeWorks.Mvvm.Primitives
     /// <remarks>Explicitly implements <see cref="ICommand"/></remarks> methods. Derived classes should provide their own implementation.
     public abstract class CommandBase : ObservableObject, ICommand, CommunityToolkit.Mvvm.Input.IRelayCommand, IRelayCommand
     {
+        /// <summary> Static method that can be used as the default Func{T, bool}</summary>
+        /// <returns><see langword="true"/></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ReturnTrue<T>(T ignoredParameter) => true;
+
+        /// <summary> Static method that can be used as the default Func{bool}</summary>
+        /// <returns><see langword="true"/></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool ReturnTrue() => true;
+
         /// <summary>
         /// Subscribe (or not) to the <see cref="CommandManager.RequerySuggested"/> event
         /// </summary>

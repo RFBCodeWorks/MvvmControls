@@ -359,7 +359,7 @@ namespace RFBCodeWorks.Mvvm
             /// <inheritdoc cref="CreateActionFromMethodName{O}(string)"/>
             public ButtonDefinition<O> FromMethodName<O>(string methodName, string toolTip = null, string displayText = null)
             {
-                return FromMethodName<O>(methodName, Primitives.AbstractCommand<O>.ReturnTrue, toolTip, displayText);
+                return FromMethodName<O>(methodName, Primitives.CommandBase.ReturnTrue, toolTip, displayText);
             }
 
             #endregion

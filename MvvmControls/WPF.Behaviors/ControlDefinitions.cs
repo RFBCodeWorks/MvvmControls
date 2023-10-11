@@ -32,7 +32,7 @@ namespace RFBCodeWorks.WPF.Behaviors
         }
 
         /// <summary>
-        /// Unbind the specified dependency property if the source is the same as the binding.source
+        /// Create a new binding for the specified dependency property.
         /// </summary>
         /// <param name="obj">the bound control</param>
         /// <param name="prop">the bound dependencyproperty</param>
@@ -47,7 +47,7 @@ namespace RFBCodeWorks.WPF.Behaviors
             UpdateSourceTrigger? trigger = null)
         where T : class, IControlDefinition
         {
-            BindingOperations.SetBinding(obj, prop, new Binding(propertyName)
+            _ = BindingOperations.SetBinding(obj, prop, new Binding(propertyName)
             {
                 Source = source,
                 Mode = mode ?? BindingMode.Default,
