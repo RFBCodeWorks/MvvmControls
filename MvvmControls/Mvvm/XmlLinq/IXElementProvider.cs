@@ -105,11 +105,6 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
     public interface IXElementProvider : IXObjectProvider
     {
         /// <summary>
-        /// The name of the XElement
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
         /// Occurs when this node received a 'Changed' event that indicates an ADD or REMOVE event from some descendant within the tree. <br/>
         /// The sender of the event should represent the node that was changed, not necessarily this object that hosts the event.
         /// </summary>
@@ -118,6 +113,16 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// <br/> - If its determined that this XObject was Added/Removed To/From the tree, then those events should be raised, meaning this should only be notifying direct Xml.Linq children.
         /// </remarks>
         event EventHandler DescendantChanged;
+
+        /// <summary>
+        /// The name of the XElement
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// An <see cref="IXElementSorter"/> to be used when adding children to this node.
+        /// </summary>
+        IXElementSorter ChildSorter { get; set; }
 
         /// <summary>
         /// Get the XElement from the provider

@@ -66,7 +66,16 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         public XElementProvider(string elementName, IXElementProvider parent)
             : this(elementName, parent, LocateByName, CreateXElement) { }
 
+        /// <inheritdoc/>
+        public event EventHandler ValueChanged;
+        /// <inheritdoc/>
+        public event EventHandler Added;
+        /// <inheritdoc/>
+        public event EventHandler Removed;
+        /// <inheritdoc/>
+        public event EventHandler DescendantChanged;
 
+        private IXElementSorter ChildSorterField;
         private XElement XElementField;
         private readonly string NameField;
         /// <inheritdoc cref="XElementLocatorDelegate"/>
@@ -76,14 +85,16 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         
         /// <inheritdoc/>
         public IXElementProvider Parent { get; }
-        /// <inheritdoc/>
-        public event EventHandler ValueChanged;
-        /// <inheritdoc/>
-        public event EventHandler Added;
-        /// <inheritdoc/>
-        public event EventHandler Removed;
-        /// <inheritdoc/>
-        public event EventHandler DescendantChanged;
+        
+        /// <summary>
+        /// An <see cref="IXElementSorter"/> to be used when adding children to this node.
+        /// </summary>
+        /// <remarks>If not specified, uses the <see cref="Parent"/>'s sorter.</remarks>
+        public IXElementSorter ChildSorter 
+        { 
+            get => ChildSorterField ?? Parent?.ChildSorter ??  XElementSorter.DefaultSorter;
+            set => ChildSorterField = value;
+        }
 
         /// <summary>
         /// <inheritdoc cref="XObjectChangedEventEvaluation.XElementChanged(object, XObjectChangeEventArgs, XElement, bool)" path="/param[@name='discriminateDescendants']" />
@@ -134,7 +145,6 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
                 OnPropertyChanged("");
             }
         }
-
 
         /// <inheritdoc/>
         public string Value
@@ -218,8 +228,12 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         {
             if (XElement != null) return XElement;
             if (!CanBeCreated) return null;
-            var x = CreateElementFunc(NameField);
-            Parent.CreateXElement()?.Add(x);
+            XElement parent = Parent.CreateXElement();
+            if (parent != null)
+            {
+                var x = CreateElementFunc(NameField);
+                ChildSorter.AddChild(parent, x);
+            }
             return XElement;
         }
 
@@ -240,6 +254,36 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
                     DescendantChanged?.Invoke(this, EventArgs.Empty);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Sort the children XElements using this object's <see cref="ChildSorter"/>
+        /// </summary>
+        public void SortChildren() => SortChildren(ChildSorter);
+
+        /// <summary>
+        /// Sort the children XElements using the specified <paramref name="sorter"/>
+        /// </summary>
+        /// <exception cref="ArgumentNullException"/>
+        public void SortChildren(IXElementSorter sorter)
+        {
+            if (sorter is null) throw new ArgumentNullException(nameof(sorter));
+            if (IsNodeAvailable) sorter.SortChildren(this.XElement);
+        }
+
+        /// <summary>
+        /// Sort the Attributes using this object's <see cref="ChildSorter"/>
+        /// </summary>
+        public void SortAttributes() => SortAttributes(ChildSorter);
+
+        /// <summary>
+        /// Sort the Attributes using the specified <paramref name="sorter"/>
+        /// </summary>
+        /// <exception cref="ArgumentNullException"/>
+        public void SortAttributes(IXElementSorter sorter)
+        {
+            if (sorter is null) throw new ArgumentNullException(nameof(sorter));
+            if (IsNodeAvailable) sorter.SortAttributes(this.XElement);
         }
 
         /// <summary>

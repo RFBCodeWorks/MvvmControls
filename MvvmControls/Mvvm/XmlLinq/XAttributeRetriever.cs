@@ -109,7 +109,11 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
                 }
                 else if (IsNodeAvailable || CanBeCreated)
                 {
-                    Parent.CreateXElement()?.SetAttributeValue(AttrName, value);
+                    var parentNode = Parent.CreateXElement();
+                    if (parentNode != null)
+                    {
+                        Parent.ChildSorter.SetAttributeValue(parentNode, AttrName, value);
+                    }
                 }
             }
         }

@@ -18,7 +18,7 @@
         <Authors>Robert Brenckman</Authors>
         <Company />
         <Copyright>Copyright 2023</Copyright>
-        <Version>1.0.0.5</Version>
+        <Version>1.0.0.6</Version>
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
         <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
@@ -42,12 +42,12 @@
         </Description>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>StrongName.pfx</AssemblyOriginatorKeyFile>
-        <PackageReleaseNotes>- ControlDefinition bindings no longer take priority if a value was set in xaml, such as for a tooltip or content.
-- Fixed NumericUpDowns focus issue when using the keyboard tab function
-- Reworked the Async Commands for improved thread safety.
-- Default lazy initialization of the Refreshable* itemsources
-- Refreshable textbox</PackageReleaseNotes>
-        
+        <PackageReleaseNotes>
+            - Modifies RFBCodeWorks.Mvvm.XmlLinq namespace
+            - Added IXElementSorter interface
+            - Modified IXElementProvider to include an IXElementSorter property.
+            - Added default implementation of IXElementSorter to retain default functionality.
+        </PackageReleaseNotes>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
       <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>

@@ -33,13 +33,22 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// <inheritdoc/>
         public event EventHandler DescendantChanged;
 
+        private XContainer XContainerField;
+        private IXElementSorter ChildSorterField;
+
+        IXElementProvider IXObjectProvider.Parent => null;
+        bool IXObjectProvider.CanBeCreated { get => IsNodeAvailable; set { } }
+        XObject IXObjectProvider.XObject => ProvidedElement;
+        XElement IXElementProvider.XObject => ProvidedElement;
+
         /// <summary>
         /// The XContainer object to provide
         /// </summary>
         public XContainer XContainer
         {
             get { return XContainerField; }
-            set {
+            set
+            {
                 if (XContainer.ReferenceEquals(XContainerField, value)) return;
                 //Updating the value
                 if (XContainer != null)
@@ -59,20 +68,6 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         }
 
         /// <summary>
-        /// <inheritdoc cref="XObjectChangedEventEvaluation.XElementChanged(object, XObjectChangeEventArgs, XElement, bool)" path="/param[@name='discriminateDescendants']" />
-        /// </summary>
-        public bool DiscriminateDescendantChanged { get; set; }
-
-        private void XContainer_Changed(object sender, XObjectChangeEventArgs e)
-        {
-            var result = XObjectChangedEventEvaluation.XElementChanged(sender, e, ProvidedElement, DiscriminateDescendantChanged);
-            if (result == XObjectChangedEventEvaluation.ChangeType.DescendantAdded | result == XObjectChangedEventEvaluation.ChangeType.DescendantRemoved)
-                DescendantChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        private XContainer XContainerField;
-
-        /// <summary>
         /// The XElement provided by this XContainerProvider.
         /// <br/> - If an XDocument is the XContainer, then this will be the root node.
         /// <br/> - If an XElement is the XContainer, then this will be the XElement.
@@ -89,10 +84,15 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
             }
         }
 
-        IXElementProvider IXObjectProvider.Parent => null;
-        XObject IXObjectProvider.XObject => ProvidedElement;
-        XElement IXElementProvider.XObject => ProvidedElement;
-
+        /// <summary>
+        /// An <see cref="IXElementSorter"/> to be used when adding children to this node.
+        /// </summary>
+        /// <remarks>If not specified, uses the default implementation of <see cref="XElementSorter"/></remarks>
+        public IXElementSorter ChildSorter
+        {
+            get => ChildSorterField ?? XElementSorter.DefaultSorter;
+            set => ChildSorterField = value;
+        }
 
         /// <summary>
         /// The name of the provided XElement object
@@ -102,9 +102,15 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// <inheritdoc/>
         public bool IsNodeAvailable => this.ProvidedElement != null;
 
-        bool IXObjectProvider.CanBeCreated { get => IsNodeAvailable; set { } }
+        /// <summary>
+        /// <inheritdoc cref="XObjectChangedEventEvaluation.XElementChanged(object, XObjectChangeEventArgs, XElement, bool)" path="/param[@name='discriminateDescendants']" />
+        /// </summary>
+        public bool DiscriminateDescendantChanged { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Does not create an element, as the XContainerProvider is designed to be the root of an <see cref="XDocument"/>
+        /// </summary>
+        /// <returns><see cref="ProvidedElement"/></returns>
         public XElement CreateXElement()
         {
             return ProvidedElement;
@@ -120,12 +126,49 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         }
 
         /// <summary>
+        /// Sort the children XElements using this object's <see cref="ChildSorter"/>
+        /// </summary>
+        public void SortChildren() => SortChildren(ChildSorter);
+
+        /// <summary>
+        /// Sort the children XElements using the specified <paramref name="sorter"/>
+        /// </summary>
+        /// <exception cref="ArgumentNullException"/>
+        public void SortChildren(IXElementSorter sorter)
+        {
+            if (sorter is null) throw new ArgumentNullException(nameof(sorter));
+            if (IsNodeAvailable) sorter.SortChildren(this.ProvidedElement);
+        }
+
+        /// <summary>
+        /// Sort the Attributes using this object's <see cref="ChildSorter"/>
+        /// </summary>
+        public void SortAttributes() => SortAttributes(ChildSorter);
+
+        /// <summary>
+        /// Sort the Attributes using the specified <paramref name="sorter"/>
+        /// </summary>
+        /// <exception cref="ArgumentNullException"/>
+        public void SortAttributes(IXElementSorter sorter)
+        {
+            if (sorter is null) throw new ArgumentNullException(nameof(sorter));
+            if (IsNodeAvailable) sorter.SortAttributes(this.ProvidedElement);
+        }
+
+        /// <summary>
         /// Write out the contents of the <see cref="XContainer"/>
         /// </summary>
         /// <inheritdoc/>
         public override string ToString()
         {
             return XContainer?.ToString() ?? string.Empty;
+        }
+
+        private void XContainer_Changed(object sender, XObjectChangeEventArgs e)
+        {
+            var result = XObjectChangedEventEvaluation.XElementChanged(sender, e, ProvidedElement, DiscriminateDescendantChanged);
+            if (result == XObjectChangedEventEvaluation.ChangeType.DescendantAdded | result == XObjectChangedEventEvaluation.ChangeType.DescendantRemoved)
+                DescendantChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

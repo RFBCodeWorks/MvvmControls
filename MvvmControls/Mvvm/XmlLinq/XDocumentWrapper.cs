@@ -53,6 +53,17 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         XElement IXElementProvider.XObject => base.Root;
 
         /// <summary>
+        /// An <see cref="IXElementSorter"/> to be used when adding children to this node.
+        /// </summary>
+        /// <remarks>If not specified, uses the default implementation of <see cref="XElementSorter"/></remarks>
+        public IXElementSorter ChildSorter
+        {
+            get => ChildSorterField ?? XElementSorter.DefaultSorter;
+            set => ChildSorterField = value;
+        }
+        private IXElementSorter ChildSorterField;
+
+        /// <summary>
         /// Determine if a Root XElement object exists
         /// </summary>
         public bool IsNodeAvailable => base.Root != null;

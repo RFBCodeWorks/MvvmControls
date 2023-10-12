@@ -82,6 +82,17 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
             }
         }
 
+        /// <summary>
+        /// An <see cref="IXElementSorter"/> to be used when adding children to this node.
+        /// </summary>
+        /// <remarks>If not specified, uses the default implementation of <see cref="XElementSorter"/></remarks>
+        public IXElementSorter ChildSorter
+        {
+            get => ChildSorterField ?? XElementSorter.DefaultSorter;
+            set => ChildSorterField = value;
+        }
+        private IXElementSorter ChildSorterField;
+
         string IXElementProvider.Name => this.Name.LocalName;
         string IXValueObject.Name => this.Name.LocalName;
         XElement IXElementProvider.XObject => this;
