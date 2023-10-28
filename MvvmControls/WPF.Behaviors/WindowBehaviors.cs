@@ -234,23 +234,20 @@ namespace RFBCodeWorks.WPF.Behaviors
 
         const string CoerceKeyBindings = nameof(CoerceKeyBindings);
 
-        /// <summary>
-        /// Assigns an <see cref="IWindowLoadingHandler"/> handler to a <see cref="Window"/>
-        /// </summary>
-        public static readonly DependencyProperty CoerceKeyBindingsProperty =
-            DependencyProperty.RegisterAttached(CoerceKeyBindings, typeof(bool), typeof(WindowBehaviors), new PropertyMetadata(false, CoerceKeyBindingsPropertyChanged) );
+        /// <inheritdoc cref="SetCoerceKeyBindings(DependencyObject, bool)"/>
+        public static readonly DependencyProperty CoerceKeyBindingsProperty = DependencyProperty.RegisterAttached(CoerceKeyBindings, typeof(bool), typeof(WindowBehaviors), new PropertyMetadata(false, CoerceKeyBindingsPropertyChanged) );
 
         /// <summary>
-        /// Gets the assigned <see cref="IWindowLoadingHandler"/> from a <see cref="Window"/>
+        /// Gets the <see cref="CoerceKeyBindingsProperty"/> setting
         /// </summary>
         public static bool GetCoerceKeyBindings(DependencyObject obj) => (bool)obj.GetValue(CoerceKeyBindingsProperty);
 
         /// <summary>
-        /// Assigns an <see cref="IWindowActivatedHandler"/> to a <see cref="Window"/>
+        /// Coerces the KeyBindings of the FrameworkElement onto any child MenuItems with the matching command
         /// </summary>
         public static void SetCoerceKeyBindings(DependencyObject obj, bool value)
         {
-            if (obj is not FrameworkElement) throw new ArgumentException($"{nameof(CoerceKeyBindingsProperty)} property can only be bound to a {nameof(ContentControl)}");
+            if (obj is not FrameworkElement) throw new ArgumentException($"{nameof(CoerceKeyBindingsProperty)} property can only be bound to a {nameof(FrameworkElement)}");
             obj.SetValue(CoerceKeyBindingsProperty, value);
         }
 
@@ -279,9 +276,8 @@ namespace RFBCodeWorks.WPF.Behaviors
             if (keyBinds.Length == 0) return;
             foreach (MenuItem menuItem in FindLogicalChildren<MenuItem>(control).Where(m => m.Command != null))
             {
-                foreach(KeyBinding key in keyBinds.Where(k => k.Command == menuItem.Command))
+                if (keyBinds.FirstOrDefault(k => k.Command == menuItem.Command) is KeyBinding key)
                 {
-                    
                     menuItem.InputGestureText = ((KeyGesture)key.Gesture).GetDisplayStringForCulture(CultureInfo.CurrentUICulture);
                 }
             }
