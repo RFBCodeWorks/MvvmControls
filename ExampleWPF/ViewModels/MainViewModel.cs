@@ -14,7 +14,8 @@ namespace ExampleWPF
     {
         public MainViewModel()
         {
-            
+            MenuItemTestCommand = new RelayCommand(() => System.Windows.MessageBox.Show("Menu Item 1 Command has fired."));
+            MenuItemTestCommand2 = new RelayCommand(() => System.Windows.MessageBox.Show("Menu Item 2 Command has fired."));
         }
 
         public bool TriggerClosingWindowInterface { get; set; }
@@ -59,6 +60,9 @@ namespace ExampleWPF
         }
         private bool WasLoadedField;
 
+
+        public RelayCommand MenuItemTestCommand { get; }
+        public RelayCommand MenuItemTestCommand2 { get; }
 
         public void OnUIElementGotFocus(object sender, EventArgs e)
         {
