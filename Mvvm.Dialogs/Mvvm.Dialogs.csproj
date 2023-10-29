@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net472;netcoreapp3.1;net5.0-windows</TargetFrameworks>
+        <TargetFrameworks>net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows</TargetFrameworks>
         <UseWpf>true</UseWpf>
         <RootNamespace>RFBCodeWorks.Mvvm.Dialogs</RootNamespace>
         <AssemblyName>RFBCodeWorks.Mvvm.Dialogs</AssemblyName>
@@ -19,10 +19,10 @@
         <Authors>Robert Brenckman</Authors>
         <Company />
         <Copyright>Copyright 2023</Copyright>
-        <Version>1.0.0.5</Version>
+        <Version>1.0.0.8</Version>
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
         <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
-        <PackageReleaseNotes>Fixed warning regarding the package dependencies</PackageReleaseNotes>
+        <PackageReleaseNotes>Added build targets for Net6 and Net7</PackageReleaseNotes>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
     </PropertyGroup>
 
