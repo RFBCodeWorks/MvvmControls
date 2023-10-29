@@ -18,7 +18,7 @@
         <Authors>Robert Brenckman</Authors>
         <Company />
         <Copyright>Copyright 2023</Copyright>
-        <Version>1.0.0.6</Version>
+        <Version>1.0.0.7</Version>
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
         <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
@@ -42,10 +42,7 @@
         </Description>
         <SignAssembly>True</SignAssembly>
         <PackageReleaseNotes>
-            - Modifies RFBCodeWorks.Mvvm.XmlLinq namespace
-            - Added IXElementSorter interface
-            - Modified IXElementProvider to include an IXElementSorter property.
-            - Added default implementation of IXElementSorter to retain default functionality.
+            - Add WindowBehaviors.CoerceKeyBindings Dependency Property
         </PackageReleaseNotes>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <AssemblyOriginatorKeyFile>..\MvvmControls.snk</AssemblyOriginatorKeyFile>
