@@ -232,10 +232,8 @@ namespace RFBCodeWorks.WPF.Behaviors
 
         #region < CoercedKeyBindings >
 
-        const string CoerceKeyBindings = nameof(CoerceKeyBindings);
-
         /// <inheritdoc cref="SetCoerceKeyBindings(DependencyObject, bool)"/>
-        public static readonly DependencyProperty CoerceKeyBindingsProperty = DependencyProperty.RegisterAttached(CoerceKeyBindings, typeof(bool), typeof(WindowBehaviors), new PropertyMetadata(false, CoerceKeyBindingsPropertyChanged) );
+        public static readonly DependencyProperty CoerceKeyBindingsProperty = DependencyProperty.RegisterAttached("CoerceKeyBindings", typeof(bool), typeof(WindowBehaviors), new PropertyMetadata(false, CoerceKeyBindingsPropertyChanged) );
 
         /// <summary>
         /// Gets the <see cref="CoerceKeyBindingsProperty"/> setting
@@ -247,7 +245,7 @@ namespace RFBCodeWorks.WPF.Behaviors
         /// </summary>
         public static void SetCoerceKeyBindings(DependencyObject obj, bool value)
         {
-            if (obj is not FrameworkElement) throw new ArgumentException($"{nameof(CoerceKeyBindingsProperty)} property can only be bound to a {nameof(FrameworkElement)}");
+            if (obj is not FrameworkElement) throw new ArgumentException($"{nameof(CoerceKeyBindingsProperty)} can only be bound to a {nameof(FrameworkElement)}");
             obj.SetValue(CoerceKeyBindingsProperty, value);
         }
 
@@ -274,7 +272,7 @@ namespace RFBCodeWorks.WPF.Behaviors
             if (control == null) return;
             KeyBinding[] keyBinds = control.InputBindings.OfType<KeyBinding>().Where(k => k.Gesture is KeyGesture).ToArray();
             if (keyBinds.Length == 0) return;
-            foreach (MenuItem menuItem in FindLogicalChildren<MenuItem>(control).Where(m => m.Command != null))
+            foreach (MenuItem menuItem in FindLogicalChildren<MenuItem>(control).Where(m => m.Command != null && string.IsNullOrWhiteSpace(m.InputGestureText)))
             {
                 if (keyBinds.FirstOrDefault(k => k.Command == menuItem.Command) is KeyBinding key)
                 {

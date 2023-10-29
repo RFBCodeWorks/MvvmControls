@@ -6,7 +6,7 @@
         <RootNamespace>RFBCodeWorks.Mvvm.Dialogs</RootNamespace>
         <AssemblyName>RFBCodeWorks.Mvvm.Dialogs</AssemblyName>
         <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>StrongName.pfx</AssemblyOriginatorKeyFile>
+		<AssemblyOriginatorKeyFile>..\MvvmControls.snk</AssemblyOriginatorKeyFile>
 
         <!-- Nuget Stuff -->
         <GeneratePackageOnBuild Condition="$(Configuration)=='Release'">true</GeneratePackageOnBuild>

@@ -41,7 +41,7 @@
         <PackageTags>Mvvm, ViewModel</PackageTags>
         <SignAssembly>true</SignAssembly>
         <DelaySign>false</DelaySign>
-        <AssemblyOriginatorKeyFile>StrongName.pfx</AssemblyOriginatorKeyFile>
+		<AssemblyOriginatorKeyFile>..\MvvmControls.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
     <ItemGroup>

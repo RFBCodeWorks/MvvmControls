@@ -40,14 +40,15 @@
             ## XAML:
             &lt;ComboBox MvvmControls:ControlDefinitions.ComboBoxDefinition="{Binding MyComboBox}" /&gt;
         </Description>
-        <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>StrongName.pfx</AssemblyOriginatorKeyFile>
+        <SignAssembly>True</SignAssembly>
         <PackageReleaseNotes>
             - Modifies RFBCodeWorks.Mvvm.XmlLinq namespace
             - Added IXElementSorter interface
             - Modified IXElementProvider to include an IXElementSorter property.
             - Added default implementation of IXElementSorter to retain default functionality.
         </PackageReleaseNotes>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <AssemblyOriginatorKeyFile>..\MvvmControls.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
       <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
@@ -81,5 +82,4 @@
             <SubType>Designer</SubType>
         </Page>
     </ItemGroup>
-
 </Project>
