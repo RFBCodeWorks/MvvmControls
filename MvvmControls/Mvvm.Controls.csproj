@@ -11,7 +11,7 @@
         <GeneratePackageOnBuild Condition="$(Configuration)=='Release'">true</GeneratePackageOnBuild>
         <PackageId>$(AssemblyName)</PackageId>
         <Product>$(AssemblyName)</Product>
-        <PackageOutputPath>..\_OutputPackages\</PackageOutputPath>
+        <PackageOutputPath>_OutputPackages\</PackageOutputPath>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
         <PackageLicenseExpression></PackageLicenseExpression>
         <DocumentationFile>bin\$(Configuration)\\$(TargetFramework)\\$(AssemblyName).xml</DocumentationFile>
@@ -43,6 +43,7 @@
         <SignAssembly>True</SignAssembly>
         <PackageReleaseNotes>
             - Add WindowBehaviors.CoerceKeyBindings Dependency Property
+            - Add TreeView Support
         </PackageReleaseNotes>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <AssemblyOriginatorKeyFile>..\MvvmControls.snk</AssemblyOriginatorKeyFile>
