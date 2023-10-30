@@ -37,15 +37,22 @@ namespace RFBCodeWorks.Mvvm.Specialized
         public FileTreeViewModel() : this(new IconDictionary()) { }
 
         /// <inheritdoc/>
-        public FileTreeViewModel(IconDictionary iconDictionary)
+        public FileTreeViewModel(IconDictionary iconDictionary) : base()
         {
             IconDictionary = iconDictionary;
+            RefreshCommand = new RelayCommand(Refresh, CanRefresh);
+            base.ItemSourceChanged += RefreshCommand.NotifyCanExecuteChanged;
         }
-        
+
         /// <summary>
         /// The IconDictionary that can be used to provides icons to the UI
         /// </summary>
         public IconDictionary IconDictionary { get; }
+
+        /// <summary>
+        /// Command to refresh the tree
+        /// </summary>
+        public RelayCommand RefreshCommand { get; }
 
         /// <inheritdoc cref="SetRootDirectory(DirectoryInfo)"/>
         /// <inheritdoc cref="DirectoryInfo.DirectoryInfo(string)"/>
@@ -66,6 +73,11 @@ namespace RFBCodeWorks.Mvvm.Specialized
         public void Refresh()
         {
             TreeRoot.Refresh();
+        }
+
+        private bool CanRefresh()
+        {
+            return TreeRoot is TreeViewDirectoryInfo;
         }
     }
 }
