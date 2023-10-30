@@ -10,13 +10,17 @@ namespace RFBCodeWorks.Mvvm
     public class TreeViewItemBase<TItem> : TreeViewItemBase<TItem, ITreeViewItem>
     {
         /// <inheritdoc/>
-        public TreeViewItemBase(TItem item) : base(item) { }
+        protected TreeViewItemBase(TItem item) : base(item) { }
+
+        /// <inheritdoc cref="TreeViewItemBase(string, ITreeViewItem)"/>
+        protected TreeViewItemBase(TItem item, ITreeViewItem parent) : base(item, parent) { }
 
         /// <inheritdoc/>
         public TreeViewItemBase(TItem item, string name) : base(item, name) { }
 
         /// <inheritdoc/>
         public TreeViewItemBase(TItem item, string name, ITreeViewItem parent) : base(item, name, parent) { }
+
     }
 
     /// <summary>A TreeViewItem that provides details about a specified <typeparamref name="TItem"/></summary>
@@ -25,13 +29,17 @@ namespace RFBCodeWorks.Mvvm
     public class TreeViewItemBase<TItem, TParent> : TreeViewItemBase where TParent : ITreeViewItem
     {
         /// <inheritdoc cref="TreeViewItemBase()"/>
-        public TreeViewItemBase(TItem item) : base() { Item = item; }
+        protected TreeViewItemBase(TItem item) : base() { Item = item; }
+
+        /// <inheritdoc cref="TreeViewItemBase(ITreeViewItem)"/>
+        protected TreeViewItemBase(TItem item, TParent parent) : base(parent) { Item = item; }
 
         /// <inheritdoc cref="TreeViewItemBase(string)"/>
         public TreeViewItemBase(TItem item, string name) : base(name) { Item = item; }
         
         /// <inheritdoc cref="TreeViewItemBase(string, ITreeViewItem)"/>
         public TreeViewItemBase(TItem item, string name, TParent parent) : base(name, parent) { Item = item; }
+
 
         /// <summary>
         /// The Item represented by this TreeViewItem
@@ -55,6 +63,8 @@ namespace RFBCodeWorks.Mvvm
         /// Instantiate the base class - Name will be <see cref="String.Empty"/> unless overridden.
         /// </summary>
         protected TreeViewItemBase() : this(string.Empty) { }
+        
+        internal TreeViewItemBase(ITreeViewItem parent) { Parent = parent; }
 
         /// <summary>
         /// Create a new <see cref="TreeViewItemBase"/> with the specified name

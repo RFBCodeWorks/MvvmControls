@@ -9,27 +9,84 @@
              xmlns:Behaviors="clr-namespace:RFBCodeWorks.WPF.Behaviors;assembly=RFBCodeWorks.Mvvm.Controls"
              xmlns:BehaviorHelpers="clr-namespace:RFBCodeWorks.WPF.Behaviors.Helpers;assembly=RFBCodeWorks.Mvvm.Controls"
              xmlns:Converters="clr-namespace:RFBCodeWorks.WPF.Converters;assembly=RFBCodeWorks.Mvvm.Controls"
-             xmlns:Model="clr-namespace:ExampleWPF.Models"
-             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type=Model:XmlLinqModel}">
+             xmlns:ViewModels="clr-namespace:ExampleWPF.ViewModels"
+             xmlns:XTree="clr-namespace:RFBCodeWorks.Mvvm.XmlLinq.Controls;assembly=RFBCodeWorks.Mvvm.Controls"
+             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type=ViewModels:XmlLinqViewModel}">
     <Grid Background="AliceBlue">
-        <StackPanel>
-            <GroupBox Header="IntegerUpDown">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Stored Xml Value: "/>
-                        <TextBlock Text="{Binding NumericBox.NodeValueSetter.XValueProvider.Value}"/>
+        <Grid.Resources>
+            <Converters:BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
+            <Converters:VisibilityCollapseWhenTrueConverter x:Key="CollapsedConverter"/>
+        </Grid.Resources>
+        <ScrollViewer>
+            <StackPanel>
+                <GroupBox Header="IntegerUpDown">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Stored Xml Value: "/>
+                            <TextBlock Text="{Binding XmlLinqVM.NumericBox.NodeValueSetter.XValueProvider.Value}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="NodeValueSetter Value (Wraps the XValueProvider): "/>
+                            <TextBlock Text="{Binding XmlLinqVM.NumericBox.NodeValueSetter.Value}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="NumericBox object Value (Wraps the NodeValueSetter): "/>
+                            <TextBlock Text="{Binding XmlLinqVM.NumericBox.Value}"/>
+                        </StackPanel>
+                        <CC:IntegerUpDown Value="{Binding XmlLinqVM.NumericBox.Value}" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="NodeValueSetter Value (Wraps the XValueProvider): "/>
-                        <TextBlock Text="{Binding NumericBox.NodeValueSetter.Value}"/>
+                </GroupBox>
+                <GroupBox MaxHeight="800" Header="TreeView" MinHeight="100">
+                    <StackPanel>
+                        <Button Content="Load XMl File" Command="{Binding SelectXmlFileCommand}" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Selected Node : "/>
+                            <TextBlock Text="{Binding XmlTreeView.SelectedItem.Name}"/>
+                        </StackPanel>
+                        <TreeView ItemsSource="{Binding XmlTreeView.Items}" MinHeight="200">
+                            <TreeView.Resources>
+                                <!-- TreeViewItem Setters -->
+                                <Style TargetType="TreeViewItem">
+                                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                                </Style>
+                                <!-- XElement Data Template -->
+                                <HierarchicalDataTemplate DataType="{x:Type XTree:XElementTreeViewItem}" ItemsSource="{Binding Elements}">
+                                    <!-- Base Item Template -->
+                                    <GroupBox Header="{Binding Name}">
+                                        <StackPanel Orientation="Vertical">
+                                            <StackPanel 
+                                                Orientation="Horizontal" 
+                                                Visibility="{Binding Item.HasElements, Converter={StaticResource CollapsedConverter}}"
+                                                >
+                                                <TextBlock Text="   Value : "/>
+                                                <TextBlock Text="{Binding Value}"/>
+                                            </StackPanel>
+                                            <GroupBox 
+                                            Header="Attributes"
+                                            Visibility="{Binding Item.HasAttributes, Converter={StaticResource BoolToVisConverter}}"
+                                            >
+                                                <ListView ItemsSource="{Binding Attributes}">
+                                                    <ListView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="{Binding Name}"/>
+                                                                <TextBlock Text=" = "/>
+                                                                <TextBlock Text="{Binding Item.Value}"/>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </ListView.ItemTemplate>
+                                                </ListView>
+                                            </GroupBox>
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <!-- Data Triggers -->
+                                </HierarchicalDataTemplate>
+                            </TreeView.Resources>
+                        </TreeView>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="NumericBox object Value (Wraps the NodeValueSetter): "/>
-                        <TextBlock Text="{Binding NumericBox.Value}"/>
-                    </StackPanel>
-                    <CC:IntegerUpDown Value="{Binding NumericBox.Value}" Minimum="-100" Maximum="100" SmallChange="1" LargeChange="10"/>
-                </StackPanel>
-            </GroupBox>
-        </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

@@ -76,7 +76,7 @@ namespace RFBCodeWorks.WPF.Converters
         /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Visibility ret = (Visibility)((IValueConverter)converter).Convert(value, targetType, parameter, culture);
+            Visibility ret = (Visibility)Convert(value, targetType, parameter, culture);
             if (ret == Visibility.Collapsed) return Visibility.Hidden;
             return ret;
         }
