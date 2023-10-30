@@ -7,7 +7,19 @@ using System.Threading.Tasks;
 namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
-    /// Interface for TreeViewItems to be used with <see cref="Primitives.AbstractTreeView{TSelectedItem, TEnumerable, TSelectedValue}"/>
+    /// A strongly typed <see cref="ITreeViewItem"/> interface
+    /// </summary>
+    /// <typeparam name="TChild"></typeparam>
+    public interface ITreeViewItem<TChild> : ITreeViewItem where TChild : ITreeViewItem
+    {
+        /// <summary>
+        /// Any child TreeViewItems
+        /// </summary>
+        new IEnumerable<TChild> Children { get; }
+    }
+
+    /// <summary>
+    /// Interface for TreeViewItems to be used with <see cref="TreeViewBase{TSelectedItem, TEnumerable}"/>
     /// </summary>
     public interface ITreeViewItem
     {
