@@ -35,14 +35,6 @@ namespace RFBCodeWorks.Mvvm.Primitives
 
         #endregion
 
-        #region < Static Methods >
-
-        /// <inheritdoc cref="AbstractCommand.ReturnTrue"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected static bool ReturnTrue() => true;
-
-        #endregion
-
         #region < Constructors >
 
         /// <inheritdoc cref="AbstractAsyncCommand.AbstractAsyncCommand(bool, Action{Exception})"/>

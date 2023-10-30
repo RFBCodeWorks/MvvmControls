@@ -18,11 +18,6 @@ namespace RFBCodeWorks.Mvvm.Primitives
     /// </summary>
     public abstract class AbstractAsyncButtonDefinition : ControlBase, IButtonDefinition, ICommand
     {
-        /// <summary> Static method that can be used as the default Func{bool} for <see cref="ICommand.CanExecute(object)"/> </summary>
-        /// <returns><see langword="true"/></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected static bool ReturnTrue() => true;
-
         /// <inheritdoc/>
         public virtual string DisplayText
         {
