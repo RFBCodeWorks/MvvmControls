@@ -12,14 +12,45 @@ namespace RFBCodeWorks.Mvvm
     public interface ITreeViewItem
     {
         /// <summary>
+        /// Event that occurs when <see cref="IsSelected"/> gets set to TRUE
+        /// </summary>
+        event EventHandler Selected;
+
+        /// <summary>
+        /// Event that occurs when <see cref="IsSelected"/> gets changes from TRUE to FALSE
+        /// </summary>
+        event EventHandler Deselected;
+
+        /// <summary>
+        /// Event that can bubble up when a child has been selected
+        /// </summary>
+        event EventHandler ChildSelected;
+
+        /// <summary>
+        /// Event that occurs when <see cref="IsExpanded"/> gets changes to TRUE
+        /// </summary>
+        public event EventHandler Expanded;
+
+        /// <summary>
+        /// Event that occurs when <see cref="IsExpanded"/> gets changes to FALSE
+        /// </summary>
+        public event EventHandler Collapsed;
+
+        /// <summary>
         /// Get the name of the item - Used to display the item within the TreeView
         /// </summary>
         string Name { get; }
 
         /// <summary>
-        /// This will be set True/False by the WPF control if bound
+        /// Gets/Sets if the TreeViewItem is currently selected
         /// </summary>
+        /// <remarks>For ViewModel Set functionality, Binding must be set to TwoWay</remarks>
         bool IsSelected { get; set; }
+
+        /// <summary>
+        /// Gets/Sets if the TreeViewItem is expanded
+        /// </summary>
+        bool IsExpanded { get; set; }
 
         /// <summary>
         /// Any child TreeViewItems
