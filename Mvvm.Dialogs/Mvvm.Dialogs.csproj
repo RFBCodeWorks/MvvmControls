@@ -12,7 +12,6 @@
         <GeneratePackageOnBuild Condition="$(Configuration)=='Release'">true</GeneratePackageOnBuild>
         <PackageId>$(AssemblyName)</PackageId>
         <Product>$(AssemblyName)</Product>
-        <PackageOutputPath>..\_OutputPackages\</PackageOutputPath>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
         <PackageLicenseExpression></PackageLicenseExpression>
         <DocumentationFile>bin\$(Configuration)\\$(AssemblyName).xml</DocumentationFile>

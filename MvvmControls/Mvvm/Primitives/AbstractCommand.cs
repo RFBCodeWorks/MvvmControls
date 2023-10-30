@@ -15,23 +15,12 @@ namespace RFBCodeWorks.Mvvm.Primitives
     public abstract class AbstractCommand : CommandBase, IRelayCommand
     {
 
-        /// <summary>
-        /// Static method to be used in place of Func{bool} methods to always return true
-        /// </summary>
-        /// <returns><see langword="true"/></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool ReturnTrue() => true;
-
-        #region < Constructors >
-
         /// <inheritdoc/>
         protected AbstractCommand() : this(true) { }
 
         /// <summary> Initialize the object </summary>
         /// <inheritdoc/>
         protected AbstractCommand(bool subscribeToCommandManager) : base(subscribeToCommandManager) { }
-
-        #endregion
 
         /// <inheritdoc/>
         public abstract bool CanExecute();

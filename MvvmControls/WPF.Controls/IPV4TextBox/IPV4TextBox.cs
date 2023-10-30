@@ -80,11 +80,12 @@ namespace RFBCodeWorks.WPF.Controls
 
         private static void IPAddressChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var t = d as IPV4TextBox;
-            if (t.SettingIPAddress) return;
-            t.SettingIPAddress = true;
-            t.Text = e.NewValue?.ToString() ?? "";
-            t.SettingIPAddress = false;
+            if (d is IPV4TextBox t && !t.SettingIPAddress)
+            {
+                t.SettingIPAddress = true;
+                t.Text = e.NewValue?.ToString() ?? "";
+                t.SettingIPAddress = false;
+            }
         }
 
         /// <summary>

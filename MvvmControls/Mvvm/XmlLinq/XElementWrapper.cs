@@ -14,20 +14,34 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// <inheritdoc cref="XElement.XElement(XElement)"/>
         public XElementWrapper(XElement other) : base(other)
         {
+            OriginalElement = other;
             base.Changed += XElementChanged;
         }
 
         /// <inheritdoc cref="XElement.XElement(XName)"/>
-        public XElementWrapper(XName name) : this(new XElement(name)) { }
+        public XElementWrapper(XName name) : base(name)
+        {
+            base.Changed += XElementChanged;
+        }
 
         /// <inheritdoc cref="XElement.XElement(XName, object)"/>
-        public XElementWrapper(XName name, object content) : this(new XElement(name, content)) { }
+        public XElementWrapper(XName name, object content) : base(name, content)
+        {
+            base.Changed += XElementChanged;
+        }
 
         /// <inheritdoc cref="XElement.XElement(XName, object[])"/>
-        public XElementWrapper(XName name, params object[] content) : this(new XElement(name, content)) { }
+        public XElementWrapper(XName name, params object[] content) : base(name, content)
+        {
+            base.Changed += XElementChanged;
+        }
 
         /// <inheritdoc cref="XElement.XElement(XStreamingElement)"/>
-        public XElementWrapper(XStreamingElement other) : this(new XElement(other)) { }
+        public XElementWrapper(XStreamingElement other) : base(other)
+        {
+            OriginalSteamingElement = other;
+            base.Changed += XElementChanged;
+        }
 
         // These will never be raised since this object will never be notified of the change
         event EventHandler IXObjectProvider.Added { add { } remove { } }
@@ -40,6 +54,9 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         public event EventHandler ValueChanged;
         /// <inheritdoc/>
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private readonly XElement OriginalElement;
+        private readonly XStreamingElement OriginalSteamingElement;
 
         /// <summary>
         /// <inheritdoc cref="XObjectChangedEventEvaluation.XElementChanged(object, XObjectChangeEventArgs, XElement, bool)" path="/param[@name='discriminateDescendants']" />
@@ -62,8 +79,9 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         }
 
         /// <inheritdoc cref="XElement.Value"/>
-        new public string Value { 
-            get => base.Value; 
+        new public string Value
+        {
+            get => base.Value;
             set
             {
                 if (value is null)
@@ -107,7 +125,6 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
             return this;
         }
 
-
         private void XElementChanged(object sender, XObjectChangeEventArgs e)
         {
             var result = XObjectChangedEventEvaluation.XElementChanged(sender, e, this, DiscriminateDescendantChanged);
@@ -127,5 +144,17 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
                     break;
             }
         }
+
+        /// <summary>
+        /// Check if the provided <paramref name="element"/> is the same element that was passed into this object's constructor.
+        /// </summary>
+        /// <returns>The if this element is the same element that was passed into this object's constructor. Otherwise false.</returns>
+        public bool IsSameElement(XElement element) => element == OriginalElement;
+
+        /// <inheritdoc cref="IsSameElement(XElement)"/>
+        public bool IsSameElement(XNode element) => element is XElement el && el == OriginalElement;
+
+        /// <inheritdoc cref="IsSameElement(XElement)"/>
+        public bool IsSameElement(XStreamingElement element) => element == OriginalSteamingElement;
     }
 }

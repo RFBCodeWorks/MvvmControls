@@ -80,7 +80,10 @@
             </ScrollViewer>
         </TabItem>
         <TabItem Header="  XML.Linq  ">
-            <Views:XmlLinqView DataContext="{Binding XmlLinqViewModel}"/>
+            <Views:XmlLinqView DataContext="{Binding XmlLinqTester}"/>
+        </TabItem>
+        <TabItem Header="  TreeView  ">
+            <Views:FolderBrowserTreeView DataContext="{Binding TreeViewTester}"/>
         </TabItem>
         <TabItem Header="  Misc.  ">
             <cc:SimpleGrid RowCount="3">
