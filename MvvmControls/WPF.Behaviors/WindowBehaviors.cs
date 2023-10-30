@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace RFBCodeWorks.WPF.Behaviors
 {
@@ -41,8 +44,7 @@ namespace RFBCodeWorks.WPF.Behaviors
 
         private static void IWindowFocusHandlerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var w = d as UIElement;
-            if (w is null) return;
+            if (d is not UIElement w) return;
             if (e.NewValue != null)
             {
                 w.GotFocus += W_GotFocus;
@@ -96,8 +98,7 @@ namespace RFBCodeWorks.WPF.Behaviors
 
         private static void IWindowLoadingHandlerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var w = d as Window;
-            if (w is null) return;
+            if (d is not Window w) return;
             if (e.NewValue != null)
             {
                 w.Loaded += W_Loaded;
@@ -151,8 +152,7 @@ namespace RFBCodeWorks.WPF.Behaviors
 
         private static void IWindowActivatedHandlerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Window w = d as Window;
-            if (w is null) return;
+            if (d is not Window w) return;
             if (e.NewValue != null)
             {
                 w.Activated += W_Activated;
@@ -205,8 +205,7 @@ namespace RFBCodeWorks.WPF.Behaviors
 
         private static void IWindowClosingHandlerPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Window w = d as Window;
-            if (w is null) return;
+            if (d is not Window w) return;
             if (e.NewValue != null)
             {
                 w.Closing += W_Closing;
@@ -231,5 +230,79 @@ namespace RFBCodeWorks.WPF.Behaviors
 
         #endregion
 
+        #region < CoercedKeyBindings >
+
+        /// <inheritdoc cref="SetCoerceKeyBindings(DependencyObject, bool)"/>
+        public static readonly DependencyProperty CoerceKeyBindingsProperty = DependencyProperty.RegisterAttached("CoerceKeyBindings", typeof(bool), typeof(WindowBehaviors), new PropertyMetadata(false, CoerceKeyBindingsPropertyChanged) );
+
+        /// <summary>
+        /// Gets the <see cref="CoerceKeyBindingsProperty"/> setting
+        /// </summary>
+        public static bool GetCoerceKeyBindings(DependencyObject obj) => (bool)obj.GetValue(CoerceKeyBindingsProperty);
+
+        /// <summary>
+        /// Coerces the KeyBindings of the FrameworkElement onto any child MenuItems with the matching command
+        /// </summary>
+        public static void SetCoerceKeyBindings(DependencyObject obj, bool value)
+        {
+            if (obj is not FrameworkElement) throw new ArgumentException($"{nameof(CoerceKeyBindingsProperty)} can only be bound to a {nameof(FrameworkElement)}");
+            obj.SetValue(CoerceKeyBindingsProperty, value);
+        }
+
+        private static void CoerceKeyBindingsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is FrameworkElement cc && e.NewValue is bool value)
+            {
+                if (value && cc.IsLoaded)
+                    ApplyKeyBindings(cc);
+                else if (value)
+                    cc.Loaded += CoerceKeyBindings_ContentControlLoaded;
+                else
+                    cc.Loaded -= CoerceKeyBindings_ContentControlLoaded;
+            }
+        }
+
+        private static void CoerceKeyBindings_ContentControlLoaded(object sender, RoutedEventArgs e)
+        {
+            ApplyKeyBindings(sender as FrameworkElement);
+        }
+
+        private static void ApplyKeyBindings(FrameworkElement control)
+        {
+            if (control == null) return;
+            KeyBinding[] keyBinds = control.InputBindings.OfType<KeyBinding>().Where(k => k.Gesture is KeyGesture).ToArray();
+            if (keyBinds.Length == 0) return;
+            foreach (MenuItem menuItem in FindLogicalChildren<MenuItem>(control).Where(m => m.Command != null && string.IsNullOrWhiteSpace(m.InputGestureText)))
+            {
+                if (keyBinds.FirstOrDefault(k => k.Command == menuItem.Command) is KeyBinding key)
+                {
+                    menuItem.InputGestureText = ((KeyGesture)key.Gesture).GetDisplayStringForCulture(CultureInfo.CurrentUICulture);
+                }
+            }
+        }
+
+        #endregion
+
+        /// <remarks>
+        /// See also https://stackoverflow.com/a/978352/1600
+        /// </remarks>
+        private static IEnumerable<T> FindLogicalChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj == null)
+                yield return (T)Enumerable.Empty<T>();
+
+            foreach (var child in LogicalTreeHelper.GetChildren(depObj))
+            {
+                if (child == null) continue;
+
+                if (child is T t) yield return t;
+
+                if (child is DependencyObject childDepObj)
+                {
+                    foreach (T childOfChild in FindLogicalChildren<T>(childDepObj))
+                        yield return childOfChild;
+                }
+            }
+        }
     }
 }

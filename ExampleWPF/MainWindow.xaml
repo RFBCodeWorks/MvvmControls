@@ -10,16 +10,29 @@
         xmlns:Behaviors="clr-namespace:RFBCodeWorks.WPF.Behaviors;assembly=RFBCodeWorks.Mvvm.Controls"
         xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:Views="clr-namespace:ExampleWPF.Views"
-        d:DataContext="{d:DesignInstance Type=local:MainViewModel, IsDesignTimeCreatable=True}"
+        d:DataContext="{d:DesignInstance Type=local:MainViewModel, IsDesignTimeCreatable=False}"
         xmlns:md="clr-namespace:MvvmDialogs;assembly=MvvmDialogs"
         md:DialogServiceViews.IsRegistered="True"
         Title="MainWindow" Height="450" Width="800"
         ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True"
         Behaviors:WindowBehaviors.IWindowClosingHandler="{Binding ElementName=ThisWindow, Path=DataContext}"
         Behaviors:WindowBehaviors.IWindowLoadingHandler="{Binding ElementName=ThisWindow, Path=DataContext}"
+        Behaviors:WindowBehaviors.CoerceKeyBindings="True"
         >
-
-    <TabControl >
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding MenuItemTestCommand2}" Key="F2"/>
+    </Window.InputBindings>
+    <StackPanel Behaviors:WindowBehaviors.CoerceKeyBindings="True">
+        <StackPanel.InputBindings>
+            <KeyBinding Command="{Binding MenuItemTestCommand}" Key="F1"/>
+        </StackPanel.InputBindings>
+        <Menu>
+            <MenuItem Header="Key Bind Command Tests">
+                <MenuItem Header="Test Command" Command="{Binding MenuItemTestCommand}"/>
+                <MenuItem Header="Test Command2" Command="{Binding MenuItemTestCommand2}"/>
+            </MenuItem>
+        </Menu>
+        <TabControl >
         <TabItem Header="  Control Definitions  " >
             <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" Background="BurlyWood">
                 <StackPanel >
@@ -88,4 +101,5 @@
             </cc:SimpleGrid>
         </TabItem>
     </TabControl>
+    </StackPanel>
 </Window>

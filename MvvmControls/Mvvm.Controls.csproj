@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net472;net48;netcoreapp3.1;net5.0-windows</TargetFrameworks>
+        <TargetFrameworks>net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows</TargetFrameworks>
         <RootNamespace>RFBCodeWorks</RootNamespace>
         <AssemblyName>RFBCodeWorks.Mvvm.Controls</AssemblyName>
         <LangVersion>9.0</LangVersion>
@@ -40,14 +40,12 @@
             ## XAML:
             &lt;ComboBox MvvmControls:ControlDefinitions.ComboBoxDefinition="{Binding MyComboBox}" /&gt;
         </Description>
-        <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>StrongName.pfx</AssemblyOriginatorKeyFile>
+        <SignAssembly>True</SignAssembly>
         <PackageReleaseNotes>
-            - Modifies RFBCodeWorks.Mvvm.XmlLinq namespace
-            - Added IXElementSorter interface
-            - Modified IXElementProvider to include an IXElementSorter property.
-            - Added default implementation of IXElementSorter to retain default functionality.
+            - Add WindowBehaviors.CoerceKeyBindings Dependency Property
         </PackageReleaseNotes>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <AssemblyOriginatorKeyFile>..\MvvmControls.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
       <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
@@ -81,5 +79,4 @@
             <SubType>Designer</SubType>
         </Page>
     </ItemGroup>
-
 </Project>
