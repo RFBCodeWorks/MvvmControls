@@ -19,7 +19,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         bool IsFile { get; }
 
         /// <summary> The underlying FileInfo or DirectoryInfo object </summary>
-        FileSystemInfo ItemInfo{ get; }
+        FileSystemInfo Item{ get; }
 
         /// <summary>
         /// Children files or directories

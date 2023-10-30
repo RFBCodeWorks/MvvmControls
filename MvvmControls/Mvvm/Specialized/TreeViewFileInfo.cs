@@ -33,6 +33,8 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// <summary> The <see cref="System.IO.FileInfo"/> object this <see cref="ITreeViewItem"/> represents </summary>
         public override FileInfo Item => base.Item;
 
+        /// <inheritdoc/>
+        public override string Name => Item.Name;
 
         /// <summary> An image to show on the WPF window - Must be specified by consumer if not created by <see cref="FileTreeViewModel"/> </summary>
         public ImageSource Icon => LazyIcon.Value;
@@ -69,6 +71,6 @@ namespace RFBCodeWorks.Mvvm.Specialized
         IFileOrDirectoryTreeViewItem[] IFileOrDirectoryTreeViewItem.Children => Array.Empty<IFileOrDirectoryTreeViewItem>();
         bool IFileOrDirectoryTreeViewItem.IsDirectory => false;
         bool IFileOrDirectoryTreeViewItem.IsFile => true;
-        FileSystemInfo IFileOrDirectoryTreeViewItem.ItemInfo => Item;
+        FileSystemInfo IFileOrDirectoryTreeViewItem.Item => Item;
     }
 }

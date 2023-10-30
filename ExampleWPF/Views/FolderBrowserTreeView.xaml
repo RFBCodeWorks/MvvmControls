@@ -12,20 +12,37 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Button Content="Select Root Folder" Command="{Binding SelectNewRootButton}"/>
+        <TextBlock Grid.Row="1" Text="{Binding TreeViewVM.TreeRoot.Item.FullName, Mode=OneWay}"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="2">
+            <TextBlock Grid.Row="2" Text="Selected Item: "/>
+            <TextBlock Grid.Row="2" Text="{Binding TreeViewVM.SelectedItem.Name}"/>
+        </StackPanel>
         <!-- Define the Tree View -->
-        <TreeView Grid.Row="1" ItemsSource="{Binding TreeViewVM.Items}">
+        <TreeView Grid.Row="3" ItemsSource="{Binding TreeViewVM.Items}">
             <!-- Define the Hierarchical Data Templates for proper viewing of the folder tree -->
             <!-- https://learn.microsoft.com/en-us/dotnet/api/system.windows.hierarchicaldatatemplate?view=windowsdesktop-7.0 -->
             <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type DT:DirectoryInfoTreeViewItem}" ItemsSource="{Binding Children}">
-                    <TextBlock Text="{Binding Name}"/>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                </Style>
+                <HierarchicalDataTemplate DataType="{x:Type DT:TreeViewDirectoryInfo}" ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image  MaxHeight="16" Source="{Binding Icon}" />
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
                 </HierarchicalDataTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type DT:FileInfoTreeViewItem}">
-                    <TextBlock Text="{Binding Name}"/>
-                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type DT:TreeViewFileInfo}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image  MaxHeight="16" Source="{Binding Icon}" />
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+                </DataTemplate>
             </TreeView.Resources>
         </TreeView>
     </Grid>

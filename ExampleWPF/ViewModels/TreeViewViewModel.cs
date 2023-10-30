@@ -13,7 +13,7 @@ namespace ExampleWPF.ViewModels
             SelectNewRootButton = new RelayCommand(SelectRoot);
         }
 
-        public RFBCodeWorks.Mvvm.Specialized.FolderBrowserTreeView TreeViewVM { get; } = new RFBCodeWorks.Mvvm.Specialized.FolderBrowserTreeView();
+        public RFBCodeWorks.Mvvm.Specialized.FileTreeViewModel TreeViewVM { get; } = new RFBCodeWorks.Mvvm.Specialized.FileTreeViewModel();
 
         public RelayCommand SelectNewRootButton { get; }
 
