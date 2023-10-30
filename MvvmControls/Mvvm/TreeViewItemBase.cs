@@ -36,7 +36,7 @@ namespace RFBCodeWorks.Mvvm
         /// <summary>
         /// The Item represented by this TreeViewItem
         /// </summary>
-        public TItem Item { get; }
+        public virtual TItem Item { get; }
 
         /// <inheritdoc cref="TreeViewItemBase.Parent"/>
         public new TParent Parent
