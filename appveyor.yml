@@ -9,7 +9,7 @@ nuget:
 before_build:
 - cmd: nuget restore
 build:
-  project: '%project_name%\%project_name%.csproj'
+  project: '*\*.csproj'
   publish_nuget: true
   verbosity: minimal
 artifacts:
