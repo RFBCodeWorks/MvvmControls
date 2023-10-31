@@ -33,6 +33,11 @@ build:
 before_build:
 - cmd: nuget restore
 
+build_script:
+- cmd: MSBuild .\Mvvm.ViewModel\Mvvm.IViewModel.csproj
+- cmd: MSBuild .\Mvvm.Dialogs\Mvvm.Dialogs.csproj
+- cmd: MSBuild .\MvvmControls\MvvmControls.csproj
+
 artifacts: # Locate the Nuget Packages
 - path: .\OutputNuget\RFBCodeWorks.Mvvm.Controls*.nupkg
   name: Controls
