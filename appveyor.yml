@@ -28,7 +28,7 @@ branches:
 build:
   project: RFBCodeWorks.Mvvm.sln
   publish_nuget: true
-  verbosity: quiet          #quiet|minimal|normal|detailed
+  verbosity: minimal          #quiet|minimal|normal|detailed
 
 before_build:
 - cmd: nuget restore
