@@ -9,6 +9,7 @@
 
         <!-- Nuget Stuff -->
         <GeneratePackageOnBuild Condition="$(Configuration)=='Release'">true</GeneratePackageOnBuild>
+        <PackageOutputPath>bin\</PackageOutputPath>
         <PackageId>$(AssemblyName)</PackageId>
         <Product>$(AssemblyName)</Product>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
@@ -40,17 +41,11 @@
             &lt;ComboBox MvvmControls:ControlDefinitions.ComboBoxDefinition="{Binding MyComboBox}" /&gt;
         </Description>
         <SignAssembly>True</SignAssembly>
-        <PackageReleaseNotes>
-            - Add WindowBehaviors.CoerceKeyBindings Dependency Property
-            - Add TreeView Support
-        </PackageReleaseNotes>
+        <PackageReleaseNotes>- Add WindowBehaviors.CoerceKeyBindings Dependency Property
+            - Add TreeView Support</PackageReleaseNotes>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <AssemblyOriginatorKeyFile>..\MvvmControls.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
-      <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    </PropertyGroup>
-
     <ItemGroup>
         <None Include="..\LICENSE.txt" Link="LICENSE.txt">
             <PackagePath></PackagePath>
