@@ -19,7 +19,7 @@ nuget:
 #---------------------------------#
 
 platform: Any CPU
-configuration: AppVeyor
+configuration: Release # AppVeyor | Release
 
 branches:
   only:
@@ -28,22 +28,22 @@ branches:
 build:
   project: RFBCodeWorks.Mvvm.sln
   publish_nuget: true
-  verbosity: minimal          #quiet|minimal|normal|detailed
+  verbosity: quiet          #quiet|minimal|normal|detailed
 
 before_build:
 - cmd: nuget restore
 
 build_script:
-- cmd: MSBuild .\Mvvm.ViewModel\Mvvm.IViewModel.csproj
-- cmd: MSBuild .\Mvvm.Dialogs\Mvvm.Dialogs.csproj
-- cmd: MSBuild .\MvvmControls\MvvmControls.csproj
+- msbuild  .\Mvvm.ViewModel\Mvvm.IViewModel.csproj
+- msbuild  .\Mvvm.Dialogs\Mvvm.Dialogs.csproj
+- msbuild  .\MvvmControls\MvvmControls.csproj
 
 artifacts: # Locate the Nuget Packages
-- path: .\OutputNuget\RFBCodeWorks.Mvvm.Controls*.nupkg
+- path: .\OutputNuget\*Controls*.nupkg
   name: Controls
-- path: .\OutputNuget\RFBCodeWorks.Mvvm.Dialogs*.nupkg
+- path: .\OutputNuget\*Dialogs*.nupkg
   name: Dialogs
-- path: .\OutputNuget\RFBCodeWorks.Mvvm.IViewModel*.nupkg
+- path: .\OutputNuget\*IViewModel*.nupkg
   name: IViewModel
 
 assembly_info:
