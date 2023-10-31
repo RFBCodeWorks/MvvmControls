@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows</TargetFrameworks>
         <RootNamespace>RFBCodeWorks</RootNamespace>
@@ -19,7 +19,7 @@
         <Company />
         <Copyright>Copyright 2023</Copyright>
         <!-- ###################   Version Info ###############  -->
-        <Version>1.0.1.0</Version>
+        <Version>1.0.1.1</Version>
         <PackageReleaseNotes>
             - Add WindowBehaviors.CoerceKeyBindings Dependency Property
             - Add TreeView Support
