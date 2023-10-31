@@ -29,6 +29,7 @@
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
         <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
+        <Configurations>Debug;Release;AppVeyor</Configurations>
     </PropertyGroup>
 
     <!-- Decide which nuget package to utilize -->

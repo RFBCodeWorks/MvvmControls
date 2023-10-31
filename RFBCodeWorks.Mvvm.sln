@@ -23,6 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mvvm.Dialogs", "Mvvm.Dialog
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		AppVeyor|Any CPU = AppVeyor|Any CPU
+		AppVeyor|x64 = AppVeyor|x64
+		AppVeyor|x86 = AppVeyor|x86
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
@@ -31,6 +34,12 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{70F1F67C-BDE4-40DA-8493-273235C6A2F8}.AppVeyor|Any CPU.ActiveCfg = AppVeyor|Any CPU
+		{70F1F67C-BDE4-40DA-8493-273235C6A2F8}.AppVeyor|Any CPU.Build.0 = AppVeyor|Any CPU
+		{70F1F67C-BDE4-40DA-8493-273235C6A2F8}.AppVeyor|x64.ActiveCfg = AppVeyor|Any CPU
+		{70F1F67C-BDE4-40DA-8493-273235C6A2F8}.AppVeyor|x64.Build.0 = AppVeyor|Any CPU
+		{70F1F67C-BDE4-40DA-8493-273235C6A2F8}.AppVeyor|x86.ActiveCfg = AppVeyor|Any CPU
+		{70F1F67C-BDE4-40DA-8493-273235C6A2F8}.AppVeyor|x86.Build.0 = AppVeyor|Any CPU
 		{70F1F67C-BDE4-40DA-8493-273235C6A2F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{70F1F67C-BDE4-40DA-8493-273235C6A2F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70F1F67C-BDE4-40DA-8493-273235C6A2F8}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -43,6 +52,12 @@ Global
 		{70F1F67C-BDE4-40DA-8493-273235C6A2F8}.Release|x64.Build.0 = Release|Any CPU
 		{70F1F67C-BDE4-40DA-8493-273235C6A2F8}.Release|x86.ActiveCfg = Release|Any CPU
 		{70F1F67C-BDE4-40DA-8493-273235C6A2F8}.Release|x86.Build.0 = Release|Any CPU
+		{759021FE-B314-45EC-8133-44AE65EB839B}.AppVeyor|Any CPU.ActiveCfg = AppVeyor|Any CPU
+		{759021FE-B314-45EC-8133-44AE65EB839B}.AppVeyor|Any CPU.Build.0 = AppVeyor|Any CPU
+		{759021FE-B314-45EC-8133-44AE65EB839B}.AppVeyor|x64.ActiveCfg = AppVeyor|Any CPU
+		{759021FE-B314-45EC-8133-44AE65EB839B}.AppVeyor|x64.Build.0 = AppVeyor|Any CPU
+		{759021FE-B314-45EC-8133-44AE65EB839B}.AppVeyor|x86.ActiveCfg = AppVeyor|Any CPU
+		{759021FE-B314-45EC-8133-44AE65EB839B}.AppVeyor|x86.Build.0 = AppVeyor|Any CPU
 		{759021FE-B314-45EC-8133-44AE65EB839B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{759021FE-B314-45EC-8133-44AE65EB839B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{759021FE-B314-45EC-8133-44AE65EB839B}.Debug|x64.ActiveCfg = Debug|x64
@@ -55,6 +70,11 @@ Global
 		{759021FE-B314-45EC-8133-44AE65EB839B}.Release|x64.Build.0 = Release|x64
 		{759021FE-B314-45EC-8133-44AE65EB839B}.Release|x86.ActiveCfg = Release|x86
 		{759021FE-B314-45EC-8133-44AE65EB839B}.Release|x86.Build.0 = Release|x86
+		{BD3C4277-A7B6-4110-88F4-D22850412685}.AppVeyor|Any CPU.ActiveCfg = AppVeyor|Any CPU
+		{BD3C4277-A7B6-4110-88F4-D22850412685}.AppVeyor|x64.ActiveCfg = AppVeyor|Any CPU
+		{BD3C4277-A7B6-4110-88F4-D22850412685}.AppVeyor|x64.Build.0 = AppVeyor|Any CPU
+		{BD3C4277-A7B6-4110-88F4-D22850412685}.AppVeyor|x86.ActiveCfg = AppVeyor|Any CPU
+		{BD3C4277-A7B6-4110-88F4-D22850412685}.AppVeyor|x86.Build.0 = AppVeyor|Any CPU
 		{BD3C4277-A7B6-4110-88F4-D22850412685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BD3C4277-A7B6-4110-88F4-D22850412685}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD3C4277-A7B6-4110-88F4-D22850412685}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -67,6 +87,12 @@ Global
 		{BD3C4277-A7B6-4110-88F4-D22850412685}.Release|x64.Build.0 = Release|Any CPU
 		{BD3C4277-A7B6-4110-88F4-D22850412685}.Release|x86.ActiveCfg = Release|Any CPU
 		{BD3C4277-A7B6-4110-88F4-D22850412685}.Release|x86.Build.0 = Release|Any CPU
+		{4B4E66FE-5094-4EDC-8FA4-B8F828DF4356}.AppVeyor|Any CPU.ActiveCfg = AppVeyor|Any CPU
+		{4B4E66FE-5094-4EDC-8FA4-B8F828DF4356}.AppVeyor|Any CPU.Build.0 = AppVeyor|Any CPU
+		{4B4E66FE-5094-4EDC-8FA4-B8F828DF4356}.AppVeyor|x64.ActiveCfg = AppVeyor|Any CPU
+		{4B4E66FE-5094-4EDC-8FA4-B8F828DF4356}.AppVeyor|x64.Build.0 = AppVeyor|Any CPU
+		{4B4E66FE-5094-4EDC-8FA4-B8F828DF4356}.AppVeyor|x86.ActiveCfg = AppVeyor|Any CPU
+		{4B4E66FE-5094-4EDC-8FA4-B8F828DF4356}.AppVeyor|x86.Build.0 = AppVeyor|Any CPU
 		{4B4E66FE-5094-4EDC-8FA4-B8F828DF4356}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4B4E66FE-5094-4EDC-8FA4-B8F828DF4356}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B4E66FE-5094-4EDC-8FA4-B8F828DF4356}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -79,6 +105,12 @@ Global
 		{4B4E66FE-5094-4EDC-8FA4-B8F828DF4356}.Release|x64.Build.0 = Release|Any CPU
 		{4B4E66FE-5094-4EDC-8FA4-B8F828DF4356}.Release|x86.ActiveCfg = Release|Any CPU
 		{4B4E66FE-5094-4EDC-8FA4-B8F828DF4356}.Release|x86.Build.0 = Release|Any CPU
+		{F2070053-83E2-4EAF-A80F-54AEC844D0C0}.AppVeyor|Any CPU.ActiveCfg = AppVeyor|Any CPU
+		{F2070053-83E2-4EAF-A80F-54AEC844D0C0}.AppVeyor|Any CPU.Build.0 = AppVeyor|Any CPU
+		{F2070053-83E2-4EAF-A80F-54AEC844D0C0}.AppVeyor|x64.ActiveCfg = AppVeyor|Any CPU
+		{F2070053-83E2-4EAF-A80F-54AEC844D0C0}.AppVeyor|x64.Build.0 = AppVeyor|Any CPU
+		{F2070053-83E2-4EAF-A80F-54AEC844D0C0}.AppVeyor|x86.ActiveCfg = AppVeyor|Any CPU
+		{F2070053-83E2-4EAF-A80F-54AEC844D0C0}.AppVeyor|x86.Build.0 = AppVeyor|Any CPU
 		{F2070053-83E2-4EAF-A80F-54AEC844D0C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F2070053-83E2-4EAF-A80F-54AEC844D0C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2070053-83E2-4EAF-A80F-54AEC844D0C0}.Debug|x64.ActiveCfg = Debug|Any CPU

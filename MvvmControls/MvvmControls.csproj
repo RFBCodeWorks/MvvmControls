@@ -51,6 +51,7 @@
         <SignAssembly>True</SignAssembly>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <AssemblyOriginatorKeyFile>..\MvvmControls.snk</AssemblyOriginatorKeyFile>
+        <Configurations>Debug;Release;AppVeyor</Configurations>
     </PropertyGroup>
     <ItemGroup>
         <None Include="..\LICENSE.txt" Link="LICENSE.txt">

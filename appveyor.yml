@@ -10,9 +10,6 @@ version: 1.0.{build}.{branch}
 
 image: Visual Studio 2022
 
-cache:
-- packages -> **\packages.config      # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
-
 nuget:
   disable_publish_on_pr: true  # disable publishing of .nupkg artifacts to account/project feeds for pull request builds
 
@@ -22,7 +19,7 @@ nuget:
 #---------------------------------#
 
 platform: Any CPU
-configuration: Release
+configuration: AppVeyor
 
 branches:
   only:
@@ -38,9 +35,17 @@ before_build:
 
 artifacts: # Locate the Nuget Packages
 - path: .\OutputNuget\RFBCodeWorks.Mvvm.Controls*.nupkg
+  name: Controls
 - path: .\OutputNuget\RFBCodeWorks.Mvvm.Dialogs*.nupkg
+  name: Dialogs
 - path: .\OutputNuget\RFBCodeWorks.Mvvm.IViewModel*.nupkg
+  name: IViewModel
 
+assembly_info:
+    patch: false
+
+cache:
+- packages -> **\packages.config      # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 
 
 #---------------------------------#
