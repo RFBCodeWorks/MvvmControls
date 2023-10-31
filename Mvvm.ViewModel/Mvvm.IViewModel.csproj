@@ -43,6 +43,7 @@
         <SignAssembly>true</SignAssembly>
         <DelaySign>false</DelaySign>
 		<AssemblyOriginatorKeyFile>..\MvvmControls.snk</AssemblyOriginatorKeyFile>
+		<Configurations>Debug;Release;AppVeyor</Configurations>
     </PropertyGroup>
 
     <ItemGroup>

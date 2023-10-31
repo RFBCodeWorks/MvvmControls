@@ -5,6 +5,7 @@
     <RootNamespace>RFBCodeWorks.Mvvm.Tests</RootNamespace>
       <LangVersion>9.0</LangVersion>
     <IsPackable>false</IsPackable>
+    <Configurations>Debug;Release;AppVeyor</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MvvmControls\Mvvm.Controls.csproj" />
+    <ProjectReference Include="..\MvvmControls\MvvmControls.csproj" />
   </ItemGroup>
 
 </Project>

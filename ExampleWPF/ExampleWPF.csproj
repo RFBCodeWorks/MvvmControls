@@ -6,11 +6,12 @@
       <LangVersion>9.0</LangVersion>
       <UseWPF>true</UseWPF>
       <UseWindowsForms>true</UseWindowsForms>
+      <Configurations>Debug;Release;AppVeyor</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Mvvm.Dialogs\Mvvm.Dialogs.csproj" />
-    <ProjectReference Include="..\MvvmControls\Mvvm.Controls.csproj" />
+    <ProjectReference Include="..\MvvmControls\MvvmControls.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,71 @@
+version: 1.0.{build}.{branch}
+
+#
+# https://www.appveyor.com/docs/appveyor-yml/
+#
+
+#---------------------------------#
+#    environment configuration    #
+#---------------------------------#
+
+image: Visual Studio 2022
+
+nuget:
+  disable_publish_on_pr: true  # disable publishing of .nupkg artifacts to account/project feeds for pull request builds
+
+  
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+platform: Any CPU
+configuration: Release # AppVeyor | Release
+
+branches:
+  only:
+  - master
+
+build:
+  project: RFBCodeWorks.Mvvm.sln
+  publish_nuget: true
+  verbosity: quiet          #quiet|minimal|normal|detailed
+
+before_build:
+- cmd: nuget restore
+
+build_script:
+- msbuild  .\Mvvm.ViewModel\Mvvm.IViewModel.csproj
+- msbuild  .\Mvvm.Dialogs\Mvvm.Dialogs.csproj
+- msbuild  .\MvvmControls\MvvmControls.csproj
+
+artifacts: # Locate the Nuget Packages
+- path: .\OutputNuget\*Controls*.nupkg
+  name: Controls
+- path: .\OutputNuget\*Dialogs*.nupkg
+  name: Dialogs
+- path: .\OutputNuget\*IViewModel*.nupkg
+  name: IViewModel
+
+assembly_info:
+    patch: false
+
+cache:
+- packages -> **\packages.config      # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+
+
+#---------------------------------#
+#     deployment configuration    #
+#---------------------------------#
+
+# providers: Local, FTP, WebDeploy, AzureCS, AzureBlob, S3, NuGet, Environment
+# provider names are case-sensitive!
+#deploy:
+#
+#    # Deploying to NuGet feed
+#  - provider: NuGet
+#    server: https://my.nuget.server/feed
+#    api_key:
+#      secure: FYWX6NfjZIVw==
+#    skip_symbols: false
+#    symbol_server: https://your.symbol.server/feed
+#    artifact: MyPackage.nupkg
