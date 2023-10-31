@@ -1,18 +1,61 @@
 version: 1.0.{build}.{branch}
+
+#
+# https://www.appveyor.com/docs/appveyor-yml/
+#
+
+#---------------------------------#
+#    environment configuration    #
+#---------------------------------#
+
+image: Visual Studio 2022
+
+cache:
+- packages -> **\packages.config      # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+
+nuget:
+  disable_publish_on_pr: true  # disable publishing of .nupkg artifacts to account/project feeds for pull request builds
+
+  
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+platform: Any CPU
+configuration: Release
+
 branches:
   only:
   - master
-image: Visual Studio 2022
-configuration: Release
-nuget:
-  disable_publish_on_pr: false
+
+build:
+  project: RFBCodeWorks.Mvvm.sln
+  publish_nuget: true
+  verbosity: quiet          #quiet|minimal|normal|detailed
+
 before_build:
 - cmd: nuget restore
-build:
-  project: '*\*.csproj'
-  publish_nuget: true
-  verbosity: minimal
-artifacts:
+
+artifacts: # Locate the Nuget Packages
 - path: .\OutputNuget\RFBCodeWorks.Mvvm.Controls*.nupkg
 - path: .\OutputNuget\RFBCodeWorks.Mvvm.Dialogs*.nupkg
 - path: .\OutputNuget\RFBCodeWorks.Mvvm.IViewModel*.nupkg
+
+
+
+#---------------------------------#
+#     deployment configuration    #
+#---------------------------------#
+
+# providers: Local, FTP, WebDeploy, AzureCS, AzureBlob, S3, NuGet, Environment
+# provider names are case-sensitive!
+#deploy:
+#
+#    # Deploying to NuGet feed
+#  - provider: NuGet
+#    server: https://my.nuget.server/feed
+#    api_key:
+#      secure: FYWX6NfjZIVw==
+#    skip_symbols: false
+#    symbol_server: https://your.symbol.server/feed
+#    artifact: MyPackage.nupkg
