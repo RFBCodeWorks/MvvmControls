@@ -8,7 +8,7 @@
 
         <!-- Nuget Stuff -->
         <GeneratePackageOnBuild Condition="$(Configuration)=='Release'">true</GeneratePackageOnBuild>
-        <PackageOutputPath>bin\</PackageOutputPath>
+        <PackageOutputPath>..\OutputNuget\</PackageOutputPath>
         <PackageId>$(AssemblyName)</PackageId>
         <Product>$(AssemblyName)</Product>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
