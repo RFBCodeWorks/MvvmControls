@@ -1,17 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.7.34202.233
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33529.622
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mvvm.Controls.Tests", "MvvmControlsTests\Mvvm.Controls.Tests.csproj", "{70F1F67C-BDE4-40DA-8493-273235C6A2F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmControls.Tests", "MvvmControlsTests\MvvmControls.Tests.csproj", "{70F1F67C-BDE4-40DA-8493-273235C6A2F8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mvvm.Controls", "MvvmControls\Mvvm.Controls.csproj", "{759021FE-B314-45EC-8133-44AE65EB839B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvvmControls", "MvvmControls\MvvmControls.csproj", "{759021FE-B314-45EC-8133-44AE65EB839B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleWPF", "ExampleWPF\ExampleWPF.csproj", "{BD3C4277-A7B6-4110-88F4-D22850412685}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F7F23A78-3D3B-40F2-9FC0-B4B70B15378A}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		appveyor.yml = appveyor.yml
 		MvvmControls.snk = MvvmControls.snk
 		README.md = README.md
 	EndProjectSection

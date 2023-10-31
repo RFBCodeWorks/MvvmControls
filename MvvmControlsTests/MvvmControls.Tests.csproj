@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MvvmControls\Mvvm.Controls.csproj" />
+    <ProjectReference Include="..\MvvmControls\MvvmControls.csproj" />
   </ItemGroup>
 
 </Project>

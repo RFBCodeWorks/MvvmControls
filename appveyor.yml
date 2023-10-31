@@ -14,3 +14,5 @@ build:
   verbosity: minimal
 artifacts:
 - path: .\OutputNuget\RFBCodeWorks.Mvvm.Controls*.nupkg
+- path: .\OutputNuget\RFBCodeWorks.Mvvm.Dialogs*.nupkg
+- path: .\OutputNuget\RFBCodeWorks.Mvvm.IViewModel*.nupkg
