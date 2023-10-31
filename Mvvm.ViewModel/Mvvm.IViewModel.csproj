@@ -17,12 +17,14 @@
         <Authors>Robert Brenckman</Authors>
         <Company />
         <Copyright>Copyright 2023</Copyright>
-        <Version>1.0.0.1</Version>
+        <!-- ###################   Version Info ###############  -->
+        <Version>1.0.1.0</Version>
+        <PackageReleaseNotes>Updated StrongName Key</PackageReleaseNotes>
+        <!-- #################################  -->
+        
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
         <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
-        <PackageReleaseNotes></PackageReleaseNotes>
-
         <Description>
             Library that includes the following:
             

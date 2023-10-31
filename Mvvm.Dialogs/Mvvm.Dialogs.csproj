@@ -6,7 +6,7 @@
         <RootNamespace>RFBCodeWorks.Mvvm.Dialogs</RootNamespace>
         <AssemblyName>RFBCodeWorks.Mvvm.Dialogs</AssemblyName>
         <SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>..\MvvmControls.snk</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile>..\MvvmControls.snk</AssemblyOriginatorKeyFile>
 
         <!-- Nuget Stuff -->
         <GeneratePackageOnBuild Condition="$(Configuration)=='Release'">true</GeneratePackageOnBuild>
@@ -19,10 +19,15 @@
         <Authors>Robert Brenckman</Authors>
         <Company />
         <Copyright>Copyright 2023</Copyright>
-        <Version>1.0.0.8</Version>
+        <!-- ###################   Version Info ###############  -->
+        <Version>1.0.1.0</Version>
+        <PackageReleaseNotes>
+            - Added build targets for Net6 and Net7.
+            - Updated StrongName Key
+        </PackageReleaseNotes>
+        <!-- #################################  -->
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
         <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
-        <PackageReleaseNotes>Added build targets for Net6 and Net7</PackageReleaseNotes>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
     </PropertyGroup>
 
@@ -31,7 +36,8 @@
         <!-- Custom Property UseOfficalPackage is used to determine when the official package vs the nuget package from RFBCodeworks should be used -->
         <UseOfficialPackage>net462|net472|net48|net480|net6.0-windows|net7.0-windows</UseOfficialPackage>
         <DeprecatedPackage>netcoreapp3.1|net5.0-windows</DeprecatedPackage>
-        <Description>This dll relies on MvvmDialogs.IDialogService 
+        <Description>
+            This dll relies on MvvmDialogs.IDialogService
 
             This dll provides the following:
 
@@ -57,9 +63,10 @@
             - Provides additional constructors
             - Provides a virtual 'Show(IViewModel)' dialog that can be used to show the MessageBox
 
-MvvmDialogs Dependency Notes:
-- Where Possible, this will target the latest release of the original maintainer's package. (.NetFramework, .Net6.0, etc)
-- Since this package also targets .NetCoreApp3.1 and .Net5, which have been deprecate by the original maintainer, these will depend on a seperate nuget package that retains the required functionality for this library. (Clone of main repo, just updated targets)</Description>
+            MvvmDialogs Dependency Notes:
+            - Where Possible, this will target the latest release of the original maintainer's package. (.NetFramework, .Net6.0, etc)
+            - Since this package also targets .NetCoreApp3.1 and .Net5, which have been deprecate by the original maintainer, these will depend on a seperate nuget package that retains the required functionality for this library. (Clone of main repo, just updated targets)
+        </Description>
     </PropertyGroup>
     <ItemGroup>
         <!-- Official -->
@@ -67,7 +74,7 @@ MvvmDialogs Dependency Notes:
         <!-- Deprecated package - Maintained by RFBCodeworks -->
         <PackageReference Include="MvvmDialogs_.NetCore" Version="9.1.0" Condition="$(DeprecatedPackage.Contains('$(TargetFramework)'))"/>
     </ItemGroup>
-    
+
     <ItemGroup>
         <ProjectReference Include="..\Mvvm.ViewModel\Mvvm.IViewModel.csproj" />
     </ItemGroup>

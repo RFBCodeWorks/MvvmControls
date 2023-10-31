@@ -18,7 +18,15 @@
         <Authors>Robert Brenckman</Authors>
         <Company />
         <Copyright>Copyright 2023</Copyright>
-        <Version>1.0.0.8</Version>
+        <!-- ###################   Version Info ###############  -->
+        <Version>1.0.1.0</Version>
+        <PackageReleaseNotes>
+            - Add WindowBehaviors.CoerceKeyBindings Dependency Property
+            - Add TreeView Support
+            - Updated StrongName Key
+            - Added build targets for Net6 and Net7.
+        </PackageReleaseNotes>
+        <!-- #################################  -->
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
         <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
         <PackageReadmeFile>Readme.md</PackageReadmeFile>
@@ -41,8 +49,6 @@
             &lt;ComboBox MvvmControls:ControlDefinitions.ComboBoxDefinition="{Binding MyComboBox}" /&gt;
         </Description>
         <SignAssembly>True</SignAssembly>
-        <PackageReleaseNotes>- Add WindowBehaviors.CoerceKeyBindings Dependency Property
-            - Add TreeView Support</PackageReleaseNotes>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <AssemblyOriginatorKeyFile>..\MvvmControls.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
