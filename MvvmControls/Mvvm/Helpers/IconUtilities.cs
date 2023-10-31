@@ -1,4 +1,4 @@
-﻿#if WINDOWS || NETFRAMEWORK
+#if WINDOWS || NETFRAMEWORK
 
 using System;
 using System.Collections.Generic;
@@ -42,6 +42,7 @@ namespace RFBCodeWorks.Mvvm.Helpers
             {
                 imageSource = icon.ToImageSource();
             }
+            imageSource.Freeze();
             return imageSource;
         }
 
