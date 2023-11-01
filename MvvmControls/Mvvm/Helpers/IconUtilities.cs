@@ -1,5 +1,6 @@
-﻿#if WINDOWS || NETFRAMEWORK
+#if WINDOWS || NETFRAMEWORK
 
+using RFBCodeWorks.Mvvm.Specialized;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -22,36 +23,55 @@ namespace RFBCodeWorks.Mvvm.Helpers
     /// </summary>
     public static class IconUtilities
     {
+        /// <summary>
+        /// The default IIconLoader object - Retrieves frozen ImageSource icons using <see cref="IconUtilities"/>
+        /// </summary>
+        public static IIconLoader IconLoader { get => IconLoaderField ??= new IconLoaderImplementation(); }
+        private static IIconLoader IconLoaderField;
+        private class IconLoaderImplementation : IIconLoader
+        {
+            public ImageSource GetDirectoryIcon() => LargeFolderIcon;
+            public ImageSource GetIcon(FileInfo file) => ExtractAssociatedIcon(file?.FullName ?? throw new ArgumentNullException(nameof(file)), true);
+            public ImageSource GetIcon(string filePath) => ExtractAssociatedIcon(filePath, true);
+        }
+
         private static Icon largeFolderIcon;
         private static Icon smallFolderIcon;
 
         /// <summary>Gets an ImageSource representing the stock Large Folder Icon</summary>
-        public static ImageSource LargeFolderIcon => (largeFolderIcon ??= GetStockIcon(StockIcons.Explorer_Closed_Folder, IconSize.LargeIcon)).ToImageSource();
+        public static ImageSource LargeFolderIcon => (largeFolderIcon ??= GetStockIcon(StockIcons.Explorer_Closed_Folder, IconSize.LargeIcon)).ToImageSource(true);
 
         /// <summary>Gets an ImageSource representing the stock Small Folder Icon</summary>
-        public static ImageSource SmallFolderIcon => (smallFolderIcon ??= GetStockIcon(StockIcons.Explorer_Closed_Folder, IconSize.SmallIcon)).ToImageSource();
+        public static ImageSource SmallFolderIcon => (smallFolderIcon ??= GetStockIcon(StockIcons.Explorer_Closed_Folder, IconSize.SmallIcon)).ToImageSource(true);
 
         /// <summary>Retrieve an ImageSource of an Icon from the specified <paramref name="filePath"/></summary>
         /// <param name="filePath">The path to a file that contains an image - Must not be a UNC Path</param>
-        /// <inheritdoc cref="ToImageSource(System.Drawing.Icon)"/>
+        /// <inheritdoc cref="ToImageSource(System.Drawing.Icon, bool)"/>
         /// <inheritdoc cref="System.Drawing.Icon.ExtractAssociatedIcon(string)"/>
-        public static ImageSource ExtractAssociatedIcon(string filePath)
+        /// <param name="freezeImage"/>
+        public static ImageSource ExtractAssociatedIcon(string filePath, bool freezeImage = true)
         {
+            if (string.IsNullOrWhiteSpace(filePath)) { throw new ArgumentException(nameof(filePath)); }
+            if (!File.Exists(filePath)) { throw new FileNotFoundException(nameof(filePath)); }
             ImageSource imageSource = null;
             using (System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(filePath))
             {
-                imageSource = icon.ToImageSource();
+                imageSource = icon?.ToImageSource(freezeImage);
             }
             return imageSource;
         }
 
+        /// <param name="icon">The icon to convert</param>
+        /// <param name="freezeImage">If set true (default), the ImageSource will be frozen via <see cref="Freezable.Freeze()"/></param>
         /// <inheritdoc cref="Imaging.CreateBitmapSourceFromHIcon(IntPtr, Int32Rect, BitmapSizeOptions)"/>
-        public static ImageSource ToImageSource(this System.Drawing.Icon icon)
+        public static ImageSource ToImageSource(this System.Drawing.Icon icon, bool freezeImage = true)
         {
-            return Imaging.CreateBitmapSourceFromHIcon(
+            var image = Imaging.CreateBitmapSourceFromHIcon(
                 icon.Handle,
                 Int32Rect.Empty,
                 BitmapSizeOptions.FromEmptyOptions());
+            if (freezeImage) { image.Freeze(); }
+            return image;
         }
 
         // https://stackoverflow.com/questions/42910628/is-there-a-way-to-get-the-windows-default-folder-icon-using-c
