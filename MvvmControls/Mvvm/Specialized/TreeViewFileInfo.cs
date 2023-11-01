@@ -20,15 +20,15 @@ namespace RFBCodeWorks.Mvvm.Specialized
         }
 
         /// <summary>
-        /// Create the object, applying the icon from the <paramref name="iconDictionary"/>
+        /// Create the object, applying the icon from the <paramref name="iconProvider"/>
         /// </summary>
-        public TreeViewFileInfo(FileInfo fileInfo, IconDictionary iconDictionary) : this(fileInfo)
+        public TreeViewFileInfo(FileInfo fileInfo, IIconProvider iconProvider) : this(fileInfo)
         {
-            IconDictionary = iconDictionary;
+            IconProvider = iconProvider;
         }
 
         private Lazy<ImageSource> LazyIcon;
-        private readonly IconDictionary IconDictionary;
+        private readonly IIconProvider IconProvider;
 
         /// <summary> The <see cref="System.IO.FileInfo"/> object this <see cref="ITreeViewItem"/> represents </summary>
         public override FileInfo Item => base.Item;
@@ -43,13 +43,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// <inheritdoc cref="IconDictionary.TryAddIcon(FileInfo, out ImageSource)"/>
         private ImageSource GetIcon()
         {
-            if (Item.Exists)
-            {
-                ImageSource img = null;
-                if (IconDictionary?.TryLookupIcon(Item.FullName, false, out img) ?? false)
-                    return img;
-            }
-            return null;
+            return Item.Exists ? IconProvider?.GetFileIcon(Item.FullName) : null;
         }
 
         /// <summary>

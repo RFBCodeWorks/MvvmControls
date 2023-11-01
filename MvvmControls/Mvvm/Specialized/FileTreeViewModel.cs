@@ -37,9 +37,9 @@ namespace RFBCodeWorks.Mvvm.Specialized
         public FileTreeViewModel() : this(new IconDictionary()) { }
 
         /// <inheritdoc/>
-        public FileTreeViewModel(IconDictionary iconDictionary) : base()
+        public FileTreeViewModel(IIconProvider iconProvider) : base()
         {
-            IconDictionary = iconDictionary;
+            IconDictionary = iconProvider;
             RefreshCommand = new RelayCommand(Refresh, CanRefresh);
             base.ItemSourceChanged += RefreshCommand.NotifyCanExecuteChanged;
         }
@@ -47,7 +47,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// <summary>
         /// The IconDictionary that can be used to provides icons to the UI
         /// </summary>
-        public IconDictionary IconDictionary { get; }
+        public IIconProvider IconDictionary { get; }
 
         /// <summary>
         /// Command to refresh the tree

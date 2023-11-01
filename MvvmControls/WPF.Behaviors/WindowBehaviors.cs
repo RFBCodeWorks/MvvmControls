@@ -249,6 +249,26 @@ namespace RFBCodeWorks.WPF.Behaviors
             obj.SetValue(CoerceKeyBindingsProperty, value);
         }
 
+        /// <summary>
+        /// If set to a value, delays the application of the CoerceKeyBindings by X number of milliseconds.<br/> 
+        /// Useful if the ViewModel needs additional time to bind to all menuItems to the ViewModel's commands
+        /// </summary>
+        public static readonly DependencyProperty CoerceBindingDelayProperty = DependencyProperty.RegisterAttached("CoerceBindingDelay", typeof(int), typeof(WindowBehaviors), new PropertyMetadata(0));
+
+        /// <summary>
+        /// Gets the <see cref="CoerceBindingDelayProperty"/> setting
+        /// </summary>
+        public static int GetCoerceBindingDelay(DependencyObject obj) => (int)obj.GetValue(CoerceBindingDelayProperty);
+
+        /// <summary>
+        /// Coerces the KeyBindings of the FrameworkElement onto any child MenuItems with the matching command
+        /// </summary>
+        public static void SetCoerceBindingDelay(DependencyObject obj, int value)
+        {
+            if (obj is not FrameworkElement) throw new ArgumentException($"{nameof(CoerceBindingDelayProperty)} can only be bound to a {nameof(FrameworkElement)}");
+            obj.SetValue(CoerceBindingDelayProperty, value);
+        }
+
         private static void CoerceKeyBindingsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is FrameworkElement cc && e.NewValue is bool value)
@@ -264,19 +284,40 @@ namespace RFBCodeWorks.WPF.Behaviors
 
         private static void CoerceKeyBindings_ContentControlLoaded(object sender, RoutedEventArgs e)
         {
-            ApplyKeyBindings(sender as FrameworkElement);
+            if (sender is FrameworkElement el)
+            {
+                ApplyKeyBindings(el);
+                el.Loaded -= CoerceKeyBindings_ContentControlLoaded;
+            }
         }
 
         private static void ApplyKeyBindings(FrameworkElement control)
         {
             if (control == null) return;
-            KeyBinding[] keyBinds = control.InputBindings.OfType<KeyBinding>().Where(k => k.Gesture is KeyGesture).ToArray();
-            if (keyBinds.Length == 0) return;
-            foreach (MenuItem menuItem in FindLogicalChildren<MenuItem>(control).Where(m => m.Command != null && string.IsNullOrWhiteSpace(m.InputGestureText)))
+            int delay = GetCoerceBindingDelay(control);
+            if (delay > 0)
             {
-                if (keyBinds.FirstOrDefault(k => k.Command == menuItem.Command) is KeyBinding key)
+                Task.Run(async () =>
                 {
-                    menuItem.InputGestureText = ((KeyGesture)key.Gesture).GetDisplayStringForCulture(CultureInfo.CurrentUICulture);
+                    await Task.Delay(delay);
+                    control.Dispatcher.Invoke(Apply);
+                });
+            }
+            else
+            {
+                Apply();
+            }
+
+            void Apply()
+            {
+                KeyBinding[] keyBinds = control.InputBindings.OfType<KeyBinding>().Where(k => k.Gesture is KeyGesture).ToArray();
+                if (keyBinds.Length == 0) return;
+                foreach (MenuItem menuItem in FindLogicalChildren<MenuItem>(control).Where(m => m.Command != null && string.IsNullOrWhiteSpace(m.InputGestureText)))
+                {
+                    if (keyBinds.FirstOrDefault(k => k.Command == menuItem.Command) is KeyBinding key)
+                    {
+                        menuItem.InputGestureText = ((KeyGesture)key.Gesture).GetDisplayStringForCulture(CultureInfo.CurrentUICulture);
+                    }
                 }
             }
         }

@@ -20,14 +20,13 @@ namespace RFBCodeWorks.Mvvm.Specialized
     /// Class that is used to look up the Icon files for associated File Types, and hold them in a dictionary.
     /// <br/> This class returns <see cref="ImageSource"/> objects for use with WPF Bindings
     /// </summary>
-    public class IconDictionary : IValueConverter, IDictionary<string, ImageSource>
+    public class IconDictionary : IValueConverter, IDictionary<string, ImageSource>, IIconProvider
     {
         /// <inheritdoc/>
         public IconDictionary()
         {
 #if WINDOWS || NETFRAMEWORK
             IconLoader = Helpers.IconUtilities.IconLoader;
-            IconDict.Add(DirectoryIconKey, Helpers.IconUtilities.LargeFolderIcon);
 #endif
         }
 
@@ -41,7 +40,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// <summary>
         /// The object that can locate icons.
         /// </summary>
-        public IIconLoader IconLoader { get; set; }
+        public IIconProvider IconLoader { get; set; }
         
         /// <inheritdoc/>
         public int Count => IconDict.Count;
@@ -64,7 +63,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         public bool Remove(string key) => IconDict.Remove(key);
 
         /// <summary>
-        /// Attempt to get a icon that has already been added to the dictionary.
+        /// Attempt to get a icon that has already been added to the dictionary (based on File Extension)
         /// </summary>
         /// <inheritdoc cref="Dictionary{TKey, TValue}.TryGetValue(TKey, out TValue)"/>
         public bool TryGetValue(FileInfo file, out ImageSource value) => IconDict.TryGetValue(file.Extension, out value);
@@ -80,12 +79,12 @@ namespace RFBCodeWorks.Mvvm.Specialized
         public bool TryAddIcon(FileInfo file, out ImageSource imageSource) => TryAddIcon(file.FullName, out imageSource);
 
         /// <returns>True if successfully added or an icon was already present in the dictionary, otherwise false</returns>
-        /// <inheritdoc cref="LookupIcon(string, bool)"/>
+        /// <inheritdoc cref="GetFileIconFromPath(string, bool)"/>
         public bool TryAddIcon(string filePath, out ImageSource imageSource)
         {
             try
             {
-                imageSource = LookupIcon(filePath, true);
+                imageSource = GetFileIconFromPath(filePath, true);
                 return true;
             }
             catch
@@ -96,14 +95,14 @@ namespace RFBCodeWorks.Mvvm.Specialized
         }
 
         /// <summary>
-        /// Attempt to retrieve the icon associated with the specified file and add it to the dictionary.
+        /// Attempt to retrieve the icon associated with the specified file and optionally add it to the dictionary.
         /// </summary>
         /// <returns>
         /// - If the dictionary already contains an associated icon, that value will be returned. <br/>
-        /// - If the dictionary does not contain an icon, locate it and add it to dictionary, then return it.
+        /// - If the dictionary does not contain an icon, try to use the <see cref="IconLoader"/> to locate the icon.
         /// </returns>
         /// <inheritdoc cref="Dictionary{TKey, TValue}.Add(TKey, TValue)"/>
-        public virtual ImageSource LookupIcon(string filePath, bool addToDictionary)
+        public ImageSource GetFileIconFromPath(string filePath, bool addToDictionary)
         {
             string key = GetKey(filePath);
             if (IconDict.TryGetValue(key, out ImageSource img))
@@ -119,23 +118,23 @@ namespace RFBCodeWorks.Mvvm.Specialized
                 }
                 else
                 {
-                    img = IconLoader.GetIcon(filePath);
+                    img = IconLoader.GetFileIcon(filePath);
                 }
             }
-            if (img is not null && (addToDictionary || AutoCachedItems().Contains(key)))
+            if (img is not null && (addToDictionary || ShouldAutoCacheIcon(key)))
             {
                 IconDict.Add(key, img);
             }
             return img;
         }
 
-        /// <inheritdoc cref="LookupIcon(string, bool)"/>
+        /// <inheritdoc cref="GetFileIconFromPath(string, bool)"/>
         /// <returns>True if successful, otherwise false</returns>
-        public bool TryLookupIcon(string filePath, bool addToDictionary, out ImageSource image)
+        public bool TryGetFileIconFromPath(string filePath, bool addToDictionary, out ImageSource image)
         {
             try
             {
-                image = LookupIcon(filePath, addToDictionary);
+                image = GetFileIconFromPath(filePath, addToDictionary);
                 return image != null;
             }
             catch
@@ -148,26 +147,55 @@ namespace RFBCodeWorks.Mvvm.Specialized
         private static string GetKey(string filePath)
         {
             if (filePath == DirectoryIconKey) return DirectoryIconKey;
-            string key = Path.GetExtension(filePath).ToLower(System.Globalization.CultureInfo.InvariantCulture);
-            if (key == ".exe") key = Path.GetFileName(filePath);
+            string key = filePath;
+            if (Path.HasExtension(filePath))
+            {
+                key = Path.GetExtension(filePath).ToLower(System.Globalization.CultureInfo.InvariantCulture);
+                if (key == ".exe") return filePath;
+            }
             return key;
         }
 
         /// <summary>
-        /// A collection of extensions whose icons will automatically cache on their first successfull lookup request
+        /// Determine if the key should be automatically cached into the dictionary.
         /// </summary>
-        /// <returns></returns>
-        protected virtual IEnumerable<string> AutoCachedItems()
+        /// <returns>True if the key should be automatically added to the dictionary, otherwise false.</returns>
+        /// <remarks>
+        /// Default implementation returns true if key matches any of the following:
+        /// <br/> - .txt
+        /// <br/> - .pdf
+        /// <br/> - .htm | .html | .xml
+        /// <br/> - .zip | .7z | .rar ( archive files )
+        /// <br/> - .cfg
+        /// <br/> - .py
+        /// <br/> - .doc | .docx ( Word Docs )
+        /// <br/> - .xlms | .xltm | .xls | .xlts ( Excel Workbooks )
+        /// </remarks>
+        protected virtual bool ShouldAutoCacheIcon(string key)
         {
-            yield return ".txt";
-            yield return ".pdf";
-            yield return ".htm";
-            yield return ".html";
-            yield return ".xml";
-            yield return ".rar";
-            yield return ".zip";
-            yield return ".7z";
-            yield break;
+            return DefaultExtensions().Contains(key);
+
+            static IEnumerable<string> DefaultExtensions()
+            {
+                yield return DirectoryIconKey;
+                yield return ".txt";
+                yield return ".pdf";
+                yield return ".htm";
+                yield return ".html";
+                yield return ".xml";
+                yield return ".rar";
+                yield return ".zip";
+                yield return ".7z";
+                yield return ".cfg";
+                yield return ".py";
+                yield return ".doc";
+                yield return ".docx";
+                yield return ".xls";
+                yield return ".xlsm";
+                yield return ".xltm";
+                yield return ".xlts";
+                yield break;
+            }
         }
 
         /// <summary>
@@ -193,7 +221,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
             else if (parameter is bool b) addToDict = b;
             else if (parameter is string bs && bool.TryParse(bs, out b)) addToDict = b;
 
-            if (TryLookupIcon(path, addToDict, out ImageSource img))
+            if (TryGetFileIconFromPath(path, addToDict, out ImageSource img))
             {
                 return img;
             }
@@ -204,10 +232,10 @@ namespace RFBCodeWorks.Mvvm.Specialized
         }
 
         /// <summary>
-        /// Does nothing - returns the <paramref name="value"/>
+        /// Not Implemented
         /// </summary>
-        /// <returns><paramref name="value"/></returns>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => value;
+        /// <exception cref="NotImplementedException"/>
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
 
         /// <inheritdoc/>
         public ICollection<string> Keys => IconDict.Keys;
@@ -224,5 +252,15 @@ namespace RFBCodeWorks.Mvvm.Specialized
         void ICollection<KeyValuePair<string, ImageSource>>.CopyTo(KeyValuePair<string, ImageSource>[] array, int arrayIndex) => ((ICollection<KeyValuePair<string, ImageSource>>)IconDict).CopyTo(array, arrayIndex);
         bool ICollection<KeyValuePair<string, ImageSource>>.Remove(KeyValuePair<string, ImageSource> item) => ((ICollection<KeyValuePair<string, ImageSource>>)IconDict).Remove(item);
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)IconDict).GetEnumerator();
+
+        ImageSource IIconProvider.GetFileIcon(string filePath) => GetKeyImage(filePath);
+        ImageSource IIconProvider.GetDirectoryIcon(string directoryPath) => IconLoader.GetDirectoryIcon(directoryPath);
+        ImageSource IIconProvider.GetDirectoryIcon() => GetKeyImage(DirectoryIconKey);
+        private ImageSource GetKeyImage(string path)
+        {
+            if (TryGetFileIconFromPath(path, false, out ImageSource image))
+                return image;
+            return null;
+        }
     }
 }

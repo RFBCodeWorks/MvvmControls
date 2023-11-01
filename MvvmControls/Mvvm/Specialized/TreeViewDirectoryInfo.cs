@@ -22,13 +22,13 @@ namespace RFBCodeWorks.Mvvm.Specialized
 
 
         /// <param name="directoryInfo"></param>
-        /// <param name="iconDictionary">An IconDictionay used when creating child <see cref="TreeViewFileInfo"/></param>
-        public TreeViewDirectoryInfo(DirectoryInfo directoryInfo, IconDictionary iconDictionary) : this(directoryInfo)
+        /// <param name="iconProvider">An IconDictionay used when creating child <see cref="TreeViewFileInfo"/></param>
+        public TreeViewDirectoryInfo(DirectoryInfo directoryInfo, IIconProvider iconProvider) : this(directoryInfo)
         {
-            IconDictionary = iconDictionary;
+            IconProvider = iconProvider;
         }
 
-        private readonly IconDictionary IconDictionary;
+        private readonly IIconProvider IconProvider;
         private readonly Lazy<ImageSource> LazyIcon;
         private Lazy<IFileOrDirectoryTreeViewItem[]> LazyChildren;
         
@@ -42,17 +42,18 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// <summary> An image to show on the WPF window - Must be specified by consumer if not created by <see cref="FileTreeViewModel"/> </summary>
         public ImageSource Icon => LazyIcon.Value;
 
+
         /// <inheritdoc/>
         public IFileOrDirectoryTreeViewItem[] Children => LazyChildren.Value;
 
         /// <inheritdoc/>
         protected override IEnumerable<ITreeViewItem> ITreeViewChildren => Children;
 
-        private IFileOrDirectoryTreeViewItem[] GetChildren()
+        protected virtual IFileOrDirectoryTreeViewItem[] GetChildren()
         {
             IFileOrDirectoryTreeViewItem[] collection =
-                Item.EnumerateDirectories().Select(CreateChild)
-                .Concat(Item.EnumerateFiles().Select(CreateChild))
+                GetSubdirectories()
+                .Concat(GetFiles())
                 .ToArray();
 
             foreach (IFileOrDirectoryTreeViewItem f in collection)
@@ -62,12 +63,29 @@ namespace RFBCodeWorks.Mvvm.Specialized
             return collection;
         }
 
+        /// <summary>
+        /// Get this directory's subdirectories
+        /// </summary>
+        /// <returns></returns>
+        protected virtual IEnumerable<IFileOrDirectoryTreeViewItem> GetSubdirectories()
+        {
+            return Item.EnumerateDirectories().Select(CreateChild);
+        }
+
+        /// <summary>
+        /// Get this directory's files
+        /// </summary>
+        /// <returns></returns>
+        protected virtual IEnumerable<IFileOrDirectoryTreeViewItem> GetFiles()
+        {
+            return Item.EnumerateFiles().Select(CreateChild);
+        }
+
         /// <summary> Apply an icon from the specified dictionary to this object's Icon property. </summary>
         /// <inheritdoc cref="IconDictionary.TryAddIcon(FileInfo, out ImageSource)"/>
-        private ImageSource GetIcon()
+        protected virtual ImageSource GetIcon()
         {
-            if (IconDictionary.TryLookupIcon(IconDictionary.DirectoryIconKey, false, out ImageSource img)) return img;
-            return null;
+            return IconProvider.GetDirectoryIcon(Item.FullName);
         }
 
         /// <summary>
@@ -86,14 +104,15 @@ namespace RFBCodeWorks.Mvvm.Specialized
             OnPropertyChanged(string.Empty);
         }
 
-        /// <summary>Delegate for LINQ</summary>
-        public static TreeViewDirectoryInfo Create(DirectoryInfo dir) => new TreeViewDirectoryInfo(dir);
+        /// <summary>
+        /// Create a child directory object
+        /// </summary>
+        protected virtual IFileOrDirectoryTreeViewItem CreateChild(DirectoryInfo directory) => new TreeViewDirectoryInfo(directory, IconProvider) { Parent = this };
 
-        /// <summary>Delegate for LINQ</summary>
-        public static IFileOrDirectoryTreeViewItem CreateAsInterface(DirectoryInfo dir) => new TreeViewDirectoryInfo(dir);
-
-        private IFileOrDirectoryTreeViewItem CreateChild(DirectoryInfo directory) => new TreeViewDirectoryInfo(directory, IconDictionary) { Parent = this };
-        private IFileOrDirectoryTreeViewItem CreateChild(FileInfo file) => new TreeViewFileInfo(file, IconDictionary) { Parent = this };
+        /// <summary>
+        /// Create a child File object
+        /// </summary>
+        protected virtual IFileOrDirectoryTreeViewItem CreateChild(FileInfo file) => new TreeViewFileInfo(file, IconProvider) { Parent = this };
 
         bool IFileOrDirectoryTreeViewItem.IsDirectory => true;
         bool IFileOrDirectoryTreeViewItem.IsFile => false;

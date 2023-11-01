@@ -19,12 +19,14 @@
         <Company />
         <Copyright>Copyright 2023</Copyright>
         <!-- ###################   Version Info ###############  -->
-        <Version>1.0.1.1</Version>
+        <Version>1.0.1.2</Version>
         <PackageReleaseNotes>
             - Add WindowBehaviors.CoerceKeyBindings Dependency Property
+            - Add WindowBehaviors.CoerceKeyBindingsDelay Dependency Property (Delay KeyBindingCoersion by x milliseconds)
             - Add TreeView Support
-            - Updated StrongName Key
-            - Added build targets for Net6 and Net7.
+            - Add Specialized.FileTreeView, Specialized.IIconProvider, Specialized.IconDictionary
+            - Updated StrongName Key ( v1.0.1.0 )
+            - Added build targets for Net6 and Net7. ( v1.0.1.0 )
         </PackageReleaseNotes>
         <!-- #################################  -->
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>

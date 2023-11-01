@@ -14,6 +14,8 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 namespace RFBCodeWorks.Mvvm.Helpers
 {
 
@@ -26,69 +28,121 @@ namespace RFBCodeWorks.Mvvm.Helpers
         /// <summary>
         /// The default IIconLoader object - Retrieves frozen ImageSource icons using <see cref="IconUtilities"/>
         /// </summary>
-        public static IIconLoader IconLoader { get => IconLoaderField ??= new IconLoaderImplementation(); }
-        private static IIconLoader IconLoaderField;
-        private class IconLoaderImplementation : IIconLoader
+        public static IIconProvider IconLoader { get => IconLoaderField ??= new IconLoaderImplementation(); }
+        private static IIconProvider IconLoaderField;
+        private class IconLoaderImplementation : IIconProvider
         {
             public ImageSource GetDirectoryIcon() => LargeFolderIcon;
-            public ImageSource GetIcon(FileInfo file) => ExtractAssociatedIcon(file?.FullName ?? throw new ArgumentNullException(nameof(file)), true);
-            public ImageSource GetIcon(string filePath) => ExtractAssociatedIcon(filePath, true);
+            public ImageSource GetFileIcon(string filePath) => IconUtilities.GetFileIcon(filePath).ToImageSource();
+            public ImageSource GetDirectoryIcon(string directoryPath) => IconUtilities.GetDirectoryIcon(directoryPath).ToImageSource();
         }
 
         private static Icon largeFolderIcon;
         private static Icon smallFolderIcon;
 
         /// <summary>Gets an ImageSource representing the stock Large Folder Icon</summary>
-        public static ImageSource LargeFolderIcon => (largeFolderIcon ??= GetStockIcon(StockIcons.Explorer_Closed_Folder, IconSize.LargeIcon)).ToImageSource(true);
+        public static ImageSource LargeFolderIcon => (largeFolderIcon ??= GetStockIcon(StockIcons.Explorer_Closed_Folder, IconSize.LargeIcon)).ToImageSource();
 
         /// <summary>Gets an ImageSource representing the stock Small Folder Icon</summary>
-        public static ImageSource SmallFolderIcon => (smallFolderIcon ??= GetStockIcon(StockIcons.Explorer_Closed_Folder, IconSize.SmallIcon)).ToImageSource(true);
-
-        /// <summary>Retrieve an ImageSource of an Icon from the specified <paramref name="filePath"/></summary>
-        /// <param name="filePath">The path to a file that contains an image - Must not be a UNC Path</param>
-        /// <inheritdoc cref="ToImageSource(System.Drawing.Icon, bool)"/>
-        /// <inheritdoc cref="System.Drawing.Icon.ExtractAssociatedIcon(string)"/>
-        /// <param name="freezeImage"/>
-        public static ImageSource ExtractAssociatedIcon(string filePath, bool freezeImage = true)
-        {
-            if (string.IsNullOrWhiteSpace(filePath)) { throw new ArgumentException(nameof(filePath)); }
-            if (!File.Exists(filePath)) { throw new FileNotFoundException(nameof(filePath)); }
-            ImageSource imageSource = null;
-            using (System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(filePath))
-            {
-                imageSource = icon?.ToImageSource(freezeImage);
-            }
-            return imageSource;
-        }
+        public static ImageSource SmallFolderIcon => (smallFolderIcon ??= GetStockIcon(StockIcons.Explorer_Closed_Folder, IconSize.SmallIcon)).ToImageSource();
 
         /// <param name="icon">The icon to convert</param>
         /// <param name="freezeImage">If set true (default), the ImageSource will be frozen via <see cref="Freezable.Freeze()"/></param>
+        /// <param name="disposeIcon">Set to false is using the icon elsewhere, otherwise the icon will be disposed of after conversion.</param>
         /// <inheritdoc cref="Imaging.CreateBitmapSourceFromHIcon(IntPtr, Int32Rect, BitmapSizeOptions)"/>
-        public static ImageSource ToImageSource(this System.Drawing.Icon icon, bool freezeImage = true)
+        public static ImageSource ToImageSource(this Icon icon, bool freezeImage = true, bool disposeIcon = true)
         {
-            var image = Imaging.CreateBitmapSourceFromHIcon(
-                icon.Handle,
-                Int32Rect.Empty,
-                BitmapSizeOptions.FromEmptyOptions());
+            if (icon is null) throw new ArgumentNullException(nameof(icon));
+            BitmapSource image;
+            if (disposeIcon)
+            {
+                using (icon)
+                {
+                    image = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                    icon.Dispose();
+                }
+            }
+            else
+            {
+                image = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            }
             if (freezeImage) { image.Freeze(); }
             return image;
         }
 
-        // https://stackoverflow.com/questions/42910628/is-there-a-way-to-get-the-windows-default-folder-icon-using-c
+        
+        /// <summary>Retrieve an ImageSource of an Icon from the specified <paramref name="filePath"/></summary>
+        /// <param name="filePath">The path to a file that contains an image - Must not be a UNC Path</param>
+        /// <inheritdoc cref="System.Drawing.Icon.ExtractAssociatedIcon(string)"/>
+        public static Icon GetFileIcon(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath)) { throw new ArgumentException(nameof(filePath)); }
+            if (!File.Exists(filePath)) { throw new FileNotFoundException(nameof(filePath)); }
+            try
+            {
+                return Icon.ExtractAssociatedIcon(filePath);
+            }
+            catch (Exception e)
+            {
+                throw new IconRetrievalException("Unable to retrieve icon from file path.", filePath, e);
+            }
+            
+        }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
+        /// <summary>
+        /// Get the stock icon using the specified parameters
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        /// <seealso href="https://stackoverflow.com/questions/42910628/is-there-a-way-to-get-the-windows-default-folder-icon-using-c"/>
         public static Icon GetStockIcon(StockIcons type, IconSize size)
         {
-            var info = new SHSTOCKICONINFO();
-            info.cbSize = (uint)Marshal.SizeOf(info);
+            try
+            {
+                var info = new SHSTOCKICONINFO();
+                info.cbSize = (uint)Marshal.SizeOf(info);
+                _ = SHGetStockIconInfo((uint)type, SHGSI_ICON | (uint)size, ref info);
+                try
+                {
+                    return (Icon)Icon.FromHandle(info.hIcon).Clone(); // Get a copy that doesn't use the original handle
+                }
+                finally
+                {
+                    _ = DestroyIcon(info.hIcon); // Clean up native icon to prevent resource leak
+                }
+            }
+            catch(Exception e)
+            {
+                throw new IconRetrievalException("Unable to get stock icon.", type.ToString(), e);
+            }
+        }
 
-            SHGetStockIconInfo((uint)type, SHGSI_ICON | (uint)size, ref info);
-
-            var icon = (Icon)Icon.FromHandle(info.hIcon).Clone(); // Get a copy that doesn't use the original handle
-            DestroyIcon(info.hIcon); // Clean up native icon to prevent resource leak
-
-            return icon;
+        /// <summary>Get the Directory Icon from the specified directory path</summary>
+        /// <param name="directoryPath">The path to the directory</param>
+        /// <returns>The icon associated with the directory</returns>
+        public static Icon GetDirectoryIcon(string directoryPath)
+        {
+            if (string.IsNullOrWhiteSpace(directoryPath)) { throw new ArgumentException(nameof(directoryPath)); }
+            if (!Directory.Exists(directoryPath)) { throw new DirectoryNotFoundException(directoryPath); }
+            if (Path.GetExtension(directoryPath).ToLowerInvariant() == ".bin") return GetStockIcon(StockIcons.compressed_file_folder_overlay_icon, IconSize.LargeIcon);
+            try
+            {
+                SHFILEINFO shinfo = new SHFILEINFO();
+                _ = SHGetFileInfo(directoryPath, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), 0x100 | 0x0);
+                try
+                {
+                    return (Icon)Icon.FromHandle(shinfo.hIcon).Clone(); // Get a copy that doesn't use the original handle
+                }
+                finally
+                {
+                    _ = DestroyIcon(shinfo.hIcon); // Clean up native icon to prevent resource leak
+                }
+            }
+            catch (Exception e)
+            {
+                throw new IconRetrievalException("Unable to retrieve icon from directory path.", directoryPath, e);
+            }
         }
 
         private const uint SHSIID_FOLDER = 0x3;
@@ -148,7 +202,6 @@ namespace RFBCodeWorks.Mvvm.Helpers
             os_drive_folder_icon = 107,
             compressed_file_folder_overlay_icon = 179
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         [DllImport("shell32.dll")]
         private static extern int SHGetStockIconInfo(uint siid, uint uFlags, ref SHSTOCKICONINFO psii);
@@ -166,7 +219,26 @@ namespace RFBCodeWorks.Mvvm.Helpers
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
             public string szPath;
         }
+
+        // https://stackoverflow.com/questions/23666076/how-to-get-the-icon-associated-with-a-specific-folder
+
+        [DllImport("shell32.dll")]
+        private static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
+
+        //Struct used by SHGetFileInfo function
+        [StructLayout(LayoutKind.Sequential)]
+        private struct SHFILEINFO
+        {
+            public IntPtr hIcon;
+            public int iIcon;
+            public uint dwAttributes;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szDisplayName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
+            public string szTypeName;
+        };
     }
 }
 
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 #endif
