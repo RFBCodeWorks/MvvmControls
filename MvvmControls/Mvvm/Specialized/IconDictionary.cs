@@ -26,6 +26,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         public IconDictionary()
         {
 #if WINDOWS || NETFRAMEWORK
+            IconLoader = Helpers.IconUtilities.IconLoader;
             IconDict.Add(DirectoryIconKey, Helpers.IconUtilities.LargeFolderIcon);
 #endif
         }
@@ -37,6 +38,10 @@ namespace RFBCodeWorks.Mvvm.Specialized
 
         private Dictionary<string, ImageSource> IconDict { get; } = new Dictionary<string, ImageSource>();
 
+        /// <summary>
+        /// The object that can locate icons.
+        /// </summary>
+        public IIconLoader IconLoader { get; set; }
         
         /// <inheritdoc/>
         public int Count => IconDict.Count;
@@ -105,17 +110,22 @@ namespace RFBCodeWorks.Mvvm.Specialized
             {
                 return img;
             }
-
-#if WINDOWS || NETFRAMEWORK
-            img = Helpers.IconUtilities.ExtractAssociatedIcon(filePath);
-            if (key == DirectoryIconKey)
+            if (IconLoader is not null)
             {
-                img = Helpers.IconUtilities.LargeFolderIcon; 
-                addToDictionary = true;
+                if (key == DirectoryIconKey)
+                {
+                    img = IconLoader.GetDirectoryIcon();
+                    addToDictionary = true;
+                }
+                else
+                {
+                    img = IconLoader.GetIcon(filePath);
+                }
             }
-#endif
-
-            if (addToDictionary || AutoCachedItems().Contains(key)) IconDict.Add(key, img);
+            if (img is not null && (addToDictionary || AutoCachedItems().Contains(key)))
+            {
+                IconDict.Add(key, img);
+            }
             return img;
         }
 
@@ -199,14 +209,20 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// <returns><paramref name="value"/></returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => value;
 
-        ICollection<string> IDictionary<string, ImageSource>.Keys => IconDict.Keys;
-        ICollection<ImageSource> IDictionary<string, ImageSource>.Values => IconDict.Values;
+        /// <inheritdoc/>
+        public ICollection<string> Keys => IconDict.Keys;
+        
+        /// <inheritdoc cref="Dictionary{TKey, TValue}.Values"/>
+        public ICollection<ImageSource> Values => IconDict.Values;
+
+        /// <inheritdoc cref="Dictionary{TKey, TValue}.GetEnumerator"/>
+        public IEnumerator<KeyValuePair<string, ImageSource>> GetEnumerator() => IconDict.GetEnumerator();
+
         bool ICollection<KeyValuePair<string, ImageSource>>.IsReadOnly => ((ICollection<KeyValuePair<string, ImageSource>>)IconDict).IsReadOnly;
         void ICollection<KeyValuePair<string, ImageSource>>.Add(KeyValuePair<string, ImageSource> item) => ((ICollection<KeyValuePair<string, ImageSource>>)IconDict).Add(item);
         bool ICollection<KeyValuePair<string, ImageSource>>.Contains(KeyValuePair<string, ImageSource> item) => ((ICollection<KeyValuePair<string, ImageSource>>)IconDict).Contains(item);
         void ICollection<KeyValuePair<string, ImageSource>>.CopyTo(KeyValuePair<string, ImageSource>[] array, int arrayIndex) => ((ICollection<KeyValuePair<string, ImageSource>>)IconDict).CopyTo(array, arrayIndex);
         bool ICollection<KeyValuePair<string, ImageSource>>.Remove(KeyValuePair<string, ImageSource> item) => ((ICollection<KeyValuePair<string, ImageSource>>)IconDict).Remove(item);
-        IEnumerator<KeyValuePair<string, ImageSource>> IEnumerable<KeyValuePair<string, ImageSource>>.GetEnumerator() => ((IEnumerable<KeyValuePair<string, ImageSource>>)IconDict).GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)IconDict).GetEnumerator();
     }
 }
