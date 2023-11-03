@@ -8,7 +8,8 @@
 
         <!-- Nuget Stuff -->
         <GeneratePackageOnBuild Condition="$(Configuration)=='Release'">true</GeneratePackageOnBuild>
-        <PackageOutputPath>..\OutputNuget\</PackageOutputPath>
+        <GeneratePackageOnBuild Condition="$(Configuration)=='AppVeyor'">true</GeneratePackageOnBuild>
+        <PackageOutputPath>..\_OutputNuget\</PackageOutputPath>
         <PackageId>$(AssemblyName)</PackageId>
         <Product>$(AssemblyName)</Product>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>

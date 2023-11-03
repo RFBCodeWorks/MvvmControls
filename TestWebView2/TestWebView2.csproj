@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup>
+    <RootNamespace>RFBCodeWorks.WPF.WebView2Integration.Tester</RootNamespace>
+    <AssemblyName>WebView2Tester</AssemblyName>
+	<StartupObject></StartupObject>
+	<OutputType>WinExe</OutputType>
+    <TargetFrameworks>net472;</TargetFrameworks>
+    <UseWPF>true</UseWPF>
+    <Authors>Robert Brenckman</Authors>
+    <Company>Wittmann USA</Company>
+    <LangVersion>8.0</LangVersion>
+</PropertyGroup>
+<ItemGroup>
+  <None Remove="TestPage.html" />
+</ItemGroup>
+<ItemGroup>
+  <Content Include="TestPage.html">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+  </Content>
+</ItemGroup>
+<ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+  <PackageReference Include="Costura.Fody" Version="5.7.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; resource; build; compile; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+</ItemGroup>
+<ItemGroup>
+  <ProjectReference Include="..\MvvmControls\Mvvm.Controls.csproj" />
+  <ProjectReference Include="..\WebView2Integration\Mvvm.WebView2Integration.csproj" />
+</ItemGroup>
+<ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+</Project>

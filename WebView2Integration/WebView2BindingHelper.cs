@@ -12,13 +12,12 @@ namespace RFBCodeWorks.WPF.WebView2Integration
     {
         static WebView2BindingHelper()
         {
-            IsVisibleProperty.OverrideMetadata(typeof(WebView2BindingHelper), new PropertyMetadata(false));
-            IsHitTestVisibleProperty.OverrideMetadata(typeof(WebView2BindingHelper), new PropertyMetadata(false));
-            VisibilityProperty.OverrideMetadata(typeof(WebView2BindingHelper), new PropertyMetadata(Visibility.Collapsed));
-            HeightProperty.OverrideMetadata(typeof(WebView2BindingHelper), new PropertyMetadata(0));
-            MaxHeightProperty.OverrideMetadata(typeof(WebView2BindingHelper), new PropertyMetadata(0));
-            WidthProperty.OverrideMetadata(typeof(WebView2BindingHelper), new PropertyMetadata(0));
-            MaxWidthProperty.OverrideMetadata(typeof(WebView2BindingHelper), new PropertyMetadata(0));
+            IsHitTestVisibleProperty.OverrideMetadata(typeof(WebView2BindingHelper), new FrameworkPropertyMetadata(false));
+            VisibilityProperty.OverrideMetadata(typeof(WebView2BindingHelper), new FrameworkPropertyMetadata(Visibility.Collapsed));
+            HeightProperty.OverrideMetadata(typeof(WebView2BindingHelper), new FrameworkPropertyMetadata((double)0));
+            MaxHeightProperty.OverrideMetadata(typeof(WebView2BindingHelper), new FrameworkPropertyMetadata((double)0));
+            WidthProperty.OverrideMetadata(typeof(WebView2BindingHelper), new FrameworkPropertyMetadata((double)0));
+            MaxWidthProperty.OverrideMetadata(typeof(WebView2BindingHelper), new FrameworkPropertyMetadata((double)0));
         }
 
         private bool IsNavigationHandlerExpanded;
@@ -62,10 +61,13 @@ namespace RFBCodeWorks.WPF.WebView2Integration
                 //Expanded
                 old.ContentLoading -= bh.OnContentLoading;
                 old.CoreWebView2InitializationCompleted -= bh.OnCoreWebView2InitializationCompleted;
-                old.CoreWebView2.HistoryChanged -= bh.CoreWebView2_HistoryChanged;
-                old.CoreWebView2.BasicAuthenticationRequested -= bh.CoreWebView2_BasicAuthenticationRequested;
                 old.SourceChanged -= bh.OnSourceChanged;
                 old.WebMessageReceived -= bh.OnWebMessageReceived;
+                if (old.CoreWebView2 != null)
+                {
+                    old.CoreWebView2.HistoryChanged -= bh.CoreWebView2_HistoryChanged;
+                    old.CoreWebView2.BasicAuthenticationRequested -= bh.CoreWebView2_BasicAuthenticationRequested;
+                }
             }
             if (e.NewValue is WebView2 wv)
             {
@@ -75,12 +77,11 @@ namespace RFBCodeWorks.WPF.WebView2Integration
                 //Expanded
                 wv.ContentLoading += bh.OnContentLoading;
                 wv.CoreWebView2InitializationCompleted += bh.OnCoreWebView2InitializationCompleted;
-                wv.CoreWebView2.HistoryChanged += bh.CoreWebView2_HistoryChanged;
-                wv.CoreWebView2.BasicAuthenticationRequested += bh.CoreWebView2_BasicAuthenticationRequested;
                 wv.SourceChanged += bh.OnSourceChanged;
                 wv.WebMessageReceived += bh.OnWebMessageReceived;
             }
         }
+
 
         private void CoreWebView2_BasicAuthenticationRequested(object sender, Microsoft.Web.WebView2.Core.CoreWebView2BasicAuthenticationRequestedEventArgs e)
         {
@@ -96,6 +97,11 @@ namespace RFBCodeWorks.WPF.WebView2Integration
 
         private void OnCoreWebView2InitializationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs e)
         {
+            if (sender is WebView2 wv)
+            {
+                wv.CoreWebView2.HistoryChanged += CoreWebView2_HistoryChanged;
+                wv.CoreWebView2.BasicAuthenticationRequested += CoreWebView2_BasicAuthenticationRequested;
+            }
             if (IsNavigationHandlerExpanded && NavigationHandler is IWebView2NavigationHandlerExpanded nav)
                 nav.OnCoreWebView2InitializationCompleted(sender, e);
         }

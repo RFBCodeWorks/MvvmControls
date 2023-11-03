@@ -36,15 +36,18 @@ before_build:
 build_script:
 - msbuild  .\Mvvm.ViewModel\Mvvm.IViewModel.csproj
 - msbuild  .\Mvvm.Dialogs\Mvvm.Dialogs.csproj
-- msbuild  .\MvvmControls\MvvmControls.csproj
+- msbuild  .\MvvmControls\Mvvm.Controls.csproj
+- msbuild  .\WebView2Integration\Mvvm.WebView2Integration.csproj
 
 artifacts: # Locate the Nuget Packages
-- path: .\OutputNuget\*Controls*.nupkg
+- path: .\_OutputNuget\*Controls*.nupkg
   name: Controls
-- path: .\OutputNuget\*Dialogs*.nupkg
+- path: .\_OutputNuget\*Dialogs*.nupkg
   name: Dialogs
-- path: .\OutputNuget\*IViewModel*.nupkg
+- path: .\_OutputNuget\*IViewModel*.nupkg
   name: IViewModel
+- path: .\_OutputNuget\*WebView2Integration*.nupkg
+  name: WebView
 
 assembly_info:
     patch: false
