@@ -33,7 +33,7 @@
                 <CheckBox Content="Navigation Complete " IsChecked="{Binding NavCompleted, Mode=OneWay}"/>
                 <CheckBox Content="Content Loaded  " IsChecked="{Binding ContentLoaded, Mode=OneWay}"/>
                 <CheckBox Content="History Changed " IsChecked="{Binding HistoryChanged, Mode=OneWay}"/>
-                <CheckBox Content="Web Message Recieved" IsChecked="{Binding WebMessageReceived, Mode=OneWay}"/>
+                <CheckBox Content="Web Message Recieved" IsChecked="{Binding WebMessageReceived, Mode=OneWay}" ToolTip="This is expected to be false."/>
             </StackPanel>
         </GroupBox>
         <WV:WebView2 Grid.Row="1" x:Name="Viewer" Source="{Binding PageToLoad}" IsEnabled="True" />
