@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 
-namespace RFBCodeWorks.WPF.WebView2Integration
+namespace RFBCodeWorks.Mvvm.WebView2Integration
 {
     public enum InstallType
     {
@@ -61,7 +61,7 @@ namespace RFBCodeWorks.WPF.WebView2Integration
         public bool IsInstalled => InstallType != InstallType.NotInstalled;
 
         /// <summary>
-        /// Gets the <see cref="RFBCodeWorks.WPF.WebView2Integration.InstallType"/>
+        /// Gets the <see cref="RFBCodeWorks.Mvvm.WebView2Integration.InstallType"/>
         /// </summary>
         public InstallType InstallType => Version switch
         {

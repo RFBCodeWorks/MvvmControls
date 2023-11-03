@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace RFBCodeWorks.WPF.WebView2Integration.Tester
+namespace RFBCodeWorks.Mvvm.WebView2Integration.Tester
 {
     /// <summary>
     /// Interaction logic for App.xaml

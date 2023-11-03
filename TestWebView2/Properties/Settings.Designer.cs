@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RFBCodeWorks.WPF.WebView2Integration.Tester.Properties {
+namespace RFBCodeWorks.Mvvm.WebView2Integration.Tester.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

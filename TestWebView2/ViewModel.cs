@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.WPF.WebView2Integration.Tester
+namespace RFBCodeWorks.Mvvm.WebView2Integration.Tester
 {
     // https://stackoverflow.com/questions/64740327/detect-if-webview2-is-installed-on-clients-machine-vb-net
 

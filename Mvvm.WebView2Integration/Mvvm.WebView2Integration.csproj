@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-      <TargetFrameworks>net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows</TargetFrameworks>
-      <RootNamespace>RFBCodeWorks.WPF.WebView2Integration</RootNamespace>
-      <AssemblyName>RFBCodeWorks.WPF.WebView2Integration</AssemblyName>
+      <TargetFrameworks>net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net7.0-windows;</TargetFrameworks>
+      <RootNamespace>RFBCodeWorks.Mvvm.WebView2Integration</RootNamespace>
+      <AssemblyName>RFBCodeWorks.Mvvm.WebView2Integration</AssemblyName>
       <LangVersion>9.0</LangVersion>
       <Platforms>AnyCPU</Platforms>
       <UseWPF>true</UseWPF>
@@ -37,7 +37,7 @@
 
 ## Example Usage:
 
-xmlns:MyWebView="clr-namespace:RFBCodeWorks.WPF.WebView2Integration;assembly=RFBCodeWorks.WPF.WebView2Integration"
+xmlns:MyWebView="clr-namespace:RFBCodeWorks.Mvvm.WebView2Integration;assembly=RFBCodeWorks.Mvvm.WebView2Integration"
 
 &lt;grid&gt;
 

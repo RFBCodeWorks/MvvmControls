@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mvvm.WebView2Integration", "WebView2Integration\Mvvm.WebView2Integration.csproj", "{E5522D5B-8561-4C6F-992B-2BDE1DE5D607}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mvvm.WebView2Integration", "Mvvm.WebView2Integration\Mvvm.WebView2Integration.csproj", "{E5522D5B-8561-4C6F-992B-2BDE1DE5D607}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWebView2", "TestWebView2\TestWebView2.csproj", "{A12C135F-4A15-43B4-BB5A-8F2D06ADD6F1}"
 EndProject

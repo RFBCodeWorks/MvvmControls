@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RFBCodeWorks.WPF.WebView2Integration.Tester
+namespace RFBCodeWorks.Mvvm.WebView2Integration.Tester
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -1,7 +1,7 @@
-﻿<Application x:Class="RFBCodeWorks.WPF.WebView2Integration.Tester.App"
+﻿<Application x:Class="RFBCodeWorks.Mvvm.WebView2Integration.Tester.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:RFBCodeWorks.WPF.WebView2Integration.Tester"
+             xmlns:local="clr-namespace:RFBCodeWorks.Mvvm.WebView2Integration.Tester"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

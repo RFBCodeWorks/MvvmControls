@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 <PropertyGroup>
-    <RootNamespace>RFBCodeWorks.WPF.WebView2Integration.Tester</RootNamespace>
+    <RootNamespace>RFBCodeWorks.Mvvm.WebView2Integration.Tester</RootNamespace>
     <AssemblyName>WebView2Tester</AssemblyName>
 	<StartupObject></StartupObject>
 	<OutputType>WinExe</OutputType>
@@ -26,8 +26,8 @@
     </PackageReference>
 </ItemGroup>
 <ItemGroup>
+  <ProjectReference Include="..\Mvvm.WebView2Integration\Mvvm.WebView2Integration.csproj" />
   <ProjectReference Include="..\MvvmControls\Mvvm.Controls.csproj" />
-  <ProjectReference Include="..\WebView2Integration\Mvvm.WebView2Integration.csproj" />
 </ItemGroup>
 <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">

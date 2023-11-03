@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 
-namespace RFBCodeWorks.WPF.WebView2Integration.Tester.Properties
+namespace RFBCodeWorks.Mvvm.WebView2Integration.Tester.Properties
 {
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -43,7 +43,7 @@ namespace RFBCodeWorks.WPF.WebView2Integration.Tester.Properties
             {
                 if ((resourceMan == null))
                 {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RFBCodeWorks.WPF.WebView2Integration.Tester.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RFBCodeWorks.Mvvm.WebView2Integration.Tester.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

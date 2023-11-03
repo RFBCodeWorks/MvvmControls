@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace RFBCodeWorks.WPF.WebView2Integration
+namespace RFBCodeWorks.Mvvm.WebView2Integration
 {
     public class WebView2BindingHelper : FrameworkElement
     {

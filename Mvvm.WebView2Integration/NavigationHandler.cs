@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.WPF.WebView2Integration
+namespace RFBCodeWorks.Mvvm.WebView2Integration
 {
     /// <summary>
     /// Class that implements <see cref="IWebView2NavigationHandler"/> via its delegate properties.
