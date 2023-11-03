@@ -37,7 +37,7 @@ build_script:
 - msbuild  .\Mvvm.ViewModel\Mvvm.IViewModel.csproj
 - msbuild  .\Mvvm.Dialogs\Mvvm.Dialogs.csproj
 - msbuild  .\MvvmControls\Mvvm.Controls.csproj
-- msbuild  .\WebView2Integration\Mvvm.WebView2Integration.csproj
+- msbuild  .\Mvvm.WebView2Integration\Mvvm.WebView2Integration.csproj
 
 artifacts: # Locate the Nuget Packages
 - path: .\_OutputNuget\*Controls*.nupkg
