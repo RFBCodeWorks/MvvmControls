@@ -6,23 +6,27 @@
         xmlns:local="clr-namespace:ExampleWPF"
         mc:Ignorable="d"
         x:Name="ThisWindow"
-        xmlns:cc="clr-namespace:RFBCodeWorks.WPF.Controls;assembly=RFBCodeWorks.Mvvm.Controls"
-        xmlns:Behaviors="clr-namespace:RFBCodeWorks.WPF.Behaviors;assembly=RFBCodeWorks.Mvvm.Controls"
+        
         xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:cc="https://github.com/RFBCodeWorks/MvvmControls/WPF.Controls"
+        xmlns:cb="https://github.com/RFBCodeWorks/MvvmControls/WPF.Behaviors"
+        xmlns:cs="https://github.com/RFBCodeWorks/MvvmControls/Mvvm/Specialized"
+        xmlns:converters="https://github.com/RFBCodeWorks/MvvmControls/WPF.Converters"
+        
         xmlns:Views="clr-namespace:ExampleWPF.Views"
         d:DataContext="{d:DesignInstance Type=local:MainViewModel, IsDesignTimeCreatable=False}"
         xmlns:md="clr-namespace:MvvmDialogs;assembly=MvvmDialogs"
         md:DialogServiceViews.IsRegistered="True"
         Title="MainWindow" Height="450" Width="800"
         ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True"
-        Behaviors:WindowBehaviors.IWindowClosingHandler="{Binding ElementName=ThisWindow, Path=DataContext}"
-        Behaviors:WindowBehaviors.IWindowLoadingHandler="{Binding ElementName=ThisWindow, Path=DataContext}"
-        Behaviors:WindowBehaviors.CoerceKeyBindings="True"
+        cb:WindowBehaviors.IWindowClosingHandler="{Binding ElementName=ThisWindow, Path=DataContext}"
+        cb:WindowBehaviors.IWindowLoadingHandler="{Binding ElementName=ThisWindow, Path=DataContext}"
+        cb:WindowBehaviors.CoerceKeyBindings="True"
         >
     <Window.InputBindings>
         <KeyBinding Command="{Binding MenuItemTestCommand2}" Key="F2"/>
     </Window.InputBindings>
-    <StackPanel Behaviors:WindowBehaviors.CoerceKeyBindings="True">
+    <StackPanel cb:WindowBehaviors.CoerceKeyBindings="True">
         <StackPanel.InputBindings>
             <KeyBinding Command="{Binding MenuItemTestCommand}" Key="F1"/>
         </StackPanel.InputBindings>
@@ -33,73 +37,111 @@
             </MenuItem>
         </Menu>
         <TabControl >
-        <TabItem Header="  Control Definitions  " >
-            <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" Background="BurlyWood">
-                <StackPanel >
-                    <StackPanel.Resources>
-                        <!-- Apply the FocusHandler to all GroupBoxes on the page -->
-                        <Style TargetType="GroupBox">
-                            <Setter Property="Behaviors:WindowBehaviors.IWindowFocusHandler" Value="{Binding RelativeSource={RelativeSource AncestorType=Window} , Path=DataContext}"/>
-                        </Style>
-                    </StackPanel.Resources>
-                    <GroupBox Header="Various Interface Tests">
+            <TabItem Header="  Control Definitions  " >
+                <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" Background="BurlyWood">
+                    <StackPanel >
+                        <StackPanel.Resources>
+                            <!-- Apply the FocusHandler to all GroupBoxes on the page -->
+                            <Style TargetType="GroupBox">
+                                <Setter Property="cb:WindowBehaviors.IWindowFocusHandler" Value="{Binding RelativeSource={RelativeSource AncestorType=Window} , Path=DataContext}"/>
+                            </Style>
+                        </StackPanel.Resources>
+                        <GroupBox Header="Various Interface Tests">
+                            <StackPanel>
+                                <CheckBox IsChecked="{Binding WasContentRendered}" Content="IWindowLoadingHandler.OnContentRendered" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding WasLoaded}" Content="IWindowLoadingHandler.OnWindowLoaded" IsEnabled="False"/>
+                                <CheckBox IsChecked="{Binding TriggerClosingWindowInterface}" Content="Enable the IWindowClosingYHandler test" IsThreeState="False"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <Views:ControlDefinitionsTab/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="ListBoxes" DataContext="{Binding ListBoxTester}">
+                <Views:ListBoxTab/>
+            </TabItem>
+            <TabItem Header="ComboBoxes" DataContext="{Binding ComboxTester}">
+                <Views:ComboBoxTab/>
+            </TabItem>
+            <TabItem Header="TextBoxes" DataContext="{Binding TextBoxTester}">
+                <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" >
+                    <StackPanel >
+                        <GroupBox Header="Textbox with 'GetText' function utilized" >
+                            <cc:SimpleGrid ColumnCount="2" AutoColumnWidth="*" Margin="15">
+                                <TextBox x:Name="mytextbox" Grid.Column="0" Text="{Binding TextCBoxDef.Text}"/>
+                                <Button cb:ControlDefinitions.ButtonDefinition="{Binding ResetTextboxBtn}" Margin="25,0" Grid.Column="1"/>
+                            </cc:SimpleGrid>
+                        </GroupBox>
+                        <GroupBox Header="Textbox Validation Control" >
+                            <TextBox
+                                Margin="0,0,-0.755,0"
+                                cb:ControlDefinitions.TextControlDefinition="{Binding TextValidation, UpdateSourceTrigger=PropertyChanged}" 
+                                >
+                            </TextBox>
+                        </GroupBox>
+                        <!-- Reactive Styles -->
+                        <GroupBox Header="Reactive Styles">
+                            <GroupBox.Resources>
+                                <!-- Setup your style -->
+                                <Style TargetType="TextBox">
+                                    <Setter Property="Margin" Value="5"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="cb:ReactiveStyles.IsDirty" Value="True">
+                                            <Setter Property="Background" Value="LightPink"/>
+                                        </Trigger>
+                                        <Trigger Property="cb:ReactiveStyles.IsInvalid" Value="True">
+                                            <Setter Property="Background" Value="Yellow"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </GroupBox.Resources>
+                            <cc:SimpleGrid ColumnCount="2" RowCount="3" AutoColumnWidth="*" AutoRowHeight="40">
+                                <!-- Apply the attached bindings -->
+                                <TextBox x:Name="Txt_1"
+                                    cb:ReactiveStylesIsDirtyString.CurrentValue="{Binding ElementName=Txt_1, Path=Text}"
+                                    cb:ReactiveStylesIsDirtyString.OriginalValue=""
+                                    />
+                                <TextBox Grid.Row="1" x:Name="Txt_2"
+                                    cb:ReactiveStylesIsDirtyString.CurrentValue="{Binding ElementName=Txt_2, Path=Text}"
+                                    cb:ReactiveStylesIsDirtyString.OriginalValue=""
+                                    />
+                                <TextBox Grid.Row="2" x:Name="Txt_3"
+                                    cb:ReactiveStylesIsDirtyString.CurrentValue="{Binding ElementName=Txt_3, Path=Text}"
+                                    cb:ReactiveStylesIsDirtyString.OriginalValue=""
+                                    />
+                            </cc:SimpleGrid>
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="  NumericUpDowns  ">
+                <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" >
+                    <ScrollViewer>
+                        <Views:NumericUpDownView/>
+                    </ScrollViewer>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="  XML.Linq  ">
+                <Views:XmlLinqView DataContext="{Binding XmlLinqTester}"/>
+            </TabItem>
+            <TabItem Header="  TreeView  ">
+                <Views:FolderBrowserTreeView DataContext="{Binding TreeViewTester}"/>
+            </TabItem>
+            <TabItem Header="  Misc.  ">
+                <cc:SimpleGrid RowCount="3">
+                    <GroupBox Header="Masked Textbox" Grid.Row="0">
                         <StackPanel>
-                            <CheckBox IsChecked="{Binding WasContentRendered}" Content="IWindowLoadingHandler.OnContentRendered" IsEnabled="False"/>
-                            <CheckBox IsChecked="{Binding WasLoaded}" Content="IWindowLoadingHandler.OnWindowLoaded" IsEnabled="False"/>
-                            <CheckBox IsChecked="{Binding TriggerClosingWindowInterface}" Content="Enable the IWindowClosingYHandler test" IsThreeState="False"/>
+                            <cc:MaskedTextBox Mask="099.099.099.099" Grid.Row="1"/>
                         </StackPanel>
                     </GroupBox>
-                    <Views:ControlDefinitionsTab/>
-                </StackPanel>
-            </ScrollViewer>
-        </TabItem>
-        <TabItem Header="ListBoxes" DataContext="{Binding ListBoxTester}">
-            <Views:ListBoxTab/>
-        </TabItem>
-        <TabItem Header="ComboBoxes" DataContext="{Binding ComboxTester}">
-            <Views:ComboBoxTab/>
-        </TabItem>
-        <TabItem Header="TextBoxes" DataContext="{Binding TextBoxTester}">
-            <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" >
-                <StackPanel >
-                    <GroupBox Header="Textbox with 'GetText' function utilized" >
-                        <cc:SimpleGrid ColumnCount="2" AutoColumnWidth="*" Margin="15">
-            <TextBox Behaviors:ControlDefinitions.TextControlDefinition="{Binding TextCBoxDef}" Grid.Column="0"/>
-            <Button Behaviors:ControlDefinitions.ButtonDefinition="{Binding ResetTextboxBtn}" Margin="25,0" Grid.Column="1"/>
-            </cc:SimpleGrid>
-            </GroupBox>
-            <GroupBox Header="Textbox Validation Control" >
-                <TextBox Behaviors:ControlDefinitions.TextControlDefinition="{Binding TextValidation, UpdateSourceTrigger=PropertyChanged}"/>
-            </GroupBox>
-            </StackPanel>
-            </ScrollViewer>
-        </TabItem>
-        <TabItem Header="  NumericUpDowns  ">
-            <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" >
-                <Views:NumericUpDownView/>
-            </ScrollViewer>
-        </TabItem>
-        <TabItem Header="  XML.Linq  ">
-            <Views:XmlLinqView DataContext="{Binding XmlLinqTester}"/>
-        </TabItem>
-        <TabItem Header="  TreeView  ">
-            <Views:FolderBrowserTreeView DataContext="{Binding TreeViewTester}"/>
-        </TabItem>
-        <TabItem Header="  Misc.  ">
-            <cc:SimpleGrid RowCount="3">
-                <GroupBox Header="Masked Textbox" Grid.Row="0">
-                    <StackPanel>
-                        <cc:MaskedTextBox Mask="099.099.099.099" Grid.Row="1"/>
-                    </StackPanel>
-                </GroupBox>
-                <GroupBox Header="IPV4 Controls" Grid.Row="1">
-                    <StackPanel>
-                        <cc:IPV4TextBox InputFormat="Masked" x:Name="IPBox1"/>
-                        <cc:IPV4TextBox InputFormat="Numeric" x:Name="IPBox2" Text="{Binding ElementName=IPBox1, Path=Text, Mode=TwoWay}"/>
-                    </StackPanel>
-                </GroupBox>
-            </cc:SimpleGrid>
-        </TabItem>
-    </TabControl>
+                    <GroupBox Header="IPV4 Controls" Grid.Row="1">
+                        <StackPanel>
+                            <cc:IPV4TextBox InputFormat="Masked" x:Name="IPBox1"/>
+                            <cc:IPV4TextBox InputFormat="Numeric" x:Name="IPBox2" Text="{Binding ElementName=IPBox1, Path=Text, Mode=TwoWay}"/>
+                        </StackPanel>
+                    </GroupBox>
+                </cc:SimpleGrid>
+            </TabItem>
+        </TabControl>
     </StackPanel>
 </Window>

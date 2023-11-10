@@ -6,15 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace RFBCodeWorks.Mvvm.XmlLinq.Controls
+namespace RFBCodeWorks.Mvvm.Specialized
 {
     /// <summary>
     /// 
     /// </summary>
-    public class XDocumentTreeView : TreeViewBase<XElementTreeViewItem, XNodeTreeViewItem>
+    public class XDocumentTreeViewModel : TreeViewBase<XElementTreeViewItem, XNodeTreeViewItem>
     {
         /// <inheritdoc/>
-        public XDocumentTreeView() : base()  { }
+        public XDocumentTreeViewModel() : base()  { }
 
         private XDocument Document;
         private RelayCommand overwriteCmd;

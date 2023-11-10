@@ -20,7 +20,7 @@
 </ItemGroup>
 <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
-  <PackageReference Include="Costura.Fody" Version="5.7.0">
+  <PackageReference Include="Costura.Fody" Version="5.7.0" Condition="$(Configuration)=='Release'">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; resource; build; compile; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

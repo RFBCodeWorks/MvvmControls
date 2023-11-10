@@ -79,7 +79,7 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
         {
             // Test the DIrectory Child Selected
             bool eventRaised = false;
-            var parent = new Specialized.TreeViewDirectoryInfo(new System.IO.DirectoryInfo(Environment.CurrentDirectory));
+            var parent = new Specialized.DirectoryInfoTreeViewItem(new System.IO.DirectoryInfo(Environment.CurrentDirectory));
             parent.ChildSelected += Acknowledge;
             var firstItem = parent.Children.First();
             firstItem.IsSelected = true;

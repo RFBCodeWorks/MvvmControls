@@ -24,7 +24,7 @@
       <Company />
       <Copyright>Copyright 2023</Copyright>
       <!-- ###################   Version Info ###############  -->
-      <Version>1.0.1.0</Version>
+      <Version>1.0.1.1</Version>
       <PackageReleaseNotes>
           - Initial Release
       </PackageReleaseNotes>

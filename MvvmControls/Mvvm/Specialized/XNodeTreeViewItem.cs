@@ -1,10 +1,11 @@
-﻿using System;
+﻿using RFBCodeWorks.Mvvm.XmlLinq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.Mvvm.XmlLinq.Controls
+namespace RFBCodeWorks.Mvvm.Specialized
 {
     /// <summary>
     /// shared base class for Xml.Linq TreeViewItems

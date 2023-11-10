@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ExampleWPF.Views"
              xmlns:ViewModels="clr-namespace:ExampleWPF.ViewModels"
-             xmlns:DT="clr-namespace:RFBCodeWorks.Mvvm.Specialized;assembly=RFBCodeWorks.Mvvm.Controls"
+             xmlns:DT="https://github.com/RFBCodeWorks/MvvmControls/Mvvm/Specialized"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type=ViewModels:TreeViewViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -31,13 +31,13 @@
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
                 </Style>
-                <HierarchicalDataTemplate DataType="{x:Type DT:TreeViewDirectoryInfo}" ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate DataType="{x:Type DT:DirectoryInfoTreeViewItem}" ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal">
                         <Image  MaxHeight="16" Source="{Binding Icon}" />
                         <TextBlock Text="{Binding Name}"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>
-                <DataTemplate DataType="{x:Type DT:TreeViewFileInfo}">
+                <DataTemplate DataType="{x:Type DT:FileInfoTreeViewItem}">
                     <StackPanel Orientation="Horizontal">
                         <Image  MaxHeight="16" Source="{Binding Icon}" />
                         <TextBlock Text="{Binding Name}"/>
