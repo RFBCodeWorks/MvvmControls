@@ -22,12 +22,19 @@
         <!-- ###################   Version Info ###############  -->
         <Version>1.0.2.0</Version>
         <PackageReleaseNotes>
-            - Add XmlnsDefinition properties for easier XAML setup 
+            - Add XmlnsDefinition properties for easier XAML setup
+            
+            Breaking Changes (Namespace/Class name adjustments):
             - Relocate ReactiveStyles.Helpers to the Behaviors namespace to reduce XAML namespacing requirements.
             - Relocate Mvvm.XmlLinq.Controls.TreeViewItems into Mvvm.Specialized
             - Normalize Specialized TreeViewItems names:
             --- TreeViewFileInfo -> FileInfoTreeViewItem
             --- TreeViewDirectoryInfo -> DirectoryInfoTreeViewItem
+
+            Deprecated Functionality (use WPF Styles instead):
+            - Behaviors.ReactiveStyles.IsTabletMode
+            - Behaviors.ReactiveStyles.IsDirtySetters
+            - Behaviors.ReactiveStyles.IsInvalidSetters
         </PackageReleaseNotes>
         <!-- #################################  -->
         <PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
