@@ -38,34 +38,8 @@ namespace RFBCodeWorks.WPF.Behaviors
         /// <br/> When <see langword="true"/>, this would indicate that the value has been changed but has not yet been saved. (This should be set false after the value has been saved)
         /// </summary>
         public static readonly DependencyProperty IsDirtyProperty =
-            DependencyProperty.RegisterAttached("IsDirty", typeof(bool), typeof(ReactiveStyles), new PropertyMetadata(false, UpdateElement));
+            DependencyProperty.RegisterAttached("IsDirty", typeof(bool), typeof(ReactiveStyles), new PropertyMetadata(false));
 
-
-        /// <summary>
-        /// Gets the Style Setters for the 'Dirty' style
-        /// </summary>
-        public static SetterBaseCollection GetIsDirtySetters(DependencyObject obj)
-        {
-            return (SetterBaseCollection)obj.GetValue(IsDirtySettersProperty);
-        }
-
-        /// <summary>
-        /// Sets the Style Setters for the 'Dirty' style
-        /// </summary>
-        public static void SetIsDirtySetters(DependencyObject obj, SetterBaseCollection value)
-        {
-            obj.SetValue(IsDirtySettersProperty, value);
-        }
-
-        /// <summary>
-        /// The collection of style setters to enable when the <see cref="IsDirtyProperty"/> is set TRUE
-        /// </summary>
-        public static readonly DependencyProperty IsDirtySettersProperty =
-            DependencyProperty.RegisterAttached("IsDirtySetters", typeof(SetterBaseCollection), typeof(ReactiveStyles), new PropertyMetadata(default));
-
-        private static readonly DependencyProperty IsDirtyStyleActiveProperty =
-            DependencyProperty.RegisterAttached("IsDirtyStyleActive", typeof(bool), typeof(ReactiveStyles), new PropertyMetadata(false));
-        private static bool IsDirtyStyleActive(DependencyObject obj) => (bool)obj.GetValue(IsDirtyStyleActiveProperty);
 
         #endregion
 
@@ -91,106 +65,55 @@ namespace RFBCodeWorks.WPF.Behaviors
         /// Enable/Disable the 'IsInvalid' style for the control
         /// </summary>
         public static readonly DependencyProperty IsInvalidProperty =
-            DependencyProperty.RegisterAttached("IsInvalid", typeof(bool), typeof(ReactiveStyles), new PropertyMetadata(false, propertyChangedCallback: UpdateElement));
-
-        /// <summary>
-        /// Gets the Style Setters for the 'IsInvalid' style
-        /// </summary>
-        public static SetterBaseCollection GetIsInvalidSetters(DependencyObject obj)
-        {
-            return (SetterBaseCollection)obj.GetValue(IsInvalidSettersProperty);
-        }
-
-        /// <summary>
-        /// Sets the Style Setters for the 'IsInvalid' style
-        /// </summary>
-        public static void SetIsInvalidSetters(DependencyObject obj, SetterBaseCollection value)
-        {
-            obj.SetValue(IsInvalidSettersProperty, value);
-        }
-
-        /// <summary>
-        /// The collection of style setters to enable when the <see cref="IsInvalidProperty"/> is set <see langword="true"/>
-        /// </summary>
-        public static readonly DependencyProperty IsInvalidSettersProperty =
-            DependencyProperty.RegisterAttached("IsInvalidSetters", typeof(SetterBaseCollection), typeof(ReactiveStyles), new PropertyMetadata(default));
-
-        private static readonly DependencyProperty IsInvalidStyleActiveProperty =
-            DependencyProperty.RegisterAttached("IsInvalidStyleActive", typeof(bool), typeof(ReactiveStyles), new PropertyMetadata(false));
-        private static bool IsInvalidStyleActive(DependencyObject obj) => (bool)obj.GetValue(IsInvalidStyleActiveProperty);
+            DependencyProperty.RegisterAttached("IsInvalid", typeof(bool), typeof(ReactiveStyles), new PropertyMetadata(false));
 
         #endregion
 
-        /// <summary>
-        /// Apply/remove the styles to/from the element
-        /// </summary>
-        private static void UpdateElement(DependencyObject d, DependencyPropertyChangedEventArgs e)
+
+
+
+
+
+
+        public static TriggerObject GetDirtyTrigger(DependencyObject obj)
         {
-            if (d is not FrameworkElement element) return;
-            
-            // Check if any styles should be applied. If not, apply the base style and return
-            bool isDirty = GetIsDirty(element);
-            bool isInvalid = GetIsInvalid(element);
-
-            ////Abort if no style change is needed
-            //if (
-            //    isTabletMode == IsTabletModeActive(element) &&
-            //    isDirty == IsDirtyStyleActive(element) &&
-            //    isInvalid == IsInvalidStyleActive(element)
-            //    )
-            //    return;
-
-            //Get Base Style
-            Style baseStyle;
-            if (IsDirtyStyleActive(element) || IsInvalidStyleActive(element))
-            {
-                baseStyle = element.Style.BasedOn;
-            }
-            else
-            {
-                baseStyle = element.Style;
-            }
-
-            // Update the properties storing if the style is active
-            element.SetValue(IsDirtyStyleActiveProperty, isDirty);
-            element.SetValue(IsInvalidStyleActiveProperty, isInvalid);
-
-            // Restore the base style if no superceding style is required, then exit
-            if (!isDirty && !isInvalid)
-            {
-                element.Style = baseStyle;
-                return;
-            }
-
-            //Create a new style and apply the styles in order of importance
-            Style responsivenessStyle = new Style(element.GetType(), baseStyle);
-            if (isDirty)
-            {
-                _ = ApplyStyleSetters(responsivenessStyle, GetIsDirtySetters(element));
-            }
-            if (isInvalid)
-            {
-                _ = ApplyStyleSetters(responsivenessStyle, GetIsInvalidSetters(element));
-            }
-
-            // Apply the style
-            element.Style = responsivenessStyle;
+            return (TriggerObject)obj.GetValue(DirtyTriggerProperty);
         }
 
-        /// <summary>
-        /// Applies the setters to the style
-        /// </summary>
-        /// <param name="style">The style to apply the setters to</param>
-        /// <param name="collection">The style setters collection</param>
-        /// <returns>The input <paramref name="style"/>, after it has had the setters applied</returns>
-        private static Style ApplyStyleSetters(Style style, SetterBaseCollection collection)
+        public static void SetDirtyTrigger(DependencyObject obj, TriggerObject value)
         {
-            if (collection is null) return style;
-            foreach (Setter setter in collection)
-            {
-                style.Setters.Add(setter);
-            }
-            return style;
+            obj.SetValue(DirtyTriggerProperty, value);
         }
+
+        // Using a DependencyProperty as the backing store for DirtyTrigger.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DirtyTriggerProperty =
+            DependencyProperty.RegisterAttached("DirtyTrigger", typeof(TriggerObject), typeof(ReactiveStyles), new PropertyMetadata(null));
+
+
+
+
+
+
+
     }
+
+
+    public class TriggerObject : FrameworkElement
+    {
+
+
+        public object Value
+        {
+            get { return (object)GetValue(TestProperty); }
+            set { SetValue(TestProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Test.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TestProperty =
+            DependencyProperty.Register(nameof(Value), typeof(object), typeof(TriggerObject), new PropertyMetadata(null));
+
+
+    }
+
 }
+
