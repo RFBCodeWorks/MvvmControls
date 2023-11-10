@@ -30,7 +30,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
     /// <summary>
     /// 
     /// </summary>
-    public sealed class FileTreeViewModel : TreeViewBase<TreeViewDirectoryInfo, IFileOrDirectoryTreeViewItem>
+    public sealed class FileTreeViewModel : TreeViewBase<DirectoryInfoTreeViewItem, IFileOrDirectoryTreeViewItem>
     {
 
         /// <inheritdoc/>
@@ -64,7 +64,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// <param name="dir"></param>
         public void SetRootDirectory(DirectoryInfo dir)
         {
-            TreeRoot = new TreeViewDirectoryInfo(dir, IconDictionary);
+            TreeRoot = new DirectoryInfoTreeViewItem(dir, IconDictionary);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
 
         private bool CanRefresh()
         {
-            return TreeRoot is TreeViewDirectoryInfo;
+            return TreeRoot is DirectoryInfoTreeViewItem;
         }
     }
 }

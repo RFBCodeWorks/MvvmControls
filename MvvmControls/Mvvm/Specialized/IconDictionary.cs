@@ -211,9 +211,9 @@ namespace RFBCodeWorks.Mvvm.Specialized
             string path;
             if (value is string p) path = p;
             else if (value is FileInfo f) path = f.FullName;
-            else if (value is TreeViewFileInfo tf) path = tf.Item.FullName;
+            else if (value is FileInfoTreeViewItem tf) path = tf.Item.FullName;
             else if (value is DirectoryInfo) path = DirectoryIconKey;
-            else if (value is TreeViewDirectoryInfo) path = DirectoryIconKey;
+            else if (value is DirectoryInfoTreeViewItem) path = DirectoryIconKey;
             else return null;
 
             bool addToDict = false;

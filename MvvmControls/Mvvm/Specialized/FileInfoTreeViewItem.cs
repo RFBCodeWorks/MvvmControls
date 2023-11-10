@@ -11,10 +11,10 @@ namespace RFBCodeWorks.Mvvm.Specialized
     /// <summary>
     /// A <see cref="IFileOrDirectoryTreeViewItem"/> that represents a <see cref="System.IO.FileInfo"/> object
     /// </summary>
-    public class TreeViewFileInfo : TreeViewItemBase<FileInfo, TreeViewDirectoryInfo>, IFileOrDirectoryTreeViewItem
+    public class FileInfoTreeViewItem : TreeViewItemBase<FileInfo, DirectoryInfoTreeViewItem>, IFileOrDirectoryTreeViewItem
     {
         /// <inheritdoc/>
-        public TreeViewFileInfo(FileInfo fileInfo) : base(fileInfo)
+        public FileInfoTreeViewItem(FileInfo fileInfo) : base(fileInfo)
         {
             LazyIcon = new Lazy<ImageSource>(GetIcon);
         }
@@ -22,7 +22,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// <summary>
         /// Create the object, applying the icon from the <paramref name="iconProvider"/>
         /// </summary>
-        public TreeViewFileInfo(FileInfo fileInfo, IIconProvider iconProvider) : this(fileInfo)
+        public FileInfoTreeViewItem(FileInfo fileInfo, IIconProvider iconProvider) : this(fileInfo)
         {
             IconProvider = iconProvider;
         }
@@ -57,10 +57,10 @@ namespace RFBCodeWorks.Mvvm.Specialized
         }
 
         /// <summary>Delegate for LINQ</summary>
-        public static TreeViewFileInfo Create(FileInfo file) => new TreeViewFileInfo(file);
+        public static FileInfoTreeViewItem Create(FileInfo file) => new FileInfoTreeViewItem(file);
 
         /// <summary>Delegate for LINQ</summary>
-        public static IFileOrDirectoryTreeViewItem CreateAsInterface(FileInfo file) => new TreeViewFileInfo(file);
+        public static IFileOrDirectoryTreeViewItem CreateAsInterface(FileInfo file) => new FileInfoTreeViewItem(file);
 
         IFileOrDirectoryTreeViewItem[] IFileOrDirectoryTreeViewItem.Children => Array.Empty<IFileOrDirectoryTreeViewItem>();
         bool IFileOrDirectoryTreeViewItem.IsDirectory => false;

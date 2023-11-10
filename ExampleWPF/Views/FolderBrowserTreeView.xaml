@@ -31,20 +31,18 @@
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
                 </Style>
-                <!--
-                <HierarchicalDataTemplate DataType="{x:Type DT:TreeViewDirectoryInfo}" ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate DataType="{x:Type DT:DirectoryInfoTreeViewItem}" ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal">
                         <Image  MaxHeight="16" Source="{Binding Icon}" />
                         <TextBlock Text="{Binding Name}"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>
-                <DataTemplate DataType="{x:Type DT:TreeViewFileInfo}">
+                <DataTemplate DataType="{x:Type DT:FileInfoTreeViewItem}">
                     <StackPanel Orientation="Horizontal">
                         <Image  MaxHeight="16" Source="{Binding Icon}" />
                         <TextBlock Text="{Binding Name}"/>
                     </StackPanel>
                 </DataTemplate>
-                -->
             </TreeView.Resources>
         </TreeView>
     </Grid>
