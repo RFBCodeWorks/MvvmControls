@@ -3,6 +3,15 @@
 # MvvmControls
  This is a Library designed to ease working within an MVVM framework, and is meant to consolidate boiler-plate ViewModel interactions for common WPF controls into pre-built classes. 
 
+# XAML Namespace:
+
+	
+	|Converters | xmlns:converters="https://github.com/RFBCodeWorks/MvvmControls/WPF.Converters"|
+	|Custom Controls | xmlns:cc="https://github.com/RFBCodeWorks/MvvmControls/WPF.Controls"|
+    |Attached Behaviors | xmlns:cb="https://github.com/RFBCodeWorks/MvvmControls/WPF.Behaviors"|
+    |Specialized ViewModels | xmlns:cs="https://github.com/RFBCodeWorks/MvvmControls/Mvvm/Specialized"|
+    
+
 ## Mvvm.Primitive Classes
 These classes are the base classes the main objects are derived from, and follow a strucute similar to System.Windows.Controls namespace.
 
@@ -93,9 +102,9 @@ public class MyViewModel {
 ```  
 And the corresponding xaml:
 ```
-  xmlns:Behaviors="clr-namespace:RFBCodeWorks.WPF.Behaviors;assembly=RFBCodeWorks.Mvvm.Controls"
-
-  <ComboBox Behaviors:ControlDefinitions.ComboBoxDefinition="{Binding ComboBoxDefinition}" />
+	xmlns:cb="https://github.com/RFBCodeWorks/MvvmControls/WPF.Behaviors"
+	
+  <ComboBox cb:ControlDefinitions.ComboBoxDefinition="{Binding ComboBoxDefinition}" />
 ```
 
 ### Development Targets
@@ -108,4 +117,6 @@ Build Targets:
 - .NetFramework `net472`, `net480`
 - `.NetCoreApp3.1`
 - `.Net5.0-windows`
+- `.Net6.0-windows`
+- `.Net7.0-windows`
 
