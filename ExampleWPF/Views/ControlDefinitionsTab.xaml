@@ -5,16 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ExampleWPF"
              mc:Ignorable="d" 
-            xmlns:Behaviors="clr-namespace:RFBCodeWorks.WPF.Behaviors;assembly=RFBCodeWorks.Mvvm.Controls"
+             xmlns:cb="https://github.com/RFBCodeWorks/MvvmControls/WPF.Behaviors"
             xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
             xmlns:Views="clr-namespace:ExampleWPF.Views"
             xmlns:ViewModels="clr-namespace:ExampleWPF.ViewModels"
-            d:DataContext="{d:DesignInstance Type=local:MainViewModel, IsDesignTimeCreatable=True}"
+            d:DataContext="{d:DesignInstance Type=local:MainViewModel, IsDesignTimeCreatable=False}"
             xmlns:md="clr-namespace:MvvmDialogs;assembly=MvvmDialogs"
             d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Background="BurlyWood">
         <GroupBox Header="File Drag and Drop Handler" 
-                  Behaviors:DragAndDrop.FileDropHandler="{Binding DragDropHandler}"
+                  cb:DragAndDrop.FileDropHandler="{Binding DragDropHandler}"
                   >
             <Grid>
                 <StackPanel>
@@ -39,11 +39,11 @@
                 <Button 
                     Content="This Button Content is specified in XAML"
                     ToolTip="This Button Tooltip is specified in XAML"
-                    Behaviors:ControlDefinitions.ButtonDefinition="{Binding ButtonContentTest}"
+                    cb:ControlDefinitions.ButtonDefinition="{Binding ButtonContentTest}"
                     />
                 <TextBlock Height="10"/>
                 <TextBlock Text="The button below should have its content and tooltip specified by the bound ButtonDefinition"/>
-                <Button Behaviors:ControlDefinitions.ButtonDefinition="{Binding ButtonContentTest}"/>
+                <Button cb:ControlDefinitions.ButtonDefinition="{Binding ButtonContentTest}"/>
             </StackPanel>
         </GroupBox>
     </StackPanel>

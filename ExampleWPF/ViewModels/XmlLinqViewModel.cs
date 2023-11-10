@@ -17,7 +17,7 @@ namespace ExampleWPF.ViewModels
 
         public Models.XmlLinqModel XmlLinqVM { get; } = new();
 
-        public RFBCodeWorks.Mvvm.XmlLinq.Controls.XDocumentTreeView XmlTreeView { get; } = new RFBCodeWorks.Mvvm.XmlLinq.Controls.XDocumentTreeView();
+        public RFBCodeWorks.Mvvm.Specialized.XDocumentTreeViewModel XmlTreeView { get; } = new RFBCodeWorks.Mvvm.Specialized.XDocumentTreeViewModel();
 
         public RelayCommand SelectXmlFileCommand { get; }
 
