@@ -173,29 +173,42 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// </remarks>
         protected virtual bool ShouldAutoCacheIcon(string key)
         {
-            return DefaultExtensions().Contains(key);
+            return AutoCachedExtensions.Contains(key);
+        }
 
-            static IEnumerable<string> DefaultExtensions()
-            {
-                yield return DirectoryIconKey;
-                yield return ".txt";
-                yield return ".pdf";
-                yield return ".htm";
-                yield return ".html";
-                yield return ".xml";
-                yield return ".rar";
-                yield return ".zip";
-                yield return ".7z";
-                yield return ".cfg";
-                yield return ".py";
-                yield return ".doc";
-                yield return ".docx";
-                yield return ".xls";
-                yield return ".xlsm";
-                yield return ".xltm";
-                yield return ".xlts";
-                yield break;
-            }
+        /// <summary>
+        /// The collection of keys that should be automatically cached for future retrieval.
+        /// </summary>
+        /// <remarks>Default collection = <see cref="DefaultAutoCachedExtensions"</remarks>
+        public IEnumerable<string> AutoCachedExtensions
+        {
+            get => AutoCacheField ?? DefaultAutoCachedExtensions();
+            set => AutoCacheField = value;
+        }
+        private IEnumerable<string> AutoCacheField;
+
+        /// <summary>
+        /// The default collection of file extensions that will be automatically cached by this object.
+        /// </summary>
+        public static IEnumerable<string> DefaultAutoCachedExtensions()
+        {
+            yield return DirectoryIconKey;
+            yield return ".txt";
+            yield return ".pdf";
+            yield return ".htm";
+            yield return ".html";
+            yield return ".xml";
+            yield return ".rar";
+            yield return ".zip";
+            yield return ".7z";
+            yield return ".cfg";
+            yield return ".py";
+            yield return ".doc";
+            yield return ".docx";
+            yield return ".xls";
+            yield return ".xlsm";
+            yield return ".xltm";
+            yield return ".xlts";
         }
 
         /// <summary>
