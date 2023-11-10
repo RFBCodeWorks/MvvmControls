@@ -97,15 +97,10 @@
                             </GroupBox.Resources>
                             <cc:SimpleGrid ColumnCount="2" RowCount="3" AutoColumnWidth="*" AutoRowHeight="40">
                                 <!-- Apply the attached bindings -->
-                                <TextBox 
-                                    Grid.Column="0" x:Name="Txt_1"
+                                <TextBox x:Name="Txt_1"
                                     cb:ReactiveStylesIsDirtyString.CurrentValue="{Binding ElementName=Txt_1, Path=Text}"
                                     cb:ReactiveStylesIsDirtyString.OriginalValue=""
-                                    >
-                                    <cb:ReactiveStyles.DirtyTrigger>
-                                        <cb:TriggerObject DataContext="{Binding ElementName=Txt_1, Path=DataContext}" />
-                                    </cb:ReactiveStyles.DirtyTrigger>
-                                </TextBox>
+                                    />
                                 <TextBox Grid.Row="1" x:Name="Txt_2"
                                     cb:ReactiveStylesIsDirtyString.CurrentValue="{Binding ElementName=Txt_2, Path=Text}"
                                     cb:ReactiveStylesIsDirtyString.OriginalValue=""

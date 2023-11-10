@@ -69,50 +69,6 @@ namespace RFBCodeWorks.WPF.Behaviors
 
         #endregion
 
-
-
-
-
-
-
-        public static TriggerObject GetDirtyTrigger(DependencyObject obj)
-        {
-            return (TriggerObject)obj.GetValue(DirtyTriggerProperty);
-        }
-
-        public static void SetDirtyTrigger(DependencyObject obj, TriggerObject value)
-        {
-            obj.SetValue(DirtyTriggerProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for DirtyTrigger.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty DirtyTriggerProperty =
-            DependencyProperty.RegisterAttached("DirtyTrigger", typeof(TriggerObject), typeof(ReactiveStyles), new PropertyMetadata(null));
-
-
-
-
-
-
-
-    }
-
-
-    public class TriggerObject : FrameworkElement
-    {
-
-
-        public object Value
-        {
-            get { return (object)GetValue(TestProperty); }
-            set { SetValue(TestProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for Test.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty TestProperty =
-            DependencyProperty.Register(nameof(Value), typeof(object), typeof(TriggerObject), new PropertyMetadata(null));
-
-
     }
 
 }
