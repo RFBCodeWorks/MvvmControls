@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RFBCodeWorks.Mvvm.WebView2Integration.Tester"
         xmlns:WV="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
-        xmlns:WVEvents="clr-namespace:RFBCodeWorks.Mvvm.WebView2Integration;assembly=RFBCodeWorks.Mvvm.WebView2Integration"
+        xmlns:WVEvents="https://github.com/RFBCodeWorks/MvvmControls/Mvvm.WebView2Integration"
+        xmlns:cb="https://github.com/RFBCodeWorks/MvvmControls/WPF.Behaviors"
         d:DataContext="{d:DesignInstance Type=local:ViewModel}"
         mc:Ignorable="d"
         Title="MainWindow" Height="250" Width="600">
