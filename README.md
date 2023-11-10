@@ -3,13 +3,14 @@
 # MvvmControls
  This is a Library designed to ease working within an MVVM framework, and is meant to consolidate boiler-plate ViewModel interactions for common WPF controls into pre-built classes. 
 
-# XAML Namespace:
+## XAML Namespace:
 
-	
-	|Converters | xmlns:converters="https://github.com/RFBCodeWorks/MvvmControls/WPF.Converters"|
-	|Custom Controls | xmlns:cc="https://github.com/RFBCodeWorks/MvvmControls/WPF.Controls"|
-    |Attached Behaviors | xmlns:cb="https://github.com/RFBCodeWorks/MvvmControls/WPF.Behaviors"|
-    |Specialized ViewModels | xmlns:cs="https://github.com/RFBCodeWorks/MvvmControls/Mvvm/Specialized"|
+|Usage|Namespace|
+|---|---|
+|Converters | xmlns:converters="https://github.com/RFBCodeWorks/MvvmControls/WPF.Converters"|
+|Custom Controls | xmlns:cc="https://github.com/RFBCodeWorks/MvvmControls/WPF.Controls"|
+|Attached Behaviors | xmlns:cb="https://github.com/RFBCodeWorks/MvvmControls/WPF.Behaviors"|
+|Specialized ViewModels | xmlns:cs="https://github.com/RFBCodeWorks/MvvmControls/Mvvm/Specialized"|
     
 
 ## Mvvm.Primitive Classes
