@@ -7,65 +7,12 @@ using System.Windows;
 
 namespace RFBCodeWorks.WPF.Behaviors
 {
+
     /// <summary>
     /// Contains Attached properties for triggering a style to overlay onto a control
     /// </summary>
     public static partial class ReactiveStyles
     {
-
-        #region < IsTabletMode >
-
-        /// <summary>
-        /// Check the state of <see cref="IsTabletModeProperty"/>
-        /// </summary>
-        public static bool GetIsTabletMode(DependencyObject obj)
-        {
-            return (bool)obj.GetValue(IsTabletModeProperty);
-        }
-
-
-        /// <summary>
-        /// Set the state of <see cref="IsTabletModeProperty"/>
-        /// </summary>
-        public static void SetIsTabletMode(DependencyObject obj, bool value)
-        {
-            obj.SetValue(IsTabletModeProperty, value);
-        }
-
-        /// <summary>
-        /// Enable/Disable the Reactive Style
-        /// </summary>
-        public static readonly DependencyProperty IsTabletModeProperty =
-            DependencyProperty.RegisterAttached("IsTabletMode", typeof(bool), typeof(ReactiveStyles), new PropertyMetadata(false, UpdateElement));
-
-
-        /// <summary>
-        /// Gets the Style Setters for the 'Dirty' style
-        /// </summary>
-        public static SetterBaseCollection GetTabletModeSetters(DependencyObject obj)
-        {
-            return (SetterBaseCollection)obj.GetValue(TabletModeSettersProperty);
-        }
-
-        /// <summary>
-        /// Sets the Style Setters for the 'Dirty' style
-        /// </summary>
-        public static void SetTabletModeSetters(DependencyObject obj, SetterBaseCollection value)
-        {
-            obj.SetValue(TabletModeSettersProperty, value);
-        }
-
-        /// <summary>
-        /// The collection of style setters to enable when the <see cref="IsDirtyProperty"/> is set TRUE
-        /// </summary>
-        public static readonly DependencyProperty TabletModeSettersProperty =
-            DependencyProperty.RegisterAttached("TabletModeSetters", typeof(SetterBaseCollection), typeof(ReactiveStyles), new PropertyMetadata(default));
-
-        private static readonly DependencyProperty IsTabletModeActiveProperty =
-            DependencyProperty.RegisterAttached("IsTableModeActive", typeof(bool), typeof(ReactiveStyles), new PropertyMetadata(false));
-        private static bool IsTabletModeActive(DependencyObject obj) => (bool)obj.GetValue(IsTabletModeActiveProperty);
-
-        #endregion
 
         #region < IsDirty >
 
@@ -182,7 +129,6 @@ namespace RFBCodeWorks.WPF.Behaviors
             if (d is not FrameworkElement element) return;
             
             // Check if any styles should be applied. If not, apply the base style and return
-            bool isTabletMode = GetIsTabletMode(element);
             bool isDirty = GetIsDirty(element);
             bool isInvalid = GetIsInvalid(element);
 
@@ -196,7 +142,7 @@ namespace RFBCodeWorks.WPF.Behaviors
 
             //Get Base Style
             Style baseStyle;
-            if (IsTabletModeActive(element) || IsDirtyStyleActive(element) || IsInvalidStyleActive(element))
+            if (IsDirtyStyleActive(element) || IsInvalidStyleActive(element))
             {
                 baseStyle = element.Style.BasedOn;
             }
@@ -206,12 +152,11 @@ namespace RFBCodeWorks.WPF.Behaviors
             }
 
             // Update the properties storing if the style is active
-            element.SetValue(IsTabletModeActiveProperty, isTabletMode);
             element.SetValue(IsDirtyStyleActiveProperty, isDirty);
             element.SetValue(IsInvalidStyleActiveProperty, isInvalid);
 
             // Restore the base style if no superceding style is required, then exit
-            if (!isDirty && !isInvalid && !isTabletMode)
+            if (!isDirty && !isInvalid)
             {
                 element.Style = baseStyle;
                 return;
@@ -219,10 +164,6 @@ namespace RFBCodeWorks.WPF.Behaviors
 
             //Create a new style and apply the styles in order of importance
             Style responsivenessStyle = new Style(element.GetType(), baseStyle);
-            if (isTabletMode)
-            {
-                _ = ApplyStyleSetters(responsivenessStyle, GetTabletModeSetters(element));
-            }
             if (isDirty)
             {
                 _ = ApplyStyleSetters(responsivenessStyle, GetIsDirtySetters(element));
