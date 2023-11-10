@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace RFBCodeWorks.WPF.Behaviors.Helpers
+namespace RFBCodeWorks.WPF.Behaviors
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
     /// <summary>
     /// Helper class to set <see cref="Behaviors.ReactiveStyles.IsDirtyProperty"/> when the Default and Current values don't match
     /// </summary>
-    public static class IsDirtyDouble
+    public static class ReactiveStyleIsDirtyDouble
     {
 
 
@@ -28,7 +28,7 @@ namespace RFBCodeWorks.WPF.Behaviors.Helpers
 
         // Using a DependencyProperty as the backing store for EnableComparer.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty EnableComparerProperty =
-            DependencyProperty.RegisterAttached("EnableComparer", typeof(bool), typeof(IsDirtyDouble), new PropertyMetadata(false, IsEnabledChanged));
+            DependencyProperty.RegisterAttached("EnableComparer", typeof(bool), typeof(ReactiveStyleIsDirtyDouble), new PropertyMetadata(true, IsEnabledChanged));
 
 
 
@@ -44,7 +44,7 @@ namespace RFBCodeWorks.WPF.Behaviors.Helpers
 
         // Using a DependencyProperty as the backing store for OriginalValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty OriginalValueProperty =
-            DependencyProperty.RegisterAttached("OriginalValue", typeof(double), typeof(IsDirtyDouble), new PropertyMetadata(default, CompareValues));
+            DependencyProperty.RegisterAttached("OriginalValue", typeof(double), typeof(ReactiveStyleIsDirtyDouble), new PropertyMetadata(default, CompareValues));
 
 
         public static double GetCurrentValue(DependencyObject obj)
@@ -59,11 +59,11 @@ namespace RFBCodeWorks.WPF.Behaviors.Helpers
 
         // Using a DependencyProperty as the backing store for CurrentValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CurrentValueProperty =
-            DependencyProperty.RegisterAttached("CurrentValue", typeof(double), typeof(IsDirtyDouble), new PropertyMetadata(default, CompareValues));
+            DependencyProperty.RegisterAttached("CurrentValue", typeof(double), typeof(ReactiveStyleIsDirtyDouble), new PropertyMetadata(default, CompareValues));
 
 
         private static readonly DependencyProperty IsDirtyComparerActiveProperty =
-        DependencyProperty.RegisterAttached("IsDirtyComparerActive", typeof(bool), typeof(ReactiveStyles), new PropertyMetadata(false));
+        DependencyProperty.RegisterAttached("IsDirtyComparerActive", typeof(bool), typeof(ReactiveStyles), new PropertyMetadata(true));
         private static bool IsDirtyComparerActive(DependencyObject obj) => (bool)obj.GetValue(IsDirtyComparerActiveProperty);
 
 

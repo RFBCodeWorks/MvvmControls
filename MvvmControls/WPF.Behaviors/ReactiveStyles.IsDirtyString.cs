@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace RFBCodeWorks.WPF.Behaviors.Helpers
+namespace RFBCodeWorks.WPF.Behaviors
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
     /// <summary>
     /// Helper class to set <see cref="Behaviors.ReactiveStyles.IsDirtyProperty"/> when the Default and Current values don't match
     /// </summary>
-    public static class IsDirtyString
+    public static class ReactiveStyleIsDirtyString
     {
 
         public static bool GetEnableComparer(DependencyObject obj)
@@ -27,8 +27,7 @@ namespace RFBCodeWorks.WPF.Behaviors.Helpers
 
         // Using a DependencyProperty as the backing store for EnableComparer.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty EnableComparerProperty =
-            DependencyProperty.RegisterAttached("EnableComparer", typeof(bool), typeof(IsDirtyString), new PropertyMetadata(false, IsEnabledChanged));
-
+            DependencyProperty.RegisterAttached("EnableComparer", typeof(bool), typeof(ReactiveStyleIsDirtyString), new PropertyMetadata(true, IsEnabledChanged));
 
 
         public static string GetOriginalValue(DependencyObject obj)
@@ -43,7 +42,7 @@ namespace RFBCodeWorks.WPF.Behaviors.Helpers
 
         // Using a DependencyProperty as the backing store for OriginalValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty OriginalValueProperty =
-            DependencyProperty.RegisterAttached("OriginalValue", typeof(string), typeof(IsDirtyString), new PropertyMetadata(default, CompareValues));
+            DependencyProperty.RegisterAttached("OriginalValue", typeof(string), typeof(ReactiveStyleIsDirtyString), new PropertyMetadata(default, CompareValues));
 
 
         public static string GetCurrentValue(DependencyObject obj)
@@ -59,11 +58,11 @@ namespace RFBCodeWorks.WPF.Behaviors.Helpers
 
         // Using a DependencyProperty as the backing store for CurrentValue.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CurrentValueProperty =
-            DependencyProperty.RegisterAttached("CurrentValue", typeof(string), typeof(IsDirtyString), new PropertyMetadata(default, CompareValues));
+            DependencyProperty.RegisterAttached("CurrentValue", typeof(string), typeof(ReactiveStyleIsDirtyString), new PropertyMetadata(default, CompareValues));
 
 
         private static readonly DependencyProperty IsDirtyComparerActiveProperty =
-        DependencyProperty.RegisterAttached("IsDirtyComparerActive", typeof(bool), typeof(ReactiveStyles), new PropertyMetadata(false));
+        DependencyProperty.RegisterAttached("IsDirtyComparerActive", typeof(bool), typeof(ReactiveStyles), new PropertyMetadata(true));
         private static bool IsDirtyComparerActive(DependencyObject obj) => (bool)obj.GetValue(IsDirtyComparerActiveProperty);
 
 
