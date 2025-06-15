@@ -4,6 +4,9 @@ using System.Windows.Controls;
 using System.Collections.Specialized;
 using System.Collections;
 
+#nullable enable
+#nullable disable warnings
+
 namespace RFBCodeWorks.Mvvm.Primitives
 {
     /// <summary>
@@ -22,6 +25,18 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// </summary>
         public ItemSource() { }
 
+        /// <summary>
+        /// Create a new selector
+        /// </summary>
+        /// <param name="collection">A collection of items. Default or null is OK.</param>
+        /// <param name="onItemSourceChanged">An action to be inoked when the collection changes (such as calling IRelayCommand.CanExecuteChanged)</param>
+        public ItemSource(E? collection = default, Action onItemSourceChanged = null)
+        {
+            Items = collection;
+            _onItemSourceChanged = onItemSourceChanged;
+        }
+
+        private readonly Action? _onItemSourceChanged;
 
         static ItemSource()
         {
@@ -52,6 +67,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         protected void OnItemSourceChanged()
         {
             OnItemSourceChanged(new());
+            _onItemSourceChanged?.Invoke();
         }
 
         /// <summary> Raises the SelectionChanged event </summary>

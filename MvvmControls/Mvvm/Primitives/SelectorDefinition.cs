@@ -10,6 +10,25 @@ namespace RFBCodeWorks.Mvvm.Primitives
     public class SelectorDefinition<T, E, V> : ItemSource<T,E>, ISelector, ISelector<T>, ISelector<T, E>
         where E : IList<T>
     {
+        /// <summary>
+        /// Crete a new Selector
+        /// </summary>
+        public SelectorDefinition() { }
+
+        /// <summary>
+        /// Create a new selector
+        /// </summary>
+        /// <param name="collection">The collection or null</param>
+        /// <param name="onSelectionChanged">An action to be inoked when the selected item changes (such as calling IRelayCommand.CanExecuteChanged)</param>
+        /// <inheritdoc cref="ItemSource{T, E}.ItemSource(E, Action)"/>
+        /// <param name="onItemSourceChanged"/>
+        public SelectorDefinition(E collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection, onItemSourceChanged)
+        {
+            _onSelectionChanged = onSelectionChanged;
+        }
+
+        private readonly Action _onSelectionChanged;
+
         #region < SelectionChangedEvent >
 
         /// <summary>
@@ -22,6 +41,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         {
             SelectedItemChanged?.Invoke(this, e);
             ISelectorEvent?.Invoke(this, e);
+            _onSelectionChanged?.Invoke();
         }
 
         #endregion

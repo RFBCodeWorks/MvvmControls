@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Windows;
 
+#nullable enable
+#nullable disable warnings
+
 namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
@@ -38,6 +41,14 @@ namespace RFBCodeWorks.Mvvm
     public class ComboBoxDefinition<T, E, V> : Primitives.SelectorDefinition<T, E, V>, IComboBox, IComboBox<T>
         where E : IList<T>
     {
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
+        public ComboBoxDefinition() { }
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
+        public ComboBoxDefinition(E collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection, onItemSourceChanged, onSelectionChanged) { }
+
         /// <inheritdoc cref="System.Windows.Controls.ComboBox.Text"/>
         /// <remarks>
         /// When the IsEditable property is true, setting this property places initial text entered in the text box. When IsEditable is false, setting this value has no effect.
@@ -87,20 +98,47 @@ namespace RFBCodeWorks.Mvvm
     /// A Simple ComboBox Definition that only specifies the enumerated type
     /// </summary>
     /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
-    public class ComboBoxDefinition<T> : ComboBoxDefinition<T, IList<T>, object> { }
+    public class ComboBoxDefinition<T> : ComboBoxDefinition<T, IList<T>, object> 
+    {
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
+        public ComboBoxDefinition() { }
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
+        public ComboBoxDefinition(IList<T>? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
+    }
 
     /// <summary>
     /// A generic bindable definition for a ComboBox whose ItemSource is any IEnumerable object, that expects a SelectedValue of a specific type
     /// </summary>
     /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
-    public class ComboBoxDefinition<T, V> : ComboBoxDefinition<T, IList<T>, V> { }
+    public class ComboBoxDefinition<T, V> : ComboBoxDefinition<T, IList<T>, V> 
+    {
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
+        public ComboBoxDefinition() { }
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
+        public ComboBoxDefinition(IList<T>? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
+    }
 
     #endregion'
 
     #region < Refreshable >
 
     /// <inheritdoc cref="RefreshableComboBoxDefinition{T, V}"/>
-    public class RefreshableComboBoxDefinition<T> : RefreshableComboBoxDefinition<T, object> { }
+    public class RefreshableComboBoxDefinition<T> : RefreshableComboBoxDefinition<T, object> 
+    {
+        /// <summary>Create a new RefreshableComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
+        public RefreshableComboBoxDefinition() { }
+
+        /// <summary>Create a new RefreshableComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
+        public RefreshableComboBoxDefinition(T[]? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
+    }
 
     /// <summary>
     /// A ComboBoxDefinition whose collection is an array of <typeparamref name="T"/> objects, that can be refreshed on demand via the <see cref="RefreshFunc"/>
@@ -108,13 +146,13 @@ namespace RFBCodeWorks.Mvvm
     /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
     public class RefreshableComboBoxDefinition<T, V> : ComboBoxDefinition<T, T[], V>, IRefreshableItemSource<T>
     {
-        /// <summary>
-        /// Create a new RefreshableComboBox object
-        /// </summary>
-        public RefreshableComboBoxDefinition()
-        {
-            RefreshCommand = new ButtonDefinition(Refresh, () => CanRefresh());
-        }
+        /// <summary>Create a new RefreshableComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
+        public RefreshableComboBoxDefinition() { }
+
+        /// <summary>Create a new RefreshableComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
+        public RefreshableComboBoxDefinition(T[]? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
 
         /// <inheritdoc/>
         public override T[] Items
@@ -143,7 +181,8 @@ namespace RFBCodeWorks.Mvvm
         public Func<bool> CanRefresh { get; init; }
         
         /// <inheritdoc/>
-        public IButtonDefinition RefreshCommand { get; }
+        public IButtonDefinition RefreshCommand => _refreshCommand ??= new ButtonDefinition(Refresh, () => CanRefresh());
+        private IButtonDefinition _refreshCommand;
 
         /// <summary>
         /// Check if the <see cref="RefreshFunc"/> is null and return the opposite

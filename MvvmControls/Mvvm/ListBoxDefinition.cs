@@ -5,6 +5,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
+#nullable enable
+#nullable disable warnings
+
 namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
@@ -56,6 +59,14 @@ namespace RFBCodeWorks.Mvvm
     public class ListBoxDefinition<T, E, V> : Primitives.SelectorDefinition<T, E, V>, IListBox, IListBox<T>
         where E : IList<T>
     {
+        /// <summary>Create a new ListBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
+        public ListBoxDefinition() { }
+
+        /// <summary>Create a new ListBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
+        public ListBoxDefinition(E collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection, onItemSourceChanged, onSelectionChanged) { }
+
         #region < SelectionChangedEvent >
 
         /// <summary>
@@ -131,13 +142,31 @@ namespace RFBCodeWorks.Mvvm
     /// A Simple ListBox/ListView Definition that only ListBox/ListView the enumerated type
     /// </summary>
     /// <inheritdoc cref="ListBoxDefinition{T, E, V}"/>
-    public class ListBoxDefinition<T> : ListBoxDefinition<T, object> { }
+    public class ListBoxDefinition<T> : ListBoxDefinition<T, object> 
+    {
+        /// <summary>Create a new ListBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
+        public ListBoxDefinition() { }
+
+        /// <summary>Create a new ListBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
+        public ListBoxDefinition(IList<T>? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
+    }
 
     /// <summary>
     /// A generic definition for a ListBox/ListView whose ItemSource is any IEnumerable object, that expects a SelectedValue of a specific type
     /// </summary>
     /// <inheritdoc cref="ListBoxDefinition{T, E, V}"/>
-    public class ListBoxDefinition<T, V> : ListBoxDefinition<T, IList<T>, V> { }
+    public class ListBoxDefinition<T, V> : ListBoxDefinition<T, IList<T>, V> 
+    {
+        /// <summary>Create a new ListBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
+        public ListBoxDefinition() { }
+
+        /// <summary>Create a new ListBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
+        public ListBoxDefinition(IList<T>? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
+    }
 
     #endregion
 
@@ -147,10 +176,24 @@ namespace RFBCodeWorks.Mvvm
     /// A listbox that contains only strings
     /// </summary>
     /// <inheritdoc cref="RefreshableListBoxDefinition{T, V}"/>
-    public class RefreshableListBoxDefinition : RefreshableListBoxDefinition<string, object> { }
+    public class RefreshableListBoxDefinition : RefreshableListBoxDefinition<string, object> 
+    {
+        /// <inheritdoc cref="RefreshableListBoxDefinition{T, V}.RefreshableListBoxDefinition()"/>
+        public RefreshableListBoxDefinition() { }
+
+        /// <inheritdoc cref="RefreshableListBoxDefinition{T, V}.RefreshableListBoxDefinition(T[], Action, Action)"/>
+        public RefreshableListBoxDefinition(string[]? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<string>(), onItemSourceChanged, onSelectionChanged) { }
+    }
 
     /// <inheritdoc cref="RefreshableListBoxDefinition{T, V}"/>
-    public class RefreshableListBoxDefinition<T> : RefreshableListBoxDefinition<T, object> { }
+    public class RefreshableListBoxDefinition<T> : RefreshableListBoxDefinition<T, object> 
+    {
+        /// <inheritdoc cref="RefreshableListBoxDefinition{T, V}.RefreshableListBoxDefinition()"/>
+        public RefreshableListBoxDefinition() { }
+
+        /// <inheritdoc cref="RefreshableListBoxDefinition{T, V}.RefreshableListBoxDefinition(T[], Action, Action)"/>
+        public RefreshableListBoxDefinition(T[]? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
+    }
 
     /// <summary>
     /// A ComboBoxDefinition whose collection is an array of <typeparamref name="T"/> objects, that can be refreshed on demand via the <see cref="RefreshFunc"/>
@@ -158,13 +201,14 @@ namespace RFBCodeWorks.Mvvm
     /// <inheritdoc cref="ListBoxDefinition{T, E, V}"/>
     public class RefreshableListBoxDefinition<T, V> : ListBoxDefinition<T, T[], V>, IRefreshableItemSource<T>
     {
-        /// <summary>
-        /// Create a new RefreshableComboBox object
-        /// </summary>
-        public RefreshableListBoxDefinition()
-        {
-            RefreshCommand = new ButtonDefinition(Refresh, () => CanRefresh());
-        }
+        /// <summary>Create a new RefreshableListBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
+        public RefreshableListBoxDefinition() { }
+
+        /// <summary>Create a new RefreshableListBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
+        public RefreshableListBoxDefinition(T[]? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
+
         /// <inheritdoc/>
         public override T[] Items
         {
