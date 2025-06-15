@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -9,37 +10,38 @@ using System.Windows.Input;
 namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
-    /// Class that wraps an <see cref="IAsyncRelayCommand"/> to provide the remaining implementation of <see cref="IButtonDefinition"/>
+    /// Class that wraps an <see cref="Input.IAsyncRelayCommand"/> to provide the remaining implementation of <see cref="IButtonDefinition"/>
     /// </summary>
-    public sealed class AsyncButtonDefinition : Primitives.AbstractAsyncButtonDefinition, IAsyncRelayCommand, ICommand
+    public sealed class AsyncButtonDefinition : Primitives.AbstractAsyncButtonDefinition, Input.IAsyncRelayCommand, ICommand
     {
+
         /// <summary>
         /// Create a new ButtonDefinition that wraps a Fire-And-Forget task
         /// </summary>
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{Task}, Func{bool}, Action{Exception})"/>
+        /// <inheritdoc cref="Input.AsyncRelayCommand.AsyncRelayCommand(Func{Task}, Func{bool}, Action{Exception})"/>
         public AsyncButtonDefinition(
             Func<Task> execute,
             Func<bool> canExecute = null,
             Action<Exception> errorHandler = null
-            ) : this(new AsyncRelayCommand(execute, canExecute, errorHandler)) { }
+            ) : this(new Input.AsyncRelayCommand(execute, canExecute, errorHandler)) { }
 
         /// <summary>
         /// Create a new ButtonDefinition that wraps a Cancellable Task
         /// </summary>
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool}, Action{Exception}, Action)"/>
+        /// <inheritdoc cref="Input.AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool}, Action{Exception}, Action)"/>
         public AsyncButtonDefinition(
             Func<CancellationToken, Task> cancelableExecute,
             Func<bool> canExecute = null,
             Action<Exception> errorHandler = null,
             Action cancelReaction = null
-            ) : this(new AsyncRelayCommand(cancelableExecute, canExecute, errorHandler, cancelReaction)) { }
+            ) : this(new Input.AsyncRelayCommand(cancelableExecute, canExecute, errorHandler, cancelReaction)) { }
 
         /// <summary>
         /// Create a new ButtonDefinition from the specified <paramref name="command"/>
         /// </summary>
         /// <param name="command">the command to wrap</param>
         /// <exception cref="ArgumentNullException"/>
-        public AsyncButtonDefinition(IAsyncRelayCommand command) : base()
+        public AsyncButtonDefinition(Input.IAsyncRelayCommand command) : base()
         {
             Command = command ?? throw new ArgumentNullException(nameof(command));
         }
@@ -47,7 +49,7 @@ namespace RFBCodeWorks.Mvvm
         /// <summary>
         /// The IAsyncRelayCommand object through which the <see cref="ICommand"/> interface is implemented
         /// </summary>
-        public IAsyncRelayCommand Command { get; }
+        public Input.IAsyncRelayCommand Command { get; }
 
         /// <inheritdoc cref="Primitives.AbstractAsyncCommand.ExecuteAsync"/>
         public override Task ExecuteAsync() => Command.ExecuteAsync(null);
@@ -83,7 +85,7 @@ namespace RFBCodeWorks.Mvvm
         /// <inheritdoc/>
         public override bool CanExecute() => Command?.CanExecute(null) ?? false;
 
-        IEnumerable<Task> IAsyncRelayCommand.RunningTasks => Command.RunningTasks;
+        IEnumerable<Task> Input.IAsyncRelayCommand.RunningTasks => Command.RunningTasks;
         Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecutionTask => Command.ExecutionTask;
         Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync();
         void ICommand.Execute(object parameter) => Command.Execute(parameter);

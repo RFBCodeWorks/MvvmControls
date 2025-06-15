@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RFBCodeWorks.Mvvm.Input;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;

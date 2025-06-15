@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace RFBCodeWorks.Mvvm
+namespace RFBCodeWorks.Mvvm.Input
 {
 
     /// <summary>
@@ -16,7 +16,7 @@ namespace RFBCodeWorks.Mvvm
     {
 
         /// <inheritdoc cref="RelayCommand{T}.RelayCommand(Action{T}, Func{T, bool}, Action{T, Exception})"/>
-        public RelayCommand(Action<T> execute) 
+        public RelayCommand(Action<T> execute)
             : this(execute, ReturnTrue) { }
 
         /// <inheritdoc cref="RelayCommand{T}.RelayCommand(Action{T}, Func{T, bool}, Action{T, Exception})"/>
@@ -38,11 +38,11 @@ namespace RFBCodeWorks.Mvvm
         }
 
         /// <inheritdoc cref="RelayCommand{T}.RelayCommand(Action{T}, Func{T, bool}, Action{T, Exception})"/>
-        public RelayCommand(Action<T> execute, Action<Exception> errorHandler) 
+        public RelayCommand(Action<T> execute, Action<Exception> errorHandler)
             : this(execute, ReturnTrue, errorHandler) { }
 
         /// <inheritdoc cref="RelayCommand{T}.RelayCommand(Action{T}, Func{T, bool}, Action{T, Exception})"/>
-        public RelayCommand(Action<T> execute, Action<T, Exception> errorHandler) 
+        public RelayCommand(Action<T> execute, Action<T, Exception> errorHandler)
             : this(execute, ReturnTrue, errorHandler) { }
 
         /// <summary>
@@ -51,14 +51,14 @@ namespace RFBCodeWorks.Mvvm
         /// <inheritdoc cref="Primitives.AbstractCommand.AbstractCommand(bool)"/>
         /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.RelayCommand.RelayCommand(Action, Func{bool})"/>
         /// <exception cref="ArgumentNullException"/>
-        public RelayCommand(Action<T> execute, Func<T,bool> canExecute, Action<T,Exception> errorHandler) : base(true)
+        public RelayCommand(Action<T> execute, Func<T, bool> canExecute, Action<T, Exception> errorHandler) : base(true)
         {
             ExecuteAction = execute ?? throw new ArgumentNullException(nameof(execute));
             CanExecuteFunction = canExecute ?? throw new ArgumentNullException(nameof(canExecute));
             ErrorHandler = errorHandler ?? throw new ArgumentNullException(nameof(errorHandler));
         }
 
-        private readonly Action<T> ExecuteAction; 
+        private readonly Action<T> ExecuteAction;
         private readonly Func<T, bool> CanExecuteFunction;
         private readonly Action<T, Exception> ErrorHandler;
 

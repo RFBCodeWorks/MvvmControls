@@ -1,4 +1,5 @@
 ﻿using RFBCodeWorks.Mvvm;
+using RFBCodeWorks.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RFBCodeWorks.Mvvm;
+using RFBCodeWorks.Mvvm.Input;
 using RFBCodeWorks.Mvvm.Primitives;
 using System;
 using System.Collections.Generic;

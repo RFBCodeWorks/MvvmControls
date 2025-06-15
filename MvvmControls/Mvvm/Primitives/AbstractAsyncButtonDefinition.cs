@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using RFBCodeWorks.Mvvm.Input;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -18,19 +20,22 @@ namespace RFBCodeWorks.Mvvm.Primitives
     /// </summary>
     public abstract class AbstractAsyncButtonDefinition : ControlBase, IButtonDefinition, ICommand
     {
+        private string _displayText;
+
         /// <inheritdoc/>
         public virtual string DisplayText
         {
-            get { return ButtonTextField; }
-            set { SetProperty(ref ButtonTextField, value, nameof(DisplayText)); }
+            get => _displayText;
+            set
+            {
+                if (!EqualityComparer<string>.Default.Equals(_displayText, value))
+                {
+                    OnPropertyChanging(EventArgSingletons.DisplayText);
+                    _displayText = value;
+                    OnPropertyChanged(EventArgSingletons.DisplayText);
+                }
+            }
         }
-        private string ButtonTextField;
-
-        /// <summary>
-        /// Returns the result of the last <see cref="ICommand.CanExecute(object)"/> call.
-        /// <br/> The set method has no effect.
-        /// </summary>
-        public override bool IsEnabled { get => base.IsEnabled; set { } }
 
         /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.RelayCommand{T}.CanExecute(T)"/>
         public abstract bool CanExecute();
@@ -45,21 +50,17 @@ namespace RFBCodeWorks.Mvvm.Primitives
         public abstract void NotifyCanExecuteChanged();
 
         /// <inheritdoc/>
-        public void NotifyCanExecuteChanged(object sender, EventArgs e) => this.NotifyCanExecuteChanged();
-
-        #region < ICommand Explicit Implementation >
+        public void NotifyCanExecuteChanged(object sender, EventArgs e) => NotifyCanExecuteChanged();
 
         /// <inheritdoc/>
         public abstract event EventHandler CanExecuteChanged;
 
-        void ICommand.Execute(object parameter) => this.ExecuteAsync().Wait();
+        void ICommand.Execute(object parameter) => ExecuteAsync().Wait();
         bool ICommand.CanExecute(object parameter)
         {
             base.IsEnabled = CanExecute();
             return base.IsEnabled;
         }
-        
-        #endregion
     }
 
 }

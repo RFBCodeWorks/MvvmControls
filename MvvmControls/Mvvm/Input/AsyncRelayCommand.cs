@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.Mvvm
+namespace RFBCodeWorks.Mvvm.Input
 {
     /// <summary>
     /// A RelayCommand that supports Async Functionality, can react to the task generating an error, and can react to a task being cancelled
@@ -29,10 +29,10 @@ namespace RFBCodeWorks.Mvvm
             CanExecuteFunction = canExecute ?? ReturnTrue;
         }
 
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{Task}, Func{bool}, Action{Exception})"/>
+        /// <inheritdoc cref="AsyncRelayCommand(Func{Task}, Func{bool}, Action{Exception})"/>
         public AsyncRelayCommand(Func<Task> execute, Action<Exception> errorHandler) : this(execute, null, errorHandler) { }
-        
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{Task}, Func{bool}, Action{Exception})"/>
+
+        /// <inheritdoc cref="AsyncRelayCommand(Func{Task}, Func{bool}, Action{Exception})"/>
         public AsyncRelayCommand(Func<Task> execute) : this(execute, null, null) { }
 
         /// <summary>
@@ -57,10 +57,10 @@ namespace RFBCodeWorks.Mvvm
             SwallowCancellations = cancelReaction != null;
         }
 
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool}, Action{Exception}, Action)"/>
+        /// <inheritdoc cref="AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool}, Action{Exception}, Action)"/>
         public AsyncRelayCommand(Func<CancellationToken, Task> cancelableExecute, Action<Exception> errorHandler, Action cancelReaction = null) : this(cancelableExecute, null, errorHandler, cancelReaction) { }
 
-        /// <inheritdoc cref="AsyncRelayCommand.AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool}, Action{Exception}, Action)"/>
+        /// <inheritdoc cref="AsyncRelayCommand(Func{CancellationToken, Task}, Func{bool}, Action{Exception}, Action)"/>
         public AsyncRelayCommand(Func<CancellationToken, Task> cancelableExecute) : this(cancelableExecute, null, null, null) { }
 
         private readonly Func<bool> CanExecuteFunction;
@@ -103,7 +103,7 @@ namespace RFBCodeWorks.Mvvm
         public sealed override void Cancel()
         {
             if (!CanBeCanceled | IsCancellationRequested) return;
-            IsCancellationRequestedField = true; 
+            IsCancellationRequestedField = true;
             OnPropertyChanged(IsCancellationRequestedChangedArgs);
 
             foreach (var source in CancellationTokens.Values)

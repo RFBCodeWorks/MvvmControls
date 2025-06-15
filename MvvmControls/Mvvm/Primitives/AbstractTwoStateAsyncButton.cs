@@ -86,7 +86,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         }
         private void DisplayTextProvider_PropertyChanged(object sender, System.EventArgs e)
         {
-            OnPropertyChanged(EventArgSingletons.DisplayName);
+            OnPropertyChanged(EventArgSingletons.DisplayText);
         }
 
         #endregion

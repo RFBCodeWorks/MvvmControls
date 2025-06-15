@@ -9,7 +9,7 @@ namespace RFBCodeWorks.Mvvm
 {
     internal static class EventArgSingletons
     {
-        public static readonly INotifyArgs DisplayName = new(nameof(IDisplayTextProvider.DisplayText));
+        public static readonly INotifyArgs DisplayText = new(nameof(IDisplayTextProvider.DisplayText));
         public static readonly INotifyArgs ToolTip = new(nameof(IToolTipProvider.ToolTip));
 
         public static readonly INotifyArgs IsVisible = new(nameof(IControlDefinition.IsVisible));

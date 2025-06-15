@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.Mvvm
+namespace RFBCodeWorks.Mvvm.Input
 {
     /// <summary>
     /// A RelayCommand that supports Async Functionality, can react to the task generating an error, and can react to a task being cancelled
@@ -20,8 +20,8 @@ namespace RFBCodeWorks.Mvvm
         /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.AsyncRelayCommand.AsyncRelayCommand(Func{Task}, Func{bool})"/>
         /// <exception cref="ArgumentNullException"/><exception cref="ArgumentNullException"/>
         public AsyncRelayCommand(
-            Func<T, Task> execute, 
-            Func<T,bool> canExecute = null, 
+            Func<T, Task> execute,
+            Func<T, bool> canExecute = null,
             Action<Exception> errorHandler = null
             ) : base(true, errorHandler)
         {
@@ -44,11 +44,11 @@ namespace RFBCodeWorks.Mvvm
         /// <param name="errorHandler"/><param name="canExecute"/><param name="cancelableExecute"/>
         /// <exception cref="ArgumentNullException"/>
         public AsyncRelayCommand(
-            Func<T, CancellationToken, Task> cancelableExecute, 
-            Func<T,bool> canExecute = null, 
-            Action<Exception> errorHandler = null, 
+            Func<T, CancellationToken, Task> cancelableExecute,
+            Func<T, bool> canExecute = null,
+            Action<Exception> errorHandler = null,
             Action<T> cancelReaction = null
-            )  : base(true, errorHandler)
+            ) : base(true, errorHandler)
         {
             CanExecuteFunction = canExecute ?? ReturnTrue;
             CancellableExecuteAction = cancelableExecute ?? throw new ArgumentNullException(nameof(cancelableExecute));
@@ -58,8 +58,8 @@ namespace RFBCodeWorks.Mvvm
         }
 
         /// <inheritdoc cref="AsyncRelayCommand{T}.AsyncRelayCommand(Func{T, CancellationToken, Task}, Func{T, bool}, Action{Exception}, Action{T})"/>
-        public AsyncRelayCommand(Func<T, CancellationToken, Task> cancelableExecute, Action<Exception> errorHandler, Action<T> cancelReaction = null ) 
-            : this (cancelableExecute, null, errorHandler, cancelReaction) { }
+        public AsyncRelayCommand(Func<T, CancellationToken, Task> cancelableExecute, Action<Exception> errorHandler, Action<T> cancelReaction = null)
+            : this(cancelableExecute, null, errorHandler, cancelReaction) { }
 
         /// <inheritdoc cref="AsyncRelayCommand{T}.AsyncRelayCommand(Func{T, CancellationToken, Task}, Func{T, bool}, Action{Exception}, Action{T})"/>
         public AsyncRelayCommand(Func<T, CancellationToken, Task> cancelableExecute, Action<T> cancelReaction)
@@ -69,9 +69,9 @@ namespace RFBCodeWorks.Mvvm
         public AsyncRelayCommand(Func<T, CancellationToken, Task> cancelableExecute)
             : this(cancelableExecute, null, null, null) { }
 
-        private readonly Func<T,bool> CanExecuteFunction;
+        private readonly Func<T, bool> CanExecuteFunction;
         private readonly Func<T, Task> ExecuteAction;
-        private readonly Func<T,CancellationToken, Task> CancellableExecuteAction;
+        private readonly Func<T, CancellationToken, Task> CancellableExecuteAction;
         private readonly Dictionary<Task, CancellationTokenSource> CancellationTokens;
         /// <summary>An action that will take place if the task throws an <see cref="OperationCanceledException"/>. The input parameter will be passed into this action when invoked.</summary>
         private readonly Action<T> CancelReaction;
@@ -109,7 +109,7 @@ namespace RFBCodeWorks.Mvvm
         public sealed override void Cancel()
         {
             if (!CanBeCanceled | IsCancellationRequested) return;
-            IsCancellationRequestedField = true; 
+            IsCancellationRequestedField = true;
             OnPropertyChanged(IsCancellationRequestedChangedArgs);
 
             foreach (var source in CancellationTokens.Values)
@@ -154,7 +154,7 @@ namespace RFBCodeWorks.Mvvm
 
                 //Generate the cancellable task
                 var source = new CancellationTokenSource();
-                Task task = CancellableExecuteAction(parameter,source.Token);
+                Task task = CancellableExecuteAction(parameter, source.Token);
                 lock (CancellationTokens)
                     CancellationTokens.Add(task, source);
 

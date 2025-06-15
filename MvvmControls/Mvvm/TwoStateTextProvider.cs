@@ -89,7 +89,7 @@ namespace RFBCodeWorks.Mvvm
         public void OnUpdateButtonText()
         {
             DisplayTextUpdated?.Invoke(this, System.EventArgs.Empty);
-            OnPropertyChanged(EventArgSingletons.DisplayName);
+            OnPropertyChanged(EventArgSingletons.DisplayText);
         }
 
         /// <summary>

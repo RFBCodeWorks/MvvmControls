@@ -68,7 +68,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 
         [TestMethod()]
         [DataRow(data1: true, DisplayName = "Test Object: " + nameof(XElementWrapper))]
-        //[DataRow(data1: false, DisplayName = "Test Object: " + nameof(XAttributeWrapper))]
+        //[DataRow(data1: false, DisplayText = "Test Object: " + nameof(XAttributeWrapper))]
         [DataRow(data1: null, DisplayName = "Test Object: " + nameof(XDocumentWrapper))]
         public void TestXElementWrapper(bool? isElement)
         {

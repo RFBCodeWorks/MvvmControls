@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RFBCodeWorks.Mvvm.Input;
+using System;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -169,7 +170,7 @@ namespace RFBCodeWorks.Mvvm
                     DisplayText = displayText,
                     ToolTip = toolTip,
                 };
-                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                ViewModel.ObjectModelChanged += cmd.NotifyCanExecuteChanged;
                 return cmd;
             }
 
@@ -188,7 +189,7 @@ namespace RFBCodeWorks.Mvvm
                     DisplayText = displayText,
                     ToolTip = toolTip,
                 };
-                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                ViewModel.ObjectModelChanged += cmd.NotifyCanExecuteChanged;
                 return cmd;
             }
 
@@ -328,7 +329,7 @@ namespace RFBCodeWorks.Mvvm
                     ToolTip = toolTip,
                     DisplayText = displayText
                 };
-                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                ViewModel.ObjectModelChanged += cmd.NotifyCanExecuteChanged;
                 return cmd;
             }
 
@@ -351,7 +352,7 @@ namespace RFBCodeWorks.Mvvm
                     ToolTip = toolTip,
                     DisplayText = displayText
                 };
-                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                ViewModel.ObjectModelChanged += cmd.NotifyCanExecuteChanged;
                 return cmd;
             }
 

@@ -28,8 +28,8 @@
             - Relocate ReactiveStyles.Helpers to the Behaviors namespace to reduce XAML namespacing requirements.
             - Relocate Mvvm.XmlLinq.Controls.TreeViewItems into Mvvm.Specialized
             - Normalize Specialized TreeViewItems names:
-            --- TreeViewFileInfo -> FileInfoTreeViewItem
-            --- TreeViewDirectoryInfo -> DirectoryInfoTreeViewItem
+            --- TreeViewFileInfo -&gt; FileInfoTreeViewItem
+            --- TreeViewDirectoryInfo -&gt; DirectoryInfoTreeViewItem
 
             Deprecated Functionality (use WPF Styles instead):
             - Behaviors.ReactiveStyles.IsTabletMode

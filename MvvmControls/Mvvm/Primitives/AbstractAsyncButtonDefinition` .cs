@@ -1,6 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using RFBCodeWorks.Mvvm.Input;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -21,21 +24,25 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <summary> Static method that can be used as the default Func{bool} for <see cref="ICommand.CanExecute(object)"/> </summary>
         /// <returns><see langword="true"/></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [SuppressMessage("", "IDE0060")]
         protected static bool ReturnTrue(T ignoredParameter) => true;
+
+        private string _displayText;
 
         /// <inheritdoc/>
         public virtual string DisplayText
         {
-            get { return ButtonTextField; }
-            set { SetProperty(ref ButtonTextField, value, nameof(DisplayText)); }
+            get => _displayText;
+            set
+            {
+                if (!EqualityComparer<string>.Default.Equals(_displayText, value))
+                {
+                    OnPropertyChanging(EventArgSingletons.DisplayText);
+                    _displayText = value;
+                    OnPropertyChanged(EventArgSingletons.DisplayText);
+                }
+            }
         }
-        private string ButtonTextField;
-
-        /// <summary>
-        /// Returns the result of the last <see cref="ICommand.CanExecute(object)"/> call.
-        /// <br/> The set method has no effect.
-        /// </summary>
-        public override bool IsEnabled { get => base.IsEnabled; set { } }
 
         /// <inheritdoc cref="ICommand.CanExecute(object)"/>
         public abstract bool CanExecute(T parameter);
@@ -51,14 +58,14 @@ namespace RFBCodeWorks.Mvvm.Primitives
         public abstract void NotifyCanExecuteChanged();
 
         /// <inheritdoc/>
-        public void NotifyCanExecuteChanged(object sender, EventArgs e) => this.NotifyCanExecuteChanged();
+        public void NotifyCanExecuteChanged(object sender, EventArgs e) => NotifyCanExecuteChanged();
 
         #region < ICommand Explicit Implementation >
 
         /// <inheritdoc/>
         public abstract event EventHandler CanExecuteChanged;
 
-        void ICommand.Execute(object parameter) => this.ExecuteAsync(AbstractCommand<T>.ThrowIfInvalidParameter(parameter)).Wait();
+        void ICommand.Execute(object parameter) => ExecuteAsync(AbstractCommand<T>.ThrowIfInvalidParameter(parameter)).Wait();
         bool ICommand.CanExecute(object parameter)
         {
             // Special case a null value for a value type argument type.
@@ -71,7 +78,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
             base.IsEnabled = CanExecute(AbstractCommand<T>.ThrowIfInvalidParameter(parameter));
             return base.IsEnabled;
         }
-        
+
         #endregion
     }
 

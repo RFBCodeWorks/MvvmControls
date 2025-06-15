@@ -179,7 +179,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// <summary>
         /// The collection of keys that should be automatically cached for future retrieval.
         /// </summary>
-        /// <remarks>Default collection = <see cref="DefaultAutoCachedExtensions"</remarks>
+        /// <remarks>Default collection = <see cref="DefaultAutoCachedExtensions"/></remarks>
         public IEnumerable<string> AutoCachedExtensions
         {
             get => AutoCacheField ?? DefaultAutoCachedExtensions();

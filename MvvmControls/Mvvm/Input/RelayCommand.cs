@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace RFBCodeWorks.Mvvm
+namespace RFBCodeWorks.Mvvm.Input
 {
     /// <summary>
     /// RelayCommand object that will execute an action that does not require any parameters
@@ -13,11 +13,11 @@ namespace RFBCodeWorks.Mvvm
     public sealed class RelayCommand : Primitives.AbstractCommand
     {
 
-        /// <inheritdoc cref="RelayCommand.RelayCommand(Action, Func{ bool}, Action{ Exception})"/>
+        /// <inheritdoc cref="RelayCommand(Action, Func{ bool}, Action{ Exception})"/>
         public RelayCommand(Action execute)
             : this(execute, ReturnTrue) { }
 
-        /// <inheritdoc cref="RelayCommand.RelayCommand(Action, Func{ bool}, Action{ Exception})"/>
+        /// <inheritdoc cref="RelayCommand(Action, Func{ bool}, Action{ Exception})"/>
         /// <exception cref="ArgumentNullException"/>
         public RelayCommand(Action execute, Func<bool> canExecute) : base(true)
         {
@@ -25,7 +25,7 @@ namespace RFBCodeWorks.Mvvm
             CanExecuteFunction = canExecute ?? throw new ArgumentNullException(nameof(canExecute));
         }
 
-        /// <inheritdoc cref="RelayCommand.RelayCommand(Action, Func{ bool}, Action{ Exception})"/>
+        /// <inheritdoc cref="RelayCommand(Action, Func{ bool}, Action{ Exception})"/>
         public RelayCommand(Action execute, Action<Exception> errorHandler)
             : this(execute, ReturnTrue, errorHandler) { }
 

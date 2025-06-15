@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace RFBCodeWorks.Mvvm
+namespace RFBCodeWorks.Mvvm.Input
 {
     /// <summary>
     /// Extends <see cref="CommunityToolkit.Mvvm.Input.IRelayCommand"/> to add a public event handler that, which can be used to notify CanExecuteChanged subscribers
@@ -67,7 +67,7 @@ namespace RFBCodeWorks.Mvvm
     /// </remarks>
     public interface IAsyncRelayCommand<in T> : IAsyncRelayCommand, CommunityToolkit.Mvvm.Input.IAsyncRelayCommand<T>, ICommand, IRelayCommand<T>
     {
-        
+
     }
 
 

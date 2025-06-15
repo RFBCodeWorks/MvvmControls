@@ -10,10 +10,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// <summary>
         /// 
         /// </summary>
-        public TwoStateButton() : base()
-        {
-            System.Windows.Input.CommandManager.RequerySuggested += CanExecuteChanged;
-        }
+        public TwoStateButton() : base() { }
 
         /// <summary>
         /// 
@@ -29,9 +26,6 @@ namespace RFBCodeWorks.Mvvm.Specialized
             AlternateAction = alternateAction;
             AlternateActionCanExecute = alternateCanExecute;
         }
-
-        /// <inheritdoc/>
-        public override event EventHandler CanExecuteChanged;
 
         /// <summary>
         /// The action to perform while <see cref="Primitives.AbstractTwoStateButton.IsDefaultState"/> == true
@@ -72,11 +66,6 @@ namespace RFBCodeWorks.Mvvm.Specialized
         protected override bool AlternateCanExecute()
         {
             return AlternateAction is not null && (AlternateActionCanExecute?.Invoke() ?? false);
-        }
-
-        public override void NotifyCanExecuteChanged()
-        {
-            CanExecuteChanged?.Invoke(this, System.EventArgs.Empty);
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
