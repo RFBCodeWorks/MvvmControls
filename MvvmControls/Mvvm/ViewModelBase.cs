@@ -1,5 +1,6 @@
 ﻿using System;
-using System.ComponentModel;
+
+#nullable enable
 
 namespace RFBCodeWorks.Mvvm
 {
@@ -13,7 +14,7 @@ namespace RFBCodeWorks.Mvvm
         /// Create a new instance of the ViewModelBase
         /// </summary>
         /// <param name="parent">The <see cref="IViewModel"/> object that owns this ViewModel </param>
-        public ViewModelBase(IViewModel parent = null) : base()
+        public ViewModelBase(IViewModel? parent = null) : base()
         {
             ParentViewModel = parent;
         }
@@ -21,7 +22,7 @@ namespace RFBCodeWorks.Mvvm
         /// <summary>
         /// Reference back to the parent view model - Can be used by the messaging bus in this case the view model is being provided as a property within another ViewModel.
         /// </summary>
-        public IViewModel ParentViewModel { get; init; }
+        public IViewModel? ParentViewModel { get; init; }
 
         private bool disposedValue;
 
