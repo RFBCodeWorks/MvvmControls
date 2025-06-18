@@ -31,8 +31,36 @@ namespace RFBCodeWorks.Mvvm
         private bool _enabled = true;
         private string _displayText;
 
+        private event EventHandler? PrivateCanExecuteChanged;
+
         /// <inheritdoc/>
-        public event EventHandler? CanExecuteChanged;
+        public event EventHandler CanExecuteChanged
+        {
+            add
+            {
+                if (_command is null)
+                {
+                    PrivateCanExecuteChanged += value;
+                }
+                else
+                {
+                    _command.CanExecuteChanged += value;
+                }
+
+            }
+            remove
+            {
+                if (_command is null)
+                {
+                    PrivateCanExecuteChanged -= value;
+                }
+                else
+                {
+                    _command.CanExecuteChanged -= value;
+                }
+            }
+        }
+
 
         /// <inheritdoc cref="ButtonDefinition.ButtonDefinition(Action, Func{bool})"/>
         public ButtonDefinition(Action<T> execute) : this(execute, ReturnTrue) { }
@@ -54,7 +82,7 @@ namespace RFBCodeWorks.Mvvm
         public ButtonDefinition(Toolkit.IRelayCommand<T> command)
         {
             _command = command ?? throw new ArgumentNullException(nameof(command));
-            _command.CanExecuteChanged += (_, _) => NotifyCanExecuteChanged();
+            _command.CanExecuteChanged += (_, _) => NotifyCanExecuteChangedPrivate();
         }
 
         /// <summary>
@@ -95,7 +123,6 @@ namespace RFBCodeWorks.Mvvm
         [Obsolete("property has been deprecated.", true)]
         public Toolkit.IRelayCommand<T> Command => _command ?? this;
         
-
         /// <inheritdoc cref="Toolkit.RelayCommand{T}.CanExecute(T)"/>
         public bool CanExecute(T parameter)
         {
@@ -113,10 +140,21 @@ namespace RFBCodeWorks.Mvvm
         }
 
         /// <inheritdoc/>
-        public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        public void NotifyCanExecuteChanged()
+        {
+            if (_command is null)
+            {
+                NotifyCanExecuteChangedPrivate();
+            }
+            else
+            {
+                _command.NotifyCanExecuteChanged();
+            }
+        }
 
         /// <inheritdoc/>
         public void NotifyCanExecuteChanged(object sender, EventArgs e) => NotifyCanExecuteChanged();
+        private void NotifyCanExecuteChangedPrivate() => PrivateCanExecuteChanged?.Invoke(this, EventArgs.Empty);
 
         void ICommand.Execute(object parameter) => Execute(AbstractCommand<T>.ThrowIfInvalidParameter(parameter));
         bool ICommand.CanExecute(object parameter)
