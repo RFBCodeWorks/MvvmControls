@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using BaseObj = CommunityToolkit.Mvvm.ComponentModel.ObservableObject;
+﻿using BaseObj = CommunityToolkit.Mvvm.ComponentModel.ObservableObject;
 
 namespace RFBCodeWorks.Mvvm
 {

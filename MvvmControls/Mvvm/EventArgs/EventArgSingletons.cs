@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RFBCodeWorks.Mvvm
+﻿namespace RFBCodeWorks.Mvvm
 {
     internal static class EventArgSingletons
     {

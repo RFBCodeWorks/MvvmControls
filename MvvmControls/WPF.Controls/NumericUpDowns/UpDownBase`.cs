@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace RFBCodeWorks.WPF.Controls.Primitives
 {

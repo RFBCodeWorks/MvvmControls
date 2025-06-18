@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Controls.Primitives;
 
 namespace RFBCodeWorks.Mvvm.Primitives
 {

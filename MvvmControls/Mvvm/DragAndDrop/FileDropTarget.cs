@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace RFBCodeWorks.Mvvm.DragAndDrop
+﻿namespace RFBCodeWorks.Mvvm.DragAndDrop
 {
 
     /// <summary>
