@@ -1,10 +1,5 @@
-﻿using RFBCodeWorks.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RFBCodeWorks.Mvvm.Primitives
@@ -13,7 +8,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
     /// Abstract Base class all of the Abstract*Command classes are derived from that stores common functionality between the implementations
     /// </summary>
     /// <remarks>Explicitly implements <see cref="ICommand"/></remarks> methods. Derived classes should provide their own implementation.
-    public abstract class CommandBase : ObservableObject, ICommand, CommunityToolkit.Mvvm.Input.IRelayCommand, IRelayCommand
+    public abstract class CommandBase : ObservableObject, ICommand, CommunityToolkit.Mvvm.Input.IRelayCommand, RFBCodeWorks.Mvvm.Input.IRelayCommand
     {
         /// <summary> Static method that can be used as the default Func{T, bool}</summary>
         /// <returns><see langword="true"/></returns>
@@ -63,7 +58,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         }
         private bool SubscribeToCommandManagerField;
 
-        /// <inheritdoc cref="IRelayCommand.NotifyCanExecuteChanged(object, EventArgs)"/>
+        /// <inheritdoc cref="RFBCodeWorks.Mvvm.Input.IRelayCommand.NotifyCanExecuteChanged(object, EventArgs)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void NotifyCanExecuteChanged(object sender, EventArgs e) => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 

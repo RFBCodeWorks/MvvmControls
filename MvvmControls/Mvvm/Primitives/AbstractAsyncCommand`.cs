@@ -1,11 +1,8 @@
-﻿using RFBCodeWorks.Mvvm.Input;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -14,7 +11,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
     /// <summary>
     /// Abstract base class for AsyncRelayCommands that do not take parameters
     /// </summary>
-    public abstract class AbstractAsyncCommand<T> : CommandBase, IAsyncRelayCommand<T>
+    public abstract class AbstractAsyncCommand<T> : CommandBase, RFBCodeWorks.Mvvm.Input.IAsyncRelayCommand<T>
     {
         //Adapted from :
         // https://www.youtube.com/watch?v=F7hRmbdE9eY
