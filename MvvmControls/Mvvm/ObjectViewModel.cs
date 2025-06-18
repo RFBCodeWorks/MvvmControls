@@ -1,5 +1,6 @@
 ﻿using RFBCodeWorks.Mvvm.Input;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,78 +16,79 @@ namespace RFBCodeWorks.Mvvm
     /// <typeparam name="T"></typeparam>
     public abstract class ObjectViewModel<T> : ViewModelBase where T : class
     {
-        #region < ObjectViewModel Class >
-        #region < Constructors >
+        private readonly IEqualityComparer<T> _equalityComparer;
+        private T _model;
+        private ObjectCommandFactory _cmdfactory;
 
         /// <summary>
         /// Create a new ObjectViewModel
         /// </summary>
-        public ObjectViewModel() { }
+        public ObjectViewModel() :this(default, default) { }
 
         /// <summary>
         /// Create a new ObjectViewModel
         /// </summary>
-        public ObjectViewModel(T model)
+        public ObjectViewModel(T model) : this(model, default) {}
+
+        /// <summary>
+        /// Create a new ObjectViewModel
+        /// </summary>
+        public ObjectViewModel(T model, IEqualityComparer<T> equalityComparer)
         {
-            ObjectModel = model;
+            Model = model;
+            _equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
         }
 
-        #endregion
-
-        #region < ObjectModelChanging Event >
-
-
+        
         /// <summary>
         /// Raised when the ObjectModel is updated
         /// </summary>
-        public event PropertyChangingEventHandler ObjectModelChanging;
+        public event PropertyChangingEventHandler ModelChanging;
 
 
         /// <summary>
-        /// Raise the <see cref="ObjectModelChanged"/> event 
+        /// Raise the <see cref="ModelChanged"/> event 
         /// </summary>
-        protected virtual void OnObjectModelChanging()
+        protected virtual void OnModelChanging()
         {
-            ObjectModelChanging?.Invoke(this, new PropertyChangingEventArgs(nameof(ObjectModel))); // Raise the ObjectModelChanging event
-            if (!(ObjectModel is null)) UnsubscribeFromObjectModel(ObjectModel);
+            ModelChanging?.Invoke(this, new PropertyChangingEventArgs(nameof(Model))); // Raise the ObjectModelChanging event
+            if (Model is not null) UnsubscribeFromObjectModel(Model);
         }
 
         /// <summary>
         /// Override this method to unsubscribe from the object models events. <br/>
-        /// This method will occur during <see cref="OnObjectModelChanging()"/> after the event is raised while the old model is still in place.
+        /// This method will occur during <see cref="OnModelChanging()"/> after the event is raised while the old model is still in place.
         /// </summary>
         protected virtual void UnsubscribeFromObjectModel(T model) { }
 
         /// <inheritdoc/>
         protected override void Dispose_UnsubscribeFromEvents()
         {
-            if (!(ObjectModel is null)) UnsubscribeFromObjectModel(ObjectModel);
+            if (Model is not null) UnsubscribeFromObjectModel(Model);
             base.Dispose_UnsubscribeFromEvents();
         }
-
-        #endregion
 
         #region < ObjectModelChanged Event >
 
         /// <summary>
         /// Raised when the ObjectModel is updated
         /// </summary>
-        public event PropertyChangedEventHandler ObjectModelChanged;
+        public event PropertyChangedEventHandler ModelChanged;
 
 
         /// <summary>
-        /// Raise the <see cref="ObjectModelChanged"/> event 
+        /// Raise the <see cref="ModelChanged"/> event 
         /// </summary>
-        protected virtual void OnObjectModelChanged()
+        protected virtual void OnModelChanged()
         {
-            ObjectModelChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ObjectModel))); // Raise the ObjectModelChanged event
+            ModelChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Model))); // Raise the ObjectModelChanged event
             //this.OnPropertyChanged(string.Empty); // Use String.Empty here to indicate that all properties have changed
-            if (!(ObjectModel is null)) SubscribeToObjectModel(ObjectModel);
+            if (!(Model is null)) SubscribeToObjectModel(Model);
         }
 
         /// <summary>
         /// Override this method to subscribe to the object models events. <br/>
-        /// This method will occur during <see cref="OnObjectModelChanged()"/> before the event is raised, but after the new model is in place.
+        /// This method will occur during <see cref="OnModelChanged()"/> before the event is raised, but after the new model is in place.
         /// </summary>
         protected virtual void SubscribeToObjectModel(T model) { }
 
@@ -97,35 +99,34 @@ namespace RFBCodeWorks.Mvvm
         /// <summary>
         /// The object this ViewModel represents 
         /// </summary>
-        public virtual T ObjectModel {
-            get => model;
+        public virtual T Model
+        {
+            get => _model;
             set {
-                OnObjectModelChanging();
-                base.SetProperty(ref model, value, string.Empty); // Use String.Empty here to indicate that all properties have changed
-                OnObjectModelChanged();
+                if (_equalityComparer.Equals(_model, value) is false)
+                {
+                    OnModelChanging();
+                    base.SetProperty(ref _model, value, string.Empty); // Use String.Empty here to indicate that all properties have changed
+                    OnModelChanged();
+                }
             }
         }
-        private T model;
 
         /// <summary>
         /// A Factory to create commands associated with this <see cref="ObjectViewModel{T}"/>
         /// </summary>
         protected ObjectCommandFactory CommandFactory {
             get {
-                if (cmdfactory is null) cmdfactory = new ObjectCommandFactory(this);
-                return cmdfactory;
+                if (_cmdfactory is null) _cmdfactory = new ObjectCommandFactory(this);
+                return _cmdfactory;
             }
-            set => cmdfactory = value;
+            set => _cmdfactory = value;
         }
-        private ObjectCommandFactory cmdfactory;
-
-        #endregion
-        #endregion
 
         #region < ObjectCommandFactory >
 
         /// <summary>
-        /// Generate <see cref="ICommand"/>s that rely on the <see cref="ObjectModel"/> of an <see cref="ObjectViewModel{T}"/>
+        /// Generate <see cref="System.Windows.Input.ICommand"/>s that rely on the <see cref="Model"/> of an <see cref="ObjectViewModel{T}"/>
         /// </summary>
         protected class ObjectCommandFactory
         {
@@ -147,7 +148,7 @@ namespace RFBCodeWorks.Mvvm
             /// If not specified, the CanExecute functions will utilize this this function
             /// </summary>
             /// <returns>TRUE if the ViewModel.ObjectModel is not null. ( FALSE is the reference is null ) </returns>
-            public virtual bool DefaultCanExecuteFunction() => !(ViewModel.ObjectModel is null);
+            public virtual bool DefaultCanExecuteFunction() => !(ViewModel.Model is null);
             private bool DefaultCanExecuteFunction<O>(O parameter) => DefaultCanExecuteFunction();
 
             private Func<bool> CanBeInvoked(Func<bool> canExecute) => () => DefaultCanExecuteFunction() && canExecute();
@@ -170,7 +171,11 @@ namespace RFBCodeWorks.Mvvm
                     DisplayText = displayText,
                     ToolTip = toolTip,
                 };
+<<<<<<< Updated upstream
                 ViewModel.ObjectModelChanged += cmd.NotifyCanExecuteChanged;
+=======
+                ViewModel.ModelChanged += cmd.NotifyCanExecuteChanged;
+>>>>>>> Stashed changes
                 return cmd;
             }
 
@@ -189,12 +194,15 @@ namespace RFBCodeWorks.Mvvm
                     DisplayText = displayText,
                     ToolTip = toolTip,
                 };
+<<<<<<< Updated upstream
                 ViewModel.ObjectModelChanged += cmd.NotifyCanExecuteChanged;
+=======
+                ViewModel.ModelChanged += cmd.NotifyCanExecuteChanged;
+>>>>>>> Stashed changes
                 return cmd;
             }
 
             #endregion
-
 
             #region < FromTask >
 
@@ -213,7 +221,7 @@ namespace RFBCodeWorks.Mvvm
                     DisplayText = displayText,
                     ToolTip = toolTip,
                 };
-                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                ViewModel.ModelChanged += cmd.NotifyCanExecuteChanged;
                 return cmd;
             }
 
@@ -232,7 +240,7 @@ namespace RFBCodeWorks.Mvvm
                     DisplayText = displayText,
                     ToolTip = toolTip,
                 };
-                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                ViewModel.ModelChanged += cmd.NotifyCanExecuteChanged;
                 return cmd;
             }
 
@@ -251,7 +259,7 @@ namespace RFBCodeWorks.Mvvm
                     DisplayText = displayText,
                     ToolTip = toolTip,
                 };
-                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                ViewModel.ModelChanged += cmd.NotifyCanExecuteChanged;
                 return cmd;
             }
 
@@ -270,7 +278,7 @@ namespace RFBCodeWorks.Mvvm
                     DisplayText = displayText,
                     ToolTip = toolTip,
                 };
-                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                ViewModel.ModelChanged += cmd.NotifyCanExecuteChanged;
                 return cmd;
             }
 
@@ -279,7 +287,7 @@ namespace RFBCodeWorks.Mvvm
             #region < FromMethodName >
 
             /// <summary>
-            /// Use reflection to retrieve a parameterless method by its method name, then create an execute to invoke against the <see cref="ObjectViewModel{T}.ObjectModel"/>
+            /// Use reflection to retrieve a parameterless method by its method name, then create an execute to invoke against the <see cref="ObjectViewModel{T}.Model"/>
             /// </summary>
             /// <param name="methodName">
             /// use the 'nameof()' function to retrieve the method name. Ex: <Br/>
@@ -293,12 +301,12 @@ namespace RFBCodeWorks.Mvvm
                 var t = typeof(T);
                 var m = t.GetMethod(methodName.Trim(), Array.Empty<Type>());
 
-                void Invoker() => m.Invoke(ViewModel.ObjectModel, null);
+                void Invoker() => m.Invoke(ViewModel.Model, null);
                 return Invoker;
             }
 
             /// <summary>
-            /// Use reflection to retrieve a method by its method name, then create an execute to invoke against the <see cref="ObjectViewModel{T}.ObjectModel"/>
+            /// Use reflection to retrieve a method by its method name, then create an execute to invoke against the <see cref="ObjectViewModel{T}.Model"/>
             /// </summary>
             /// <param name="methodName">
             /// use the 'nameof()' function to retrieve the method name. Ex: <Br/>
@@ -312,7 +320,7 @@ namespace RFBCodeWorks.Mvvm
                 var t = typeof(T);
                 var m = t.GetMethod(methodName, new Type[1] { typeof(O) });
 
-                void Invoker(O obj) => m.Invoke(ViewModel.ObjectModel, new object[] { obj });
+                void Invoker(O obj) => m.Invoke(ViewModel.Model, new object[] { obj });
                 return Invoker;
             }
 
@@ -329,7 +337,11 @@ namespace RFBCodeWorks.Mvvm
                     ToolTip = toolTip,
                     DisplayText = displayText
                 };
+<<<<<<< Updated upstream
                 ViewModel.ObjectModelChanged += cmd.NotifyCanExecuteChanged;
+=======
+                ViewModel.ModelChanged += cmd.NotifyCanExecuteChanged;
+>>>>>>> Stashed changes
                 return cmd;
             }
 
@@ -352,7 +364,15 @@ namespace RFBCodeWorks.Mvvm
                     ToolTip = toolTip,
                     DisplayText = displayText
                 };
+<<<<<<< Updated upstream
                 ViewModel.ObjectModelChanged += cmd.NotifyCanExecuteChanged;
+=======
+                ViewModel.ModelChanged += (o, e) =>
+                {
+                    cmd?.NotifyCanExecuteChanged();
+                    cmd?.Command?.NotifyCanExecuteChanged();
+                };
+>>>>>>> Stashed changes
                 return cmd;
             }
 
@@ -368,7 +388,7 @@ namespace RFBCodeWorks.Mvvm
             #region < FromMethodNameAsync >
 
             /// <summary>
-            /// Use reflection to retrieve a parameterless method by its method name, then create an execute to invoke against the <see cref="ObjectViewModel{T}.ObjectModel"/>
+            /// Use reflection to retrieve a parameterless method by its method name, then create an execute to invoke against the <see cref="ObjectViewModel{T}.Model"/>
             /// </summary>
             /// <param name="methodName">
             /// use the 'nameof()' function to retrieve the method name. Ex: <Br/>
@@ -387,13 +407,13 @@ namespace RFBCodeWorks.Mvvm
                 }
                 async Task Invoker()
                 {
-                    await (m.Invoke(ViewModel.ObjectModel, null) as Task);
+                    await (m.Invoke(ViewModel.Model, null) as Task);
                 }
                 return Invoker;
             }
 
             /// <summary>
-            /// Use reflection to retrieve a method by its method name, then create an execute to invoke against the <see cref="ObjectViewModel{T}.ObjectModel"/>
+            /// Use reflection to retrieve a method by its method name, then create an execute to invoke against the <see cref="ObjectViewModel{T}.Model"/>
             /// </summary>
             /// <param name="methodName">
             /// use the 'nameof()' function to retrieve the method name. Ex: <Br/>
@@ -412,7 +432,7 @@ namespace RFBCodeWorks.Mvvm
                 }
                 async Task Invoker(O obj)
                 {
-                    await (m.Invoke(ViewModel.ObjectModel, new object[] { obj }) as Task);
+                    await (m.Invoke(ViewModel.Model, new object[] { obj }) as Task);
                 }
                 return Invoker;
             }
@@ -430,7 +450,7 @@ namespace RFBCodeWorks.Mvvm
                     ToolTip = toolTip,
                     DisplayText = displayText
                 };
-                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                ViewModel.ModelChanged += (_, _) => cmd?.Command?.NotifyCanExecuteChanged();
                 return cmd;
             }
 
@@ -453,7 +473,7 @@ namespace RFBCodeWorks.Mvvm
                     ToolTip = toolTip,
                     DisplayText = displayText
                 };
-                ViewModel.ObjectModelChanged += cmd.Command.NotifyCanExecuteChanged;
+                ViewModel.ModelChanged += (_, _) => cmd?.Command?.NotifyCanExecuteChanged();
                 return cmd;
             }
 
@@ -482,7 +502,7 @@ namespace RFBCodeWorks.Mvvm
             {
                 var cmd = new Specialized.TwoStateButton()
                 {
-                    DefaultAction = execute ?? throw new ArgumentException(nameof(execute)),
+                    DefaultAction = execute ?? throw new ArgumentException("execute must not be null", nameof(execute)),
                     AlternateAction = altExecute,
                     DefaultActionCanExecute = canExecute ?? DefaultCanExecuteFunction,
                     AlternateActionCanExecute = altCanExecute ?? DefaultCanExecuteFunction,
@@ -491,7 +511,7 @@ namespace RFBCodeWorks.Mvvm
                     DefaultTooltip = defaultToolTip,
                     AlternateToolTip = altToolTip
                 };
-                ViewModel.ObjectModelChanged += cmd.NotifyCanExecuteChanged;
+                ViewModel.ModelChanged += cmd.NotifyCanExecuteChanged;
                 return cmd;
             }
         }
