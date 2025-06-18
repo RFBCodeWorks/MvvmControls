@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <!--<LangVersion>9.0</LangVersion>-->
+        <LangVersion>8.0</LangVersion>
         <Platforms>AnyCPU</Platforms>
         <AssemblyName>RFBCodeWorks.Mvvm.IViewModel</AssemblyName>
 
@@ -19,8 +19,8 @@
         <Company />
         <Copyright>Copyright 2023</Copyright>
         <!-- ###################   Version Info ###############  -->
-        <Version>1.0.1.0</Version>
-        <PackageReleaseNotes>Updated StrongName Key</PackageReleaseNotes>
+        <Version>2.0.0.0</Version>
+        <PackageReleaseNotes>Changes IViewModel to return "IViewModel?" to indicate that the value may be null</PackageReleaseNotes>
         <!-- #################################  -->
         
         <PackageReadmeFile>Readme.md</PackageReadmeFile>

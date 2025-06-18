@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 
+#nullable enable
 namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
@@ -14,6 +15,6 @@ namespace RFBCodeWorks.Mvvm
         /// <remarks>
         /// This would be used by a DialogService to locate the viewmodel registered to the window's DataContext.
         /// </remarks>
-        IViewModel ParentViewModel { get; }
+        IViewModel? ParentViewModel { get; }
     }
 }
