@@ -1,6 +1,13 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 #nullable enable
 #nullable disable warnings
@@ -17,10 +24,10 @@ namespace RFBCodeWorks.Mvvm
         /// <remarks>This property can be used to force the drop-down open from the ViewModel</remarks>
         bool IsDropDownOpen { get; set; }
 
-        /// <inheritdoc cref="ComboBoxDefinition{T, E, V}.IsReadOnly"/>
+        /// <inheritdoc cref="ComboBoxDefinition{T, TList,  TSelectedValue}.IsReadOnly"/>
         bool IsReadOnly { get; set; }
 
-        /// <inheritdoc cref="ComboBoxDefinition{T, E, V}.IsEditable"/>
+        /// <inheritdoc cref="ComboBoxDefinition{T, TList,  TSelectedValue}.IsEditable"/>
         bool IsEditable { get; set; }
     }
 
@@ -37,17 +44,23 @@ namespace RFBCodeWorks.Mvvm
     /// <summary>
     /// The base ComboBoxDefinition
     /// </summary>
-    /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}"/>
-    public class ComboBoxDefinition<T, E, V> : Primitives.SelectorDefinition<T, E, V>, IComboBox, IComboBox<T>
-        where E : IList<T>
+    /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}"/>
+    public partial class ComboBoxDefinition<T, TList, TSelectedValue> : Primitives.SelectorDefinition<T, TList, TSelectedValue>, IComboBox, IComboBox<T>
+        where TList : IList<T>
     {
         /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition()"/>
         public ComboBoxDefinition() { }
 
         /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
-        public ComboBoxDefinition(E collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection, onItemSourceChanged, onSelectionChanged) { }
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition()"/>
+        public ComboBoxDefinition(TList collection) :base(collection) { }
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ComboBoxDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, TList collection = default) : base(onItemSourceChanged, onSelectionChanged, collection) { }
+
+        private bool _isEditable;
 
         /// <inheritdoc cref="System.Windows.Controls.ComboBox.Text"/>
         /// <remarks>
@@ -56,7 +69,12 @@ namespace RFBCodeWorks.Mvvm
         /// See the link below for more information on this interaction: <br/>
         /// <see href="https://learn.microsoft.com/en-us/dotnet/api/system.windows.controls.combobox?view=windowsdesktop-6.0"/>
         /// </remarks>
-        public virtual string Text { get; set; }
+        [ObservableProperty]
+        private string _text;
+
+        /// <inheritdoc/>
+        [ObservableProperty]
+        private bool _isDropDownOpen;
 
         /// <inheritdoc cref="System.Windows.Controls.ComboBox.IsEditable"/>
         /// <remarks>
@@ -65,11 +83,17 @@ namespace RFBCodeWorks.Mvvm
         /// </remarks>
         public virtual bool IsEditable
         {
-            get { return IsEditableField; }
-            set { SetProperty(ref IsEditableField, value, nameof(IsEditable)); }
+            get { return _isEditable; }
+            set
+            {
+                if (_isEditable != value)
+                {
+                    OnPropertyChanging(EventArgSingletons.IsEditable);
+                    _isEditable = value;
+                    OnPropertyChanged(EventArgSingletons.IsEditable);
+                }
+            }
         }
-        private bool IsEditableField;
-
 
         /// <returns>
         /// true if the ComboBox is read-only; otherwise, false. <br/>
@@ -80,138 +104,63 @@ namespace RFBCodeWorks.Mvvm
         /// See the link below for more information on this interaction: <br/>
         /// <see href="https://learn.microsoft.com/en-us/dotnet/api/system.windows.controls.combobox?view=windowsdesktop-6.0"/>
         /// </remarks>
-        public bool IsReadOnly { get; set; } = true;
-
-        /// <inheritdoc/>
-        public bool IsDropDownOpen
-        {
-            get { return IsDropDownOpenField; }
-            set { SetProperty(ref IsDropDownOpenField, value, nameof(IsDropDownOpen)); }
-        }
-        private bool IsDropDownOpenField;
+        [ObservableProperty]
+        private bool _isReadOnly = true;
 
     }
-
-    #region < ComboBox Definition >
 
     /// <summary>
     /// A Simple ComboBox Definition that only specifies the enumerated type
     /// </summary>
-    /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
+    /// <inheritdoc cref="ComboBoxDefinition{T, TList, TSelectedValue}"/>
     public class ComboBoxDefinition<T> : ComboBoxDefinition<T, IList<T>, object> 
     {
         /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition()"/>
         public ComboBoxDefinition() { }
 
         /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
-        public ComboBoxDefinition(IList<T>? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ComboBoxDefinition(IList<T> collection) : this(null, null, collection) { }
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ComboBoxDefinition(params T[] collection) : this(null, null, collection) { }
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ComboBoxDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, params T[] collection) : base(onItemSourceChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
+
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ComboBoxDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, IList<T> collection = default) : base(onItemSourceChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
     }
 
     /// <summary>
     /// A generic bindable definition for a ComboBox whose ItemSource is any IEnumerable object, that expects a SelectedValue of a specific type
     /// </summary>
-    /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
-    public class ComboBoxDefinition<T, V> : ComboBoxDefinition<T, IList<T>, V> 
+    /// <inheritdoc cref="ComboBoxDefinition{T, TList, TSelectedValue}"/>
+    public class ComboBoxDefinition<T, TSelectedValue> : ComboBoxDefinition<T, IList<T>, TSelectedValue> 
     {
         /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition()"/>
         public ComboBoxDefinition() { }
 
         /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
-        public ComboBoxDefinition(IList<T>? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ComboBoxDefinition(IList<T> collection) : this(null, null, collection) { }
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ComboBoxDefinition(params T[] collection) : this(null, null, collection) { }
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ComboBoxDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, params T[] collection) : base(onItemSourceChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ComboBoxDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, IList<T> collection = default) : base(onItemSourceChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
     }
-
-    #endregion'
-
-    #region < Refreshable >
-
-    /// <inheritdoc cref="RefreshableComboBoxDefinition{T, V}"/>
-    public class RefreshableComboBoxDefinition<T> : RefreshableComboBoxDefinition<T, object> 
-    {
-        /// <summary>Create a new RefreshableComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
-        public RefreshableComboBoxDefinition() { }
-
-        /// <summary>Create a new RefreshableComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
-        public RefreshableComboBoxDefinition(T[]? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
-    }
-
-    /// <summary>
-    /// A ComboBoxDefinition whose collection is an array of <typeparamref name="T"/> objects, that can be refreshed on demand via the <see cref="RefreshFunc"/>
-    /// </summary>
-    /// <inheritdoc cref="ComboBoxDefinition{T, E, V}"/>
-    public class RefreshableComboBoxDefinition<T, V> : ComboBoxDefinition<T, T[], V>, IRefreshableItemSource<T>
-    {
-        /// <summary>Create a new RefreshableComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
-        public RefreshableComboBoxDefinition() { }
-
-        /// <summary>Create a new RefreshableComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
-        public RefreshableComboBoxDefinition(T[]? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
-
-        /// <inheritdoc/>
-        public override T[] Items
-        {
-            get
-            {
-                if (base.Items is null && !itemsInitialized)
-                {
-                    Refresh();
-                    itemsInitialized = true;
-                }
-                return base.Items;
-            }
-            set
-            {
-                base.Items = value;
-                itemsInitialized = true;
-            }
-        }
-        private bool itemsInitialized;
-
-        /// <inheritdoc/>
-        public Func<T[]> RefreshFunc { get; init; }
-        
-        /// <inheritdoc/>
-        public Func<bool> CanRefresh { get; init; }
-        
-        /// <inheritdoc/>
-        public IButtonDefinition RefreshCommand => _refreshCommand ??= new ButtonDefinition(Refresh, () => CanRefresh());
-        private IButtonDefinition _refreshCommand;
-
-        /// <summary>
-        /// Check if the <see cref="RefreshFunc"/> is null and return the opposite
-        /// </summary>
-        /// <returns>TRUE if not null, FALSE is null</returns>
-        protected bool HasRefreshFunc()
-        {
-            return RefreshFunc != null;
-        }
-
-        /// <inheritdoc/>
-        public virtual void Refresh()
-        {
-            if (RefreshFunc != null && (CanRefresh?.Invoke() ?? true))
-                Items = RefreshFunc();
-        }
-
-        /// <inheritdoc/>
-        public void Refresh(object sender, EventArgs e)
-        {
-            Refresh();
-        }
-
-        /// <inheritdoc/>
-        public void Refresh(object sender, RoutedEventArgs e)
-        {
-            Refresh();
-        }
-    }
-
-    #endregion
 }

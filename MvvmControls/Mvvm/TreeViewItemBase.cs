@@ -4,44 +4,44 @@ using System.Collections.Generic;
 namespace RFBCodeWorks.Mvvm
 {
     /// <inheritdoc/>
-    public class TreeViewItemBase<TItem> : TreeViewItemBase<TItem, ITreeViewItem>
+    public class TreeViewItemBase<T> : TreeViewItemBase<T, ITreeViewItem>
     {
         /// <inheritdoc/>
-        protected TreeViewItemBase(TItem item) : base(item) { }
+        protected TreeViewItemBase(T item) : base(item) { }
 
         /// <inheritdoc cref="TreeViewItemBase(string, ITreeViewItem)"/>
-        protected TreeViewItemBase(TItem item, ITreeViewItem parent) : base(item, parent) { }
+        protected TreeViewItemBase(T item, ITreeViewItem parent) : base(item, parent) { }
 
         /// <inheritdoc/>
-        public TreeViewItemBase(TItem item, string name) : base(item, name) { }
+        public TreeViewItemBase(T item, string name) : base(item, name) { }
 
         /// <inheritdoc/>
-        public TreeViewItemBase(TItem item, string name, ITreeViewItem parent) : base(item, name, parent) { }
+        public TreeViewItemBase(T item, string name, ITreeViewItem parent) : base(item, name, parent) { }
 
     }
 
-    /// <summary>A TreeViewItem that provides details about a specified <typeparamref name="TItem"/></summary>
-    /// <typeparam name="TItem">The type of Item contained within this TreeViewItem</typeparam>
+    /// <summary>A TreeViewItem that provides details about a specified <typeparamref name="T"/></summary>
+    /// <typeparam name="T">The type of Item contained within this TreeViewItem</typeparam>
     /// <typeparam name="TParent">The type of Parent item</typeparam>
-    public class TreeViewItemBase<TItem, TParent> : TreeViewItemBase where TParent : ITreeViewItem
+    public class TreeViewItemBase<T, TParent> : TreeViewItemBase where TParent : ITreeViewItem
     {
         /// <inheritdoc cref="TreeViewItemBase()"/>
-        protected TreeViewItemBase(TItem item) : base() { Item = item; }
+        protected TreeViewItemBase(T item) : base() { Item = item; }
 
         /// <inheritdoc cref="TreeViewItemBase(ITreeViewItem)"/>
-        protected TreeViewItemBase(TItem item, TParent parent) : base(parent) { Item = item; }
+        protected TreeViewItemBase(T item, TParent parent) : base(parent) { Item = item; }
 
         /// <inheritdoc cref="TreeViewItemBase(string)"/>
-        public TreeViewItemBase(TItem item, string name) : base(name) { Item = item; }
+        public TreeViewItemBase(T item, string name) : base(name) { Item = item; }
         
         /// <inheritdoc cref="TreeViewItemBase(string, ITreeViewItem)"/>
-        public TreeViewItemBase(TItem item, string name, TParent parent) : base(name, parent) { Item = item; }
+        public TreeViewItemBase(T item, string name, TParent parent) : base(name, parent) { Item = item; }
 
 
         /// <summary>
         /// The Item represented by this TreeViewItem
         /// </summary>
-        public virtual TItem Item { get; }
+        public virtual T Item { get; }
 
         /// <inheritdoc cref="TreeViewItemBase.Parent"/>
         public new TParent Parent

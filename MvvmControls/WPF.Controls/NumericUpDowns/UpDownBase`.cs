@@ -185,7 +185,7 @@ namespace RFBCodeWorks.WPF.Controls.Primitives
         #region < Value >
 
         /// <summary>
-        /// The T value of the control
+        /// The <typeparamref name="T"/> value of the control
         /// </summary>
         public virtual T Value
         {

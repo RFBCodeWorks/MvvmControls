@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace RFBCodeWorks.Mvvm
         /// <inheritdoc cref="ListBox.SelectionMode" path="*"/>
         SelectionMode SelectionMode { get; set; }
 
-        /// <inheritdoc cref="ListBoxDefinition{T, E, V}.IsMultiSelect"/>
+        /// <inheritdoc cref="ListBoxDefinition{T, TList,  TSelectedValue}.IsMultiSelect"/>
         bool IsMultiSelect { get; }
 
         /// <summary>
@@ -55,32 +56,26 @@ namespace RFBCodeWorks.Mvvm
     /// <summary>
     /// The base ListBoxDefinition object
     /// </summary>
-    /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}"/>
-    public class ListBoxDefinition<T, E, V> : Primitives.SelectorDefinition<T, E, V>, IListBox, IListBox<T>
-        where E : IList<T>
+    /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}"/>
+    public partial class ListBoxDefinition<T, TList,  TSelectedValue> : Primitives.SelectorDefinition<T, TList,  TSelectedValue>, IListBox, IListBox<T>
+        where TList : IList<T>
     {
         /// <summary>Create a new ListBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition()"/>
         public ListBoxDefinition() { }
 
         /// <summary>Create a new ListBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
-        public ListBoxDefinition(E collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection, onItemSourceChanged, onSelectionChanged) { }
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition()"/>
+        public ListBoxDefinition(TList collection) : base(collection) { }
 
-        #region < SelectionChangedEvent >
+        /// <summary>Create a new ListBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ListBoxDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, TList collection = default) : base(onItemSourceChanged, onSelectionChanged, collection) { }
 
         /// <summary>
         /// Occurs after the <see cref="SelectedItems"/> has been updated
         /// </summary>
         public event EventHandler SelectedItemsChanged;
-
-        /// <summary> Raises the SelectedItemsChanged event </summary>
-        protected virtual void OnSelectedItemsChanged()
-        {
-            SelectedItemsChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        #endregion
 
         /// <inheritdoc/>
         public bool HasItems => Items?.Any() ?? false;
@@ -96,16 +91,13 @@ namespace RFBCodeWorks.Mvvm
         /// <summary>
         /// Allows binding to the SelectedItems property of a listbox via the <see cref="RFBCodeWorks.WPF.Behaviors.Base.MultiItemSelectionBehavior{T}"/> behavior
         /// </summary>
-        public IList<T> SelectedItems
-        {
-            get { return SelectedItemsField; }
-            set
-            {
-                var updated = SetProperty(ref SelectedItemsField, value, nameof(SelectedItems));
-                if (updated) OnSelectedItemsChanged();
-            }
-        }
-        private IList<T> SelectedItemsField;
+        [ObservableProperty]
+        private IList<T> _selectedItems;
+
+        /// <inheritdoc/>
+        [ObservableProperty]
+        private SelectionMode _selectionMode = SelectionMode.Single;
+        
         IList IListBox.SelectedItems
         {
             get => (IList)SelectedItems;
@@ -126,148 +118,68 @@ namespace RFBCodeWorks.Mvvm
             }
         }
 
-        /// <inheritdoc/>
-        public SelectionMode SelectionMode
+        partial void OnSelectedItemsChanged(IList<T> value) => OnSelectedItemsChanged();
+
+        /// <summary> Raises the SelectedItemsChanged event </summary>
+        protected virtual void OnSelectedItemsChanged()
         {
-            get { return SelectionModeField; }
-            set { SetProperty(ref SelectionModeField, value, nameof(SelectionMode)); }
+            SelectedItemsChanged?.Invoke(this, EventArgs.Empty);
         }
-        private SelectionMode SelectionModeField = SelectionMode.Single;
-
     }
-
-    #region < ListBox Definitions >
 
     /// <summary>
     /// A Simple ListBox/ListView Definition that only ListBox/ListView the enumerated type
     /// </summary>
-    /// <inheritdoc cref="ListBoxDefinition{T, E, V}"/>
-    public class ListBoxDefinition<T> : ListBoxDefinition<T, object> 
+    /// <inheritdoc cref="ListBoxDefinition{T, TList,  TSelectedValue}"/>
+    public class ListBoxDefinition<T> : ListBoxDefinition<T, IList<T>, object>
     {
-        /// <summary>Create a new ListBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition()"/>
         public ListBoxDefinition() { }
 
-        /// <summary>Create a new ListBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
-        public ListBoxDefinition(IList<T>? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ListBoxDefinition(IList<T> collection) : this(null, null, collection) { }
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ListBoxDefinition(params T[] collection) : this(null, null, collection) { }
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ListBoxDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, params T[] collection) : base(onItemSourceChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
+
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ListBoxDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, IList<T> collection = default) : base(onItemSourceChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
     }
 
     /// <summary>
     /// A generic definition for a ListBox/ListView whose ItemSource is any IEnumerable object, that expects a SelectedValue of a specific type
     /// </summary>
-    /// <inheritdoc cref="ListBoxDefinition{T, E, V}"/>
-    public class ListBoxDefinition<T, V> : ListBoxDefinition<T, IList<T>, V> 
+    /// <inheritdoc cref="ListBoxDefinition{T, TList,  TSelectedValue}"/>
+    public class ListBoxDefinition<T, TSelectedValue> : ListBoxDefinition<T, IList<T>, TSelectedValue>
     {
-        /// <summary>Create a new ListBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition()"/>
         public ListBoxDefinition() { }
 
-        /// <summary>Create a new ListBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
-        public ListBoxDefinition(IList<T>? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ListBoxDefinition(IList<T> collection) : this(null, null, collection) { }
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ListBoxDefinition(params T[] collection) : this(null, null, collection) { }
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ListBoxDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, params T[] collection) : base(onItemSourceChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
+
+        /// <summary>Create a new ComboBox </summary>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
+        public ListBoxDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, IList<T> collection = default) : base(onItemSourceChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
     }
-
-    #endregion
-
-    #region < Refreshable >
-
-    /// <summary>
-    /// A listbox that contains only strings
-    /// </summary>
-    /// <inheritdoc cref="RefreshableListBoxDefinition{T, V}"/>
-    public class RefreshableListBoxDefinition : RefreshableListBoxDefinition<string, object> 
-    {
-        /// <inheritdoc cref="RefreshableListBoxDefinition{T, V}.RefreshableListBoxDefinition()"/>
-        public RefreshableListBoxDefinition() { }
-
-        /// <inheritdoc cref="RefreshableListBoxDefinition{T, V}.RefreshableListBoxDefinition(T[], Action, Action)"/>
-        public RefreshableListBoxDefinition(string[]? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<string>(), onItemSourceChanged, onSelectionChanged) { }
-    }
-
-    /// <inheritdoc cref="RefreshableListBoxDefinition{T, V}"/>
-    public class RefreshableListBoxDefinition<T> : RefreshableListBoxDefinition<T, object> 
-    {
-        /// <inheritdoc cref="RefreshableListBoxDefinition{T, V}.RefreshableListBoxDefinition()"/>
-        public RefreshableListBoxDefinition() { }
-
-        /// <inheritdoc cref="RefreshableListBoxDefinition{T, V}.RefreshableListBoxDefinition(T[], Action, Action)"/>
-        public RefreshableListBoxDefinition(T[]? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
-    }
-
-    /// <summary>
-    /// A ComboBoxDefinition whose collection is an array of <typeparamref name="T"/> objects, that can be refreshed on demand via the <see cref="RefreshFunc"/>
-    /// </summary>
-    /// <inheritdoc cref="ListBoxDefinition{T, E, V}"/>
-    public class RefreshableListBoxDefinition<T, V> : ListBoxDefinition<T, T[], V>, IRefreshableItemSource<T>
-    {
-        /// <summary>Create a new RefreshableListBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition()"/>
-        public RefreshableListBoxDefinition() { }
-
-        /// <summary>Create a new RefreshableListBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectorDefinition(E, Action, Action)"/>
-        public RefreshableListBoxDefinition(T[]? collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection ?? Array.Empty<T>(), onItemSourceChanged, onSelectionChanged) { }
-
-        /// <inheritdoc/>
-        public override T[] Items
-        {
-            get
-            {
-                if (base.Items is null && !itemsInitialized)
-                {
-                    Refresh();
-                    itemsInitialized = true;
-                }
-                return base.Items;
-            }
-            set
-            {
-                base.Items = value;
-                itemsInitialized = true;
-            }
-        }
-        private bool itemsInitialized;
-
-        /// <inheritdoc/>
-        public Func<T[]> RefreshFunc { get; init; }
-
-        /// <inheritdoc/>
-        public Func<bool> CanRefresh { get; init; }
-
-        /// <inheritdoc/>
-        public IButtonDefinition RefreshCommand { get; }
-
-        /// <summary>
-        /// Check if the <see cref="RefreshFunc"/> is null and return the opposite
-        /// </summary>
-        /// <returns>TRUE if not null, FALSE is null</returns>
-        protected bool HasRefreshFunc()
-        {
-            return RefreshFunc != null;
-        }
-
-        /// <inheritdoc/>
-        public virtual void Refresh()
-        {
-            if (RefreshFunc != null && (CanRefresh?.Invoke() ?? true))
-                Items = RefreshFunc();
-        }
-
-        /// <inheritdoc/>
-        public void Refresh(object sender, EventArgs e)
-        {
-            Refresh();
-        }
-
-        /// <inheritdoc/>
-        public void Refresh(object sender, RoutedEventArgs e)
-        {
-            Refresh();
-        }
-
-    }
-
-    #endregion
 
 }

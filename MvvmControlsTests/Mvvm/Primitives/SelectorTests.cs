@@ -86,7 +86,7 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
         }
 
         /// <summary>
-        /// Test a <see cref="SelectorDefinition{T, E, V}"/> against a Selector control
+        /// Test a <see cref="SelectorDefinition{TItem, TList, TItemValue}"/> against a Selector control
         /// </summary>
         protected override void TestControlInteraction(Control cntrl)
         {

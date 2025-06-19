@@ -8,13 +8,13 @@ namespace RFBCodeWorks.Mvvm.Specialized
     public abstract class XNodeTreeViewItem<TXNode> : XNodeTreeViewItem
         where TXNode : IXObjectProvider
     {
-        /// <inheritdoc cref="TreeViewItemBase{TItem, TParent}.TreeViewItemBase(TItem)"/>
+        /// <inheritdoc cref="TreeViewItemBase{T, TParent}.TreeViewItemBase(T)"/>
         protected XNodeTreeViewItem(TXNode item) : base(item) { }
 
-        /// <inheritdoc cref="TreeViewItemBase{TItem, TParent}.TreeViewItemBase(TItem, TParent)"/>
+        /// <inheritdoc cref="TreeViewItemBase{T, TParent}.TreeViewItemBase(T, TParent)"/>
         protected XNodeTreeViewItem(TXNode item, XElementTreeViewItem parent) : base(item, parent) { }
 
-        /// <inheritdoc cref="TreeViewItemBase{TItem, TParent}.Item"/>
+        /// <inheritdoc cref="TreeViewItemBase{T, TParent}.Item"/>
         public new TXNode Item => (TXNode)base.Item;
     }
 

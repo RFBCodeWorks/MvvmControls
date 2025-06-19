@@ -93,8 +93,6 @@ namespace RFBCodeWorks.Mvvm
 
         #endregion
 
-        #region < Properties >
-
         /// <summary>
         /// The object this ViewModel represents 
         /// </summary>
@@ -170,11 +168,7 @@ namespace RFBCodeWorks.Mvvm
                     DisplayText = displayText,
                     ToolTip = toolTip,
                 };
-<<<<<<< Updated upstream
-                ViewModel.ObjectModelChanged += cmd.NotifyCanExecuteChanged;
-=======
                 ViewModel.ModelChanged += cmd.NotifyCanExecuteChanged;
->>>>>>> Stashed changes
                 return cmd;
             }
 
@@ -193,11 +187,7 @@ namespace RFBCodeWorks.Mvvm
                     DisplayText = displayText,
                     ToolTip = toolTip,
                 };
-<<<<<<< Updated upstream
-                ViewModel.ObjectModelChanged += cmd.NotifyCanExecuteChanged;
-=======
                 ViewModel.ModelChanged += cmd.NotifyCanExecuteChanged;
->>>>>>> Stashed changes
                 return cmd;
             }
 
@@ -336,11 +326,7 @@ namespace RFBCodeWorks.Mvvm
                     ToolTip = toolTip,
                     DisplayText = displayText
                 };
-<<<<<<< Updated upstream
-                ViewModel.ObjectModelChanged += cmd.NotifyCanExecuteChanged;
-=======
                 ViewModel.ModelChanged += cmd.NotifyCanExecuteChanged;
->>>>>>> Stashed changes
                 return cmd;
             }
 
@@ -363,15 +349,7 @@ namespace RFBCodeWorks.Mvvm
                     ToolTip = toolTip,
                     DisplayText = displayText
                 };
-<<<<<<< Updated upstream
-                ViewModel.ObjectModelChanged += cmd.NotifyCanExecuteChanged;
-=======
-                ViewModel.ModelChanged += (o, e) =>
-                {
-                    cmd?.NotifyCanExecuteChanged();
-                    cmd?.Command?.NotifyCanExecuteChanged();
-                };
->>>>>>> Stashed changes
+                ViewModel.ModelChanged += cmd.NotifyCanExecuteChanged;
                 return cmd;
             }
 

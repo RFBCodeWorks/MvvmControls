@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Collections.Specialized;
 using System.Collections;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 #nullable enable
 #nullable disable warnings
@@ -13,12 +14,50 @@ namespace RFBCodeWorks.Mvvm.Primitives
     /// Represents an ItemSource binding
     /// </summary>
     /// <typeparam name="T"> The type of objects within the collection </typeparam>
-    /// <typeparam name="E"> The type of collection - must implement <see cref="IEnumerable{T}"/></typeparam>
-    public class ItemSource<T,E> : ControlBase, IItemSource, IItemSource<T,E> 
-        where E : IList<T>
+    /// <typeparam name="TList"> The type of collection - must implement <see cref="IEnumerable{T}"/></typeparam>
+    public partial class ItemSource<T,TList> : ControlBase, IItemSource, IItemSource<T> 
+        where TList : IList<T>
     {
+        /// <summary>
+        /// The default empty collection to return when the object is constructed
+        /// </summary>
+        /// <remarks>
+        /// If able, prefers System.Collections.Immutable.ImmutableArray.
+        /// <br/> Then attempts to use System.Array.Empty. 
+        /// <br/> If neither collection type is valid, returns  <see langword="default"/>
+        /// </remarks>
+        public static readonly TList EmptyCollection;
 
-        #region < Constructors >
+        /// <summary>
+        /// TRUE if the type of IList implements <see cref="INotifyCollectionChanged"/>, otherwise false
+        /// </summary>
+        public static readonly bool IsINotifyPropertyChanged;
+
+        /// <summary>
+        /// Set the default display member path for ItemSources of the specied type
+        /// </summary>
+        public static string DefaultDisplayMemberPath { get => _DefaultDisplayMemberPath; set => _DefaultDisplayMemberPath = value.Trim() ?? string.Empty; }
+        private static string _DefaultDisplayMemberPath;
+
+        static ItemSource()
+        {
+            IsINotifyPropertyChanged = typeof(TList) is INotifyCollectionChanged;
+            _DefaultDisplayMemberPath = string.Empty;
+
+#if NET5_0_OR_GREATER
+            if (System.Collections.Immutable.ImmutableArray<T>.Empty is TList immuatableEmpty)
+            {
+                EmptyCollection = immuatableEmpty;
+                return;
+            }
+#endif
+            if (Array.Empty<T>() is TList emptyArray)
+            {
+                EmptyCollection = emptyArray;
+                return;
+            }
+            EmptyCollection = default;
+        }
 
         /// <summary>
         /// Initialize the ItemSource
@@ -26,36 +65,23 @@ namespace RFBCodeWorks.Mvvm.Primitives
         public ItemSource() { }
 
         /// <summary>
+        /// Initialize the ItemSource
+        /// </summary>
+        public ItemSource(TList collection) : this(null, collection) { }
+
+        /// <summary>
         /// Create a new selector
         /// </summary>
         /// <param name="collection">A collection of items. Default or null is OK.</param>
         /// <param name="onItemSourceChanged">An action to be inoked when the collection changes (such as calling IRelayCommand.CanExecuteChanged)</param>
-        public ItemSource(E? collection = default, Action onItemSourceChanged = null)
+        public ItemSource(Action onItemSourceChanged = null, TList collection = default)
         {
-            Items = collection;
+            Items = collection ?? EmptyCollection;
             _onItemSourceChanged = onItemSourceChanged;
         }
 
         private readonly Action? _onItemSourceChanged;
-
-        static ItemSource()
-        {
-            IsINotifyPropertyChanged = typeof(E) is INotifyCollectionChanged;
-        }
-
-        /// <summary>
-        /// TRUE if the type of IList implements <see cref="INotifyCollectionChanged"/>, otherwise false
-        /// </summary>
-        public static bool IsINotifyPropertyChanged { get; }
-
-        /// <summary>
-        /// Set the default display member path for ItemSources of the specied type
-        /// </summary>
-        public static string DefaultDisplayMemberPath { get; set; } = "";
-
-        #endregion
-
-        #region < Events >
+        private TList _items = EmptyCollection;
 
         /// <summary>
         /// Occurs after the item source has been updated. For most implementations, this will mean the object has been replaced. 
@@ -76,49 +102,33 @@ namespace RFBCodeWorks.Mvvm.Primitives
             ItemSourceChanged?.Invoke(this, e);
         }
 
-        #endregion
-
-        #region < Properties >
-
         /// <summary>
         /// Set the DisplayMemberPath of the control
         /// </summary>
         /// <remarks>
         /// Object Person(Joe,Schmoe), DisplayMemberPath = 'FirstName', Display will be 'Joe'
         /// </remarks>
-        public string DisplayMemberPath
-        {
-            get { return DisplayMemberPathField; }
-            set
-            {
-                if (DisplayMemberPathField != value)
-                {
-                    OnPropertyChanging(EventArgSingletons.DisplayMemberPath);
-                    DisplayMemberPathField = value;
-                    OnPropertyChanged(EventArgSingletons.DisplayMemberPath);
-                }
-
-            }
-        }
-        private string DisplayMemberPathField = DefaultDisplayMemberPath;
-
+        [ObservableProperty]
+        private string _displayMemberPath = DefaultDisplayMemberPath;
 
         /// <summary>
         /// Binding for <see cref="ItemsControl.ItemsSource"/>
         /// </summary>
-        public virtual E Items
+        /// Can NOT be a [ObservableProperty] because it may need to be overriden
+        public virtual TList Items
         {
-            get { return ItemSourceField; }
+            get { return _items; }
             set 
             {
-                if (!(ItemSourceField?.Equals(value) ?? value is null))
+                if (!EqualityComparer<TList>.Default.Equals(_items, value))
                 {
-                    UnSubscribe(ItemSourceField);
+                    UnSubscribe(_items);
                     OnPropertyChanging(EventArgSingletons.ItemSourceItems);
-                    ItemSourceField = value;
-                    OnPropertyChanged(EventArgSingletons.ItemSourceItems);
-                    OnItemSourceChanged();
+                    _items = value;
+                    _onItemSourceChanged?.Invoke();
                     Subscribe(value);
+                    OnItemSourceChanged(EventArgs.Empty);
+                    OnPropertyChanged(EventArgSingletons.ItemSourceItems);
                 }
             }
         }
@@ -126,15 +136,13 @@ namespace RFBCodeWorks.Mvvm.Primitives
         IList IItemSource.Items { get => (IList)Items; }
         IList<T> IItemSource<T>.Items { get => Items; }
 
-        private E ItemSourceField;
-
-        private void UnSubscribe(E itemSource)
+        private void UnSubscribe(TList itemSource)
         {
             if (itemSource is INotifyCollectionChanged coll)
                 coll.CollectionChanged -= RaiseItemSourceChanged;
         }
 
-        private void Subscribe(E itemSource)
+        private void Subscribe(TList itemSource)
         {
             if (itemSource is INotifyCollectionChanged coll)
                 coll.CollectionChanged += RaiseItemSourceChanged;
@@ -144,9 +152,5 @@ namespace RFBCodeWorks.Mvvm.Primitives
         {
             OnItemSourceChanged(e);
         }
-
-        #endregion
     }
-
-
 }

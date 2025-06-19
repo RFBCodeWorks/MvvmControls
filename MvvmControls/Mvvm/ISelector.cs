@@ -18,13 +18,13 @@ namespace RFBCodeWorks.Mvvm
         /// </summary>
         object SelectedItem { get; set; }
 
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectedValue"/>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}"/>
         object SelectedValue { get; set; }
 
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectedValuePath"/>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectedValuePath"/>
         string SelectedValuePath { get; }
 
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, E, V}.SelectedIndex"/>
+        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectedIndex"/>
         int SelectedIndex { get; set; }
     }
 
@@ -37,13 +37,5 @@ namespace RFBCodeWorks.Mvvm
         /// Gets the SelectedItem from the Selector
         /// </summary>
         new T SelectedItem { get; set; }
-    }
-
-    /// <summary>
-    /// Interface for Selectors and collection of a specific type
-    /// </summary>
-    public interface ISelector<T, E> : ISelector<T>, IItemSource<T, E> where E : IList<T>
-    {
-
     }
 }

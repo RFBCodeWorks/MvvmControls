@@ -27,17 +27,5 @@ namespace RFBCodeWorks.Mvvm
     {
         /// <inheritdoc cref="Primitives.ItemSource{T, E}.Items"/>
         new IList<T> Items { get; }
-    }
-
-    /// <summary>
-    /// Represents an ItemSource collection
-    /// </summary>
-    public interface IItemSource<T,E> : IItemSource<T>
-        where E : IList<T>
-    {
-        /// <inheritdoc cref="Primitives.ItemSource{T, E}.Items"/>
-        new E Items { get; set; }
-    }
-
-    
+    }    
 }

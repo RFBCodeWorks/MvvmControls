@@ -2,6 +2,9 @@
 {
     internal static class EventArgSingletons
     {
+        public static readonly INotifyArgs Text = new(nameof(Text));
+        public static readonly INotifyArgs IsDropDownOpen = new(nameof(IsDropDownOpen));
+        public static readonly INotifyArgs IsEditable = new(nameof(IsEditable));
         public static readonly INotifyArgs DisplayText = new(nameof(IDisplayTextProvider.DisplayText));
         public static readonly INotifyArgs ToolTip = new(nameof(IToolTipProvider.ToolTip));
 

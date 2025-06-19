@@ -1,14 +1,18 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
+#nullable enable
+#nullable disable warnings
+
 namespace RFBCodeWorks.Mvvm.Primitives
 {
-    /// <typeparam name="V">The SelectedValue Type obtained by the SelectedValuePath</typeparam>
+    /// <typeparam name="TSelectedValue">The SelectedValue Type obtained by the SelectedValuePath</typeparam>
     /// <inheritdoc cref="ItemSource{T, E}"/>
-    /// <typeparam name="E"/><typeparam name="T"/>
-    public class SelectorDefinition<T, E, V> : ItemSource<T,E>, ISelector, ISelector<T>, ISelector<T, E>
-        where E : IList<T>
+    /// <typeparam name="TList"/><typeparam name="T"/>
+    public partial class SelectorDefinition<T, TList, TSelectedValue> : ItemSource<T,TList>, ISelector, ISelector<T>
+        where TList : IList<T>
     {
         /// <summary>
         /// Crete a new Selector
@@ -16,60 +20,44 @@ namespace RFBCodeWorks.Mvvm.Primitives
         public SelectorDefinition() { }
 
         /// <summary>
+        /// Crete a new Selector
+        /// </summary>
+        public SelectorDefinition(TList collection) : base(collection) { }
+
+        /// <summary>
         /// Create a new selector
         /// </summary>
         /// <param name="collection">The collection or null</param>
         /// <param name="onSelectionChanged">An action to be inoked when the selected item changes (such as calling IRelayCommand.CanExecuteChanged)</param>
-        /// <inheritdoc cref="ItemSource{T, E}.ItemSource(E, Action)"/>
+        /// <inheritdoc cref="ItemSource{T, TList}.ItemSource(Action, TList)"/>
         /// <param name="onItemSourceChanged"/>
-        public SelectorDefinition(E collection = default, Action onItemSourceChanged = null, Action onSelectionChanged = null) : base(collection, onItemSourceChanged)
+        public SelectorDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, TList collection = default) : base(onItemSourceChanged, collection)
         {
             _onSelectionChanged = onSelectionChanged;
         }
 
         private readonly Action _onSelectionChanged;
-
-        #region < SelectionChangedEvent >
+        private int SelectedIndexField = -1;
+        private bool UpdatingSelectedItem;
 
         /// <summary>
         /// Occurs after the <see cref="SelectedItem"/> has been updated
         /// </summary>
         public event PropertyOfTypeChangedEventHandler<T> SelectedItemChanged;
-
-        /// <summary> Raises the SelectionChanged event </summary>
-        protected virtual void OnSelectedItemChanged(PropertyOfTypeChangedEventArgs<T> e)
-        {
-            SelectedItemChanged?.Invoke(this, e);
-            ISelectorEvent?.Invoke(this, e);
-            _onSelectionChanged?.Invoke();
-        }
-
-        #endregion
-
-        #region < SelectionValueChanged >
-
+        
         /// <summary>
         /// Occurs when the <see cref="SelectedValue"/> is updated ( after <see cref="SelectedItem"/> changes )
         /// </summary>
-        public event PropertyOfTypeChangedEventHandler<V> SelectedValueChanged;
-
-        /// <summary> Raises the SelectionChanged event </summary>
-        protected virtual void OnSelectedValueChanged(PropertyOfTypeChangedEventArgs<V> e)
-        {
-            SelectedValueChanged?.Invoke(this, e);
-            OnPropertyChanged(e);
-        }
-
-        #endregion
-
-        #region < Properties >
-
-        private bool UpdatingSelectedItem;
+        public event PropertyOfTypeChangedEventHandler<TSelectedValue> SelectedValueChanged;
 
         /// <summary>
-        /// Enable/Disable auto-updating of SelectedItem and SelectedIndex if bound by the ItemSource binding definition attached property
+        /// Specify the property name/path to use as the <see cref="SelectedValue"/> of the <see cref="SelectedItem"/>
         /// </summary>
-        internal bool IsBoundByBehavior { get; set; }
+        /// <remarks>
+        /// Example: If the <see cref="SelectedItem"/> is type Person, and this value is 'Name', then the <see cref="SelectedValue"/> = Person.Name
+        /// </remarks>
+        [ObservableProperty]
+        private string _selectedValuePath = DefaultDisplayMemberPath;
 
         /// <summary>
         /// The Currently Selected item within the user control - May be null!
@@ -77,21 +65,23 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <remarks>
         /// Binding for the 'SelectedItem' property of controls such as ComboBox or ListBox
         /// </remarks>
-        public T SelectedItem
-        {
-            get { return SelectedItemField; }
-            set {
-                T oldValue = SelectedItemField;
-                if (SetProperty(ref SelectedItemField, value, nameof(SelectedItem)))
-                {
-                    UpdatingSelectedItem = true;
-                    SelectedIndex = Items.IndexOf(value);
-                    UpdatingSelectedItem = false;
-                    OnSelectedItemChanged(new(oldValue, value, nameof(SelectedItem)));
-                }
-            }
-        }
-        private T SelectedItemField;
+        [ObservableProperty]
+        private T _selectedItem;
+
+        /// <summary>
+        /// If bound to the control, the control will set this property according to the property defined by SelectedValuePath
+        /// </summary>
+        /// <remarks>
+        /// Example: If the SelectedItem = Person(Joe, Schmoe), and SelectedValuePath = "FirstName", then SelectedValue = "Joe"
+        /// </remarks>
+
+        [ObservableProperty]
+        private TSelectedValue _selectedValue;
+
+        /// <summary>
+        /// Enable/Disable auto-updating of SelectedItem and SelectedIndex if bound by the ItemSource binding definition attached property
+        /// </summary>
+        internal bool IsBoundByBehavior { get; set; }
 
         /// <summary>
         /// The index of the currently selected item within the ItemSource
@@ -124,8 +114,8 @@ namespace RFBCodeWorks.Mvvm.Primitives
                     //collection has items - check valid index
                     if (value == -1)
                     {
-                        // This may be a bad choice if the <T> is a struct, and the default resides within the list. Ex: 5,4,3,2,1,0 -> index 5 will become selected.
-                        // If this is an issue, a consumer can always use T = int? in place of it, allowing for actual null values.
+                        // This may be a bad choice if the <TValue> is a struct, and the default resides within the list. Ex: 5,4,3,2,1,0 -> index 5 will become selected.
+                        // If this is an issue, a consumer can always use TValue = int? in place of it, allowing for actual null values.
                         SelectedItem = default; 
                     }
                     else if (value < Items.Count)
@@ -140,43 +130,38 @@ namespace RFBCodeWorks.Mvvm.Primitives
             }
 
         }
-        private int SelectedIndexField = -1;
 
-        /// <summary>
-        /// If bound to the control, the control will set this property according to the property defined by SelectedValuePath
-        /// </summary>
-        /// <remarks>
-        /// Example: If the SelectedItem = Person(Joe, Schmoe), and SelectedValuePath = "FirstName", then SelectedValue = "Joe"
-        /// </remarks>
-        public V SelectedValue
+        partial void OnSelectedItemChanging(T value)
         {
-            get { return SelectedValueField; }
-            set
-            {
-                V oldValue = SelectedValueField;
-                if (SetProperty(ref SelectedValueField, value, nameof(SelectedValue)))
-                {
-                    OnSelectedValueChanged(new(oldValue, value, nameof(SelectedValue)));
-                }
-            }
+            UpdatingSelectedItem = true;
+            SelectedIndex = Items.IndexOf(value);
+            UpdatingSelectedItem = false;
         }
-        private V SelectedValueField;
 
-
-        /// <summary>
-        /// Specify the property name/path to use as the <see cref="SelectedValue"/> of the <see cref="SelectedItem"/>
-        /// </summary>
-        /// <remarks>
-        /// Example: If the <see cref="SelectedItem"/> is type Person, and this value is 'Name', then the <see cref="SelectedValue"/> = Person.Name
-        /// </remarks>
-        public string SelectedValuePath
+        partial void OnSelectedItemChanged(T? oldValue, T newValue)
         {
-            get { return SelectedValuePathField; }
-            set { SetProperty(ref SelectedValuePathField, value ?? "", nameof(SelectedValuePath)); }
+            OnSelectedItemChanged(new PropertyOfTypeChangedEventArgs<T>(oldValue, newValue, nameof(SelectedItem)));
         }
-        private string SelectedValuePathField = DefaultDisplayMemberPath;
 
-        #endregion
+        /// <summary> Raises the SelectionChanged event </summary>
+        protected virtual void OnSelectedItemChanged(PropertyOfTypeChangedEventArgs<T> e)
+        {
+            SelectedItemChanged?.Invoke(this, e);
+            ISelectorEvent?.Invoke(this, e);
+            _onSelectionChanged?.Invoke();
+        }
+
+        partial void OnSelectedValueChanged(TSelectedValue? oldValue, TSelectedValue newValue)
+        {
+            OnSelectedValueChanged(new PropertyOfTypeChangedEventArgs<TSelectedValue>(oldValue, newValue, nameof(SelectedItem)));
+        }
+
+        /// <summary> Raises the SelectionChanged event </summary>
+        protected virtual void OnSelectedValueChanged(PropertyOfTypeChangedEventArgs<TSelectedValue> e)
+        {
+            SelectedValueChanged?.Invoke(this, e);
+            OnPropertyChanged(e);
+        }
 
         /// <summary> 
         /// Searches the ItemSource for the first match to the <paramref name="predicate"/>, then sets the SelectedValue to the result. 
@@ -208,7 +193,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
             get => SelectedValue;
             set
             {
-                if (value is V val)
+                if (value is TSelectedValue val)
                     SelectedValue = val;
             }
         }

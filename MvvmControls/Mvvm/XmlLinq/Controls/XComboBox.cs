@@ -1,6 +1,9 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using RFBCodeWorks.Mvvm.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Controls
 {
@@ -35,7 +38,8 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Controls
     /// <summary>
     /// ComboBox that provides a list of some type, then stores the converted value of the selected item into an <see cref="IXValueObject"/>
     /// </summary>
-    public class XComboBox<T, E, V> : ComboBoxDefinition<T,E, V>, IXValueControl where E: IList<T>
+    public partial class XComboBox<T, TList,  TSelectedValue> : SelectorDefinition<T, TList, TSelectedValue>, IXValueControl, IComboBox
+        where TList : IList<T>
     {
         /// <summary>
         /// Create a new ComboBox that will store the SelectedItem into the <paramref name="xValueProvider"/>
@@ -65,14 +69,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Controls
         public bool StoreValueAsItemIndex { get; set; }
 
         /// <inheritdoc/>
-        public override string Text
-        {
-            get => base.Text;
-            set { }
-        }
-
-        /// <inheritdoc/>
-        public sealed override bool IsEditable { get => false; set { } }
+        public bool IsEditable { get => false; set { } }
 
         /// <summary>
         /// Occurs when the Text property is updating on the node
@@ -84,6 +81,14 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Controls
         /// <br/> If not provided, will use object.ToString().
         /// </summary>
         public Func<T,string> ItemConverter { get; init; }
+
+        /// <inheritdoc/>
+        [ObservableProperty]
+        private bool _isDropDownOpen;
+
+        /// <inheritdoc/>
+        [ObservableProperty]
+        private bool _isReadOnly;
 
         /// <summary>
         /// React to the value being updated on the node
@@ -112,7 +117,6 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Controls
                 catch
                 {
                     SelectedIndex = -1;
-                    Text = val;
                 }
             }
         }

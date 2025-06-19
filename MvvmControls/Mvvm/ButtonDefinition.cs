@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using RFBCodeWorks.Mvvm.Primitives;
 
 using Toolkit = CommunityToolkit.Mvvm.Input;
+using System.Windows;
 
 #nullable enable
 #nullable disable warnings
@@ -171,4 +172,26 @@ namespace RFBCodeWorks.Mvvm
             return _command.CanExecute(parameter);
         }
     }
+
+    internal sealed class InactiveButton : IButtonDefinition
+    {
+        private static InactiveButton _instance;
+        public static InactiveButton Instance => _instance ?? new();
+
+        private InactiveButton() { }
+
+        public event EventHandler CanExecuteChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public Visibility Visibility { get => Visibility.Visible; set {} }
+        public bool IsVisible { get => true; set { } }
+        public bool IsEnabled => false;
+        public string ToolTip => string.Empty;
+        public string DisplayText => string.Empty;
+        public void NotifyCanExecuteChanged(object sender, EventArgs e) {}
+        public void NotifyCanExecuteChanged() {}
+        public bool CanExecute(object parameter) => false;
+        public void Execute(object parameter) { }
+    }
+
 }
