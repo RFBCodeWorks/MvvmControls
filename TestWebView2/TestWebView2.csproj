@@ -19,7 +19,7 @@
   </Content>
 </ItemGroup>
 <ItemGroup>
-	<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.0" />
+	<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
   <PackageReference Include="Costura.Fody" Version="5.7.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; resource; build; compile; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -5,6 +5,9 @@
     <AssemblyName>RFBCodeWorks.Mvvm.SourceGenerators</AssemblyName>
     <RootNamespace>RFBCodeWorks.Mvvm.SourceGenerators</RootNamespace>
     <LangVersion>9</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <DefineConstants>ROSLYN_4_0_OR_GREATER;$(DefineConstants);</DefineConstants>
   </PropertyGroup>
 
   <!-- Include everything from the Legacy generator, exclude legacy generators and the obj and build folders -->
@@ -16,6 +19,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" />
+      <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
   </ItemGroup>
 </Project>
