@@ -29,7 +29,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
             _token.ThrowIfCancellationRequested();
 
             // get method info
-            var symbol = data.TargetSymbol;
+            if (data.TargetSymbol is not IMethodSymbol symbol) return;
 
             bool isAsync = data.TargetSymbol.ReturnType.Name.Contains("Task");
             var parmeterType = string.Empty;
@@ -42,7 +42,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
             }
 
             // get strings
-            if (!MvvmDiagnostics.TryCleanName(data.TargetSymbol, "Button", out string fieldName, out string PropName, out var nameDiag))
+            if (MvvmDiagnostics.TryGetPropertyName(symbol, "Button", out string fieldName, out string PropName) is Diagnostic nameDiag)
             {
                 reportDiagnostic(nameDiag);
                 return;
@@ -53,7 +53,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
             // get writer
             if (Writer is null)
             {
-                Writer ??= new SourceWriter(_token).WriteFileHeader(data.TargetSymbol.ContainingType);
+                Writer ??= new SourceWriter(_token).WriteFileHeader(symbol.ContainingType);
             }
             else
             {

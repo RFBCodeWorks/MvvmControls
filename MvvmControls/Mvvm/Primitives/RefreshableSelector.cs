@@ -41,9 +41,9 @@ namespace RFBCodeWorks.Mvvm.Primitives
         ///     <para/>Setting the Items collection via the property will also disable the first refresh.
         /// </param>
         /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
-        /// <param name="onItemSourceChanged"/><param name="onSelectionChanged"/>
-        public RefreshableSelector(Func<TList> refresh, Func<bool> canRefresh = null, Action onItemSourceChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
-            : base(onItemSourceChanged, onSelectionChanged, EmptyCollection)
+        /// <param name="onCollectionChanged"/><param name="onSelectionChanged"/>
+        public RefreshableSelector(Func<TList> refresh, Func<bool> canRefresh = null, Action onCollectionChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
+            : base(onCollectionChanged, onSelectionChanged, EmptyCollection)
         {
             _refresh = refresh;
             _canRefresh = canRefresh;
@@ -51,8 +51,8 @@ namespace RFBCodeWorks.Mvvm.Primitives
         }
 
         /// <inheritdoc cref="RefreshableSelector{T, TList, TSelectedValue}.RefreshableSelector(Func{TList}, Func{bool}, Action, Action, bool)"/>
-        public RefreshableSelector(Func<Task<TList>> refresh, Func<bool> canRefresh = null, Action onItemSourceChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
-            : base(onItemSourceChanged, onSelectionChanged, EmptyCollection)
+        public RefreshableSelector(Func<Task<TList>> refresh, Func<bool> canRefresh = null, Action onCollectionChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
+            : base(onCollectionChanged, onSelectionChanged, EmptyCollection)
         {
             _refreshAsync = refresh;
             _canRefresh = canRefresh;
@@ -60,8 +60,8 @@ namespace RFBCodeWorks.Mvvm.Primitives
         }
 
         /// <inheritdoc cref="RefreshableSelector{T, TList, TSelectedValue}.RefreshableSelector(Func{TList}, Func{bool}, Action, Action, bool)"/>
-        public RefreshableSelector(Func<CancellationToken, Task<TList>> refresh, Func<bool> canRefresh = null, Action onItemSourceChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
-            : base(onItemSourceChanged, onSelectionChanged, EmptyCollection)
+        public RefreshableSelector(Func<CancellationToken, Task<TList>> refresh, Func<bool> canRefresh = null, Action onCollectionChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
+            : base(onCollectionChanged, onSelectionChanged, EmptyCollection)
         {
             _cancellableRefreshAsync = refresh;
             _canRefresh = canRefresh;

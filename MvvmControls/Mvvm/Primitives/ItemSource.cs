@@ -73,14 +73,14 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// Create a new selector
         /// </summary>
         /// <param name="collection">A collection of items. Default or null is OK.</param>
-        /// <param name="onItemSourceChanged">An action to be inoked when the collection changes (such as calling IRelayCommand.CanExecuteChanged)</param>
-        public ItemSource(Action onItemSourceChanged = null, TList collection = default)
+        /// <param name="onCollectionChanged">An action to be inoked when the collection changes (such as calling IRelayCommand.CanExecuteChanged)</param>
+        public ItemSource(Action onCollectionChanged = null, TList collection = default)
         {
             Items = collection ?? EmptyCollection;
-            _onItemSourceChanged = onItemSourceChanged;
+            _onCollectionChanged = onCollectionChanged;
         }
 
-        private readonly Action? _onItemSourceChanged;
+        private readonly Action? _onCollectionChanged;
         private TList _items = EmptyCollection;
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         protected void OnItemSourceChanged()
         {
             OnItemSourceChanged(new());
-            _onItemSourceChanged?.Invoke();
+            _onCollectionChanged?.Invoke();
         }
 
         /// <summary> Raises the SelectionChanged event </summary>
@@ -125,7 +125,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
                     UnSubscribe(_items);
                     OnPropertyChanging(EventArgSingletons.ItemSourceItems);
                     _items = value;
-                    _onItemSourceChanged?.Invoke();
+                    _onCollectionChanged?.Invoke();
                     Subscribe(value);
                     OnItemSourceChanged(EventArgs.Empty);
                     OnPropertyChanged(EventArgSingletons.ItemSourceItems);

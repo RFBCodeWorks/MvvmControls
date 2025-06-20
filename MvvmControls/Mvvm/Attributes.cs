@@ -11,7 +11,7 @@ namespace RFBCodeWorks.Mvvm
     /// <br/> Functions similar to <see cref="CommunityToolkit.Mvvm.Input.RelayCommand"/>
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-    public  sealed partial class ButtonAttribute : Attribute
+    public sealed class ButtonAttribute : Attribute
     {
         /// <summary>
         /// Human-friendly name for the command (e.g. button text).
@@ -37,12 +37,6 @@ namespace RFBCodeWorks.Mvvm
         /// If true (async only), also generates a “Cancel” command for the operation.
         /// </summary>
         public bool IncludeCancelCommand { get; set; }
-
-        [CommunityToolkit.Mvvm.Input.RelayCommand(FlowExceptionsToTaskScheduler =true, IncludeCancelCommand = true, AllowConcurrentExecutions = true)]
-        System.Threading.Tasks.Task Test(System.Threading.CancellationToken token)
-        {
-            return Task.CompletedTask;
-        }
 
     }
 
@@ -147,7 +141,7 @@ namespace RFBCodeWorks.Mvvm
     /// <br/> - Methods with either <see cref="ComboBoxAttribute"/> or <see cref="ListBoxAttribute"/>
     /// </remarks>
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
-    public sealed class OnItemSourceChangedAttribute : Attribute
+    public sealed class OnCollectionChangedAttribute : Attribute
     {
         /// <summary>
         /// Names of ICommands to raise when the item source changes.
@@ -160,12 +154,36 @@ namespace RFBCodeWorks.Mvvm
         /// </summary>
         public string MethodName { get; set; }
 
-        /// <inheritdoc cref="OnItemSourceChangedAttribute"/>
+        /// <inheritdoc cref="OnCollectionChangedAttribute"/>
         /// <param name="commandsToNotify"><inheritdoc cref="CommandsToNotify" path="*"/></param>
-        public OnItemSourceChangedAttribute(params string[] commandsToNotify)
+        public OnCollectionChangedAttribute(params string[] commandsToNotify)
         {
             CommandsToNotify = commandsToNotify;
             MethodName = "";
         }
+    }
+
+    /// <summary>
+    /// Issues a refresh command to the specified selectors.
+    /// <para>
+    /// When used on an observable property, generates OnValueChanged partial method to invoke the refresh command of a refreshable selector.
+    /// </para>
+    /// <para>
+    /// When used on a method that generates a refreshable selector, the downstream selector will be refreshed after the selection has been changed.
+    /// </para>
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Field, AllowMultiple = true, Inherited = false)]
+    public sealed class TriggersRefreshAttribute : Attribute
+    {
+        /// <inheritdoc cref="TriggersRefreshAttribute"/>
+        public TriggersRefreshAttribute(params string[] selectorNames)
+        {
+            SelectorNames = selectorNames;
+        }
+
+        /// <summary>
+        /// Gets the list of selector names that should be refreshed.
+        /// </summary>
+        public string[] SelectorNames { get; }
     }
 }

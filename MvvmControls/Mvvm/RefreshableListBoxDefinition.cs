@@ -26,19 +26,19 @@ namespace RFBCodeWorks.Mvvm
         /// <inheritdoc cref="Primitives.RefreshableSelector{T, TList, TSelectedValue}.RefreshableSelector(Func{CancellationToken, Task{TList}}, Func{bool}, Action, Action, bool)"/>
         /// <param name="refresh">A function to invoke that will refresh the collection</param>
         /// <param name="canRefresh">a function that is used to determine if the collection can be refreshed</param>
-        /// <param name="onItemSourceChanged"/><param name="onSelectionChanged"/><param name="refreshOnFirstCollectionRequest"/>
-        public RefreshableListBoxDefinition(Func<TList> refresh, Func<bool> canRefresh = null, Action onItemSourceChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
-            : base(refresh, canRefresh, onItemSourceChanged, onSelectionChanged, refreshOnFirstCollectionRequest)
+        /// <param name="onCollectionChanged"/><param name="onSelectionChanged"/><param name="refreshOnFirstCollectionRequest"/>
+        public RefreshableListBoxDefinition(Func<TList> refresh, Func<bool> canRefresh = null, Action onCollectionChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
+            : base(refresh, canRefresh, onCollectionChanged, onSelectionChanged, refreshOnFirstCollectionRequest)
         { }
 
         /// <inheritdoc cref="RefreshableListBoxDefinition{T, TList, TSelectedValue}.RefreshableListBoxDefinition(Func{TList}, Func{bool}, Action, Action, bool)"/>
-        public RefreshableListBoxDefinition(Func<Task<TList>> refresh, Func<bool> canRefresh = null, Action onItemSourceChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
-            : base(refresh, canRefresh, onItemSourceChanged, onSelectionChanged, refreshOnFirstCollectionRequest)
+        public RefreshableListBoxDefinition(Func<Task<TList>> refresh, Func<bool> canRefresh = null, Action onCollectionChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
+            : base(refresh, canRefresh, onCollectionChanged, onSelectionChanged, refreshOnFirstCollectionRequest)
         { }
 
         /// <inheritdoc cref="RefreshableListBoxDefinition{T, TList, TSelectedValue}.RefreshableListBoxDefinition(Func{TList}, Func{bool}, Action, Action, bool)"/>
-        public RefreshableListBoxDefinition(Func<CancellationToken, Task<TList>> refresh, Func<bool> canRefresh = null, Action onItemSourceChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
-            : base(refresh, canRefresh, onItemSourceChanged, onSelectionChanged, refreshOnFirstCollectionRequest)
+        public RefreshableListBoxDefinition(Func<CancellationToken, Task<TList>> refresh, Func<bool> canRefresh = null, Action onCollectionChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
+            : base(refresh, canRefresh, onCollectionChanged, onSelectionChanged, refreshOnFirstCollectionRequest)
         { }
 
         /// <inheritdoc cref="RefreshableListBoxDefinition{T, TList, TSelectedValue}.RefreshableListBoxDefinition(Func{TList}, Func{bool}, Action, Action, bool)"/>
@@ -109,16 +109,16 @@ namespace RFBCodeWorks.Mvvm
     public sealed class RefreshableListBoxDefinition<T> : RefreshableListBoxDefinition<T, IList<T>, object>
     {
         /// <inheritdoc cref="RefreshableListBoxDefinition{T, TList, TSelectedValue}.RefreshableListBoxDefinition(Func{TList}, Func{bool}, Action, Action, bool)"/>
-        public RefreshableListBoxDefinition(Func<IList<T>> refresh, Func<bool> canRefresh = null, Action onItemSourceChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
-            : base(refresh, canRefresh, onItemSourceChanged, onSelectionChanged, refreshOnFirstCollectionRequest) { }
+        public RefreshableListBoxDefinition(Func<IList<T>> refresh, Func<bool> canRefresh = null, Action onCollectionChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
+            : base(refresh, canRefresh, onCollectionChanged, onSelectionChanged, refreshOnFirstCollectionRequest) { }
 
         /// <inheritdoc cref="RefreshableListBoxDefinition{T, TList, TSelectedValue}.RefreshableListBoxDefinition(Func{TList}, Func{bool}, Action, Action, bool)"/>
-        public RefreshableListBoxDefinition(Func<Task<IList<T>>> refresh, Func<bool> canRefresh = null, Action onItemSourceChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
-            : base(refresh, canRefresh, onItemSourceChanged, onSelectionChanged, refreshOnFirstCollectionRequest) { }
+        public RefreshableListBoxDefinition(Func<Task<IList<T>>> refresh, Func<bool> canRefresh = null, Action onCollectionChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
+            : base(refresh, canRefresh, onCollectionChanged, onSelectionChanged, refreshOnFirstCollectionRequest) { }
 
         /// <inheritdoc cref="RefreshableListBoxDefinition{T, TList, TSelectedValue}.RefreshableListBoxDefinition(Func{TList}, Func{bool}, Action, Action, bool)"/>
-        public RefreshableListBoxDefinition(Func<CancellationToken, Task<IList<T>>> refresh, Func<bool> canRefresh = null, Action onItemSourceChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
-            : base(refresh, canRefresh, onItemSourceChanged, onSelectionChanged, refreshOnFirstCollectionRequest) { }
+        public RefreshableListBoxDefinition(Func<CancellationToken, Task<IList<T>>> refresh, Func<bool> canRefresh = null, Action onCollectionChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
+            : base(refresh, canRefresh, onCollectionChanged, onSelectionChanged, refreshOnFirstCollectionRequest) { }
 
         /// <inheritdoc cref="RefreshableListBoxDefinition{T, TList, TSelectedValue}.RefreshableListBoxDefinition(Func{TList}, Func{bool}, Action, Action, bool)"/>
         public RefreshableListBoxDefinition(Func<IList<T>> refresh) : base(refresh) { }
@@ -134,16 +134,16 @@ namespace RFBCodeWorks.Mvvm
     public sealed class RefreshableListBoxDefinition<T, TSelectedValue> : RefreshableListBoxDefinition<T, IList<T>, TSelectedValue>
     {
         /// <inheritdoc cref="RefreshableListBoxDefinition{T, TList, TSelectedValue}.RefreshableListBoxDefinition(Func{TList}, Func{bool}, Action, Action, bool)"/>
-        public RefreshableListBoxDefinition(Func<IList<T>> refresh, Func<bool> canRefresh = null, Action onItemSourceChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
-            : base(refresh, canRefresh, onItemSourceChanged, onSelectionChanged, refreshOnFirstCollectionRequest) { }
+        public RefreshableListBoxDefinition(Func<IList<T>> refresh, Func<bool> canRefresh = null, Action onCollectionChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
+            : base(refresh, canRefresh, onCollectionChanged, onSelectionChanged, refreshOnFirstCollectionRequest) { }
 
         /// <inheritdoc cref="RefreshableListBoxDefinition{T, TList, TSelectedValue}.RefreshableListBoxDefinition(Func{TList}, Func{bool}, Action, Action, bool)"/>
-        public RefreshableListBoxDefinition(Func<Task<IList<T>>> refresh, Func<bool> canRefresh = null, Action onItemSourceChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
-            : base(refresh, canRefresh, onItemSourceChanged, onSelectionChanged, refreshOnFirstCollectionRequest) { }
+        public RefreshableListBoxDefinition(Func<Task<IList<T>>> refresh, Func<bool> canRefresh = null, Action onCollectionChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
+            : base(refresh, canRefresh, onCollectionChanged, onSelectionChanged, refreshOnFirstCollectionRequest) { }
 
         /// <inheritdoc cref="RefreshableListBoxDefinition{T, TList, TSelectedValue}.RefreshableListBoxDefinition(Func{TList}, Func{bool}, Action, Action, bool)"/>
-        public RefreshableListBoxDefinition(Func<CancellationToken, Task<IList<T>>> refresh, Func<bool> canRefresh = null, Action onItemSourceChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
-            : base(refresh, canRefresh, onItemSourceChanged, onSelectionChanged, refreshOnFirstCollectionRequest) { }
+        public RefreshableListBoxDefinition(Func<CancellationToken, Task<IList<T>>> refresh, Func<bool> canRefresh = null, Action onCollectionChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
+            : base(refresh, canRefresh, onCollectionChanged, onSelectionChanged, refreshOnFirstCollectionRequest) { }
 
         /// <inheritdoc cref="RefreshableListBoxDefinition{T, TList, TSelectedValue}.RefreshableListBoxDefinition(Func{TList}, Func{bool}, Action, Action, bool)"/>
         public RefreshableListBoxDefinition(Func<IList<T>> refresh) : base(refresh) { }

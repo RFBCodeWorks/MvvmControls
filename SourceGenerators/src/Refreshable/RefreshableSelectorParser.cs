@@ -11,8 +11,8 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
 {
     internal static class RefreshableSelectorParser
     {
-        public const string QualifiedName_ComboBox = "RFBCodeWorks.Mvvm.ComboBoxAttribute";
-        public const string QualifiedName_ListBox = "RFBCodeWorks.Mvvm.ListBoxAttribute";
+        public const string QualifiedName_ComboBox = "RFBCodeWorks.Mvvm." + nameof(RFBCodeWorks.Mvvm.ComboBoxAttribute);
+        public const string QualifiedName_ListBox = "RFBCodeWorks.Mvvm." + nameof(RFBCodeWorks.Mvvm.ListBoxAttribute);
 
         private const string GlobalQualifiedComboBox = "global::" + QualifiedName_ComboBox;
         private const string GlobalQualifiedListBox = "global::" + QualifiedName_ListBox;

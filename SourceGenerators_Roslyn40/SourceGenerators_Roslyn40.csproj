@@ -12,6 +12,7 @@
 
   <!-- Include everything from the Legacy generator, exclude legacy generators and the obj and build folders -->
   <ItemGroup>
+    <Compile Include="..\MvvmControls\Mvvm\Attributes.cs"/>
     <Compile Include="..\SourceGenerators\**\*.cs" Exclude="..\SourceGenerators\**\*Roslyn311.cs" />
   </ItemGroup>
   <ItemGroup>

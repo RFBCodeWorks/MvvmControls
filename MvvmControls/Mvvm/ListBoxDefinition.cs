@@ -70,7 +70,7 @@ namespace RFBCodeWorks.Mvvm
 
         /// <summary>Create a new ListBox </summary>
         /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
-        public ListBoxDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, TList collection = default) : base(onItemSourceChanged, onSelectionChanged, collection) { }
+        public ListBoxDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, TList collection = default) : base(onCollectionChanged, onSelectionChanged, collection) { }
 
         /// <summary>
         /// Occurs after the <see cref="SelectedItems"/> has been updated
@@ -147,12 +147,12 @@ namespace RFBCodeWorks.Mvvm
 
         /// <summary>Create a new ComboBox </summary>
         /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
-        public ListBoxDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, params T[] collection) : base(onItemSourceChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
+        public ListBoxDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, params T[] collection) : base(onCollectionChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
 
 
         /// <summary>Create a new ComboBox </summary>
         /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
-        public ListBoxDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, IList<T> collection = default) : base(onItemSourceChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
+        public ListBoxDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, IList<T> collection = default) : base(onCollectionChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
     }
 
     /// <summary>
@@ -175,11 +175,11 @@ namespace RFBCodeWorks.Mvvm
 
         /// <summary>Create a new ComboBox </summary>
         /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
-        public ListBoxDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, params T[] collection) : base(onItemSourceChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
+        public ListBoxDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, params T[] collection) : base(onCollectionChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
 
         /// <summary>Create a new ComboBox </summary>
         /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
-        public ListBoxDefinition(Action onItemSourceChanged = null, Action onSelectionChanged = null, IList<T> collection = default) : base(onItemSourceChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
+        public ListBoxDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, IList<T> collection = default) : base(onCollectionChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
     }
 
 }

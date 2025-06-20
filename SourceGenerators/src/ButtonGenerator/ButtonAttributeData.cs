@@ -7,7 +7,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
 {
     internal readonly struct ButtonAttributeData : IEquatable<ButtonAttributeData>
     {
-        public const string QualifiedName = "RFBCodeWorks.Mvvm.ButtonAttribute";
+        public const string QualifiedName = "RFBCodeWorks.Mvvm." + nameof(RFBCodeWorks.Mvvm.ButtonAttribute);
 
         public MethodDeclarationSyntax TargetNode { get; }
         public IMethodSymbol TargetSymbol { get; }

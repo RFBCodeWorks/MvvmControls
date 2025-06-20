@@ -6,7 +6,7 @@ using System.ComponentModel;
 namespace ClassLibrary
 {
 
-    public record Class(string Str)
+    internal record Class(string Str)
     {
         internal int Int { get; init; }
     }
@@ -20,7 +20,7 @@ namespace System.Runtime.CompilerServices
     /// This class should not be used by developers in source code.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class IsExternalInit
+    internal static class IsExternalInit
     {
     }
 }

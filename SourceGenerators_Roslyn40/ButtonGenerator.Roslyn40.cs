@@ -18,7 +18,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
                 (
                 fullyQualifiedMetadataName: ButtonAttributeData.QualifiedName,
                 predicate: ButtonParser.NodeSelector,
-                transform: static (context, token) => ButtonParser.GetInfoOrDiagnostic(context.TargetNode, context.SemanticModel, context.TargetSymbol, context.Attributes.First(), token)
+                transform: ButtonParser.GetInfoOrDiagnostic
                 );
 
             context.ReportDiagnostics(candidatesWithDiagnostics.Where(static c=> c.IsErrored).Select((c,_) => c.Diagnostics));

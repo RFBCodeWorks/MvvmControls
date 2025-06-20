@@ -5,6 +5,9 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
+#nullable enable
+#nullable disable warnings
+
 namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
 {
     /// <summary>
@@ -14,8 +17,8 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
     /// </summary>
     internal readonly struct OnDataChangedAttributeData : IEquatable<OnDataChangedAttributeData>
     {
-        public const string QualifiedName_SelectionChanged = "RFBCodeWorks.Mvvm.OnSelectionChangedAttribute";
-        public const string QualifiedName_ItemSourceChanged = "RFBCodeWorks.Mvvm.OnItemSourceChangedAttribute";
+        public const string QualifiedName_SelectionChanged = "RFBCodeWorks.Mvvm." + nameof(RFBCodeWorks.Mvvm.OnSelectionChangedAttribute);
+        public const string QualifiedName_CollectionChanged = "RFBCodeWorks.Mvvm." + nameof(RFBCodeWorks.Mvvm.OnCollectionChangedAttribute);
         
         // Attribute-specific members:
         public ImmutableArray<string> CommandsToNotify { get; }
@@ -30,7 +33,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         }
 
         public static OnDataChangedAttributeData GetSelectionChangedData(ISymbol symbol) => GetData(symbol, QualifiedName_SelectionChanged);
-        public static OnDataChangedAttributeData GetItemSourceChanged(ISymbol symbol) => GetData(symbol, QualifiedName_ItemSourceChanged);
+        public static OnDataChangedAttributeData GetCollectionChangedData(ISymbol symbol) => GetData(symbol, QualifiedName_CollectionChanged);
         private static OnDataChangedAttributeData GetData(ISymbol symbol, string qualifiedName)
         {
             var attributes = symbol.GetAttributes()
@@ -78,49 +81,6 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         public static bool operator ==(OnDataChangedAttributeData left, OnDataChangedAttributeData right) => left.Equals(right);
         public static bool operator !=(OnDataChangedAttributeData left, OnDataChangedAttributeData right) => !left.Equals(right);
 
-        /// <summary>
-        /// Generates an anonymous method if needed.
-        /// <br/>The writer begins writing assuming that you are on the next valid location in a constructor. Example : 
-        /// <para>
-        /// Ctor(Arg1, Arg2
-        /// <br/> result : Ctor(Arg1, Arg2, MethodName
-        /// </para>
-        /// <para>
-        /// Ctor(Arg1, Arg2
-        /// <br/> result : 
-        /// <br/>Ctor(Arg1, Arg2,
-        /// <br/>() => {
-        /// <br/> NotifyCommands
-        /// <br/> }
-        /// </para>
-        /// </summary>
-        /// <param name="writer">The writer to append to.</param>
-        /// <returns><see langword="true"/> if data was written, otherwise <see langword="false"/></returns>
-        public bool GenerateAnonymousMethod(SourceWriter writer, Action<Diagnostic> reportDiagnostic, string argumentName)
-        {
-            if (Diagnostic is not null)
-            {
-                reportDiagnostic?.Invoke(Diagnostic);
-                return false;
-            }
-            if (this.CommandsToNotify.Length > 0 || this.MethodsToInvoke.Length > 0)
-            {
-                writer.Write(',').WriteLine().WriteLine($"{argumentName}: () => {{");
-                writer.Indentation++;
-                foreach (var cmd in CommandsToNotify)
-                {
-                    writer.WriteLine("{0}.NotifyCanExecuteChanged();", cmd);
-                }
-                foreach (var cmd in MethodsToInvoke)
-                {
-                    writer.WriteLine("{0}();", cmd);
-                }
-                writer.Indentation--;
-                writer.WriteIndent().Write('}');
-                return true;
-            }
-            return false;
-        }
     }
 }
 

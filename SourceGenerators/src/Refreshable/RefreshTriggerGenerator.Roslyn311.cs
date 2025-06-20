@@ -1,41 +1,43 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator;
+using RFBCodeWorks.Mvvm.SourceGenerators.Refreshable;
+using RFBCodeWorks.Mvvm.SourceGenerators.src.Refreshable;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator;
-using RFBCodeWorks.Mvvm.SourceGenerators.src;
 
 namespace RFBCodeWorks.Mvvm.SourceGenerators
 {
     [Generator]
-    internal class ButtonGeneratorRoslyn311 : ISourceGenerator
+    public class RefreshTriggerGeneratorRoslyn311 : ISourceGenerator
     {
-        private class ButtonSyntaxReceiver : ContextReceiver<ButtonAttributeData>
+        private class RefreshContextReceiver : ContextReceiver<Refreshable.TriggersRefreshData>
         {
-            public static ButtonSyntaxReceiver Create() => new();
-            private ButtonSyntaxReceiver() : base(
-                ButtonAttributeData.QualifiedName,
-                n => n is MethodDeclarationSyntax,
-                ButtonParser.GetInfoOrDiagnostic
+            public static RefreshContextReceiver Create() => new();
+            private RefreshContextReceiver() : base
+                (
+                Refreshable.TriggersRefreshData.QualifiedName,
+                n => n is FieldDeclarationSyntax,
+                Refreshable.TriggersRefreshData.GetDataOrDiagnostics
                 )
             { }
         }
 
         public void Initialize(GeneratorInitializationContext context)
         {
-            context.ForAttributeWithMetaDataName(ButtonSyntaxReceiver.Create);
+            context.ForAttributeWithMetaDataName(RefreshContextReceiver.Create);
         }
 
         public void Execute(GeneratorExecutionContext context)
         {
-            if (context.CancellationToken.IsCancellationRequested || context.SyntaxContextReceiver is not ButtonSyntaxReceiver receiver) return;
+            if (context.SyntaxContextReceiver is not RefreshContextReceiver receiver) return;
             if (receiver.AnyCandidates is false) return;
-            if (context.Compilation is not CSharpCompilation compilation) return;
 
+            if (context.Compilation is not CSharpCompilation compilation) return;
             if (compilation.LanguageVersion <= LanguageVersion.CSharp8)
             {
                 context.ReportDiagnostic(Diagnostic.Create(MvvmDiagnostics.LanguageVersionTooLow, null, LanguageVersion.CSharp8));
@@ -45,15 +47,15 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
             var candidates = receiver
                 .ReportAndEnumerate(context.ReportDiagnostic, context.CancellationToken)
                 .GroupBy(d => d.TargetSymbol.ContainingType, SymbolEqualityComparer.Default)
-                .Select(d => new GroupedCandidates<ButtonAttributeData>(d.Key as INamedTypeSymbol, d.ToImmutableArray()));
+                .Select(d => new GroupedCandidates<TriggersRefreshData>(d.Key as INamedTypeSymbol, d.ToImmutableArray()));
 
             foreach (var candidate in candidates)
             {
-                ButtonEmitter emitter = new ButtonEmitter(context.CancellationToken);
+                var emitter = new RefreshTriggerEmitter(context.CancellationToken);
                 foreach (var item in candidate.Values)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
-                    emitter.EmitProperty(item, context.ReportDiagnostic);
+                    emitter.Emit(item, context.ReportDiagnostic);
                 }
 
                 if (emitter.Writer is not null)

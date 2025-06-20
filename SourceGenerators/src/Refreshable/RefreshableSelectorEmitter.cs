@@ -15,20 +15,15 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             _token = token;
         }
 
-        const string FlowExceptions = "global::CommunityToolkit.Mvvm.Input.AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler";
-        const string AllowConcurrent = "global::CommunityToolkit.Mvvm.Input.AsyncRelayCommandOptions.AllowConcurrentExecutions";
-        const string AllowAndFlow = AllowConcurrent + " | " + FlowExceptions;
-
-
         internal void EmitProperty(RefreshableSelectorData data, Action<Diagnostic> reportDiagnostic)
         {
             _token.ThrowIfCancellationRequested();
 
             // get method info
-            var symbol = data.TargetSymbol;
+            if (data.TargetSymbol is not IMethodSymbol symbol) return;
 
             // get strings
-            if (!MvvmDiagnostics.TryCleanName(data.TargetSymbol, data.PropertySuffix, out string fieldName, out string PropName, out var nameDiag))
+            if (MvvmDiagnostics.TryGetPropertyName(symbol, data.PropertySuffix, out string fieldName, out string PropName) is Diagnostic nameDiag)
             {
                 reportDiagnostic(nameDiag);
                 return;
@@ -55,9 +50,9 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                 .WriteLine("/// <summary> Generated <see cref=\"{0}\"/> for <see cref=\"{1}\"/> </summary>", propType, data.TargetSymbol.Name)
                 .WriteLine(SourceWriter.GeneratedCodeAttribute)
                 .WriteLine(SourceWriter.ExcludeFromCodeCoverage)
-                .WriteLine("public {0} {1} => {2} ??= new {3}(", propType, PropName, fieldName, propType);
+                .WriteLine("public {0} {1} => {2} ??= new {3}", propType, PropName, fieldName, propType)
+                .BeginBlock("", '(', true);
 
-            Writer.Indentation++;
             Writer.WriteIndent().Write("refresh: {0}", symbol.Name);
             if (data.CanRefresh.IsNotEmpty())
             {
@@ -65,13 +60,15 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             }
             Writer.Write(',').WriteLine().WriteIndent().Write("refreshOnFirstCollectionRequest: {0}", data.RefreshOnInitialize ? "true" : "false");
 
-            // get OnItemSourceChanged and OnSelectionChanged handlers
-            OnDataChangedAttributeData.GetSelectionChangedData(symbol).GenerateAnonymousMethod(Writer, reportDiagnostic, "onSelectionChanged");
-            OnDataChangedAttributeData.GetItemSourceChanged(symbol).GenerateAnonymousMethod(Writer, reportDiagnostic, "onItemSourceChanged");
+            Writer.WriteOnCollectionChanged(OnDataChangedAttributeData.GetCollectionChangedData(symbol), reportDiagnostic, _token);
+
+            Writer.WriteOnSelectionChanged(
+                OnDataChangedAttributeData.GetSelectionChangedData(symbol),
+                TriggersRefreshData.GetAllSelectorTargets(symbol, _token),
+                reportDiagnostic, _token);
 
             // close out the constructor
-            Writer.Indentation--;
-            Writer.Write(");");
+            Writer.EndBlock(true, true);
         }
     }
 }
