@@ -1,7 +1,11 @@
-﻿namespace RFBCodeWorks.Mvvm
+﻿using RFBCodeWorks.Mvvm.Primitives;
+
+namespace RFBCodeWorks.Mvvm
 {
     internal static class EventArgSingletons
     {
+        public static readonly INotifyArgs IsRefreshing = new(nameof(IsRefreshing));
+
         public static readonly INotifyArgs Text = new(nameof(Text));
         public static readonly INotifyArgs IsDropDownOpen = new(nameof(IsDropDownOpen));
         public static readonly INotifyArgs IsEditable = new(nameof(IsEditable));
@@ -18,7 +22,7 @@
         public static readonly INotifyArgs IsEnabled = new(nameof(RFBCodeWorks.Mvvm.ISelector.IsEnabled));
         public static readonly INotifyArgs IsDefaultState = new(nameof(RFBCodeWorks.Mvvm.Primitives.AbstractTwoStateButton.IsDefaultState));
 
-        public static readonly INotifyArgs ItemSourceItems = new(nameof(IItemSource.Items));
+        public static readonly INotifyArgs Items = new(nameof(IItemSource.Items));
         public static readonly INotifyArgs DisplayMemberPath = new(nameof(IItemSource.DisplayMemberPath));
 
         /// <summary> Value </summary>

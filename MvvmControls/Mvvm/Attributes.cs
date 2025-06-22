@@ -101,7 +101,7 @@ namespace RFBCodeWorks.Mvvm
     /// Can be applied to :
     /// <br/> - Methods with either <see cref="ComboBoxAttribute"/> or <see cref="ListBoxAttribute"/>
     /// </remarks>
-    [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
     public sealed class OnSelectionChangedAttribute : Attribute
     {
         /// <summary>
@@ -119,7 +119,7 @@ namespace RFBCodeWorks.Mvvm
         public string[] CommandsToNotify { get; }
 
         /// <summary>
-        /// Alternatively, name of a void method to call on selection change.
+        /// Alternatively, name of a parameterless void method to call on selection change.
         /// </summary>
         /// <remarks>
         /// </remarks>
@@ -140,7 +140,7 @@ namespace RFBCodeWorks.Mvvm
     /// Can be applied to :
     /// <br/> - Methods with either <see cref="ComboBoxAttribute"/> or <see cref="ListBoxAttribute"/>
     /// </remarks>
-    [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
     public sealed class OnCollectionChangedAttribute : Attribute
     {
         /// <summary>
@@ -150,7 +150,7 @@ namespace RFBCodeWorks.Mvvm
         public string[] CommandsToNotify { get; }
 
         /// <summary>
-        /// Alternatively, name of a void method to call on item-source change.
+        /// Alternatively, name of a parameterless void method to call on item-source change.
         /// </summary>
         public string MethodName { get; set; }
 

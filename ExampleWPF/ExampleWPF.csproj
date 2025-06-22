@@ -7,13 +7,16 @@
       <UseWPF>true</UseWPF>
       <UseWindowsForms>true</UseWindowsForms>
       <Configurations>Debug;Release;AppVeyor</Configurations>
+      
+    <UseLegacyGenerator>true</UseLegacyGenerator>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Mvvm.Dialogs\Mvvm.Dialogs.csproj" />
     <ProjectReference Include="..\MvvmControls\Mvvm.Controls.csproj" />
-      <!--Analyzer Include="..\SourceGenerators\SourceGenerators.csproj" /-->
-      <Analyzer Include="..\SourceGenerators\bin\Debug\netstandard2.0\RFBCodeWorks.Mvvm.SourceGenerators.dll"/>
+      
+      <Analyzer Include="..\SourceGenerators\bin\Debug\311\RFBCodeWorks.Mvvm.SourceGenerators.dll" Condition="'$(UseLegacyGenerator)' == 'true'"/>
+      <Analyzer Include="..\SourceGenerators\bin\Debug\410\RFBCodeWorks.Mvvm.SourceGenerators.dll" Condition="'$(UseLegacyGenerator)' == 'false'"/>
   </ItemGroup>
 
 </Project>

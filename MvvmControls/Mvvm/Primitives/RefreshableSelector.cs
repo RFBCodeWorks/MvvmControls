@@ -95,6 +95,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         private IRelayCommand _refreshCommand;
         private ICommand _cancelRefreshCommand;
         private bool itemsInitialized;
+        private bool _isRefreshing;
         private readonly Func<bool> _canRefresh;
         private readonly Func<TList> _refresh;
         private readonly Func<Task<TList>> _refreshAsync;
@@ -105,17 +106,35 @@ namespace RFBCodeWorks.Mvvm.Primitives
         {
             get
             {
-                if (base.Items is null && !itemsInitialized)
+                if (!itemsInitialized)
                 {
-                    RefreshCommand.Execute(Items);
                     itemsInitialized = true;
+                    RefreshCommand.Execute(null);
                 }
                 return base.Items;
             }
             set
             {
                 base.Items = value;
+                IsRefreshing = false;
                 itemsInitialized = true;
+            }
+        }
+
+        /// <summary>
+        /// Set <see langword="true"/> when the refresh command is invoked and set <see langword="false"/> after the collection has been updated.
+        /// </summary>
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            private set
+            {
+                if (value != _isRefreshing)
+                {
+                    OnPropertyChanging(EventArgSingletons.IsRefreshing);
+                    _isRefreshing = value;
+                    OnPropertyChanged(EventArgSingletons.IsRefreshing);
+                }
             }
         }
 
@@ -129,11 +148,11 @@ namespace RFBCodeWorks.Mvvm.Primitives
         {
             if (_refresh is not null)
             {
-                return new RelayCommand(() => Items = _refresh(), _canRefresh);
+                return new RelayCommand(RefreshAction, _canRefresh ?? ReturnTrue);
             }
             else if (_refreshAsync is not null || _cancellableRefreshAsync is not null)
             {
-                return new AsyncRelayCommand(RefreshTask, _canRefresh);
+                return new AsyncRelayCommand(RefreshTask, _canRefresh ?? ReturnTrue);
             }
             return InactiveButton.Instance;
         }
@@ -145,11 +164,28 @@ namespace RFBCodeWorks.Mvvm.Primitives
                 return IAsyncRelayCommandExtensions.CreateCancelCommand((IAsyncRelayCommand)RefreshCommand);
         }
 
+        /// <summary> The action too provide a RelayCommand </summary>
+        private void RefreshAction()
+        {
+            if (_refresh is null) return;
+            try
+            {
+                IsRefreshing = true;
+                Items = _refresh();
+            }
+            finally
+            {
+                IsRefreshing = false;
+            }
+        }
+
+        /// <summary> This is the task to provide an AsyncRelayCommand </summary>
         private async Task RefreshTask(CancellationToken token)
         {
             if (token.IsCancellationRequested) return;
             try
             {
+                IsRefreshing = true;
                 if (_refreshAsync is not null)
                     Items = await _refreshAsync().ConfigureAwait(true);
 
@@ -157,7 +193,9 @@ namespace RFBCodeWorks.Mvvm.Primitives
                     Items = await _cancellableRefreshAsync(token).ConfigureAwait(true);
             }
             catch (OperationCanceledException) { }
+            finally { IsRefreshing = false; }
         }
+        
 
         /// <inheritdoc/>
         public void Refresh(object sender, EventArgs e) => RefreshCommand.Execute(null);
@@ -199,13 +237,9 @@ namespace RFBCodeWorks.Mvvm.Primitives
                     await _cancellableRefreshAsync(token);
                 }
             }
-            else if (_refreshAsync is not null)
+            else if (_refresh is not null && (_canRefresh??ReturnTrue).Invoke())
             {
-                Items = await _refreshAsync();
-            }
-            else if (_refresh is not null)
-            {
-                await Task.Run(() => Items = _refresh(), token);
+                await Task.Run(RefreshAction, token);
             }
         }
 

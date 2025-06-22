@@ -23,9 +23,35 @@
                     <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding DisableComboBox}"/>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="ComboBox Definition" IsEnabled="{Binding EnableComboBox.IsChecked}">
+            <GroupBox Header="Refreshable ComboBox Definitions - Source Generated" IsEnabled="{Binding EnableComboBox.IsChecked}">
                 <Grid>
+                    <Grid.Resources>
+                        <Style TargetType="ComboBox">
+                            <Setter Property="Grid.Row" Value="3"/>
+                            <Setter Property="Margin" Value="15,3,15,0"/>
+                            <Setter Property="MinWidth" Value="20"/>
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                            <Setter Property="VerticalAlignment" Value="Top"/>
+                        </Style>
+                        <Style TargetType="ListBox">
+                            <Setter Property="Grid.Row" Value="3"/>
+                            <Setter Property="Margin" Value="15,3,15,0"/>
+                            <Setter Property="MinWidth" Value="20"/>
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                            <Setter Property="VerticalAlignment" Value="Top"/>
+                            <Setter Property="MaxHeight" Value="200"/>
+                            <Setter Property="MinHeight" Value="50"/>
+                        </Style>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="Grid.Row" Value="2"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="3"/>
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </Style>
+                    </Grid.Resources>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -33,12 +59,30 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox Behaviors:ControlDefinitions.ComboBoxDefinition="{Binding ComboBoxDefinition}" Grid.ColumnSpan="2"/>
-                    <TextBlock Grid.Row="1" Text="Selected Index: " />
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding ComboBoxDefinition.SelectedIndex}" />
-                    <TextBlock Grid.Row="2" Text="Selected Item: " />
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ComboBoxDefinition.SelectedItem}" />
+                    <!-- Headers -->
+                    <TextBlock Grid.Row="1" Grid.Column="1"  Text="First Digit : " />
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="Second Digit : " />
+                    <TextBlock Grid.Row="1" Grid.Column="3" Text="Third Digit : " />
+                    <TextBlock Grid.Row="1" Grid.Column="4" Text="Fourth Digit : " />
+                    <!-- Checkboxes for isRefreshing -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Is Refreshing : "/>
+                    <CheckBox Grid.Column="1" IsChecked="{Binding FirstDigitComboBox.IsRefreshing, Mode=OneWay}"/>
+                    <CheckBox Grid.Column="2" IsChecked="{Binding SecondDigitComboBox.IsRefreshing, Mode=OneWay}"/>
+                    <CheckBox Grid.Column="3" IsChecked="{Binding ThirdDigitListBox.IsRefreshing, Mode=OneWay}"/>
+                    <CheckBox Grid.Column="4" IsChecked="{Binding FourthDigitListBox.IsRefreshing, Mode=OneWay}"/>
+                    <Button Grid.Row="3" HorizontalContentAlignment="Center" Content="Refresh&#xA;  First&#xA; Digit" Command="{Binding FirstDigitComboBox.RefreshCommand}"/>
+                    <!-- ComboBoxes -->
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding FirstDigitComboBox.Items}" SelectedItem="{Binding FirstDigitComboBox.SelectedItem}" />
+                    <ComboBox Grid.Column="2" Behaviors:ControlDefinitions.ComboBoxDefinition="{Binding SecondDigitComboBox}" />
+                    <ListBox Grid.Column="3" Behaviors:ControlDefinitions.ListBoxDefinition="{Binding ThirdDigitListBox}" />
+                    <ListBox Grid.Column="4" Behaviors:ControlDefinitions.ListBoxDefinition="{Binding FourthDigitListBox}" />
+                    <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Text="Concatenated Value : "/>
+                    <TextBlock Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="3" Text="{Binding ConcatenatedText}"/>
                 </Grid>
             </GroupBox>
             <GroupBox Header="Refreshable ComboBox">

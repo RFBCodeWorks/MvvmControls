@@ -89,19 +89,6 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <remarks>If the collection type implements INotifyCollectionChanged, this event will fire when the collection changes, and the event args will be <see cref="NotifyCollectionChangedEventArgs"/></remarks>
         public event EventHandler ItemSourceChanged;
 
-        /// <summary> Raises the OnItemSourceChanged event - Does not differentiate between old and new items </summary>
-        protected void OnItemSourceChanged()
-        {
-            OnItemSourceChanged(new());
-            _onCollectionChanged?.Invoke();
-        }
-
-        /// <summary> Raises the SelectionChanged event </summary>
-        protected virtual void OnItemSourceChanged(EventArgs e)
-        {
-            ItemSourceChanged?.Invoke(this, e);
-        }
-
         /// <summary>
         /// Set the DisplayMemberPath of the control
         /// </summary>
@@ -122,13 +109,34 @@ namespace RFBCodeWorks.Mvvm.Primitives
             {
                 if (!EqualityComparer<TList>.Default.Equals(_items, value))
                 {
-                    UnSubscribe(_items);
-                    OnPropertyChanging(EventArgSingletons.ItemSourceItems);
+                    OnPropertyChanging(EventArgSingletons.Items);
+
+                    // unsubscribe from the old
+                    if (_items is INotifyCollectionChanged coll)
+                    {
+                        coll.CollectionChanged -= RaiseItemSourceChanged;
+                    }
+
+                    OnItemsChanging();
+
                     _items = value;
-                    _onCollectionChanged?.Invoke();
-                    Subscribe(value);
+
+                    // subscribe to the new
+                    if (value is INotifyCollectionChanged newColl)
+                    {
+                        newColl.CollectionChanged += RaiseItemSourceChanged;
+
+                    }
+
+                    // standard notifications
                     OnItemSourceChanged(EventArgs.Empty);
-                    OnPropertyChanged(EventArgSingletons.ItemSourceItems);
+                    OnPropertyChanged(EventArgSingletons.Items);
+
+                    // invoke derived class requirements
+                    OnItemsChanged();
+
+                    // Invoke the optional action  passed to the constructor 
+                    _onCollectionChanged?.Invoke();
                 }
             }
         }
@@ -136,21 +144,23 @@ namespace RFBCodeWorks.Mvvm.Primitives
         IList IItemSource.Items { get => (IList)Items; }
         IList<T> IItemSource<T>.Items { get => Items; }
 
-        private void UnSubscribe(TList itemSource)
-        {
-            if (itemSource is INotifyCollectionChanged coll)
-                coll.CollectionChanged -= RaiseItemSourceChanged;
-        }
+        /// <summary> method called after raising the <see cref="System.ComponentModel.INotifyPropertyChanging.PropertyChanging"/> event, but before the change takes place. </summary>
+        /// <remarks>Access the current collection via <see cref="Items"/></remarks>
+        protected virtual void OnItemsChanging() { }
 
-        private void Subscribe(TList itemSource)
-        {
-            if (itemSource is INotifyCollectionChanged coll)
-                coll.CollectionChanged += RaiseItemSourceChanged;
-        }
+        /// <summary> method called after the collection has been updated, but before the <see cref="System.ComponentModel.INotifyPropertyChanged.PropertyChanged"/> event is raised. </summary>
+        /// <remarks>Access the current collection via <see cref="Items"/></remarks>
+        protected virtual void OnItemsChanged() { }
 
         private void RaiseItemSourceChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             OnItemSourceChanged(e);
+        }
+
+        /// <summary> Raises the SelectionChanged event </summary>
+        protected virtual void OnItemSourceChanged(EventArgs e)
+        {
+            ItemSourceChanged?.Invoke(this, e);
         }
     }
 }

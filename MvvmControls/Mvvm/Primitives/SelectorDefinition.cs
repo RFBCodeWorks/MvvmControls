@@ -37,7 +37,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         }
 
         private readonly Action _onSelectionChanged;
-        private int SelectedIndexField = -1;
+        private int _selectedIndex = -1;
         private bool UpdatingSelectedItem;
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// The Currently Selected item within the user control - May be null!
         /// </summary>
         /// <remarks>
-        /// Binding for the 'SelectedItem' property of controls such as ComboBox or ListBox
+        /// Binding for the 'item' property of controls such as ComboBox or ListBox
         /// </remarks>
         [ObservableProperty]
         private T _selectedItem;
@@ -72,14 +72,14 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// If bound to the control, the control will set this property according to the property defined by SelectedValuePath
         /// </summary>
         /// <remarks>
-        /// Example: If the SelectedItem = Person(Joe, Schmoe), and SelectedValuePath = "FirstName", then SelectedValue = "Joe"
+        /// Example: If the item = Person(Joe, Schmoe), and SelectedValuePath = "FirstName", then SelectedValue = "Joe"
         /// </remarks>
 
         [ObservableProperty]
         private TSelectedValue _selectedValue;
 
         /// <summary>
-        /// Enable/Disable auto-updating of SelectedItem and SelectedIndex if bound by the ItemSource binding definition attached property
+        /// Enable/Disable auto-updating of item and SelectedIndex if bound by the ItemSource binding definition attached property
         /// </summary>
         internal bool IsBoundByBehavior { get; set; }
 
@@ -91,76 +91,101 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// </remarks>
         public int SelectedIndex
         {
-            get { return SelectedIndexField; }
+            get { return _selectedIndex; }
             set
             {
-                if (SelectedIndexField == value)
+                if (_selectedIndex == value)
                 {
                     return; // no change;
                 }
-                else if (UpdatingSelectedItem) // value is retrieved while SelectedItem is being updated - this value should always be valid, and is the expected way for this to be set.
+                else if (UpdatingSelectedItem) // value is retrieved while item is being updated - this value should always be valid, and is the expected way for this to be set.
                 {
                     OnPropertyChanging(EventArgSingletons.SelectedIndex);
-                    SelectedIndexField = value;
+                    _selectedIndex = value;
                     OnPropertyChanged(EventArgSingletons.SelectedIndex);
                 }
-                else if (Items is null || !Items.Any())
+                else if (value == -1) // deselect the item
+                {
+                    // This may be a bad choice if the <TValue> is a struct, and the default resides within the list. Ex: 5,4,3,2,1,0 -> index 5 will become selected.
+                    // If this is an issue, a consumer can always use TValue = int? in place of it, allowing for actual null values.
+                    SelectedItem = default;
+                }
+                else if (Items is null || Items.Count == 0)
                 {
                     // No items in collection
-                    if (value != -1) throw new ArgumentOutOfRangeException($"Cannot set the index of a selector when the collection has no items", nameof(SelectedIndex));
+                    throw new ArgumentOutOfRangeException($"Cannot set the index of a selector when the collection has no items", nameof(SelectedIndex));
+                }
+                else if (value < Items.Count)
+                {
+                    SelectedItem = Items[value];
                 }
                 else
                 {
-                    //collection has items - check valid index
-                    if (value == -1)
-                    {
-                        // This may be a bad choice if the <TValue> is a struct, and the default resides within the list. Ex: 5,4,3,2,1,0 -> index 5 will become selected.
-                        // If this is an issue, a consumer can always use TValue = int? in place of it, allowing for actual null values.
-                        SelectedItem = default; 
-                    }
-                    else if (value < Items.Count)
-                    {
-                        SelectedItem = Items[value];
-                    }
-                    else
-                    {
-                        throw new ArgumentOutOfRangeException($"SelectedIndex property was set to a value outside the valid range (expected value between -1 and number of items in the collection ( currently: {Items.Count} )", nameof(SelectedIndex));
-                    }
+                    throw new ArgumentOutOfRangeException($"SelectedIndex property was set to a value outside the valid range (expected value between -1 and number of items in the collection ( currently: {Items.Count} )", nameof(SelectedIndex));
                 }
             }
+        }
 
+        /// <inheritdoc/>
+        protected override void OnItemsChanging()
+        {
+            OnPropertyChanging(EventArgSingletons.SelectedIndex);
+            OnPropertyChanging(EventArgSingletons.SelectedItem);
+            OnPropertyChanging(EventArgSingletons.SelectedValue);
+            base.OnItemsChanging();
+        }
+
+        /// <inheritdoc/>
+        protected override void OnItemsChanged()
+        {
+            SelectedIndex = -1;
+            OnPropertyChanged(EventArgSingletons.SelectedIndex);
+            OnPropertyChanged(EventArgSingletons.SelectedItem);
+            OnPropertyChanged(EventArgSingletons.SelectedValue);
+            base.OnItemsChanged();
         }
 
         partial void OnSelectedItemChanging(T value)
         {
             UpdatingSelectedItem = true;
             SelectedIndex = Items.IndexOf(value);
+            OnPropertyChanging(EventArgSingletons.SelectedValue);
             UpdatingSelectedItem = false;
         }
 
         partial void OnSelectedItemChanged(T? oldValue, T newValue)
         {
-            OnSelectedItemChanged(new PropertyOfTypeChangedEventArgs<T>(oldValue, newValue, nameof(SelectedItem)));
-        }
+            // invoke the events if needed
+            if (SelectedItemChanged != null || ISelectorEvent != null)
+            {
+                var e = new PropertyOfTypeChangedEventArgs<T>(oldValue, newValue, nameof(SelectedItem));
+                SelectedItemChanged?.Invoke(this, e);
+                ISelectorEvent?.Invoke(this, e);
+            }
 
-        /// <summary> Raises the SelectionChanged event </summary>
-        protected virtual void OnSelectedItemChanged(PropertyOfTypeChangedEventArgs<T> e)
-        {
-            SelectedItemChanged?.Invoke(this, e);
-            ISelectorEvent?.Invoke(this, e);
+            // notify the SelectedValue has changed
+            SelectedValue = GetSelectedValue(newValue, SelectedValuePath);
+            OnPropertyChanged(EventArgSingletons.SelectedValue);
+
+            // invoke the constructor supplied action
             _onSelectionChanged?.Invoke();
         }
 
         partial void OnSelectedValueChanged(TSelectedValue? oldValue, TSelectedValue newValue)
         {
-            OnSelectedValueChanged(new PropertyOfTypeChangedEventArgs<TSelectedValue>(oldValue, newValue, nameof(SelectedItem)));
+            if (SelectedValueChanged != null)
+            {
+                SelectedValueChanged?.Invoke(this, new PropertyOfTypeChangedEventArgs<TSelectedValue>(oldValue, newValue, nameof(SelectedItem)));
+            }
         }
 
-        /// <summary> Raises the SelectionChanged event </summary>
-        protected virtual void OnSelectedValueChanged(PropertyOfTypeChangedEventArgs<TSelectedValue> e)
+        private static TSelectedValue GetSelectedValue(T item, string selectedValuePath)
         {
-            SelectedValueChanged?.Invoke(this, e);
-            OnPropertyChanged(e);
+            if (item is null) return default;
+            if (string.IsNullOrEmpty(selectedValuePath) && item is TSelectedValue ts) return ts;
+            var property = item.GetType().GetProperty(selectedValuePath);
+            if (property is TSelectedValue value) return value;
+            return default;
         }
 
         /// <summary> 
