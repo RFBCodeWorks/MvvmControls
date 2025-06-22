@@ -53,7 +53,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
             new DiagnosticDescriptor(
                     id: "RFB_MVVM_005",
                     title: "Invalid Arguments",
-                    messageFormat: "The method {0} cannot be used to generate a {1} property. Return type must implement IList<T> Task<IList<T>>, or ValueTask<IList<T>>",
+                    messageFormat: "The method {0} cannot be used to generate a {1} property. Return type must implement IList<T>, Task<IList<T>>, or ValueTask<IList<T>>",
                     category: "SourceGenerator",
                     DiagnosticSeverity.Error,
                     isEnabledByDefault: true);
@@ -94,11 +94,6 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
             defaultSeverity: DiagnosticSeverity.Warning,
             isEnabledByDefault: true
         );
-
-
-        public static bool IsNotEmpty(this string text) => !string.IsNullOrWhiteSpace(text);
-
-
 
         /// <summary>
         /// Tries to clean a symbol's name by stripping known prefixes/suffixes

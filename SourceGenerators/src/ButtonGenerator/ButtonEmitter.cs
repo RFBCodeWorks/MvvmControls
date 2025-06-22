@@ -64,12 +64,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
             Writer
                 .WriteLine("/// <summary> backing field for <see cref=\"{0}\" /> </summary>", PropName)
                 .WriteLine(SourceWriter.GeneratedCodeAttribute)
-                .WriteLine(SourceWriter.ExcludeFromCodeCoverage)
                 .WriteLine("private {0} {1};", buttonType, fieldName)
                 .WriteLine()
                 .WriteLine("/// <summary> Generated <see cref=\"{0}\"/> for <see cref=\"{1}\"/> </summary>", buttonType, data.TargetSymbol.Name)
-                .WriteLine(SourceWriter.GeneratedCodeAttribute)
-                .WriteLine(SourceWriter.ExcludeFromCodeCoverage)
+                .WriteAttributes(Attributes.GeneratedCodeAttribute | Attributes.ExcludeFromCodeCoverage)
                 .WriteIndent().Write("public {0} {1} => {2} ??= new {3}(", buttonType, PropName, fieldName, buttonType);
             
             if (isAsync)

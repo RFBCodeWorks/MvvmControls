@@ -12,7 +12,7 @@ using RFBCodeWorks.Mvvm.SourceGenerators.src;
 namespace RFBCodeWorks.Mvvm.SourceGenerators
 {
     [Generator]
-    internal class ButtonGeneratorRoslyn311 : ISourceGenerator
+    public class ButtonGeneratorRoslyn311 : ISourceGenerator
     {
         private class ButtonSyntaxReceiver : ContextReceiver<ButtonAttributeData>
         {
