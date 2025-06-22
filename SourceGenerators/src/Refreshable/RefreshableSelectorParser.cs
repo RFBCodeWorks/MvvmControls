@@ -14,8 +14,8 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         public const string QualifiedName_ComboBox = "RFBCodeWorks.Mvvm." + nameof(RFBCodeWorks.Mvvm.ComboBoxAttribute);
         public const string QualifiedName_ListBox = "RFBCodeWorks.Mvvm." + nameof(RFBCodeWorks.Mvvm.ListBoxAttribute);
 
-        private const string GlobalQualifiedComboBox = "global::" + QualifiedName_ComboBox;
-        private const string GlobalQualifiedListBox = "global::" + QualifiedName_ListBox;
+        private const string GlobalQualifiedComboBox = "global::RFBCodeWorks.Mvvm.RefreshableComboBoxDefinition";
+        private const string GlobalQualifiedListBox = "global::RFBCodeWorks.Mvvm.RefreshableListBoxDefinition";
 
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter")]
@@ -24,56 +24,32 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             return node is MethodDeclarationSyntax method && method.AttributeLists.Count > 0;
         }
 
-#if ROSLYN_4_0_OR_GREATER
-        public static IncrementalValuesProvider<GroupedCandidates<RefreshableSelectorData>> ForMethodsWithComboBoxAttribute(this IncrementalGeneratorInitializationContext context)
+        public static DataOrDiagnostics<RefreshableSelectorData> GetInfoOrDiagnostic(GeneratorAttributeSyntaxContext context, CancellationToken token)
         {
-            return GetData(context, QualifiedName_ComboBox);
-        }
-        public static IncrementalValuesProvider<GroupedCandidates<RefreshableSelectorData>> ForMethodsWithListBoxAttribute(this IncrementalGeneratorInitializationContext context)
-        {
-            return GetData(context, QualifiedName_ListBox);
+            return GetInfoOrDiagnostic(context.TargetNode, context.SemanticModel, context.TargetSymbol, context.Attributes.First(), token);
         }
 
-        private static IncrementalValuesProvider<GroupedCandidates<RefreshableSelectorData>> GetData(IncrementalGeneratorInitializationContext context, string qualifiedName)
-        {
-            var candidatesWithDiagnostics = context.SyntaxProvider.ForAttributeWithMetadataName(
-                fullyQualifiedMetadataName: QualifiedName_ComboBox,
-                predicate: RefreshableSelectorParser.NodeSelector,
-                transform: static (context, token) => RefreshableSelectorParser.GetInfoOrDiagnostic(context.TargetNode, context.SemanticModel, context.TargetSymbol, context.Attributes.First(), token)
-                );
-
-            context.ReportDiagnostics(candidatesWithDiagnostics.Where(static c => c.IsErrored).Select((c, _) => c.Diagnostics));
-
-            return candidatesWithDiagnostics
-                .Where(static c => c.IsValid)
-                .Select(static (c, _) => c.Data)
-                .GroupBy(static c => c.TargetSymbol.ContainingType, SymbolEqualityComparer.Default) // group by containing class
-                .Select(static (c, _) => new GroupedCandidates<RefreshableSelectorData>(c.Key as INamedTypeSymbol, c.Values))
-               ;
-        }
-#endif
-
-        public static DataOrDiagnostics<RefreshableSelectorData> GetInfoOrDiagnostic(SyntaxNode node, SemanticModel semanticModel, ISymbol symbol, AttributeData attributeData, CancellationToken token)
-        {
-            if (symbol is not IMethodSymbol method) return default;
-            if (MvvmDiagnostics.IsNotPartialClass(node, token, out var diagnostic))
+        public static DataOrDiagnostics<RefreshableSelectorData> GetInfoOrDiagnostic(SyntaxNode TargetNode, SemanticModel semanticModel, ISymbol TargetSymbol, AttributeData attributeData, CancellationToken token)
+        { 
+            if (TargetSymbol is not IMethodSymbol symbol) return default;
+            if (MvvmDiagnostics.IsNotPartialClass(TargetNode, token, out var diagnostic))
             {
                 return new(diagnostic);
             }
 
             if (
-                method.ReturnsVoid
-                || (method.Parameters.Length > 0 && method.Parameters[0].Type.Name != nameof(CancellationToken))
-                || MethodReturnTypeImplementsIList(method, token) is false
+                symbol.ReturnsVoid
+                || (symbol.Parameters.Length > 0 && symbol.Parameters[0].Type.Name != nameof(CancellationToken))
+                || MethodReturnTypeImplementsIList(symbol, token) is false
                 )
             {
-                return new(Diagnostic.Create(MvvmDiagnostics.MethodReturnTypeDoesNotImplementIList, node.GetLocation(), symbol.ToDisplayString()));
+                return new(Diagnostic.Create(MvvmDiagnostics.MethodReturnTypeDoesNotImplementIList, TargetNode.GetLocation(), symbol.ToDisplayString()));
             }
 
             // get the type of collection
-            if (!TryGetCollectionType(method, out string collectionType, out string itemType))
+            if (!TryGetCollectionType(symbol, out string collectionType, out string itemType))
             {
-                return new(Diagnostic.Create(MvvmDiagnostics.UnableToDetermineCollectionType, node.GetLocation(), symbol.ToDisplayString()));
+                return new(Diagnostic.Create(MvvmDiagnostics.UnableToDetermineCollectionType, TargetNode.GetLocation(), symbol.ToDisplayString()));
             }
 
             // get the selectedValue type
@@ -88,10 +64,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
 
             if (typeToGen == "")
             {
-                return new(Diagnostic.Create(MvvmDiagnostics.InvalidNameDescriptor, node.GetLocation(), symbol.ToDisplayString()));
+                return new(Diagnostic.Create(MvvmDiagnostics.InvalidNameDescriptor, TargetNode.GetLocation(), symbol.ToDisplayString()));
             }
 
-            return new(new RefreshableSelectorData(typeToGen, suffix, node as MethodDeclarationSyntax, symbol as IMethodSymbol, semanticModel, attributeData, itemType, collectionType, sv));
+            return new(new RefreshableSelectorData(typeToGen, suffix, TargetNode as MethodDeclarationSyntax, symbol, semanticModel, attributeData, itemType, collectionType, sv));
         }
 
         /// <summary>
@@ -112,8 +88,13 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             return "object";
         }
 
+        private static SymbolDisplayFormat CollectionTypeFormat = SymbolDisplayFormat.FullyQualifiedFormat
+            .WithMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.UseSpecialTypes)
+            .WithLocalOptions(SymbolDisplayLocalOptions.IncludeType)
+            .WithMemberOptions(SymbolDisplayMemberOptions.IncludeType);
+
         /// <summary>
-        /// Evaluates the method symbol's return type and extracts:
+        /// Evaluates the TargetSymbol TargetSymbol's return type and extracts:
         /// - collectionType: fully qualified collection type name (unwrapped Task if present)
         /// - itemType:   fully qualified element/item type name
         /// - valueType:  fully qualified original return type name
@@ -135,16 +116,16 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             // Array type
             if (returnType is IArrayTypeSymbol arrayType)
             {
-                collectionType = arrayType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-                itemType = arrayType.ElementType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+                collectionType = arrayType.ToDisplayString(CollectionTypeFormat);
+                itemType = arrayType.ElementType.ToDisplayString(CollectionTypeFormat);
                 return true;
             }
 
             // Generic collection type (e.g., IList<T>, IReadOnlyList<T>)
             if (returnType is INamedTypeSymbol genType && genType.IsGenericType)
             {
-                collectionType = genType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-                itemType = genType.TypeArguments[0].ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+                collectionType = genType.ToDisplayString(CollectionTypeFormat);
+                itemType = genType.TypeArguments[0].ToDisplayString(CollectionTypeFormat);
                 return true;
             }
 
@@ -154,17 +135,32 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             return false;
         }
 
+
         /// <summary>
-        /// Determines whether the given method symbol has a valid return type:
+        /// Determines whether the given TargetSymbol TargetSymbol has a valid return type:
         /// - any type implementing IList<T>
         /// - a Task<T> where T implements IList<X>
         /// </summary>
         private static bool MethodReturnTypeImplementsIList(IMethodSymbol methodSymbol, CancellationToken token)
         {
+            //GeneratorExtensions.DebuggerBreak();
             var returnType = methodSymbol.ReturnType;
+
+            // Unwrap Task<T> if necessary
+            if (returnType is INamedTypeSymbol named
+                && named.IsGenericType
+                && named.Name == nameof(Task)
+                && named.ContainingNamespace.ToDisplayString() == "System.Threading.Tasks")
+            {
+                returnType = named.TypeArguments[0];
+            }
+
+            if (returnType is IArrayTypeSymbol) 
+                return true;
+
             if (returnType is not INamedTypeSymbol namedType)
                 return false;
-
+                        
             // Direct IList<T> or implementing IList<T>
             if (IsOrImplementsIList(namedType, token))
                 return true;
@@ -182,8 +178,15 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             return false;
         }
 
+        const SpecialType ValidTypes = SpecialType.System_Array | SpecialType.System_Collections_Generic_IList_T;
+
         private static bool IsOrImplementsIList(INamedTypeSymbol typeSymbol, CancellationToken token)
         {
+
+            if (typeSymbol.SpecialType.HasFlag(SpecialType.System_Array) || typeSymbol.SpecialType.HasFlag(SpecialType.System_Collections_Generic_IList_T))
+            {
+                return true;
+            }
             if (IsIList(typeSymbol))
             {
                 return true;
@@ -201,6 +204,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
 
         private static bool IsIList(INamedTypeSymbol typeSymbol)
         {
+            if (typeSymbol.SpecialType.HasFlag(SpecialType.System_Collections_Generic_IList_T))
+            {
+                return true;
+            }
             return typeSymbol.IsGenericType
                     && typeSymbol.TypeParameters.Length == 1
                     && typeSymbol.Name.StartsWith("IList")

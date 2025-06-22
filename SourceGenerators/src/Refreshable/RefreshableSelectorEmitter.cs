@@ -44,12 +44,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             Writer
                 .WriteLine("/// <summary> backing field for <see cref=\"{0}\" /> </summary>", PropName)
                 .WriteLine(SourceWriter.GeneratedCodeAttribute)
-                .WriteLine(SourceWriter.ExcludeFromCodeCoverage)
                 .WriteLine("private {0} {1};", propType, fieldName)
                 .WriteLine()
-                .WriteLine("/// <summary> Generated <see cref=\"{0}\"/> for <see cref=\"{1}\"/> </summary>", propType, data.TargetSymbol.Name)
-                .WriteLine(SourceWriter.GeneratedCodeAttribute)
-                .WriteLine(SourceWriter.ExcludeFromCodeCoverage)
+                .WriteLine("/// <summary> Generated <see cref=\"{0}\"/> for <see cref=\"{1}\"/> </summary>", propType.SanitizeForXmlComment(), data.TargetSymbol.Name)
+                .WriteAttributes(Attributes.GeneratedCodeAttribute | Attributes.ExcludeFromCodeCoverage)
                 .WriteLine("public {0} {1} => {2} ??= new {3}", propType, PropName, fieldName, propType)
                 .BeginBlock("", '(', true);
 
@@ -64,7 +62,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
 
             Writer.WriteOnSelectionChanged(
                 OnDataChangedAttributeData.GetSelectionChangedData(symbol),
-                TriggersRefreshData.GetAllSelectorTargets(symbol, _token),
+                TriggersRefreshParser.GetAllSelectorTargets(symbol, _token),
                 reportDiagnostic, _token);
 
             // close out the constructor
