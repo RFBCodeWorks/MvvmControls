@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <!-- Set the SDK output paths -->
+  <PropertyGroup>
+    <AnalyzerVer>$(AnalyzerRoslynVersion.Replace(".","").Trim())</AnalyzerVer>
+    <IOP>..\obj\$(AnalyzerVer)\</IOP>
+    <OP>..\bin\$(Configuration)\$(AnalyzerVer)\</OP>
+    <MSBuildProjectExtensionsPath>$(IOP)</MSBuildProjectExtensionsPath>
+  </PropertyGroup>
+  
+  <!-- Imnport the SDK -->
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+  <!-- Finalize any file movements -->
+  <PropertyGroup>
+    
+    <BaseIntermediateOutputPath></BaseIntermediateOutputPath>
+    <IntermediateOutputPath>$(IOP)</IntermediateOutputPath>
+
+    
+    <BaseOutputPath>$(OP)</BaseOutputPath>
+    <OutputPath>$(OP)</OutputPath>
+    <OutputPath Condition="'$(Configuration)' != ''">$(OP)</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  
+  <!-- Remove any unwanted files -->
+  <ItemGroup>
+    <None Remove="*.csproj" />
+    <Compile Remove="..\src\Directory.Build.props" />
+    <Compile Remove="..\src\Directory.Build.targets" />
+  </ItemGroup>
+
+  <!-- Add any required files -->
+  <ItemGroup>
+    <None Include="..\src\Directory.Build.props" />
+    <None Include="..\src\Directory.Build.targets" />
+    <Compile Include="..\..\MvvmControls\Mvvm\Attributes.cs" />
+  </ItemGroup>
+
+  <!-- Misc. Properties -->
+  <PropertyGroup>
+    <DefineConstants>GENERATORS;$(DefineConstants);</DefineConstants>
+  </PropertyGroup>
+  
+</Project>

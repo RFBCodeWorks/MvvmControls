@@ -1,0 +1,23 @@
+<Project>
+  
+  <PropertyGroup>
+    <!-- Set the base output path -->
+    <BaseOutputPath>..\bin\</BaseOutputPath>
+    <BaseIntermediateOutputPath>..\obj\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version>1.0.0.2</Version>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>RFBCodeWorks.Mvvm.SourceGenerators</AssemblyName>
+    <RootNamespace>RFBCodeWorks.Mvvm.SourceGenerators</RootNamespace>
+    <LangVersion>10</LangVersion>
+
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <FlagNetStandard1XDependencies>false</FlagNetStandard1XDependencies>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <AnalyzerLanguage>cs</AnalyzerLanguage>
+  </PropertyGroup>
+
+</Project>
