@@ -1,4 +1,7 @@
 ﻿[*.cs]
 
 # IDE0022: Use block body for methods
-csharp_style_expression_bodied_methods = when_on_single_line
+csharp_style_expression_bodied_methods = when_on_single_line:silent
+
+# analyzer diagnostic tracking
+dotnet_analyzer_diagnostic.category-MicrosoftCodeAnalysisReleaseTracking.severity = none
