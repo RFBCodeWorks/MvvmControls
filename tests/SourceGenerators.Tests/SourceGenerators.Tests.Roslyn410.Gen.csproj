@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup Label="AnalyzerProps">
+      <RoslynTarget>4.10</RoslynTarget>
+      <UniqueDirName>$(RoslynTarget)\Gen</UniqueDirName>
+      <TargetFrameworks>net48;net8.0-Windows</TargetFrameworks>
+  </PropertyGroup>
+
+  <!-- Move the ..\obj directory then explicitly import the SDK -->
+  <Import Project=".\SourceGenerators.ImportSdk.Gen.targets" />
+  <!-- -->
+
+  <ItemGroup>
+    <Compile Remove=".\**\*Roslyn4*.cs" />
+  </ItemGroup>
+
+  <!-- Explicitly import the Sdk.targets  -->
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+</Project>

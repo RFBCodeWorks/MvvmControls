@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+	<!-- Only sign and pack in release mode and if 'PackingEnabled' set 'true' -->
+	
+	<PropertyGroup Condition="'$(PackingEnabled)' == 'true'">
+		<SignAssembly>True</SignAssembly>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<DocumentationFile>$(OutputPath)/$(AssemblyName).xml</DocumentationFile>
+		
+		<PackageId>$(AssemblyName)</PackageId>
+        <Product>$(AssemblyName)</Product>
+		<PackageOutputPath>..\..\_OutputNuget\</PackageOutputPath>
+	</PropertyGroup>
+	
+
+</Project>

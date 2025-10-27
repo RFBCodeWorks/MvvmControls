@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <!-- To Do : swap test platforms - unit tests require [STAthread] if run in .net, which is not currently supported -->
+        <TargetFrameworks>
+            net472;
+        </TargetFrameworks>
+
+        <RootNamespace>RFBCodeWorks.Mvvm.Tests</RootNamespace>
+        <LangVersion>9.0</LangVersion>
+        <IsPackable>false</IsPackable>
+        <Configurations>Debug;Release;AppVeyor</Configurations>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'AppVeyor'">
+        <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\..\MvvmControls.snk</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+        <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
+        <PackageReference Include="MSTest.TestFramework" Version="2.2.3" />
+        <PackageReference Include="coverlet.collector" Version="3.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Mvvm.Controls\Mvvm.Controls.csproj" />
+    </ItemGroup>
+
+</Project>

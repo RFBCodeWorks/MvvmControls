@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+    <!-- Set the Version Information -->
+    <PropertyGroup>
+        <Version>1.0.0.3</Version>
+    </PropertyGroup>
+    
+    <!-- Set the SDK output paths -->
+    <PropertyGroup>
+        <AnalyzerVer>$(AnalyzerRoslynVersion.Replace(".","").Trim())</AnalyzerVer>
+        <IOP>.\.obj\$(AnalyzerVer)\</IOP>
+        <OP>.\.bin\$(Configuration)\$(AnalyzerVer)\</OP>
+        <MSBuildProjectExtensionsPath>$(IOP)</MSBuildProjectExtensionsPath>
+        <BaseIntermediateOutputPath>$(IOP)</BaseIntermediateOutputPath>
+        <BaseOutputPath>$(OP)</BaseOutputPath>
+    </PropertyGroup>
+
+    <!-- Import the SDK -->
+    <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+	<!-- Source Generator compile props -->
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<AssemblyName>RFBCodeWorks.Mvvm.SourceGenerators</AssemblyName>
+		<RootNamespace>RFBCodeWorks.Mvvm.SourceGenerators</RootNamespace>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<FlagNetStandard1XDependencies>false</FlagNetStandard1XDependencies>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+		<AnalyzerLanguage>cs</AnalyzerLanguage>
+	</PropertyGroup>
+
+    <!-- Finalize any file movements -->
+    <PropertyGroup>
+        <IntermediateOutputPath>$(IOP)</IntermediateOutputPath>
+        <OutputPath>$(OP)</OutputPath>
+        <OutputPath Condition="'$(Configuration)' != ''">$(OP)</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+
+    <!-- Remove any unwanted files -->
+    <ItemGroup>
+        <None Remove="*.csproj" />
+        <None Remove="*.zip" />
+        <Compile Remove=".\src\Directory.Build.props" />
+        <Compile Remove=".\src\Directory.Build.targets" />
+    </ItemGroup>
+
+    <!-- Add any required files -->
+    <ItemGroup>
+        <Compile Include="..\Mvvm.Controls\Mvvm\Attributes.cs" />
+    </ItemGroup>
+
+    <!-- Misc. Properties -->
+    <PropertyGroup>
+		<PackingEnabled>false</PackingEnabled>
+        <DefineConstants>GENERATORS;$(DefineConstants);</DefineConstants>
+    </PropertyGroup>
+
+</Project>

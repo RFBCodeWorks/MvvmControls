@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+   <!-- Import the SDK and set file paths -->
+  <Import Project=".\SourceGenerators.Tests.Common.targets" />
+  
+  <!-- Project Properties -->
+  <PropertyGroup>
+	<RootNamespace>RFBCodeWorks.Mvvm.SourceGenerators.Tests</RootNamespace>
+	<AssemblyName>RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen</AssemblyName>
+  </PropertyGroup>
+  
+  <!-- Add any required files -->
+  <ItemGroup>
+	<Compile Include=".\Gen\**" />
+	<None Include=".\*.Gen*targets" />
+  </ItemGroup>
+
+   <!-- Nuget Packages for compilation -->
+  <ItemGroup>
+	<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+  </ItemGroup>
+  
+  <!-- Import the source generator -->
+  <ItemGroup>
+	<Analyzer Include="..\..\src\Mvvm.Controls.SourceGenerators\.bin\$(Configuration)\$(AnalyzerVer)\RFBCodeWorks.Mvvm.SourceGenerators.dll" />
+  </ItemGroup>
+
+  
+</Project>

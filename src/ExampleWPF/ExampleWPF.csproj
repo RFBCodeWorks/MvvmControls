@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+      <LangVersion>9.0</LangVersion>
+      <UseWPF>true</UseWPF>
+      <UseWindowsForms>true</UseWindowsForms>
+      <Configurations>Debug;Release;AppVeyor</Configurations>
+      
+    <UseLegacyGenerator>true</UseLegacyGenerator>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mvvm.Dialogs\Mvvm.Dialogs.csproj" />
+    <ProjectReference Include="..\Mvvm.Controls\Mvvm.Controls.csproj" />
+      
+      <Analyzer Include="..\Mvvm.Controls.SourceGenerators\.bin\Debug\311\RFBCodeWorks.Mvvm.SourceGenerators.dll" Condition="'$(UseLegacyGenerator)' == 'true'"/>
+      <Analyzer Include="..\Mvvm.Controls.SourceGenerators\.bin\Debug\410\RFBCodeWorks.Mvvm.SourceGenerators.dll" Condition="'$(UseLegacyGenerator)' == 'false'"/>
+  </ItemGroup>
+
+</Project>

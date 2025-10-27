@@ -1,0 +1,165 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <!-- Target Frameworks are above a 'Choose' block for nuget requirements -->
+        <RootNamespace>RFBCodeWorks</RootNamespace>
+        <AssemblyName>RFBCodeWorks.Mvvm.Controls</AssemblyName>
+        <LangVersion>9.0</LangVersion>
+        <Platforms>AnyCPU</Platforms>
+        
+        <!-- 
+            LTG: Isolate WPF out of this project
+            Issues : 
+                - Listbox SelectionMode
+                - Control Visibility
+                - TreeView and Icons
+                - DragAndDrop
+        -->
+        <UseWPF>true</UseWPF>
+        <UseWinforms>false</UseWinforms>
+        
+        <!-- Nuget Stuff -->
+        
+        <!-- ###################   Version Info ###############  -->
+        <Version>1.0.9.7</Version>
+        
+        <PackageReleaseNotes>
+            - Add XmlnsDefinition properties for easier XAML setup
+            
+            Breaking Changes (Namespace/Class name adjustments):
+            - Relocate ReactiveStyles.Helpers to the Behaviors namespace to reduce XAML namespacing requirements.
+            - Relocate Mvvm.XmlLinq.Controls.TreeViewItems into Mvvm.Specialized
+            - Normalize Specialized TreeViewItems names:
+            --- TreeViewFileInfo -&gt; FileInfoTreeViewItem
+            --- TreeViewDirectoryInfo -&gt; DirectoryInfoTreeViewItem
+
+            Deprecated Functionality (use WPF Styles instead):
+            - Behaviors.ReactiveStyles.IsTabletMode
+            - Behaviors.ReactiveStyles.IsDirtySetters
+            - Behaviors.ReactiveStyles.IsInvalidSetters
+        </PackageReleaseNotes>
+
+        <Description>
+            This is a Library designed to ease working within an MVVM framework, and is meant to consolidate boiler-plate ViewModel interactions for common WPF controls into pre-built classes.
+
+            ## Example - A simplified ComboBox Experience
+
+            A ComboBoxDefinition has the following properties that the ViewModel may interact with, and are easily bound within the XAML using a single binding.
+
+            - ItemSource (The items within the drop-down)
+            - SelectedItem (The currently selected item)
+            - SelectedValue \ SelectedValuePath ( The value of the SelectedItem, as an object, typically a property of the item )
+            - SelectedItemChanged event - Occurs and a new item is selected
+            - ItemSourceChanged event - Occurs when the itemsource is updated
+            - IsEnabled - Enable/Disable a control from within the ViewModel
+            - Visibilty / IsVisible - Toggle visibility of an item from within the ViewModel
+
+            ## XAML:
+            &lt;ComboBox MvvmControls:ControlDefinitions.ComboBoxDefinition="{Binding MyComboBox}" /&gt;
+        </Description>
+
+        <Configurations>Debug;Release;AppVeyor</Configurations>
+    </PropertyGroup>
+	
+    <ItemGroup>
+        <ProjectReference Include="..\Mvvm.IViewModel\Mvvm.IViewModel.csproj" />
+    </ItemGroup>
+
+    <!-- TARGETS -->
+    <PropertyGroup>
+        <TargetFrameworks>
+            net472;
+            net48;
+            netcoreapp3.1;
+            net5.0-windows;
+            net6.0-windows;
+        </TargetFrameworks>
+    </PropertyGroup>
+    
+    <!-- Standard Packages - Must support all targets-->
+    <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />        
+    </ItemGroup>
+    
+	<!-- Enable nuget Packing via Directory.Build.Targets -->
+	<PropertyGroup Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'AppVeyor'">
+		<PackingEnabled>true</PackingEnabled>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <None Include="..\..\Readme.md" Link="Readme.md">
+            <PackagePath></PackagePath>
+            <Pack>True</Pack>
+        </None>
+    </ItemGroup>
+
+
+    <!-- Include the analyzers for the nuget package build -->
+    <ItemGroup Condition="'$(PackingEnabled)' == 'true'">
+
+        <!-- .targets file for nuget package -->
+        <Content
+            Pack="true" Visible="false"
+            Include="..\RFBCodeWorks.Mvvm.Controls.targets"
+            PackagePath="buildTransitive/"
+            />
+
+        <!--roslyn3.11-->
+        <ProjectReference
+            Include="..\Mvvm.Controls.SourceGenerators\SourceGenerators.Roslyn311.csproj"
+            ReferenceOutputAssembly="false"
+            />
+        <Content
+            Pack="true" Visible="false"
+            Include="..\Mvvm.Controls.SourceGenerators\.bin\$(Configuration)\311\RFBCodeWorks.Mvvm.SourceGenerators.dll"
+            PackagePath="analyzers/dotnet/roslyn3.11/cs/"
+            />
+
+        <!--roslyn4.10-->
+        <ProjectReference
+            Include="..\Mvvm.Controls.SourceGenerators\SourceGenerators.Roslyn410.csproj"
+            ReferenceOutputAssembly="false"
+            />
+        <Content
+            Pack="true" Visible="false"
+            Include="..\Mvvm.Controls.SourceGenerators\.bin\$(Configuration)\410\RFBCodeWorks.Mvvm.SourceGenerators.dll"
+            PackagePath="analyzers/dotnet/roslyn4.10/cs/"
+            />
+    </ItemGroup>
+
+    <!-- WPF - Specific Item -->
+    <Choose>
+        <!-- .NET 5 | .NET Core 3.1 -->
+        <When Condition="'$(TargetFramework)' == 'net5.0-windows' Or '$(TargetFramework)' == 'netcoreapp3.1'">
+            <ItemGroup>
+                <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+                <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+            </ItemGroup>
+        </When>
+        <!-- .Net 6 version support -->
+        <When Condition="'$(TargetFramework)' == 'net6.0-windows'">
+            <ItemGroup>
+                <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+                <PackageReference Include="System.Drawing.Common" Version="8.0.21" />
+                <!-- 8.0.21 supports net6 thru net8 + netstandard2.0 -->
+            </ItemGroup>
+        </When>
+        <!-- NetFramework and other targets should specify latest package -->
+        <Otherwise>
+            <ItemGroup>
+                <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+                <PackageReference Include="System.Drawing.Common" Version="8.0.21" />
+            </ItemGroup>
+        </Otherwise>
+    </Choose>
+    <ItemGroup>
+        <Page Update="WPF.Controls\IPV4TextBox\Generic.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+            <SubType>Designer</SubType>
+        </Page>
+        <Page Update="WPF.Controls\NumericUpDowns\Generic.xaml">
+            <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+            <SubType>Designer</SubType>
+        </Page>
+    </ItemGroup>
+    
+</Project>

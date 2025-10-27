@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>8.0</LangVersion>
+        <Platforms>AnyCPU</Platforms>
+        <AssemblyName>RFBCodeWorks.Mvvm.IViewModel</AssemblyName>
+
+        
+		<!-- Nuget Stuff -->    
+        
+        <!-- ###################   Version Info ###############  -->
+        <Version>2.0.0.1</Version>
+        <PackageReleaseNotes>Changes IViewModel to return "IViewModel?" to indicate that the value may be null</PackageReleaseNotes>
+        <!-- #################################  -->
+        <Description>
+            Library that includes the following:
+            
+            IViewModel - Interface Inherits from INotifyPropertyChanged
+            - Basic Interface for ViewModels
+            - Has a 'ParentViewModel' property to allow viewmodels to be retain a reference to the ViewModel that created it
+            
+            INotifyArgs - Sealed class
+            - Simplifies creation of static objects for use with the INotifyPropertyChanging and INotifyPropertyChanged events
+            - On construction, stores the property name, and creates an instance of the args for both INotifyPropertyChanged and INotifyPropertyChanging events
+            - Implicitly converts to the event args
+            - Contains the default 'Empty' property args to indicate all properties are changing.
+            
+        </Description>
+        <PackageTags>Mvvm, ViewModel</PackageTags>        
+		<Configurations>Debug;Release;AppVeyor</Configurations>
+    </PropertyGroup>
+	
+	<!-- Enable nuget Packing via Directory.Build.Targets -->
+	<PropertyGroup Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'AppVeyor'">
+		<PackingEnabled>true</PackingEnabled>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Update="Readme.md">
+        <PackagePath></PackagePath>
+        <Pack>True</Pack>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+</Project>

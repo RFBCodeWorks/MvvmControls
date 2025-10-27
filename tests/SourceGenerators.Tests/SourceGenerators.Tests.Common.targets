@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <!-- COMMON TARGETS FOR TESTS AND Generated Libraries used by the integration tests -->
+
+    <!-- Set the SDK output paths -->
+    <PropertyGroup>
+        <UniqueDirName Condition="'$(UniqueDirName)' == ''">$(RoslynTarget)</UniqueDirName>
+        <AnalyzerVer>$(RoslynTarget.Replace(".","").Trim())</AnalyzerVer>
+        <IOP>.\.obj\$(UniqueDirName)\</IOP>
+        <OP>.\.bin\$(Configuration)\$(UniqueDirName)\</OP>
+        <MSBuildProjectExtensionsPath>$(IOP)</MSBuildProjectExtensionsPath>
+        <BaseIntermediateOutputPath>$(IOP)</BaseIntermediateOutputPath>
+        <BaseOutputPath>$(OP)</BaseOutputPath>
+    </PropertyGroup>
+
+    <!-- Imnport the SDK -->
+    <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+    <!-- Finalize any file movements -->
+    <PropertyGroup>
+        <IntermediateOutputPath>$(IOP)</IntermediateOutputPath>
+        <OutputPath>$(OP)</OutputPath>
+        <OutputPath Condition="'$(Configuration)' != ''">$(OP)</OutputPath>
+        <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+    </PropertyGroup>
+
+    <!-- Project Properties -->
+    <PropertyGroup>
+        <RootNamespace>RFBCodeWorks.Mvvm.SourceGenerators</RootNamespace>
+        <AssemblyName>$(RootNamespace)</AssemblyName>
+        <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <!-- Project References -->
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Mvvm.Controls\Mvvm.Controls.csproj" />
+    </ItemGroup>
+
+
+    <!-- Remove any unwanted files -->
+    <ItemGroup>
+        <None Remove="*.csproj" />
+        <Compile Remove=".\*bin\**" />
+        <Compile Remove=".\*obj\**" />
+        <None Remove=".\*bin\**" />
+        <None Remove=".\*obj\**" />
+
+        <None Remove=".\*.props" />
+        <None Remove=".\*.targets" />
+        <None Include=".\*.Common.targets" />
+    </ItemGroup>
+
+    <!-- Remove any unwanted compilation files -->
+    <ItemGroup>
+        <Compile Remove=".\Gen\**" />
+        <Compile Remove=".\Tests\**" />
+        <None Remove=".\Tests\**" />
+    </ItemGroup>
+</Project>
