@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RFBCodeWorks.Mvvm.SourceGenerators;
 using RFBCodeWorks.Mvvm.SourceGenerators.Refreshable;
+using System;
 
 namespace RFBCodeWorks.Mvvm
 {
@@ -20,6 +21,7 @@ namespace RFBCodeWorks.Mvvm
 
         public void Execute(GeneratorExecutionContext context)
         {
+
             if (context.CancellationToken.IsCancellationRequested || context.SyntaxReceiver is not RefreshableSelectorSyntaxReceiver receiver) return;
             if (receiver.Candidates is null) return;
             if (context.Compilation is not CSharpCompilation compilation) return;
@@ -34,16 +36,16 @@ namespace RFBCodeWorks.Mvvm
             // handles cases where a method may have both ListBoxAttribute and ComboBoxAttribute
             List<DataOrDiagnostics<RefreshableSelectorData>> candidates = null;
 
-            foreach (var node in receiver.Candidates) 
+            foreach (var node in receiver.Candidates)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
 
                 if (node is not MethodDeclarationSyntax method
                 || compilation.GetSemanticModel(node.SyntaxTree) is not SemanticModel sm
                 || sm.GetDeclaredSymbol(method, context.CancellationToken) is not IMethodSymbol symbol
-                ) 
-                { 
-                    continue; 
+                )
+                {
+                    continue;
                 }
 
                 foreach (var attr in symbol.GetAttributes())
@@ -62,13 +64,14 @@ namespace RFBCodeWorks.Mvvm
 
             var groups = candidates
                 .ReportAndEnumerate(context.ReportDiagnostic, context.CancellationToken)
-                .GroupBy(d => d.TargetSymbol.ContainingType, SymbolEqualityComparer.Default)
-                .Select(d => new GroupedCandidates<RefreshableSelectorData>(d.Key as INamedTypeSymbol, d.ToImmutableArray()));
+                .Select(s => RefreshableSelectorParser.TransformRefreshableSelectorData(s, context.CancellationToken))
+                .GroupBy(d => d.SelectorData.TargetSymbol.ContainingType, SymbolEqualityComparer.Default)
+                .Select(d => new GroupedCandidates<RefreshableSelectorDataAndTriggers>(d.Key as INamedTypeSymbol, d.ToImmutableArray()));
 
             foreach (var candidate in groups)
             {
                 RefreshableSelectorEmitter emitter = new RefreshableSelectorEmitter(context.CancellationToken);
-                
+
                 foreach (var item in candidate.Values)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();

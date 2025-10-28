@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator;
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 
@@ -18,9 +19,11 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         }
 
 
-        internal void EmitProperty(RefreshableSelectorData data, Action<Diagnostic> reportDiagnostic)
+        internal void EmitProperty(RefreshableSelectorDataAndTriggers dataAndTriggers, Action<Diagnostic> reportDiagnostic)
         {
             _token.ThrowIfCancellationRequested();
+
+            var data = dataAndTriggers.SelectorData;
 
             // get method info
             if (data.TargetSymbol is not IMethodSymbol refreshMethodSymbol) return;
@@ -86,14 +89,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             Writer.Write(',').WriteLine().WriteIndent().Write("refreshOnFirstCollectionRequest: {0}", data.RefreshOnInitialize ? "true" : "false");
 
             // OnCollectionChanged
-            Writer.WriteOnCollectionChanged(OnDataChangedAttributeData.GetCollectionChangedData(refreshMethodSymbol), propName, reportDiagnostic, _token);
+            WriteOnCollectionChanged(Writer, dataAndTriggers.CollectionChanged, propName, reportDiagnostic, _token);
 
             // OnSelectionChanged
-            Writer.WriteOnSelectionChanged(
-                OnDataChangedAttributeData.GetSelectionChangedData(refreshMethodSymbol),
-                TriggersRefreshParser.GetAllSelectorTargets(refreshMethodSymbol, _token),
-                propName,
-                reportDiagnostic, _token);
+            WriteOnSelectionChanged(Writer, dataAndTriggers.SelectionChanged, dataAndTriggers.RefreshData, propName, reportDiagnostic, _token);
 
 
             // write the remainder of the constructor for the button
@@ -111,6 +110,101 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                     ;
             }
             Writer.EndBlock(true, true);
+        }
+
+        /// <summary>
+        /// Generates an anonymous method if needed.
+        /// <br/>The writer begins writing assuming that you are on the next valid location in a constructor. Example : 
+        /// <para>
+        /// Ctor(Arg1, Arg2
+        /// <br/> result : Ctor(Arg1, Arg2, Action
+        /// </para>
+        /// <para>
+        /// Ctor(Arg1, Arg2
+        /// <br/> result : 
+        /// <br/>Ctor(Arg1, Arg2,
+        /// <br/>() => {
+        /// <br/> NotifyCommands
+        /// <br/> }
+        /// </para>
+        /// </summary>
+        /// <param name="writer">The writer to append to.</param>
+        /// <returns><see langword="true"/> if data was written, otherwise <see langword="false"/></returns>
+        private static SourceWriter WriteOnCollectionChanged(SourceWriter writer, in OnDataChangedAttributeData data, ReadOnlySpan<char> propertyName, Action<Diagnostic> reportDiagnostic, CancellationToken token)
+        {
+            if (data.HasData)
+            {
+                writer.Write(',').WriteLine()
+                    .BeginBlock($"onCollectionChanged: () => ");
+
+                if (!data.CommandsToNotify.IsDefaultOrEmpty)
+                {
+                    foreach (var cmd in data.CommandsToNotify)
+                    {
+                        token.ThrowIfCancellationRequested();
+                        writer.WriteLine("{0}?.NotifyCanExecuteChanged();", cmd.AsSpan());
+                    }
+                }
+                if (!data.SelectorActionsToInvoke.IsDefaultOrEmpty)
+                {
+                    foreach (var cmd in data.SelectorActionsToInvoke)
+                    {
+                        token.ThrowIfCancellationRequested();
+                        writer.WriteLine("{0}({1});", cmd.AsSpan(), propertyName);
+                    }
+                }
+                if (!data.ActionsToInvoke.IsDefaultOrEmpty)
+                {
+                    foreach (var cmd in data.ActionsToInvoke)
+                    {
+                        token.ThrowIfCancellationRequested();
+                        writer.WriteLine("{0}();", cmd.AsSpan());
+                    }
+                }
+                writer.EndBlock(false);
+            }
+            return writer;
+        }
+
+        /// <inheritdoc cref="WriteOnCollectionChanged(SourceWriter, in OnDataChangedAttributeData, Action{Diagnostic})"/>
+        private static SourceWriter WriteOnSelectionChanged(SourceWriter writer, in OnDataChangedAttributeData data, in TriggersRefreshData refreshData, ReadOnlySpan<char> propertyName, Action<Diagnostic> reportDiagnostic, CancellationToken token)
+        {
+            if (data.HasData || refreshData.Any)
+            {
+                writer.Write(',').WriteLine()
+                    .BeginBlock($"onSelectionChanged: () => ");
+
+                if (!data.SelectorActionsToInvoke.IsDefaultOrEmpty)
+                {
+                    foreach (var cmd in data.SelectorActionsToInvoke)
+                    {
+                        token.ThrowIfCancellationRequested();
+                        writer.WriteLine("{0}({1});", cmd.AsSpan(), propertyName);
+                    }
+                }
+
+                if (!data.ActionsToInvoke.IsDefaultOrEmpty)
+                {
+                    foreach (var cmd in data.ActionsToInvoke)
+                    {
+                        token.ThrowIfCancellationRequested();
+                        writer.WriteLine("{0}();", cmd);
+                    }
+                }
+
+                TriggerRefreshEmitter.WriteRefreshTriggers(writer, refreshData, token);
+
+                if (!data.CommandsToNotify.IsDefaultOrEmpty)
+                {
+                    foreach (var cmd in data.CommandsToNotify)
+                    {
+                        token.ThrowIfCancellationRequested();
+                        writer.WriteLine("{0}?.NotifyCanExecuteChanged();", cmd.AsSpan());
+                    }
+                }
+                writer.EndBlock(false);
+            }
+            return writer;
         }
     }
 }

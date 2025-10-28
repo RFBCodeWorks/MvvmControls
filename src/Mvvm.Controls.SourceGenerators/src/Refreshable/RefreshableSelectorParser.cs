@@ -1,17 +1,30 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis;
-using System.Threading;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 
 #nullable enable
 #nullable disable warnings
 
 namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
 {
+    /// <summary>
+    /// A struct containing the <see cref="RefreshableSelectorData"/>, <see cref="TriggersRefreshData"/>, <see cref="collde"/>
+    /// </summary>
+    internal readonly record struct RefreshableSelectorDataAndTriggers(
+        RefreshableSelectorData SelectorData,
+        OnDataChangedAttributeData CollectionChanged,
+        OnDataChangedAttributeData SelectionChanged,
+        TriggersRefreshData RefreshData
+        //ImmutableArray<Diagnostic> Diagnostics
+        );
+
     internal static class RefreshableSelectorParser
     {
         public const string QualifiedName_ComboBox = "RFBCodeWorks.Mvvm." + nameof(RFBCodeWorks.Mvvm.ComboBoxAttribute);
@@ -201,7 +214,81 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                     && typeSymbol.TypeParameters.Length == 1
                     && typeSymbol.Name.StartsWith("IList")
                     && typeSymbol.ContainingNamespace.ToDisplayString() == "System.Collections.Generic";
+
+        }
+
+        public static RefreshableSelectorDataAndTriggers TransformRefreshableSelectorData(this RefreshableSelectorData data, CancellationToken token)
+        {
+
+            ImmutableArray<string>.Builder? collection_selectorActions = null;
+            ImmutableArray<string>.Builder? collection_actions = null;
+            ImmutableArray<string>.Builder? collection_commands = null;
+
+            ImmutableArray<string>.Builder? selection_selectorActions = null;
+            ImmutableArray<string>.Builder? selection_actions = null;
+            ImmutableArray<string>.Builder? selection_commands = null;
+
+            ImmutableArray<string>.Builder? refreshTriggers = null;
+
+            bool anySelection = false, anyCollection = false, anyTriggers = false;
             
+            foreach (var attribute in data.TargetSymbol.GetAttributes())
+            {
+                switch (attribute.AttributeClass.ToDisplayString(SymbolFormats.NameAndContainingTypes))
+                {
+                    case OnDataChangedAttributeData.QualifiedName_SelectionChanged:
+                        GetDataChanged(attribute, ref selection_actions, ref selection_selectorActions, ref selection_commands, token);
+                        anySelection = anySelection || (selection_actions ?? selection_selectorActions ?? selection_commands) is not null;
+                        break;
+
+                    case OnDataChangedAttributeData.QualifiedName_CollectionChanged:
+                        GetDataChanged(attribute, ref collection_actions, ref collection_selectorActions, ref collection_commands, token);
+                        anyCollection = anyCollection || (collection_actions ?? collection_selectorActions ?? collection_commands) is not null;
+                        break;
+
+                    case TriggersRefreshData.QualifiedAttributeName:
+                        attribute.GetStringConstructorArguments(ref refreshTriggers, token);
+                        anyTriggers = anyTriggers || refreshTriggers is not null;
+                        break;
+                }
+            }
+            return new RefreshableSelectorDataAndTriggers(
+                SelectorData: data,
+                CollectionChanged: !anyCollection ? default : new OnDataChangedAttributeData(collection_actions?.ToImmutable() ?? default, collection_commands?.ToImmutable() ?? default, collection_selectorActions?.ToImmutable() ?? default),
+                SelectionChanged: !anySelection ? default : new OnDataChangedAttributeData(selection_actions?.ToImmutable() ?? default, selection_commands?.ToImmutable() ?? default, selection_selectorActions?.ToImmutable() ?? default),
+                RefreshData: !anyTriggers ? default : new TriggersRefreshData(null, refreshTriggers?.ToImmutable() ?? default)
+                );
+        }
+
+        private static void GetDataChanged(
+            AttributeData attribute, 
+            ref ImmutableArray<string>.Builder actions, 
+            ref ImmutableArray<string>.Builder selectorActions, 
+            ref ImmutableArray<string>.Builder commandBuilder,
+            CancellationToken token)
+        {
+
+            // Parse constructor arguments for commands
+            attribute.GetStringConstructorArguments(ref commandBuilder, token);
+            
+            if (attribute.NamedArguments.Length >= 1)
+            {
+                foreach (var argument in attribute.NamedArguments)
+                {
+                    token.ThrowIfCancellationRequested();
+                    if (argument.Key == nameof(OnCollectionChangedAttribute.Action))
+                    {
+                        if (argument.Value.Value is string m)
+                            (actions ??= ImmutableArray.CreateBuilder<string>(3)).Add(m);
+                    }
+
+                    else if (argument.Key == nameof(OnCollectionChangedAttribute.SelectorAction))
+                    {
+                        if (argument.Value.Value is string m)
+                            (selectorActions ??= ImmutableArray.CreateBuilder<string>(3)).Add(m);
+                    }
+                }
+            }
         }
     }
 }

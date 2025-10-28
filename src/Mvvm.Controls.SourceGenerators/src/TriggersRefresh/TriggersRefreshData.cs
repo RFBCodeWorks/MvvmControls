@@ -11,6 +11,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
 {
     internal readonly struct TriggersRefreshData : IEquatable<TriggersRefreshData>
     {
+        public const string QualifiedAttributeName = "RFBCodeWorks.Mvvm." + nameof(TriggersRefreshAttribute);
         public TriggersRefreshData(in GeneratorAttributeSyntaxContext? context, in ImmutableArray<string> selectorTargets) 
         { 
             TargetsToRefresh = selectorTargets; 

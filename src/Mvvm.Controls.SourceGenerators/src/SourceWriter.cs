@@ -141,6 +141,8 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
             return this;
         }
 
+        static char ThrowInvalidBlockChar(char arg) => throw new ArgumentException($"Invalid block start character: {arg}. Only '{{' or '(' are supported.", "blockStart");
+
         /// <summary>
         /// Writes a the text to the writer, then opens the block
         /// </summary>
@@ -163,6 +165,13 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         /// </returns>
         public SourceWriter BeginBlock(string declaration = "", char blockStart = '{', bool moveToNewLine = true)
         {
+            char endChar = blockStart switch
+            {
+                '{' => '}',
+                '(' => ')',
+                _ => ThrowInvalidBlockChar(blockStart),
+            };
+
             if (moveToNewLine)
             {
                 // logic prevents writing an empty line 
@@ -189,12 +198,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
                 _sb.Append(blockStart);
                 _isOnNewLine = false;
             }
+
             Indentation++;
-            _blocks.Push(blockStart switch
-            {
-                '(' => ')',
-                _ => '}'
-            });
+            _blocks.Push(endChar);  // Simplified and more explicit
+            Debug.WriteLine($"Pushed {endChar} onto blocks stack. Stack count: {_blocks.Count}. Indentation Level: {Indentation}");
             return this;
         }
 
@@ -231,9 +238,14 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         /// <exception cref="InvalidOperationException"></exception>
         public SourceWriter EndBlock(bool moveToNewLine, bool addSemiColon = false)
         {
-            if (_blocks.Count == 0) throw new InvalidOperationException("No more blocks to end");
+            if (_blocks.Count == 0)
+            {
+                Debug.WriteLine("Attempting to end block when no blocks are on the stack!");
+                throw new InvalidOperationException("No more blocks to end");
+            }
             char c = _blocks.Pop();
             Indentation--;
+            Debug.WriteLine($"Popped {c} from blocks stack. Remaining count: {_blocks.Count}. Indentation Level: {Indentation}");
 
             if (_isOnNewLine)
             {

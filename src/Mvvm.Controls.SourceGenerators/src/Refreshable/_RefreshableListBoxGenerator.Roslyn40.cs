@@ -20,8 +20,9 @@ namespace RFBCodeWorks.Mvvm
                 transform: RefreshableSelectorParser.GetInfoOrDiagnostic
                 )
                 .ReportDiagnostics(context)
-                .GroupBy(static c => c.TargetSymbol.ContainingType, SymbolEqualityComparer.Default) // group by containing class
-                .Select(static (c,_) => new GroupedCandidates<RefreshableSelectorData>(c.Key as INamedTypeSymbol, c.Values))
+                .Select(RefreshableSelectorParser.TransformRefreshableSelectorData)
+                .GroupBy(static c => c.SelectorData.TargetSymbol.ContainingType, SymbolEqualityComparer.Default) // group by containing class
+                .Select(static (c, _) => new GroupedCandidates<RefreshableSelectorDataAndTriggers>(c.Key as INamedTypeSymbol, c.Values))
                ;
 
 

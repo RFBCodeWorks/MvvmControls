@@ -50,7 +50,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         }
 
         /// <summary>
-        /// Generates any diagnostic Data for a <see cref="TriggersRefreshData" > struct
+        /// Generates any diagnostic Data for a <see cref="TriggersRefreshData" > struct places on an [ObservableProperty]
         /// </summary>
         public static DataOrDiagnostics<TriggersRefreshData> GetDataOrDiagnostics(GeneratorAttributeSyntaxContext context, CancellationToken token)
         {
@@ -72,17 +72,11 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             foreach (var attr in attributes)
             {
                 token.ThrowIfCancellationRequested();
-                if (attr.ConstructorArguments.Length == 1 && attr.ConstructorArguments[0].Kind == TypedConstantKind.Array)
-                {
-                    foreach (var item in attr.ConstructorArguments[0].Values)
-                    {
-                        token.ThrowIfCancellationRequested();
-                        if (item.Value is string name && !string.IsNullOrWhiteSpace(name))
-                            (builder ??= ImmutableArray.CreateBuilder<string>()).Add(name);
-                    }
-                }
+                attr.GetStringConstructorArguments(ref builder, token);
             }
             return builder is null ? default : builder.ToImmutable();
         }
+
+        
     }
 }

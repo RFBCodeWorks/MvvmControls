@@ -62,5 +62,32 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
             return text.Replace("<", "&lt;").Replace(">", "&lt;").Replace("\"", "'").Trim();
         }
 
+        /// <summary>
+        /// Iterates the attribute's constructor arguments, populating the builder if any are found.
+        /// </summary>
+        /// <param name="attr">The attribute whose <see cref="AttributeData.ConstructorArguments"/> should be evaluated.</param>
+        /// <param name="builder">a reference to a builder. A builder will be created if the supplied reference is null.</param>
+        /// <param name="token"></param>
+        public static void GetStringConstructorArguments(this AttributeData attr, ref ImmutableArray<string>.Builder? builder, CancellationToken token = default)
+        {
+            foreach (var arg in attr.ConstructorArguments)
+            {
+                if (arg.Kind == TypedConstantKind.Array)
+                {
+                    foreach (var item in arg.Values)
+                    {
+                        token.ThrowIfCancellationRequested();
+                        if (item.Value is string name && !string.IsNullOrWhiteSpace(name))
+                            (builder ??= ImmutableArray.CreateBuilder<string>(arg.Values.Length)).Add(name);
+                    }
+                }
+                else
+                {
+                    if (arg.Value is string name && !string.IsNullOrWhiteSpace(name))
+                        (builder ??= ImmutableArray.CreateBuilder<string>(attr.ConstructorArguments.Length)).Add(name);
+                }
+            }
+        }
+
     }
 }
