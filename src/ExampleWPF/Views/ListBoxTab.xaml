@@ -17,7 +17,7 @@
         <StackPanel  >
             <GroupBox Header="ListBox Definition" IsEnabled="{Binding  ListBoxEnabler.IsChecked}">
                 <!-- SimpleGrid that builds itself per the specified Column/Row Counts -->
-                <cc:SimpleGrid AutoColumnWidth="Auto" AutoRowHeight="Auto"  RowCount="4" ColumnCount="3">
+                <cc:SimpleGrid AutoColumnWidth="Auto" AutoRowHeight="Auto"  RowCount="4" ColumnCount="4">
                     <TextBlock Text="Interact with this listbox     " Grid.Column="0" />
                     <ListBox 
                     Behaviors:ControlDefinitions.ListBoxDefinition="{Binding ListBoxDefinition}" Grid.Row="1" Grid.ColumnSpan="2"
@@ -50,6 +50,20 @@
                     <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ListBoxDefinition.SelectedIndex}" />
                     <TextBlock Grid.Row="3" Text="Selected Item: " />
                     <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding ListBoxDefinition.SelectedItem}" />
+                    <!-- Generated Listbox -->
+                    <GroupBox Grid.Row="1" Grid.Column="3" Margin="30,0, 30,0" HorizontalAlignment="Left" HorizontalContentAlignment="Left">
+                        <StackPanel>
+                            <TextBlock 
+                                TextWrapping="Wrap" MaxWidth="300"
+                                Text="This backing property for this listbox was created using the Source Generator [Listbox] attribute." />
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,3">
+                                <TextBlock Text="Selected Item : " />
+                                <TextBlock Text="{Binding SelectedNumber}"/>
+                                <Button Content="Refresh" Command="{Binding GeneratedListBox.RefreshCommand}" Margin="50,0"/>
+                            </StackPanel>
+                            <ListBox Grid.Row="1" Grid.Column="4" Behaviors:ControlDefinitions.ListBoxDefinition="{Binding GeneratedListBox}" MaxHeight="80"/>
+                        </StackPanel>
+                    </GroupBox>
                 </cc:SimpleGrid>
             </GroupBox>
             <CheckBox Content="Enable/Disable ListBox" IsChecked="{Binding ListBoxEnabler.IsChecked}"/>

@@ -139,10 +139,10 @@ namespace RFBCodeWorks.Mvvm
         /// </summary>
         public bool IsRefreshing
         {
-            get => _isRefreshing == 0;
+            get => _isRefreshing == 1;
             private set
             {
-                if (value != (_isRefreshing == 0))
+                if (value != IsRefreshing)
                 {
                     OnPropertyChanging(EventArgSingletons.IsRefreshing);
                     _isRefreshing = value ? 1 : 0;

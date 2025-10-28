@@ -20,7 +20,7 @@
         <!-- Nuget Stuff -->
         
         <!-- ###################   Version Info ###############  -->
-        <Version>1.0.9.7</Version>
+        <Version>1.0.9.9</Version>
         
         <PackageReleaseNotes>
             - Add XmlnsDefinition properties for easier XAML setup

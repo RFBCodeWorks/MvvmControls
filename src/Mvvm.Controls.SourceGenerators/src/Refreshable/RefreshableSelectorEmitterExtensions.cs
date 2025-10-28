@@ -27,7 +27,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         /// <br/>The writer begins writing assuming that you are on the next valid location in a constructor. Example : 
         /// <para>
         /// Ctor(Arg1, Arg2
-        /// <br/> result : Ctor(Arg1, Arg2, MethodName
+        /// <br/> result : Ctor(Arg1, Arg2, Action
         /// </para>
         /// <para>
         /// Ctor(Arg1, Arg2
@@ -40,26 +40,31 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         /// </summary>
         /// <param name="writer">The writer to append to.</param>
         /// <returns><see langword="true"/> if data was written, otherwise <see langword="false"/></returns>
-        public static SourceWriter WriteOnCollectionChanged(this SourceWriter writer, in OnDataChangedAttributeData data, Action<Diagnostic> reportDiagnostic, CancellationToken token)
+        public static SourceWriter WriteOnCollectionChanged(this SourceWriter writer, in OnDataChangedAttributeData data, ReadOnlySpan<char> propertyName, Action<Diagnostic> reportDiagnostic, CancellationToken token)
         {
             if (data.Diagnostic is not null)
             {
                 reportDiagnostic(data.Diagnostic);
                 return writer;
             }
-            if (data.CommandsToNotify.Length > 0 || data.MethodsToInvoke.Length > 0)
+            if (data.HasData)
             {
                 writer.Write(',').WriteLine()
                     .BeginBlock($"onCollectionChanged: () => ");
                 foreach (var cmd in data.CommandsToNotify)
                 {
                     token.ThrowIfCancellationRequested();
-                    writer.WriteLine("{0}.NotifyCanExecuteChanged();", cmd);
+                    writer.WriteLine("{0}.NotifyCanExecuteChanged();".AsSpan(), cmd.AsSpan());
                 }
-                foreach (var cmd in data.MethodsToInvoke)
+                foreach (var cmd in data.SelectorActionsToInvoke)
                 {
                     token.ThrowIfCancellationRequested();
-                    writer.WriteLine("{0}();", cmd);
+                    writer.WriteLine("{0}({1});".AsSpan(), cmd.AsSpan(), propertyName);
+                }
+                foreach (var cmd in data.ActionsToInvoke)
+                {
+                    token.ThrowIfCancellationRequested();
+                    writer.WriteLine("{0}();".AsSpan(), cmd.AsSpan());
                 }
                 writer.EndBlock(false);
             }
@@ -67,14 +72,14 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         }
 
         /// <inheritdoc cref="WriteOnCollectionChanged(SourceWriter, in OnDataChangedAttributeData, Action{Diagnostic})"/>
-        public static SourceWriter WriteOnSelectionChanged(this SourceWriter writer, in OnDataChangedAttributeData data, in TriggersRefreshData refreshData, Action<Diagnostic> reportDiagnostic, CancellationToken token)
+        public static SourceWriter WriteOnSelectionChanged(this SourceWriter writer, in OnDataChangedAttributeData data, in TriggersRefreshData refreshData, ReadOnlySpan<char> propertyName, Action<Diagnostic> reportDiagnostic, CancellationToken token)
         {
             if (data.Diagnostic is not null)
             {
                 reportDiagnostic(data.Diagnostic);
                 if (refreshData.Any == false) return writer;
             }
-            if (data.CommandsToNotify.Length > 0 || data.MethodsToInvoke.Length > 0 || refreshData.Any)
+            if (data.HasData || refreshData.Any)
             {
                 writer.Write(',').WriteLine()
                     .BeginBlock($"onSelectionChanged: () => ");
@@ -83,7 +88,12 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                     token.ThrowIfCancellationRequested();
                     writer.WriteLine("{0}.NotifyCanExecuteChanged();", cmd);
                 }
-                foreach (var cmd in data.MethodsToInvoke)
+                foreach (var cmd in data.SelectorActionsToInvoke)
+                {
+                    token.ThrowIfCancellationRequested();
+                    writer.WriteLine("{0}({1});".AsSpan(), cmd.AsSpan(), propertyName);
+                }
+                foreach (var cmd in data.ActionsToInvoke)
                 {
                     token.ThrowIfCancellationRequested();
                     writer.WriteLine("{0}();", cmd);

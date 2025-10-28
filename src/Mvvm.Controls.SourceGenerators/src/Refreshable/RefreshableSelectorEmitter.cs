@@ -86,12 +86,13 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             Writer.Write(',').WriteLine().WriteIndent().Write("refreshOnFirstCollectionRequest: {0}", data.RefreshOnInitialize ? "true" : "false");
 
             // OnCollectionChanged
-            Writer.WriteOnCollectionChanged(OnDataChangedAttributeData.GetCollectionChangedData(refreshMethodSymbol), reportDiagnostic, _token);
+            Writer.WriteOnCollectionChanged(OnDataChangedAttributeData.GetCollectionChangedData(refreshMethodSymbol), propName, reportDiagnostic, _token);
 
             // OnSelectionChanged
             Writer.WriteOnSelectionChanged(
                 OnDataChangedAttributeData.GetSelectionChangedData(refreshMethodSymbol),
                 TriggersRefreshParser.GetAllSelectorTargets(refreshMethodSymbol, _token),
+                propName,
                 reportDiagnostic, _token);
 
 

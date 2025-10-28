@@ -5,8 +5,16 @@ using System.Threading.Tasks;
 
 namespace RFBCodeWorks.Mvvm
 {
-    static class ExtensionMethods
+
+    internal static class ExtensionMethods
     {
+        public static void ThrowIfNull<T>(this T value, string? paramName)
+        {
+            if (value is null) ThrowArgNull(paramName);
+        }
+        private static void ThrowArgNull(string paramName) => throw new ArgumentNullException(paramName);
+
+
         /// <summary>
         /// Extension Method that selects all of type <typeparamref name="T2"/> from the collection
         /// </summary>

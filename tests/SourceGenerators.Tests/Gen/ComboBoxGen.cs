@@ -65,7 +65,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
         [TriggersRefresh(nameof(_refreshableItemSource))]
         [OnCollectionChanged(nameof(_collectionCommand))]
         [OnSelectionChanged(nameof(_selectionCommand))]
-        [OnSelectionChanged(MethodName =nameof(SelectionChanged))]
+        [OnSelectionChanged(Action =nameof(SelectionChanged))]
         [ComboBox(CanRefresh = nameof(CanRefresh), DisplayMemberPath = "DP", RefreshOnInitialize =false, SelectedValuePath = "SV", ToolTip = "tt"  )]
         private List<int> SyncCollection()
         {
@@ -76,7 +76,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
         [TriggersRefresh(nameof(_refreshableItemSource))]
         [OnCollectionChanged(nameof(_collectionCommand))]
         [OnSelectionChanged(nameof(_selectionCommand))]
-        [OnSelectionChanged(MethodName = nameof(SelectionChanged))]
+        [OnSelectionChanged(Action = nameof(SelectionChanged))]
         [ComboBox(CanRefresh = nameof(CanRefresh))]
         public async Task<int[]> AsyncCollection()
         {
@@ -87,7 +87,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
         [TriggersRefresh(nameof(_refreshableItemSource))]
         [OnCollectionChanged(nameof(_collectionCommand))]
         [OnSelectionChanged(nameof(_selectionCommand))]
-        [OnSelectionChanged(MethodName = nameof(SelectionChanged))]
+        [OnSelectionChanged(Action = nameof(SelectionChanged))]
         [ComboBox(CanRefresh = nameof(CanRefresh))]
         public async Task<int[]> CancellableAsyncCollection(CancellationToken token)
         {

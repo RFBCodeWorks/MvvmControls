@@ -160,16 +160,25 @@ namespace RFBCodeWorks.Mvvm
         public string[] CommandsToNotify { get; }
 
         /// <summary>
-        /// Alternatively, name of a parameterless void method to call on selection change.
+        /// [Optional] name of a parameterless method to call when the <see cref="ISelector.SelectedItem"/> changes.
+        /// </summary>
+        public string? Action { get; set; }
+
+        /// <summary>
+        /// [Optional] name of a method that accepts a <see cref="ISelector"/> as the parameter.
+        /// <para/> This action will be performed when the <see cref="ISelector.SelectedItem"/> changes.
         /// </summary>
         /// <remarks>
+        /// Example : 
+        /// <br/>SelectorAction = <see langword="nameof"/>(DoSomething)
+        /// <br/>void DoSomething(ISelector selector);
         /// </remarks>
-        public string MethodName { get; set; }
+        public string? SelectorAction { get; set; }
     }
 
     /// <summary>
     /// Notify IRelayCommands when the <see cref="IItemSource.Items"/> property is updated.
-    /// <br/>Alternatively, call a parameterless method via <see cref="MethodName"/>
+    /// <br/>Alternatively, method via <see cref="Action"/> or <see cref="SelectorAction"/>
     /// </summary>
     /// <remarks>
     /// Can be applied to :
@@ -187,7 +196,7 @@ namespace RFBCodeWorks.Mvvm
         public OnCollectionChangedAttribute(params string[] commandsToNotify)
         {
             CommandsToNotify = commandsToNotify;
-            MethodName = "";
+            Action = "";
         }
 
         /// <summary>
@@ -197,9 +206,24 @@ namespace RFBCodeWorks.Mvvm
         public string[] CommandsToNotify { get; }
 
         /// <summary>
-        /// Alternatively, name of a parameterless void method to call on item-source change.
+        /// [Optional] name of a parameterless method to call when the <see cref="IItemSource.Items"/> property changes.
         /// </summary>
-        public string MethodName { get; set; }
+        public string? Action { get; set; }
+
+        /// <summary>
+        /// [Optional] name of a method that accepts a <see cref="ISelector"/> as the parameter.
+        /// <para/> This action will be performed when the <see cref="ISelector.SelectedItem"/> changes.
+        /// </summary>
+        /// <remarks>
+        /// Example : 
+        /// <br/>SelectorAction = <see langword="nameof"/>(DoSomething)
+        /// <br/>void DoSomething(ISelector selector);
+        /// <para/>
+        /// Example 2:
+        /// <br/>SelectorAction = "RFBCodeWorks.Mvvm.SelectorUtilities.TrySelectFirstItem"
+        /// <br/>SelectorAction = "RFBCodeWorks.Mvvm.SelectorUtilities.TrySelectLastItem"
+        /// </remarks>
+        public string? SelectorAction { get; set; }
     }
 
     /// <summary>

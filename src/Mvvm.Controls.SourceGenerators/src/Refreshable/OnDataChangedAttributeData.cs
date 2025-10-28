@@ -22,14 +22,24 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         
         // Attribute-specific members:
         public ImmutableArray<string> CommandsToNotify { get; }
-        public ImmutableArray<string> MethodsToInvoke { get; }
+        public ImmutableArray<string> ActionsToInvoke { get; }
+        public ImmutableArray<string> SelectorActionsToInvoke { get; }
         public Diagnostic? Diagnostic { get; }
 
-        private OnDataChangedAttributeData(Diagnostic diagnostic, ImmutableArray<string> methods, ImmutableArray<string> commands)
+        /// <summary>
+        /// True if any of the commands/actions have data. False if all are default or empty.
+        /// </summary>
+        public bool HasData =>
+            !SelectorActionsToInvoke.IsDefaultOrEmpty ||
+            !CommandsToNotify.IsDefaultOrEmpty ||
+            !ActionsToInvoke.IsDefaultOrEmpty;
+
+        private OnDataChangedAttributeData(Diagnostic diagnostic, ImmutableArray<string> actions, ImmutableArray<string> commands, ImmutableArray<string> selectorActions)
         {
             Diagnostic = diagnostic;
-            MethodsToInvoke = methods;
+            ActionsToInvoke = actions;
             CommandsToNotify = commands;
+            SelectorActionsToInvoke = selectorActions;
         }
 
         public static OnDataChangedAttributeData GetSelectionChangedData(ISymbol symbol) => GetData(symbol, QualifiedName_SelectionChanged);
@@ -39,7 +49,8 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             var attributes = symbol.GetAttributes()
              .Where(a => a.AttributeClass.ToDisplayString() == qualifiedName);
 
-            var methods = ImmutableArray.CreateBuilder<string>();
+            var actions = ImmutableArray.CreateBuilder<string>();
+            var selectorActions = ImmutableArray.CreateBuilder<string>();
             var commandbuilder = ImmutableArray.CreateBuilder<string>();
 
             foreach (var attribute in attributes)
@@ -55,17 +66,26 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                 }
                 if (attribute.NamedArguments.Length >= 1)
                 {
-                    var m = attribute.NamedArguments.FirstOrDefault(n => n.Key == "MethodName");
-                    if (m.Key != null && m.Value.Value is string s) methods.Add(s);
+                    foreach (var argument in attribute.NamedArguments)
+                    {
+                        if (argument.Key == nameof(OnCollectionChangedAttribute.Action))
+                        {
+                            if (argument.Value.Value is string m) actions.Add(m);
+                        }
+                        else if (argument.Key == nameof(OnCollectionChangedAttribute.SelectorAction))
+                        {
+                            if (argument.Value.Value is string m) selectorActions.Add(m);
+                        }
+                    }
                 }
             }
-            return new OnDataChangedAttributeData(null, methods.ToImmutable(), commandbuilder.ToImmutable());
+            return new OnDataChangedAttributeData(null, actions.ToImmutable(), commandbuilder.ToImmutable(), selectorActions.ToImmutable());
         }
 
         public bool Equals(OnDataChangedAttributeData other) =>
             Diagnostic == other.Diagnostic
             && CommandsToNotify.SequenceEqual(other.CommandsToNotify)
-            && MethodsToInvoke.SequenceEqual(other.MethodsToInvoke);
+            && ActionsToInvoke.SequenceEqual(other.ActionsToInvoke);
 
         public override bool Equals(object obj) => obj is OnDataChangedAttributeData other && Equals(other);
 
@@ -74,7 +94,8 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             var hash = new HashCode();
             hash.Add(this.Diagnostic);
             foreach (var cmd in CommandsToNotify) hash.Add(cmd);
-            foreach (var cmd in MethodsToInvoke) hash.Add(cmd);
+            foreach (var cmd in ActionsToInvoke) hash.Add(cmd);
+            foreach (var cmd in SelectorActionsToInvoke) hash.Add(cmd);
             return hash.ToHashCode();
         }
 

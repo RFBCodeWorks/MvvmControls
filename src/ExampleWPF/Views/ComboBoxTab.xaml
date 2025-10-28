@@ -17,7 +17,7 @@
         <StackPanel >
             <GroupBox Header="Enable / Disable Controls ( via Checkbox / RadioButton Definitions )" >
                 <StackPanel>
-                    <CheckBox Behaviors:ControlDefinitions.CheckBoxDefinition="{Binding EnableDisableListBox}"/>
+                    <CheckBox Behaviors:ControlDefinitions.CheckBoxDefinition="{Binding EnableComboBox}"/>
                     <Separator Visibility="Hidden" Height="20"/>
                     <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding EnableComboBox}"/>
                     <RadioButton Behaviors:ControlDefinitions.RadioButtonDefinition="{Binding DisableComboBox}"/>
@@ -73,20 +73,17 @@
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Is Refreshing : "/>
                     <CheckBox Grid.Column="1" IsChecked="{Binding FirstDigitComboBox.IsRefreshing, Mode=OneWay}"/>
                     <CheckBox Grid.Column="2" IsChecked="{Binding SecondDigitComboBox.IsRefreshing, Mode=OneWay}"/>
-                    <CheckBox Grid.Column="3" IsChecked="{Binding ThirdDigitListBox.IsRefreshing, Mode=OneWay}"/>
-                    <CheckBox Grid.Column="4" IsChecked="{Binding FourthDigitListBox.IsRefreshing, Mode=OneWay}"/>
+                    <CheckBox Grid.Column="3" IsChecked="{Binding ThirdDigitSelector.IsRefreshing, Mode=OneWay}"/>
+                    <CheckBox Grid.Column="4" IsChecked="{Binding FourthDigitSelector.IsRefreshing, Mode=OneWay}"/>
                     <Button Grid.Row="3" HorizontalContentAlignment="Center" Content="Refresh&#xA;  First&#xA; Digit" Command="{Binding FirstDigitComboBox.RefreshCommand}"/>
                     <!-- ComboBoxes -->
                     <ComboBox Grid.Column="1" ItemsSource="{Binding FirstDigitComboBox.Items}" SelectedItem="{Binding FirstDigitComboBox.SelectedItem}" />
                     <ComboBox Grid.Column="2" Behaviors:ControlDefinitions.ComboBoxDefinition="{Binding SecondDigitComboBox}" />
-                    <ListBox Grid.Column="3" Behaviors:ControlDefinitions.ListBoxDefinition="{Binding ThirdDigitListBox}" />
-                    <ListBox Grid.Column="4" Behaviors:ControlDefinitions.ListBoxDefinition="{Binding FourthDigitListBox}" />
+                    <ListBox Grid.Column="3" Behaviors:ControlDefinitions.SelectorDefinition ="{Binding ThirdDigitSelector}" />
+                    <ListBox Grid.Column="4" Behaviors:ControlDefinitions.SelectorDefinition ="{Binding FourthDigitSelector}" />
                     <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Text="Concatenated Value : "/>
                     <TextBlock Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="3" Text="{Binding ConcatenatedText}"/>
                 </Grid>
-            </GroupBox>
-            <GroupBox Header="Refreshable ComboBox">
-                <ComboBox Behaviors:ControlDefinitions.ComboBoxDefinition="{Binding RefreshableCmb}"/>
             </GroupBox>
         </StackPanel>
     </ScrollViewer>
