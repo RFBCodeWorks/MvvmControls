@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 #nullable enable
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace RFBCodeWorks.Mvvm
 {
+
     /// <summary>
     /// Turns a method into a <see cref="Mvvm.ButtonDefinition"/>.
     /// <br/> Functions similar to <see cref="CommunityToolkit.Mvvm.Input.RelayCommand"/>

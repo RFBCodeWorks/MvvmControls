@@ -7,22 +7,6 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
     internal static class RefreshableSelectorEmitterExtensions
     {
         /// <summary>
-        /// Invokes the RefreshCommand.Execute method on any RefreshableSelectors specified
-        /// </summary>
-        public static SourceWriter WriteRefreshTriggers(this SourceWriter writer, in TriggersRefreshData data, CancellationToken token)
-        {
-            if (data.Any)
-            {
-                foreach(var item in data.TargetsToRefresh)
-                {
-                    token.ThrowIfCancellationRequested();
-                    writer.WriteLine("{0}.RefreshCommand.Execute(null);", item);
-                }
-            }
-            return writer;
-        }
-
-        /// <summary>
         /// Generates an anonymous method if needed.
         /// <br/>The writer begins writing assuming that you are on the next valid location in a constructor. Example : 
         /// <para>
@@ -54,17 +38,17 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                 foreach (var cmd in data.CommandsToNotify)
                 {
                     token.ThrowIfCancellationRequested();
-                    writer.WriteLine("{0}.NotifyCanExecuteChanged();".AsSpan(), cmd.AsSpan());
+                    writer.WriteLine("{0}?.NotifyCanExecuteChanged();", cmd.AsSpan());
                 }
                 foreach (var cmd in data.SelectorActionsToInvoke)
                 {
                     token.ThrowIfCancellationRequested();
-                    writer.WriteLine("{0}({1});".AsSpan(), cmd.AsSpan(), propertyName);
+                    writer.WriteLine("{0}({1});", cmd.AsSpan(), propertyName);
                 }
                 foreach (var cmd in data.ActionsToInvoke)
                 {
                     token.ThrowIfCancellationRequested();
-                    writer.WriteLine("{0}();".AsSpan(), cmd.AsSpan());
+                    writer.WriteLine("{0}();", cmd.AsSpan());
                 }
                 writer.EndBlock(false);
             }
@@ -83,23 +67,44 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             {
                 writer.Write(',').WriteLine()
                     .BeginBlock($"onSelectionChanged: () => ");
-                foreach (var cmd in data.CommandsToNotify)
-                {
-                    token.ThrowIfCancellationRequested();
-                    writer.WriteLine("{0}.NotifyCanExecuteChanged();", cmd);
-                }
+                
                 foreach (var cmd in data.SelectorActionsToInvoke)
                 {
                     token.ThrowIfCancellationRequested();
-                    writer.WriteLine("{0}({1});".AsSpan(), cmd.AsSpan(), propertyName);
+                    writer.WriteLine("{0}({1});", cmd.AsSpan(), propertyName);
                 }
+                
                 foreach (var cmd in data.ActionsToInvoke)
                 {
                     token.ThrowIfCancellationRequested();
                     writer.WriteLine("{0}();", cmd);
                 }
-                WriteRefreshTriggers(writer,refreshData, token);
+
+                WriteRefreshTriggers(writer, refreshData, token);
+
+                foreach (var cmd in data.CommandsToNotify)
+                {
+                    token.ThrowIfCancellationRequested();
+                    writer.WriteLine("{0}?.NotifyCanExecuteChanged();", cmd.AsSpan());
+                }
+
                 writer.EndBlock(false);
+            }
+            return writer;
+        }
+
+        /// <summary>
+        /// Invokes the RefreshCommand.Execute method on any RefreshableSelectors specified
+        /// </summary>
+        public static SourceWriter WriteRefreshTriggers(this SourceWriter writer, in TriggersRefreshData data, CancellationToken token)
+        {
+            if (data.Any)
+            {
+                foreach (var item in data.TargetsToRefresh)
+                {
+                    token.ThrowIfCancellationRequested();
+                    writer.WriteLine("{0}?.RefreshCommand?.Execute(null);", item.AsSpan());
+                }
             }
             return writer;
         }

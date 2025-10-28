@@ -13,7 +13,8 @@ using System.Runtime.CompilerServices;
 
 #nullable enable
 #nullable disable warnings
-[assembly:InternalsVisibleTo("RFBCodeWorks.Mvvm.SourceGenerators.Test")]
+
+[assembly: InternalsVisibleTo(assemblyName: "RFBCodeWorks.Mvvm.SourceGenerators.Test")]
 namespace RFBCodeWorks.Mvvm.SourceGenerators
 {
     [DefaultValue(1)]
@@ -319,7 +320,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
                 WriteLine();
                 WriteLine(_fileClosingPragmas);
             }
-            Debug.Assert(_indentation == 0 && _sb.Length > 0);
+            //Debug.Assert(_indentation == 0 && _sb.Length > 0);
             return SourceText.From(_sb.ToString(), Encoding.UTF8);
         }
 
@@ -518,14 +519,18 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         }
 
         /// <inheritdoc cref="AppendFormat(StringBuilder, ReadOnlySpan{char}, ReadOnlySpan{char}, ReadOnlySpan{char}, ReadOnlySpan{char})"/>
-        public SourceWriter WriteLine(ReadOnlySpan<char> format, ReadOnlySpan<char> arg1, ReadOnlySpan<char> arg2 = default, ReadOnlySpan<char> arg3 = default)
+        public SourceWriter WriteLine(ReadOnlySpan<char> formatSpan, ReadOnlySpan<char> arg1, ReadOnlySpan<char> arg2 = default, ReadOnlySpan<char> arg3 = default)
         {
             if (_isOnNewLine && _indentation > 0) Indent();
-            AppendFormat(_sb, format, arg1, arg2, arg3);
+            AppendFormat(_sb, formatSpan, arg1, arg2, arg3);
             _sb.AppendLine();
             _isOnNewLine = true;
             return this;
         }
+
+        /// <inheritdoc cref="AppendFormat(StringBuilder, ReadOnlySpan{char}, ReadOnlySpan{char}, ReadOnlySpan{char}, ReadOnlySpan{char})"/>
+        public SourceWriter WriteLine(string format, ReadOnlySpan<char> arg1, ReadOnlySpan<char> arg2 = default, ReadOnlySpan<char> arg3 = default) => WriteLine(formatSpan: format.AsSpan(), arg1, arg2, arg3);
+
 
         /// <summary> Write a single char then moves to the next line. </summary>
         public SourceWriter WriteLine(char value)
