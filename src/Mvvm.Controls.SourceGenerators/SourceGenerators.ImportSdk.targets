@@ -3,7 +3,7 @@
 
     <!-- Set the Version Information -->
     <PropertyGroup>
-        <Version>1.0.0.4</Version>
+        <Version>1.0.1.0</Version>
     </PropertyGroup>
     
     <!-- Set the SDK output paths -->

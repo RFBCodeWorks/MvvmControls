@@ -2,6 +2,8 @@
 using RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 
@@ -89,11 +91,19 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             Writer.Write(',').WriteLine().WriteIndent().Write("refreshOnFirstCollectionRequest: {0}", data.RefreshOnInitialize ? "true" : "false");
 
             // OnCollectionChanged
-            WriteOnCollectionChanged(Writer, dataAndTriggers.CollectionChanged, propName, reportDiagnostic, _token);
+            Debug.Assert(Writer.Indentation == 3);
+            Debug.WriteLine($"DEBUG : fileName [{Path.GetFileName(Writer.SuggestedFileName)}] : Indentation before writing OnCollectionChanged: {Writer.Indentation}");
+            
+            WriteOnCollectionChanged(Writer, dataAndTriggers.CollectionChanged, propName, _token);
+
+            Debug.WriteLine($"DEBUG : fileName [{Path.GetFileName(Writer.SuggestedFileName)}] : Indentation after writing OnCollectionChanged: {Writer.Indentation}");            
+            Debug.Assert(Writer.Indentation == 3);
 
             // OnSelectionChanged
-            WriteOnSelectionChanged(Writer, dataAndTriggers.SelectionChanged, dataAndTriggers.RefreshData, propName, reportDiagnostic, _token);
-
+            WriteOnSelectionChanged(Writer, dataAndTriggers.SelectionChanged, dataAndTriggers.RefreshData, propName, _token);
+            
+            Debug.WriteLine($"DEBUG : fileName [{Path.GetFileName(Writer.SuggestedFileName)}] : Indentation after writing OnSelectionChanged: {Writer.Indentation}");
+            Debug.Assert(Writer.Indentation == 3);
 
             // write the remainder of the constructor for the button
             bool tt = !string.IsNullOrWhiteSpace(data.ToolTip);
@@ -110,6 +120,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                     ;
             }
             Writer.EndBlock(true, true);
+            Debug.Assert(Writer.Indentation == 2);
         }
 
         /// <summary>
@@ -130,7 +141,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         /// </summary>
         /// <param name="writer">The writer to append to.</param>
         /// <returns><see langword="true"/> if data was written, otherwise <see langword="false"/></returns>
-        private static SourceWriter WriteOnCollectionChanged(SourceWriter writer, in OnDataChangedAttributeData data, ReadOnlySpan<char> propertyName, Action<Diagnostic> reportDiagnostic, CancellationToken token)
+        private static void WriteOnCollectionChanged(SourceWriter writer, in OnDataChangedAttributeData data, ReadOnlySpan<char> propertyName,  CancellationToken token)
         {
             if (data.HasData)
             {
@@ -163,11 +174,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                 }
                 writer.EndBlock(false);
             }
-            return writer;
         }
 
         /// <inheritdoc cref="WriteOnCollectionChanged(SourceWriter, in OnDataChangedAttributeData, Action{Diagnostic})"/>
-        private static SourceWriter WriteOnSelectionChanged(SourceWriter writer, in OnDataChangedAttributeData data, in TriggersRefreshData refreshData, ReadOnlySpan<char> propertyName, Action<Diagnostic> reportDiagnostic, CancellationToken token)
+        private static void WriteOnSelectionChanged(SourceWriter writer, in OnDataChangedAttributeData data, in TriggersRefreshData refreshData, ReadOnlySpan<char> propertyName, CancellationToken token)
         {
             if (data.HasData || refreshData.Any)
             {
@@ -204,7 +214,6 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                 }
                 writer.EndBlock(false);
             }
-            return writer;
         }
     }
 }

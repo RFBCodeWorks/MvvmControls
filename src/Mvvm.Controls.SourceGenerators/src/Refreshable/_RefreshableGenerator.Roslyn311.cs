@@ -17,71 +17,82 @@ namespace RFBCodeWorks.Mvvm
         public void Initialize(GeneratorInitializationContext context)
         {
             context.RegisterForSyntaxNotifications(() => new RefreshableSelectorSyntaxReceiver());
+            GeneratorExtensions.DebuggerLaunch();
         }
 
         public void Execute(GeneratorExecutionContext context)
         {
-
-            if (context.CancellationToken.IsCancellationRequested || context.SyntaxReceiver is not RefreshableSelectorSyntaxReceiver receiver) return;
-            if (receiver.Candidates is null) return;
-            if (context.Compilation is not CSharpCompilation compilation) return;
-
-
-            if (compilation.LanguageVersion <= LanguageVersion.CSharp8)
+            SyntaxNode lastNode = null;
+            try
             {
-                context.ReportDiagnostic(Diagnostic.Create(Diagnostics.LanguageVersionTooLow, null, LanguageVersion.CSharp8));
-                return;
-            }
+                if (context.CancellationToken.IsCancellationRequested || context.SyntaxReceiver is not RefreshableSelectorSyntaxReceiver receiver) return;
+                if (receiver.Candidates is null) return;
+                if (context.Compilation is not CSharpCompilation compilation) return;
 
-            // handles cases where a method may have both ListBoxAttribute and ComboBoxAttribute
-            List<DataOrDiagnostics<RefreshableSelectorData>> candidates = null;
 
-            foreach (var node in receiver.Candidates)
-            {
-                context.CancellationToken.ThrowIfCancellationRequested();
-
-                if (node is not MethodDeclarationSyntax method
-                || compilation.GetSemanticModel(node.SyntaxTree) is not SemanticModel sm
-                || sm.GetDeclaredSymbol(method, context.CancellationToken) is not IMethodSymbol symbol
-                )
+                if (compilation.LanguageVersion <= LanguageVersion.CSharp8)
                 {
-                    continue;
+                    context.ReportDiagnostic(Diagnostic.Create(Diagnostics.LanguageVersionTooLow, null, LanguageVersion.CSharp8));
+                    return;
                 }
 
-                foreach (var attr in symbol.GetAttributes())
+                // handles cases where a method may have both ListBoxAttribute and ComboBoxAttribute
+                List<DataOrDiagnostics<RefreshableSelectorData>> candidates = null;
+
+                foreach (var node in receiver.Candidates)
                 {
                     context.CancellationToken.ThrowIfCancellationRequested();
+                    lastNode = node;
 
-                    string attrDisplayStr = attr.AttributeClass.ToDisplayString(SymbolFormats.NameAndContainingTypes);
-                    if (RefreshableSelectorParser.QualifiedAttributes.Contains(attrDisplayStr))
+                    if (node is not MethodDeclarationSyntax method
+                    || compilation.GetSemanticModel(node.SyntaxTree) is not SemanticModel sm
+                    || sm.GetDeclaredSymbol(method, context.CancellationToken) is not IMethodSymbol symbol
+                    )
                     {
-                        (candidates ??= new()).Add(RefreshableSelectorParser.GetInfoOrDiagnostic(node, sm, symbol, attr, context.CancellationToken));
+                        continue;
+                    }
+
+                    foreach (var attr in symbol.GetAttributes())
+                    {
+                        context.CancellationToken.ThrowIfCancellationRequested();
+
+                        string attrDisplayStr = attr.AttributeClass.ToDisplayString(SymbolFormats.NameAndContainingTypes);
+                        if (RefreshableSelectorParser.QualifiedAttributes.Contains(attrDisplayStr))
+                        {
+                            (candidates ??= new()).Add(RefreshableSelectorParser.GetInfoOrDiagnostic(node, sm, symbol, attr, context.CancellationToken));
+                        }
+                    }
+                }
+
+                if (candidates is null || candidates.Count == 0) return;
+
+                var groups = candidates
+                    .ReportAndEnumerate(context.ReportDiagnostic, context.CancellationToken)
+                    .Select(s => RefreshableSelectorParser.TransformRefreshableSelectorData(s, context.CancellationToken))
+                    .GroupBy(d => d.SelectorData.TargetSymbol.ContainingType, SymbolEqualityComparer.Default)
+                    .Select(d => new GroupedCandidates<RefreshableSelectorDataAndTriggers>(d.Key as INamedTypeSymbol, d.ToImmutableArray()));
+
+                foreach (var candidate in groups)
+                {
+                    RefreshableSelectorEmitter emitter = new RefreshableSelectorEmitter(context.CancellationToken);
+
+                    foreach (var item in candidate.Values)
+                    {
+                        context.CancellationToken.ThrowIfCancellationRequested();
+                        lastNode = item.RefreshData.TargetNode;
+                        emitter.EmitProperty(item, context.ReportDiagnostic);
+                    }
+
+                    if (emitter.Writer is not null)
+                    {
+                        context.AddSource(emitter.Writer.SuggestedFileName, emitter.Writer.ToSourceText());
                     }
                 }
             }
-
-            if (candidates is null || candidates.Count == 0) return;
-
-            var groups = candidates
-                .ReportAndEnumerate(context.ReportDiagnostic, context.CancellationToken)
-                .Select(s => RefreshableSelectorParser.TransformRefreshableSelectorData(s, context.CancellationToken))
-                .GroupBy(d => d.SelectorData.TargetSymbol.ContainingType, SymbolEqualityComparer.Default)
-                .Select(d => new GroupedCandidates<RefreshableSelectorDataAndTriggers>(d.Key as INamedTypeSymbol, d.ToImmutableArray()));
-
-            foreach (var candidate in groups)
+            catch (OperationCanceledException) { }
+            catch (System.Exception e)
             {
-                RefreshableSelectorEmitter emitter = new RefreshableSelectorEmitter(context.CancellationToken);
-
-                foreach (var item in candidate.Values)
-                {
-                    context.CancellationToken.ThrowIfCancellationRequested();
-                    emitter.EmitProperty(item, context.ReportDiagnostic);
-                }
-
-                if (emitter.Writer is not null)
-                {
-                    context.AddSource(emitter.Writer.SuggestedFileName, emitter.Writer.ToSourceText());
-                }
+                context.ReportDiagnostic(Diagnostics.CreateExceptionDiagnostic(e, lastNode?.GetLocation()));
             }
         }
 

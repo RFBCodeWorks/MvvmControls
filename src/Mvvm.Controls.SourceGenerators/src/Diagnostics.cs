@@ -16,12 +16,28 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
 {
     internal static partial class Diagnostics
     {
+        internal static Diagnostic CreateExceptionDiagnostic(Exception e, Location? location)
+        {
+            return Diagnostic.Create(
+                id: "RFB_MVVM_000",
+                title: $"Generator Exception : {e.Message}",
+                message: e.StackTrace,
+                category: "RFBCodeWorks.Mvvm.SourceGenerators",
+                severity: DiagnosticSeverity.Error,
+                defaultSeverity: DiagnosticSeverity.Warning,
+                isSuppressed: false,
+                isEnabledByDefault: true,
+                warningLevel: 4,
+                location: location
+            );
+        }
+
         /// <remarks>
         /// Message Parameters:
         /// <br/> None
         /// </remarks>
         public static DiagnosticDescriptor UnknownTargetFramework { get; } =
-           new("RFB_MVVM_000", "Unknown target framework",
+           new("RFB_MVVM_001", "Unknown target framework",
                "Could not determine target framework for compatibility check",
                "RegexGeneration", DiagnosticSeverity.Warning, isEnabledByDefault: true);
 
@@ -30,7 +46,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         /// <br/> None
         /// </remarks>
         public static DiagnosticDescriptor UnsupportedLanguage { get; } =
-           new("RFB_MVVM_001", "Unsupported Language",
+           new("RFB_MVVM_002", "Unsupported Language",
                "This source generator only supports C#",
                "RegexGeneration", DiagnosticSeverity.Error, isEnabledByDefault: true);
 
@@ -39,7 +55,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         /// <br/> - Minimum Language Version
         /// </remarks>
         public static DiagnosticDescriptor LanguageVersionTooLow { get; } =
-           new("RFB_MVVM_002", "Language version too low",
+           new("RFB_MVVM_003", "Language version too low",
                "This source generator only supports C# {0} and newer",
                "RegexGeneration", DiagnosticSeverity.Warning, isEnabledByDefault: true);
         
@@ -49,7 +65,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         /// </remarks>
         public static DiagnosticDescriptor ClassIsNotPartial { get; } =
             new DiagnosticDescriptor(
-                    id: "RFB_MVVM_003",
+                    id: "RFB_MVVM_004",
                     title: "Class is not partial",
                     messageFormat: "Class must have 'partial' keyword to support code generation",
                     category: "SourceGenerator",
@@ -65,7 +81,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         /// </remarks>
         public static DiagnosticDescriptor RelayCommandArgumentsInvalid { get; } =
             new DiagnosticDescriptor(
-                    id: "RFB_MVVM_004",
+                    id: "RFB_MVVM_005",
                     title: "Invalid Arguments",
                     messageFormat: "The method {0} cannot be used to generate a command property, as its signature isn't compatible with any of the existing relay command types",
                     category: "SourceGenerator",
@@ -82,7 +98,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         /// </remarks>
         public static DiagnosticDescriptor MethodReturnTypeDoesNotImplementIList { get; } =
             new DiagnosticDescriptor(
-                    id: "RFB_MVVM_005",
+                    id: "RFB_MVVM_006",
                     title: "Invalid Arguments",
                     messageFormat: "The method {0} cannot be used to generate a {1} property. Return type must implement IList<T>, Task<IList<T>>, or ValueTask<IList<T>>",
                     category: "SourceGenerator",
@@ -98,7 +114,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         /// </remarks>
         public static readonly DiagnosticDescriptor InvalidNameDescriptor =
             new DiagnosticDescriptor(
-                id: "RFB_MVVM_006",
+                id: "RFB_MVVM_007",
                 title: "Invalid name",
                 messageFormat: "A fully qualfied name was unable to be generated for '{0}'",
                 category: "SourceGenerator",
@@ -114,7 +130,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         /// </remarks>
         public static readonly DiagnosticDescriptor UnableToDetermineCollectionType =
             new DiagnosticDescriptor(
-                id: "RFB_MVVM_007",
+                id: "RFB_MVVM_008",
                 title: "Unable to determine collection type",
                 messageFormat: "Unable to determine return collection type for '{0}'",
                 category: "SourceGenerator",
@@ -129,7 +145,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         /// <br/> None
         /// </remarks>
         public static readonly DiagnosticDescriptor InvalidTriggersRefreshUsage = new DiagnosticDescriptor(
-            id: "RFB_MVVM_008",
+            id: "RFB_MVVM_009",
             title: "TriggersRefreshAttribute requires ObservableProperty",
             messageFormat: "Field '{0}' is marked with [TriggersRefresh] but is not an [ObservableProperty]. You must manually refresh the specified selectors.",
             category: "RFBCodeWorks.Mvvm.SourceGenerators",
@@ -146,7 +162,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         /// <br/> - Field Name
         /// </remarks>
         public static readonly DiagnosticDescriptor ObservableFieldIsNotPrivate = new DiagnosticDescriptor(
-            id: "RFB_MVVM_009",
+            id: "RFB_MVVM_010",
             title: "ObservableProperty field is not private",
             messageFormat: "Field '{0}' is not marked as private",
             category: "RFBCodeWorks.Mvvm.SourceGenerators",
@@ -163,7 +179,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         /// <br/> - Method Name
         /// </remarks>
         public static DiagnosticDescriptor TooManyParameters = new DiagnosticDescriptor(
-             id: "RFB_MVVM_010",
+             id: "RFB_MVVM_011",
              title: "Invalid Parameter List for Refreshable Generator",
              messageFormat: "Unable to generate {0} : Method '{1}' has too many parameters",
              category: "RFBCodeWorks.Mvvm.SourceGenerators",
@@ -181,7 +197,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         /// <br/> - Parameter Type FullName
         /// </remarks>
         public static DiagnosticDescriptor ParameterIsNotCancellationToken = new DiagnosticDescriptor(
-             id: "RFB_MVVM_011",
+             id: "RFB_MVVM_012",
              title: "Async Refreshable parameter must be CancellationToken or none",
              messageFormat: "Unable to generate {0} : Method {1} has an invalid parameter of type : {2}",
              category: "RFBCodeWorks.Mvvm.SourceGenerators",

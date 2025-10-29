@@ -63,7 +63,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         /// <summary>
         /// Invokes the RefreshCommand.Execute method on any RefreshableSelectors specified
         /// </summary>
-        public static SourceWriter WriteRefreshTriggers(SourceWriter writer, in TriggersRefreshData data, CancellationToken token)
+        public static void WriteRefreshTriggers(SourceWriter writer, in TriggersRefreshData data, CancellationToken token)
         {
             if (!data.TargetsToRefresh.IsDefaultOrEmpty)
             {
@@ -73,7 +73,6 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                     writer.WriteLine("{0}?.RefreshCommand?.Execute(null);".AsSpan(), item.AsSpan());
                 }
             }
-            return writer;
         }
     }
 }

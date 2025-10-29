@@ -141,7 +141,8 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
             return this;
         }
 
-        static char ThrowInvalidBlockChar(char arg) => throw new ArgumentException($"Invalid block start character: {arg}. Only '{{' or '(' are supported.", "blockStart");
+        private static char ThrowInvalidBlockChar(char arg) => throw new ArgumentException($"Invalid block start character: {arg}. Only '{{' or '(' are supported.", "blockStart");
+        private static void ThrowBlockException() => throw new InvalidOperationException("No more blocks to end");
 
         /// <summary>
         /// Writes a the text to the writer, then opens the block
@@ -201,14 +202,13 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
 
             Indentation++;
             _blocks.Push(endChar);  // Simplified and more explicit
-            Debug.WriteLine($"Pushed {endChar} onto blocks stack. Stack count: {_blocks.Count}. Indentation Level: {Indentation}");
             return this;
         }
 
         /// <summary>Writes the character to end the current block, then moves to the next line.</summary>
         public SourceWriter EndBlock()
         {
-            if (_blocks.Count == 0) throw new InvalidOperationException("No more blocks to end");
+            if (_blocks.Count == 0) ThrowBlockException();
             Indentation--;
             return WriteLine(_blocks.Pop());
         }
@@ -238,14 +238,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         /// <exception cref="InvalidOperationException"></exception>
         public SourceWriter EndBlock(bool moveToNewLine, bool addSemiColon = false)
         {
-            if (_blocks.Count == 0)
-            {
-                Debug.WriteLine("Attempting to end block when no blocks are on the stack!");
-                throw new InvalidOperationException("No more blocks to end");
-            }
+            if (_blocks.Count == 0) ThrowBlockException();
+            
             char c = _blocks.Pop();
             Indentation--;
-            Debug.WriteLine($"Popped {c} from blocks stack. Remaining count: {_blocks.Count}. Indentation Level: {Indentation}");
 
             if (_isOnNewLine)
             {
@@ -336,7 +332,11 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
             return SourceText.From(_sb.ToString(), Encoding.UTF8);
         }
 
-        public override string ToString() => ToSourceText().ToString();
+        /// <summary>
+        /// Get the curerent text of the writer
+        /// </summary>
+        /// <returns>The underlying StringBuilder's current state</returns>
+        public override string ToString() => this._sb.ToString();
 
         /// <summary>
         /// Writes the standard file header (no class entry)
