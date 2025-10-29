@@ -5,7 +5,7 @@
         <AssemblyName>RFBCodeWorks.Mvvm.Controls</AssemblyName>
         <LangVersion>9.0</LangVersion>
         <Platforms>AnyCPU</Platforms>
-        
+        <PackingEnabled>true</PackingEnabled>
         <!-- 
             LTG: Isolate WPF out of this project
             Issues : 
@@ -20,7 +20,7 @@
         <!-- Nuget Stuff -->
         
         <!-- ###################   Version Info ###############  -->
-        <Version>1.0.9.9</Version>
+        <Version>1.0.9.102</Version>
         
         <PackageReleaseNotes>
             - Add XmlnsDefinition properties for easier XAML setup

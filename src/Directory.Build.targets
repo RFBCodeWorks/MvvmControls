@@ -2,9 +2,10 @@
 <Project>
 
 	<!-- Only sign and pack in release mode and if 'PackingEnabled' set 'true' -->
-	
-	<PropertyGroup Condition="'$(PackingEnabled)' == 'true'">
+	<PropertyGroup>
 		<SignAssembly>True</SignAssembly>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(PackingEnabled)' == 'true'">
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<DocumentationFile>$(OutputPath)/$(AssemblyName).xml</DocumentationFile>
 		
