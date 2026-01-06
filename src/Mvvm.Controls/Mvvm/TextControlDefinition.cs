@@ -60,6 +60,6 @@ namespace RFBCodeWorks.Mvvm
         /// <summary>
         /// Public EventHandler method to allow triggering the refresh via another object's event
         /// </summary>
-        public virtual void Refresh(object sender, EventArgs e) => Refresh();
+        public virtual void Refresh(object? sender, EventArgs e) => Refresh();
     }
 }

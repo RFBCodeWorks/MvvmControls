@@ -39,11 +39,11 @@ namespace RFBCodeWorks.Mvvm
         /// <summary>
         /// Public EventHandler method to allow triggering the refresh via another object's event
         /// </summary>
-        public void Refresh(object sender, EventArgs e);
+        public void Refresh(object? sender, EventArgs e);
 
         /// <summary>
         /// Public EventHandler to allow triggering the refresh via a routed event
         /// </summary>
-        public void Refresh(object sender, RoutedEventArgs e);
+        public void Refresh(object? sender, RoutedEventArgs e);
     }    
 }

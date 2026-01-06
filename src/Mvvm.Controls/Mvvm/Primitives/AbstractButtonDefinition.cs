@@ -41,7 +41,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         public abstract void NotifyCanExecuteChanged();
 
         /// <inheritdoc/>
-        public void NotifyCanExecuteChanged(object sender, EventArgs e) => this.NotifyCanExecuteChanged();
+        public void NotifyCanExecuteChanged(object? sender, EventArgs e) => this.NotifyCanExecuteChanged();
 
         #region < ICommand Explicit Implementation >
 

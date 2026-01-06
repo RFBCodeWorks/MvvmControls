@@ -177,7 +177,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 
         /// <inheritdoc/>
-        public void NotifyCanExecuteChanged(object sender, EventArgs e) => NotifyCanExecuteChanged();
+        public void NotifyCanExecuteChanged(object? sender, EventArgs e) => NotifyCanExecuteChanged();
 
         void ICommand.Execute(object parameter) => Execute();
 

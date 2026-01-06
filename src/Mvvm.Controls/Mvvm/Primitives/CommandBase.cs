@@ -60,7 +60,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
 
         /// <inheritdoc cref="RFBCodeWorks.Mvvm.Input.IRelayCommand.NotifyCanExecuteChanged(object, EventArgs)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void NotifyCanExecuteChanged(object sender, EventArgs e) => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        public void NotifyCanExecuteChanged(object? sender, EventArgs e) => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 
         /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.IRelayCommand.NotifyCanExecuteChanged"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

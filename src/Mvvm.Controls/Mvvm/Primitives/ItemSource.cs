@@ -73,7 +73,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// </summary>
         /// <param name="collection">A collection of items. Default or null is OK.</param>
         /// <param name="onCollectionChanged">An action to be inoked when the collection changes (such as calling IRelayCommand.CanExecuteChanged)</param>
-        public ItemSource(Action onCollectionChanged = null, TList collection = default)
+        public ItemSource(Action? onCollectionChanged = null, TList? collection = default)
         {
             Items = collection ?? EmptyCollection;
             _onCollectionChanged = onCollectionChanged;

@@ -18,7 +18,7 @@ namespace RFBCodeWorks.Mvvm.Input
         /// <summary>
         /// Event Handler that allows an external event to raise CanExecuteChanged
         /// </summary>
-        void NotifyCanExecuteChanged(object sender, EventArgs e);
+        void NotifyCanExecuteChanged(object? sender, EventArgs e);
     }
 
     /// <summary>

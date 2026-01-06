@@ -180,7 +180,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// <summary>
         /// Delegate for the ValueUpdated event
         /// </summary>
-        public delegate void ValueUpdatedHandler(object sender, EventArgs e);
+        public delegate void ValueUpdatedHandler(object? sender, EventArgs e);
 
         /// <summary>
         /// 
@@ -207,7 +207,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// <summary>
         /// Delegate for the UnsafeValueUpdated event
         /// </summary>
-        public delegate void UnsafeValueUpdatedHandler(object sender, EventArgs e);
+        public delegate void UnsafeValueUpdatedHandler(object? sender, EventArgs e);
 
         /// <summary>
         /// 

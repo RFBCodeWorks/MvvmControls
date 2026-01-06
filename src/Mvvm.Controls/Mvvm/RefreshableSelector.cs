@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
+#nullable enable
+
 namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
@@ -47,7 +49,7 @@ namespace RFBCodeWorks.Mvvm
         /// </param>
         /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
         /// <param name="onCollectionChanged"/><param name="onSelectionChanged"/>
-        public RefreshableSelector(Func<TList> refresh, Func<bool> canRefresh = null, Action onCollectionChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
+        public RefreshableSelector(Func<TList> refresh, Func<bool>? canRefresh = null, Action? onCollectionChanged = null, Action? onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
             : base(onCollectionChanged, onSelectionChanged, EmptyCollection)
         {
             _refresh = refresh;
@@ -63,10 +65,10 @@ namespace RFBCodeWorks.Mvvm
         /* Async CTORs */
 
         /// <inheritdoc cref="RefreshableSelector{T, TList, TSelectedValue}.RefreshableSelector(Func{TList}, Func{bool}, Action, Action, bool)"/>
-        public RefreshableSelector(Func<Task<TList>> refreshAsync, Func<bool> canRefresh = null, Action onCollectionChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
+        public RefreshableSelector(Func<Task<TList>> refreshAsync, Func<bool>? canRefresh = null, Action? onCollectionChanged = null, Action? onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
             : base(onCollectionChanged, onSelectionChanged, EmptyCollection)
         {
-            _refreshAsync = refreshAsync;
+            _cancellableRefreshAsync = (c) => refreshAsync();
             _canRefresh = canRefresh;
             itemsInitialized = !refreshOnFirstCollectionRequest;
         }
@@ -77,7 +79,7 @@ namespace RFBCodeWorks.Mvvm
         /* Cancellable CTORs */
 
         /// <inheritdoc cref="RefreshableSelector{T, TList, TSelectedValue}.RefreshableSelector(Func{TList}, Func{bool}, Action, Action, bool)"/>
-        public RefreshableSelector(Func<CancellationToken, Task<TList>> refreshAsyncCancellable, Func<bool> canRefresh = null, Action onCollectionChanged = null, Action onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
+        public RefreshableSelector(Func<CancellationToken, Task<TList>> refreshAsyncCancellable, Func<bool>? canRefresh = null, Action? onCollectionChanged = null, Action? onSelectionChanged = null, bool refreshOnFirstCollectionRequest = true)
             : base(onCollectionChanged, onSelectionChanged, EmptyCollection)
         {
             _cancellableRefreshAsync = refreshAsyncCancellable;
@@ -90,7 +92,7 @@ namespace RFBCodeWorks.Mvvm
 
         /* Members  */
 
-        event EventHandler ICommand.CanExecuteChanged
+        event EventHandler? ICommand.CanExecuteChanged
         {
             add 
             {
@@ -105,15 +107,14 @@ namespace RFBCodeWorks.Mvvm
             }
         }
 
-        private IRelayCommand _refreshCommand;
-        private ICommand _cancelRefreshCommand;
+        private IRelayCommand? _refreshCommand;
+        private ICommand? _cancelRefreshCommand;
         private bool itemsInitialized;
         private int _isRefreshing;
-        private readonly Func<bool> _canRefresh;
-        private readonly Func<TList> _refresh;
-        private readonly Func<Task<TList>> _refreshAsync;
-        private readonly Func<CancellationToken, Task<TList>> _cancellableRefreshAsync;
-        private Task _isRefreshingTcs;
+        private readonly Func<bool>? _canRefresh;
+        private readonly Func<TList>? _refresh;
+        private readonly Func<CancellationToken, Task<TList>>? _cancellableRefreshAsync;
+        private Task? _isRefreshingTcs;
 
         /// <inheritdoc/>
         public sealed override TList Items
@@ -163,7 +164,7 @@ namespace RFBCodeWorks.Mvvm
             {
                 return new RelayCommand(RefreshAction, _canRefresh ?? ReturnTrue);
             }
-            else if (_refreshAsync is not null || _cancellableRefreshAsync is not null)
+            else if (_cancellableRefreshAsync is not null)
             {
                 return new AsyncRelayCommand(RefreshTask, _canRefresh ?? ReturnTrue, AsyncRelayCommandOptions.None);
             }
@@ -198,7 +199,7 @@ namespace RFBCodeWorks.Mvvm
             if (token.IsCancellationRequested) return Task.FromCanceled(token);
 
             // check if already refreshing
-            if (Interlocked.CompareExchange(ref _isRefreshing, 1, 0) == 1)
+            if (Interlocked.CompareExchange(ref _isRefreshing, 1, 0) == 1 && _isRefreshingTcs is not null)
             {
                 return _isRefreshingTcs;
             }
@@ -213,10 +214,7 @@ namespace RFBCodeWorks.Mvvm
         {
             try
             {
-                if (_refreshAsync is not null)
-                    Items = await _refreshAsync().ConfigureAwait(true);
-
-                else if (_cancellableRefreshAsync is not null)
+                if (_cancellableRefreshAsync is not null)
                     Items = await _cancellableRefreshAsync(token).ConfigureAwait(true);
             }
             finally
@@ -228,24 +226,21 @@ namespace RFBCodeWorks.Mvvm
         
 
         /// <inheritdoc/>
-        public void Refresh(object sender, EventArgs e) => RefreshCommand.Execute(null);
+        public void Refresh(object? sender, EventArgs e) => RefreshCommand.Execute(null);
         /// <inheritdoc/>
-        public void Refresh(object sender, RoutedEventArgs e) => RefreshCommand.Execute(null);
+        public void Refresh(object? sender, RoutedEventArgs e) => RefreshCommand.Execute(null);
 
         /// <inheritdoc/>
         /// <remarks>Invokes the <see cref="RefreshCommand"/>'s execute method</remarks>
         public void Refresh()
         {
-            if (RefreshCommand.CanExecute(null))
+            if (RefreshCommand is IAsyncRelayCommand)
             {
-                if (RefreshCommand is AsyncRelayCommand asyncCmd)
-                {
-                    asyncCmd.ExecuteAsync(null).Wait();
-                }
-                else
-                {
-                    RefreshCommand.Execute(null);
-                }
+                RefreshAsync(CancellationToken.None).Wait();
+            }
+            else if (RefreshCommand.CanExecute(null))
+            {
+                RefreshCommand.Execute(null);
             }
         }
 
@@ -253,18 +248,20 @@ namespace RFBCodeWorks.Mvvm
         public async Task RefreshAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
-            if (RefreshCommand is AsyncRelayCommand asyncCmd)
+            if (RefreshCommand.CanExecute(null) is false) 
+                return;
+
+            if (RefreshCommand is IAsyncRelayCommand asyncCmd)
             {
                 // need to create a cancellation event here
                 if (token.CanBeCanceled)
                 {
-                    var cancellation = token.Register(() => asyncCmd.Cancel());
+                    using var cancellation = token.Register(() => asyncCmd.Cancel());
                     await asyncCmd.ExecuteAsync(token);
-                    cancellation.Dispose();
                 }
                 else
                 {
-                    await _cancellableRefreshAsync(token);
+                    await  asyncCmd.ExecuteAsync(token);
                 }
             }
             else if (_refresh is not null && (_canRefresh??ReturnTrue).Invoke())
@@ -278,7 +275,7 @@ namespace RFBCodeWorks.Mvvm
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
         public void NotifyCanExecuteChanged() => _refreshCommand?.NotifyCanExecuteChanged();
-        bool ICommand.CanExecute(object parameter) => _refreshCommand?.CanExecute(parameter) ?? false;
-        void ICommand.Execute(object parameter) => _refreshCommand?.Execute(parameter);
+        bool ICommand.CanExecute(object? parameter) => _refreshCommand?.CanExecute(parameter) ?? false;
+        void ICommand.Execute(object? parameter) => _refreshCommand?.Execute(parameter);
     }
 }

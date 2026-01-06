@@ -158,7 +158,7 @@ namespace RFBCodeWorks.Mvvm
         }
         
         /// <inheritdoc/>
-        public void NotifyCanExecuteChanged(object sender, EventArgs e) => NotifyCanExecuteChanged();
+        public void NotifyCanExecuteChanged(object? sender, EventArgs e) => NotifyCanExecuteChanged();
         private void NotifyCanExecuteChangedPrivate() => PrivateCanExecuteChanged?.Invoke(this, EventArgs.Empty);
 
         void ICommand.Execute(object parameter)
@@ -194,7 +194,7 @@ namespace RFBCodeWorks.Mvvm
         public bool IsEnabled => false;
         public string ToolTip => string.Empty;
         public string DisplayText => string.Empty;
-        public void NotifyCanExecuteChanged(object sender, EventArgs e) {}
+        public void NotifyCanExecuteChanged(object? sender, EventArgs e) {}
         public void NotifyCanExecuteChanged() {}
         public bool CanExecute(object parameter) => false;
         public void Execute(object parameter) { }

@@ -34,12 +34,12 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <param name="onSelectionChanged">An action to be inoked when the selected item changes (such as calling IRelayCommand.CanExecuteChanged)</param>
         /// <inheritdoc cref="ItemSource{T, TList}.ItemSource(Action, TList)"/>
         /// <param name="onCollectionChanged"/>
-        public SelectorDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, TList collection = default) : base(onCollectionChanged, collection)
+        public SelectorDefinition(Action? onCollectionChanged = null, Action? onSelectionChanged = null, TList? collection = default) : base(onCollectionChanged, collection)
         {
             _onSelectionChanged = onSelectionChanged;
         }
 
-        private readonly Action _onSelectionChanged;
+        private readonly Action? _onSelectionChanged;
         private TSelectedValue? _selectedValue;
         private int? _selectedIndex = null;
         private bool _indexChanging;
