@@ -15,8 +15,8 @@
     <ProjectReference Include="..\Mvvm.Dialogs\Mvvm.Dialogs.csproj" />
     <ProjectReference Include="..\Mvvm.Controls\Mvvm.Controls.csproj" />
       
-      <Analyzer Include="..\Mvvm.Controls.SourceGenerators\.bin\Debug\311\RFBCodeWorks.Mvvm.SourceGenerators.dll" Condition="'$(UseLegacyGenerator)' == 'true'"/>
-      <Analyzer Include="..\Mvvm.Controls.SourceGenerators\.bin\Debug\410\RFBCodeWorks.Mvvm.SourceGenerators.dll" Condition="'$(UseLegacyGenerator)' == 'false'"/>
+      <Analyzer Include="..\Mvvm.Controls.SourceGenerators\.bin\$(Configuration)\311\RFBCodeWorks.Mvvm.SourceGenerators.dll" Condition="'$(UseLegacyGenerator)' == 'true'"/>
+      <Analyzer Include="..\Mvvm.Controls.SourceGenerators\.bin\$(Configuration)\410\RFBCodeWorks.Mvvm.SourceGenerators.dll" Condition="'$(UseLegacyGenerator)' == 'false'"/>
   </ItemGroup>
 
 </Project>

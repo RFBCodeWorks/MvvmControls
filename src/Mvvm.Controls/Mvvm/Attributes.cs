@@ -8,6 +8,20 @@ using System.Threading.Tasks;
 namespace RFBCodeWorks.Mvvm
 {
 
+#if !GENERATORS
+    /// <summary>
+    /// Adds the <see cref="RFBCodeWorks.Mvvm.IViewModel"/> interface to a class.
+    /// </summary>    
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    public sealed class IViewModelAttribute : Attribute
+#else
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    internal sealed class IViewModelAttribute : Attribute
+#endif
+    {
+
+    }
+
     /// <summary>
     /// Turns a method into a <see cref="Mvvm.ButtonDefinition"/>.
     /// <br/> Functions similar to <see cref="CommunityToolkit.Mvvm.Input.RelayCommand"/>

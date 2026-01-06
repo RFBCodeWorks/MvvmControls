@@ -43,15 +43,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Roslyn40", "Roslyn40", "{14212462-ECA6-4BCA-BBF5-0B0B8EBDD873}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SourceGenerators", "SourceGenerators", "{768DA011-2CBB-443A-9CC6-5B7E5B33988B}"
+	ProjectSection(SolutionItems) = preProject
+		src\Mvvm.Controls.SourceGenerators\SourceGenerators.ImportSdk.targets = src\Mvvm.Controls.SourceGenerators\SourceGenerators.ImportSdk.targets
+	EndProjectSection
 EndProject
-
-
-
-
-
-
-
-
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AppVeyor|Any CPU = AppVeyor|Any CPU

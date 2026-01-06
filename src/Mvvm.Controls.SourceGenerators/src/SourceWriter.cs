@@ -141,6 +141,8 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
             return this;
         }
 
+        public SourceWriter BeginBlock(INamespaceSymbol namespaceSymbol) => BeginBlock(namespaceSymbol.ToDisplayString(SymbolFormats.NamespaceFormat));
+
         private static char ThrowInvalidBlockChar(char arg) => throw new ArgumentException($"Invalid block start character: {arg}. Only '{{' or '(' are supported.", "blockStart");
         private static void ThrowBlockException() => throw new InvalidOperationException("No more blocks to end");
 
@@ -362,10 +364,11 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
             { WriteFileHeader(nt, false, usings); }
             else if (symbol.ContainingType is INamedTypeSymbol ct)
             { WriteFileHeader(ct, false, usings); }
-            else Throw();
+            else Throw(symbol);
+
             SetFileName(symbol);
             return this;
-            static void Throw() => throw new ArgumentException("symbol is not contained within a type");
+            static void Throw(ISymbol symbol) => throw new ArgumentException($"symbol '{symbol.ToDisplayString()}' is not an INamedTypeSymbol or contained within an INamedTypeSymbol");
         }
 
         /// <inheritdoc cref="WriteFileHeader(INamedTypeSymbol, bool, string[])"/>
@@ -762,11 +765,13 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
 
         /// <summary>
         /// Writes the <see cref="ISymbol"/> modifiers
+        /// <br/> <see langword="internal, public, private, static, abstract, virtual, override, sealed, extern, async, partial"/>
         /// </summary>
         /// <param name="isPartial">include the 'partial' keyword or not</param>
         /// <returns></returns>
         public SourceWriter WriteSymbolModifiers(ISymbol symbol, bool isPartial = false)
         {
+            WriteIndent();
             switch (symbol.DeclaredAccessibility)
             {
                 case Accessibility.NotApplicable: break;

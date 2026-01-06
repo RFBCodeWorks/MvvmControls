@@ -8,6 +8,7 @@ using System.Windows.Controls;
 
 namespace ExampleWPF.ViewModels
 {
+    [IViewModel]
     partial class ListboxTester : ObservableObject
     {
         public ListBoxDefinition<string> ListBoxDefinition { get; } = new ListBoxDefinition<string>()

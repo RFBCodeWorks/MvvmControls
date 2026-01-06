@@ -17,7 +17,7 @@ namespace RFBCodeWorks.Mvvm
         public void Initialize(GeneratorInitializationContext context)
         {
             context.RegisterForSyntaxNotifications(() => new RefreshableSelectorSyntaxReceiver());
-            GeneratorExtensions.DebuggerLaunch();
+            //GeneratorExtensions.DebuggerLaunch();
         }
 
         public void Execute(GeneratorExecutionContext context)
