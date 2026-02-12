@@ -32,7 +32,17 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
             if (data.TargetSymbol is not IMethodSymbol symbol) return;
 
             // get strings
-            if (Diagnostics.TryGetPropertyName(symbol, "Button", out var fieldName, out var PropName) is Diagnostic nameDiag)
+            ReadOnlySpan<char> fieldName, propName;
+            if (data.PropertyName.IsNotEmptyOrWhiteSpace())
+            {
+                propName = data.PropertyName.Trim().AsSpan();
+                Span<char> fc = new char[propName.Length + 1];
+                fc[0] = '_';
+                fc[1] = Char.ToLowerInvariant(propName[0]);
+                propName.Slice(1).CopyTo(fc.Slice(2));
+                fieldName = fc;
+            }
+            else if (Diagnostics.TryGetPropertyName(symbol, "Button", out fieldName, out propName) is Diagnostic nameDiag)
             {
                 reportDiagnostic(nameDiag);
                 return;
@@ -62,13 +72,24 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
 
             // write the field
             Writer
-                .WriteLine("/// <summary> backing field for <see cref=\"{0}\" /> </summary>".AsSpan(), PropName)
+                .WriteLine("/// <summary> backing field for <see cref=\"{0}\" /> </summary>".AsSpan(), propName)
                 .WriteLine(SourceWriter.GeneratedCodeAttribute)
                 .WriteLine("private {0}? {1};".AsSpan(), buttonType.AsSpan(), fieldName)
-                .WriteLine()
-                .WriteLine("/// <summary> Generated <see cref=\"{0}\"/> for <see cref=\"{1}\"/> </summary>", buttonType, data.TargetSymbol.Name)
+                .WriteLine();
+
+            // write the property comment
+            if (data.TargetSymbol.GetDocumentationCommentXml(null, false, _token) is string comment && comment.Contains("<summary>"))
+            {
+                Writer.WriteLine(comment);
+            } else
+            {
+                Writer.WriteLine("/// <summary> Generated <see cref=\"{0}\"/> for <see cref=\"{1}\"/> </summary>", buttonType.SanitizeForXmlComment(), data.TargetSymbol.Name);
+            }
+            
+            // write the property
+            Writer
                 .WriteAttributes(Attributes.GeneratedCodeAttribute | Attributes.ExcludeFromCodeCoverage)
-                .WriteIndent().Write("public {0} {1} => {2} ??= new {0}".AsSpan(), buttonType.AsSpan(), PropName, fieldName)
+                .WriteIndent().Write("public {0} {1} => {2} ??= new {0}".AsSpan(), buttonType.AsSpan(), propName, fieldName)
                 .BeginBlock("", '(', false);
             
             if (isAsync)
@@ -126,13 +147,13 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
                  */
 
                 Writer
-                    .WriteLine("/// <summary>The backing field for <see cref=\"{0}\"/>.</summary>".AsSpan(), PropName)
+                    .WriteLine("/// <summary>The backing field for <see cref=\"{0}\"/>.</summary>".AsSpan(), propName)
                     .WriteLine(SourceWriter.GeneratedCodeAttribute)
                     .WriteLine("private global::System.Windows.Input.ICommand? {0}CancelCommand;".AsSpan(), fieldName)
-                    .WriteLine("/// <summary>Gets an <see cref=\"global::System.Windows.Input.ICommand\"/> instance that can be used to cancel <see cref=\"{0}\"/>.</summary>".AsSpan(), PropName)
+                    .WriteLine("/// <summary>Gets an <see cref=\"global::System.Windows.Input.ICommand\"/> instance that can be used to cancel <see cref=\"{0}\"/>.</summary>".AsSpan(), propName)
                     .WriteLine(SourceWriter.GeneratedCodeAttribute)
                     .WriteLine(SourceWriter.ExcludeFromCodeCoverage)
-                    .WriteLine("public global::System.Windows.Input.ICommand {0}CancelCommand => {1}CancelCommand ??= global::CommunityToolkit.Mvvm.Input.IAsyncRelayCommandExtensions.CreateCancelCommand({0});".AsSpan(), PropName, fieldName);
+                    .WriteLine("public global::System.Windows.Input.ICommand {0}CancelCommand => {1}CancelCommand ??= global::CommunityToolkit.Mvvm.Input.IAsyncRelayCommandExtensions.CreateCancelCommand({0});".AsSpan(), propName, fieldName);
             }
         }
     }

@@ -63,6 +63,27 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         }
 
         /// <summary>
+        /// Strips out the &lt;member&gt; nodes that are returned from <see cref="ISymbol.GetDocumentationCommentXml(CancellationToken)"/>. 
+        /// </summary>
+        /// <returns></returns>
+        public static string SanitizieDocumentationCommentXml(this string documentationCommentXml)
+        {
+            if (string.IsNullOrEmpty(documentationCommentXml))
+                return string.Empty;
+            var startIndex = documentationCommentXml.IndexOf("<member name", StringComparison.OrdinalIgnoreCase);
+            if (startIndex < 0) return documentationCommentXml;
+
+            startIndex = documentationCommentXml.IndexOf("\">", startIndex, StringComparison.OrdinalIgnoreCase); // gets end of first <member name= "">
+            
+
+            var endIndex = documentationCommentXml.IndexOf("</member>", documentationCommentXml.Length - 20 , StringComparison.OrdinalIgnoreCase);
+            if (startIndex < 0 || endIndex < 0) return documentationCommentXml;
+            startIndex += 2; // move past the ">" at the end of the opening <member> tag
+            var summaryContent = documentationCommentXml.Substring(startIndex, endIndex - startIndex);
+            return summaryContent;
+        }
+
+        /// <summary>
         /// Iterates the attribute's constructor arguments, populating the builder if any are found.
         /// </summary>
         /// <param name="attr">The attribute whose <see cref="AttributeData.ConstructorArguments"/> should be evaluated.</param>

@@ -16,6 +16,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
         public AttributeData AttributeData { get; }
 
         // Attribute-specific members:
+        public string PropertyName { get; }
         public string DisplayText { get; }
         public string ToolTip { get; }
         public string CanExecute { get; }
@@ -38,6 +39,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
             {
                 switch (kvp.Key)
                 {
+                    case nameof(ButtonAttribute.PropertyName):
+                        PropertyName = (kvp.Value.Value as string).Trim('_', ' ').Trim();
+                        break;
+
                     case nameof(ButtonAttribute.DisplayText):
                         DisplayText = kvp.Value.ToCSharpString();
                         break;

@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-    <!-- Set the Version Information -->
-    <PropertyGroup>
-        <Version>1.0.1.2</Version>
-    </PropertyGroup>
-    
     <!-- Set the SDK output paths -->
     <PropertyGroup>
         <AnalyzerVer>$(AnalyzerRoslynVersion.Replace(".","").Trim())</AnalyzerVer>
@@ -16,8 +11,9 @@
         <BaseOutputPath>$(OP)</BaseOutputPath>
     </PropertyGroup>
 
-    <!-- Import the SDK -->
+    <!-- Import the SDK & Publish Version -->
     <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+    <Import Project="..\Mvvm.Version.targets" />
 
 	<!-- Source Generator compile props -->
 	<PropertyGroup>

@@ -34,6 +34,13 @@ namespace RFBCodeWorks.Mvvm
 #endif
     {
         /// <summary>
+        /// A custom name to use for the generated property.
+        /// <para/> Otherwise, the name will be generated based on the method name.
+        /// <br/> ex: DoSomething() -> DoSomethingButton
+        /// </summary>
+        public string? PropertyName { get; set; }
+
+        /// <summary>
         /// The text to display as the button content
         /// </summary>
         public string? DisplayText { get; set; }

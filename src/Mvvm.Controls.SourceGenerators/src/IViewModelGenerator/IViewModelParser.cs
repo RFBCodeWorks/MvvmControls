@@ -40,10 +40,20 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         public static DataOrDiagnostics<GeneratorAttributeSyntaxContext> GetDataOrDiagnostics(GeneratorAttributeSyntaxContext context, CancellationToken token)
         {
             if (context.TargetNode is not TypeDeclarationSyntax) return default;
+            if (context.TargetSymbol is not ITypeSymbol typeSymbol) return default;
+            
             if (context.TargetNode.IsNotPartialClass(token, out var partialDiag))
             {
                 return new(partialDiag);
             }
+
+            // type must implement INotifyPropertyChanged if base type is not null
+            // if base type is null, this generator can implement INotifyPropertyChanged itself
+            if (typeSymbol.BaseType is not null && typeSymbol.DoesNotImplementInterface("System.ComponentModel.INotifyPropertyChanged", token, out var ifaceDiag))
+            {
+                return new(ifaceDiag);
+            }
+            
             return new(context);
         }        
     }

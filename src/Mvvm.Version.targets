@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+    <!-- Set the Version Information for entire solution -->
+    <PropertyGroup>
+        <Version>1.0.9.113</Version>
+    </PropertyGroup>
+
+</Project>

@@ -52,6 +52,16 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
             WasSelectionChangeMethodRun = false;
         }
 
+        /// <summary>
+        /// Represents a Selector that contains a <see cref="List{T}"/> of <see cref="int"/> values.
+        /// </summary>
+        /// <remarks>
+        /// Test 
+        /// <br/> - Multiple 
+        /// <br/> - Line 
+        /// <br/> - Comment
+        /// </remarks>
+        /// <returns></returns>
         [TriggersRefresh(nameof(_refreshableItemSource))]
         [OnCollectionChanged(nameof(_collectionCommand))]
         [OnSelectionChanged(nameof(_selectionCommand))]

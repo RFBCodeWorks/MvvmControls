@@ -400,6 +400,23 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
                 _isOnNewLine = true;
             }
 
+            WriteClassEntry(symbol, true);
+            
+            if (setFileName) SetFileName(symbol);
+            return this;
+        }
+
+        /// <summary>
+        /// Writes the Class entry starting at the namespace and continuing until the specified symbol.
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <param name="beginBlock">
+        /// When set true, begins the next block.
+        /// <br/> When set false, stays on the same line after writing the entry to the class
+        /// </param>
+        /// <returns>The same instance</returns>
+        public SourceWriter WriteClassEntry(INamedTypeSymbol symbol, bool beginBlock)
+        {
             if (symbol.ContainingNamespace is INamespaceSymbol ns)
             {
                 BeginBlock(ns.ToDisplayString(SymbolFormats.NamespaceFormat));
@@ -418,7 +435,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
                 _token.ThrowIfCancellationRequested();
                 containingType = tree.Pop();
                 IndentIfOnNewLine();
-                switch(containingType.DeclaredAccessibility)
+                switch (containingType.DeclaredAccessibility)
                 {
                     case Accessibility.NotApplicable: break;
                     case Accessibility.ProtectedOrInternal: _sb.Append("protected internal "); break;
@@ -433,10 +450,12 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
                 if (containingType.IsSealed) _sb.Append("sealed ");
                 _sb.Append("partial ");
                 _isOnNewLine = false;
-                BeginBlock(containingType.ToDisplayString(SymbolFormats.PartialClassEntry));
-            }
 
-            if (setFileName) SetFileName(symbol);
+                if (tree.Count > 0 || beginBlock)
+                    BeginBlock(containingType.ToDisplayString(SymbolFormats.PartialClassEntry));
+                else
+                    _sb.Append(containingType.ToDisplayString(SymbolFormats.PartialClassEntry));
+            }
             return this;
         }
 

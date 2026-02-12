@@ -64,8 +64,27 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                 .WriteLine("/// <summary> backing field for <see cref=\"{0}\" /> </summary>".AsSpan(), propName)
                 .WriteLine(SourceWriter.GeneratedCodeAttribute)
                 .WriteLine("private {0}? {1};".AsSpan(), propType.AsSpan(), fieldName)
-                .WriteLine()
-                .WriteLine("/// <summary> Generated <see cref=\"{0}\"/> for <see cref=\"{1}\"/> </summary>", propType.SanitizeForXmlComment(), data.TargetSymbol.Name)
+                .WriteLine();
+
+            // write the property comment
+            if (data.TargetSymbol.GetDocumentationCommentXml(null, false, _token) is string comment && comment.Contains("<summary>"))
+            {
+                var xmlDoc = comment.SanitizieDocumentationCommentXml().Split('\n');
+                foreach(var line in xmlDoc)
+                {
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        Writer.WriteLine("/// {0}", line.Trim());
+                    }
+                }
+            }
+            else
+            {
+                Writer.WriteLine("/// <summary> Generated <see cref=\"{0}\"/> for <see cref=\"{1}\"/> </summary>", propType.SanitizeForXmlComment(), data.TargetSymbol.Name);
+            }
+
+            // write the property
+            Writer
                 .WriteAttributes(Attributes.GeneratedCodeAttribute | Attributes.ExcludeFromCodeCoverage)
                 .WriteLine("public {0} {1} => {2} ??= new {0}".AsSpan(), propType.AsSpan(), propName, fieldName)
                 .BeginBlock("", '(', true);
@@ -120,6 +139,9 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                     ;
             }
             Writer.EndBlock(true, true);
+
+            WritePartialMethods(Writer, propName, dataAndTriggers.CollectionChanged.HasData, dataAndTriggers.SelectionChanged.HasData);
+
             Debug.Assert(Writer.Indentation == 2);
         }
 
@@ -147,6 +169,8 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             {
                 writer.Write(',').WriteLine()
                     .BeginBlock($"onCollectionChanged: () => ");
+
+                writer.WriteLine("On{0}CollectionChanged();", propertyName);
 
                 if (!data.CommandsToNotify.IsDefaultOrEmpty)
                 {
@@ -184,6 +208,11 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                 writer.Write(',').WriteLine()
                     .BeginBlock($"onSelectionChanged: () => ");
 
+                if (data.HasData)
+                {
+                    writer.WriteLine("On{0}SelectionChanged();", propertyName);
+                }
+
                 if (!data.SelectorActionsToInvoke.IsDefaultOrEmpty)
                 {
                     foreach (var cmd in data.SelectorActionsToInvoke)
@@ -212,8 +241,26 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                         writer.WriteLine("{0}?.NotifyCanExecuteChanged();", cmd.AsSpan());
                     }
                 }
+                
                 writer.EndBlock(false);
             }
+        }
+
+        private static void WritePartialMethods(SourceWriter writer, ReadOnlySpan<char> propertyName, bool onCollection, bool onSelection)
+        {
+            if (onCollection)
+                writer
+                    .WriteLine()
+                    .WriteLine("/// <summary> Called when the collection of <see cref=\"{0}\"/> changes. </summary>", propertyName)
+                    .WriteAttributes(Attributes.GeneratedCodeAttribute | Attributes.ExcludeFromCodeCoverage)
+                    .WriteLine("partial void On{0}CollectionChanged();", propertyName);
+
+            if (onSelection)
+                writer
+                    .WriteLine()
+                    .WriteLine("/// <summary> Called when the selection of <see cref=\"{0}\"/> changes. </summary>", propertyName)
+                    .WriteAttributes(Attributes.GeneratedCodeAttribute | Attributes.ExcludeFromCodeCoverage)
+                    .WriteLine("partial void On{0}SelectionChanged();", propertyName);
         }
     }
 }

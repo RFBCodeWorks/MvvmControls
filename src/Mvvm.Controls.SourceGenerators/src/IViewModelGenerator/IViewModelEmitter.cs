@@ -23,20 +23,20 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         public static SourceWriter? Emit(SyntaxNode targetNode, ISymbol targetSymbol, Action<Diagnostic> reportDiag, CancellationToken token)
         {
             if (targetNode is not ClassDeclarationSyntax node) return null;
-            if (targetSymbol is not ITypeSymbol symbol) return null;
+            if (targetSymbol is not INamedTypeSymbol symbol) return null;
 
             token.ThrowIfCancellationRequested();
 
             SourceWriter writer = new SourceWriter(token);
             writer.Reset();
 
-            GeneratorExtensions.DebuggerBreak();
-            
             writer
                 .WriteFileHeader()
-                .BeginBlock(symbol.ContainingNamespace)
-                .WriteSymbolModifiers(symbol, isPartial: true)
-                .BeginBlock($"class {node.Identifier.Text} : global::RFBCodeWorks.Mvvm.IViewModel")
+                .WriteClassEntry(symbol, false)
+                //.BeginBlock(symbol.ContainingNamespace)
+                //.WriteSymbolModifiers(symbol, isPartial: true)
+                //.BeginBlock($"class {node.Identifier.Text} : global::RFBCodeWorks.Mvvm.IViewModel")
+                .BeginBlock($" : global::RFBCodeWorks.Mvvm.IViewModel")
                 .WriteLine("/// <summary> Reference to the ViewModel that owns this viewmodel. </summary>")
                 .WriteAttributes(Attributes.GeneratedCodeAttribute | Attributes.ExcludeFromCodeCoverage)
                 // beginning of property

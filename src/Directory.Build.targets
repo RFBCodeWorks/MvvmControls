@@ -13,6 +13,5 @@
         <Product>$(AssemblyName)</Product>
 		<PackageOutputPath>..\..\_OutputNuget\</PackageOutputPath>
 	</PropertyGroup>
-	
 
 </Project>

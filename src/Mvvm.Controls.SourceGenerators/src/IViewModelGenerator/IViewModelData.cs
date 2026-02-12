@@ -10,7 +10,6 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         public SyntaxNode TargetNode { get; }
         public ISymbol TargetSymbol { get; }
         public SemanticModel SemanticModel { get; }
-      
 
         public IViewModelData(
             SyntaxNode syntaxNode,

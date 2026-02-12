@@ -238,12 +238,12 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                 {
                     case OnDataChangedAttributeData.QualifiedName_SelectionChanged:
                         GetDataChanged(attribute, ref selection_actions, ref selection_selectorActions, ref selection_commands, token);
-                        anySelection = anySelection || (selection_actions ?? selection_selectorActions ?? selection_commands) is not null;
+                        anySelection = true || anySelection || (selection_actions ?? selection_selectorActions ?? selection_commands) is not null;
                         break;
 
                     case OnDataChangedAttributeData.QualifiedName_CollectionChanged:
                         GetDataChanged(attribute, ref collection_actions, ref collection_selectorActions, ref collection_commands, token);
-                        anyCollection = anyCollection || (collection_actions ?? collection_selectorActions ?? collection_commands) is not null;
+                        anyCollection = true || anyCollection || (collection_actions ?? collection_selectorActions ?? collection_commands) is not null;
                         break;
 
                     case TriggersRefreshData.QualifiedAttributeName:

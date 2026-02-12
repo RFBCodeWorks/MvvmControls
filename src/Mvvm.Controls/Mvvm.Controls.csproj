@@ -1,4 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+    
+    <!-- ###################   Version Info ###############  -->
+    <Import Project="..\Mvvm.Version.targets" />
+    
     <PropertyGroup>
         <!-- Target Frameworks are above a 'Choose' block for nuget requirements -->
         <RootNamespace>RFBCodeWorks</RootNamespace>
@@ -17,10 +21,7 @@
         <UseWPF>true</UseWPF>
         <UseWinforms>false</UseWinforms>
         
-        <!-- Nuget Stuff -->
-        
-        <!-- ###################   Version Info ###############  -->
-        <Version>1.0.9.105</Version>
+        <!-- Nuget Stuff -->      
         
         <PackageReleaseNotes>
             - Add XmlnsDefinition properties for easier XAML setup

@@ -24,17 +24,19 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         public ImmutableArray<string> CommandsToNotify { get; }
         public ImmutableArray<string> ActionsToInvoke { get; }
         public ImmutableArray<string> SelectorActionsToInvoke { get; }
+        private readonly bool wasSpecified;
 
         /// <summary>
         /// True if any of the commands/actions have data. False if all are default or empty.
         /// </summary>
-        public bool HasData =>
-            !SelectorActionsToInvoke.IsDefaultOrEmpty ||
-            !CommandsToNotify.IsDefaultOrEmpty ||
-            !ActionsToInvoke.IsDefaultOrEmpty;
+        public bool HasData => wasSpecified; // ||
+            //!SelectorActionsToInvoke.IsDefaultOrEmpty ||
+            //!CommandsToNotify.IsDefaultOrEmpty ||
+            //!ActionsToInvoke.IsDefaultOrEmpty;
 
         public OnDataChangedAttributeData(ImmutableArray<string> actions, ImmutableArray<string> commands, ImmutableArray<string> selectorActions)
         {
+            wasSpecified = true;
             ActionsToInvoke = actions;
             CommandsToNotify = commands;
             SelectorActionsToInvoke = selectorActions;

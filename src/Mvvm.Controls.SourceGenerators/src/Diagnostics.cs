@@ -205,6 +205,15 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
              isEnabledByDefault: true
         );
 
+        public static DiagnosticDescriptor ClassDoesNotImplementInterface = new DiagnosticDescriptor(
+             id: "RFB_MVVM_013",
+             title: "Interface Required",
+             messageFormat: "The class '{0}' must implement interface '{1}' to support this generator",
+             category: "RFBCodeWorks.Mvvm.SourceGenerators",
+             defaultSeverity: DiagnosticSeverity.Error,
+             isEnabledByDefault: true
+        );
+
 
         /// <summary>
         /// Tries to clean a symbol's name by stripping known prefixes/suffixes
@@ -334,6 +343,21 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
             var result = node.IsPartialClass(token);
             diagnostic = result ? null : Diagnostic.Create(ClassIsNotPartial, node.GetLocation());
             return !result;
+        }
+
+        internal static bool DoesNotImplementInterface(this ITypeSymbol typeSymbol, string interfaceFullName, CancellationToken token, out Diagnostic? diagnostic)
+        {
+            foreach (var iface in typeSymbol.AllInterfaces)
+            {
+                token.ThrowIfCancellationRequested();
+                if (iface.ToDisplayString() == interfaceFullName)
+                {
+                    diagnostic = null;
+                    return false;
+                }
+            }
+            diagnostic = Diagnostic.Create(ClassDoesNotImplementInterface, typeSymbol.Locations.FirstOrDefault() ?? Location.None, typeSymbol.Name, interfaceFullName);
+            return true;
         }
 
         internal static bool IsPartialClass(this SyntaxNode node, CancellationToken token)
