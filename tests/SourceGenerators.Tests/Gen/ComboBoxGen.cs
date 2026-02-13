@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
 {
@@ -59,7 +61,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
         [ComboBox(PropertyName = "PropertyNameTest")]
         private int[] PropertyName()
         {
-            return [];
+            return Array.Empty<int>();
         }
 
         [TriggersRefresh(nameof(_refreshableItemSource))]

@@ -34,6 +34,6 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
         [ComboBox(ToolTip = "Test Tooltip")]
         [Selector(ToolTip = "Selector Tooltip")]
         [ListBox(ToolTip = "Listbox Tooltip")]
-        private int[] Test() => [];
+        private int[] Test() => Array.Empty<int>();
     }
 }

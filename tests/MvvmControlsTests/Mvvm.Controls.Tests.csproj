@@ -29,4 +29,28 @@
         <ProjectReference Include="..\..\src\Mvvm.Controls\Mvvm.Controls.csproj" />
     </ItemGroup>
 
+    <Choose>
+        <When Condition="'$(TargetFramework)' == 'Net472'">
+            <!-- Roslyn 311 Testing -->
+            <PropertyGroup>
+                <DefineConstants>$(DefineConstants);ROSLYN311</DefineConstants>
+            </PropertyGroup>
+
+            <ItemGroup>
+                <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.11.0" PrivateAssets="all" />
+                <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0" PrivateAssets="all" />
+                <ProjectReference Include="..\WittmannUSA.SourceGenerators\WittmannUSA.SourceGenerators.Roslyn311.csproj" />
+            </ItemGroup>
+
+        </When>
+        <Otherwise>
+            <!-- Roslyn 410 Testing -->
+            <ItemGroup>
+                <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.10.0" PrivateAssets="all" />
+                <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.10.0" PrivateAssets="all" />
+                <ProjectReference Include="..\WittmannUSA.SourceGenerators\WittmannUSA.SourceGenerators.Roslyn410.csproj" />
+            </ItemGroup>
+        </Otherwise>
+    </Choose>
+
 </Project>
