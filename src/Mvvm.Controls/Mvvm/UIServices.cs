@@ -20,6 +20,8 @@ namespace RFBCodeWorks.Mvvm
         /// </summary>
         private static bool IsBusy;
 
+        private static DispatcherTimer _dispatcherTimer;
+
         /// <summary>
         /// Sets the cursor to some cursor type if the BusyCursor is not active
         /// </summary>
@@ -52,7 +54,7 @@ namespace RFBCodeWorks.Mvvm
         /// </summary>
         public static void TrySetBusyState()
         {
-            try { System.Windows.Application.Current.Dispatcher.Invoke(SetBusyState); } finally { }
+            try { System.Windows.Application.Current?.Dispatcher?.Invoke(SetBusyState); } catch{ }
         }
 
         /// <summary>
@@ -66,10 +68,8 @@ namespace RFBCodeWorks.Mvvm
                 IsBusy = busy;
                 Mouse.OverrideCursor = busy ? BusyCursor : null;
 
-                if (IsBusy)
-                {
-                    new DispatcherTimer(TimeSpan.FromSeconds(0), DispatcherPriority.ApplicationIdle, dispatcherTimer_Tick, System.Windows.Application.Current.Dispatcher);
-                }
+                _dispatcherTimer ??= new DispatcherTimer(TimeSpan.FromSeconds(0), DispatcherPriority.ApplicationIdle, SetBusyStateFalse, System.Windows.Application.Current.Dispatcher);
+                _dispatcherTimer.IsEnabled = IsBusy;
             }
         }
 
@@ -78,13 +78,11 @@ namespace RFBCodeWorks.Mvvm
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private static void dispatcherTimer_Tick(object sender, EventArgs e)
+        private static void SetBusyStateFalse(object sender, EventArgs e)
         {
-            var dispatcherTimer = sender as DispatcherTimer;
-            if (dispatcherTimer != null)
+            if (sender is DispatcherTimer dispatcherTimer)
             {
                 SetBusyState(false);
-                dispatcherTimer.Stop();
             }
         }
     }
