@@ -8,6 +8,8 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
+#nullable enable
+
 namespace RFBCodeWorks.Mvvm.Primitives
 {
     /// <summary>
@@ -27,7 +29,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         [SuppressMessage("", "IDE0060")]
         protected static bool ReturnTrue(T ignoredParameter) => true;
 
-        private string _displayText;
+        private string _displayText = string.Empty;
 
         /// <inheritdoc/>
         public virtual string DisplayText
@@ -63,10 +65,10 @@ namespace RFBCodeWorks.Mvvm.Primitives
         #region < ICommand Explicit Implementation >
 
         /// <inheritdoc/>
-        public abstract event EventHandler CanExecuteChanged;
+        public abstract event EventHandler? CanExecuteChanged;
 
-        void ICommand.Execute(object parameter) => ExecuteAsync(AbstractCommand<T>.ThrowIfInvalidParameter(parameter)).Wait();
-        bool ICommand.CanExecute(object parameter)
+        void ICommand.Execute(object? parameter) => ExecuteAsync(AbstractCommand<T>.ThrowIfInvalidParameter(parameter)).Wait();
+        bool ICommand.CanExecute(object ?parameter)
         {
             // Special case a null value for a value type argument type.
             // This ensures that no exceptions are thrown during initialization.

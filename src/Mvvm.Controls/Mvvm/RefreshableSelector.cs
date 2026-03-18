@@ -69,6 +69,7 @@ namespace RFBCodeWorks.Mvvm
             : base(onCollectionChanged, onSelectionChanged, EmptyCollection)
         {
             _cancellableRefreshAsync = (c) => refreshAsync();
+            _cancelRefreshCommand = InactiveButton.Instance;
             _canRefresh = canRefresh;
             itemsInitialized = !refreshOnFirstCollectionRequest;
         }

@@ -3,11 +3,12 @@
     <PropertyGroup>
         <!-- To Do : swap test platforms - unit tests require [STAthread] if run in .net, which is not currently supported -->
         <TargetFrameworks>
-            net472;
-        </TargetFrameworks>
+			net462;
+			net8.0-windows;
+			net10.0-windows;
+		</TargetFrameworks>
 
         <RootNamespace>RFBCodeWorks.Mvvm.Tests</RootNamespace>
-        <LangVersion>9.0</LangVersion>
         <IsPackable>false</IsPackable>
         <Configurations>Debug;Release;AppVeyor</Configurations>
         <UseWPF>true</UseWPF>
@@ -19,10 +20,10 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
-        <PackageReference Include="MSTest.TestAdapter" Version="2.2.3" />
-        <PackageReference Include="MSTest.TestFramework" Version="2.2.3" />
-        <PackageReference Include="coverlet.collector" Version="3.0.2" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
+        <PackageReference Include="MSTest.TestAdapter" Version="4.1.0" />
+        <PackageReference Include="MSTest.TestFramework" Version="4.1.0" />
+        <PackageReference Include="coverlet.collector" Version="8.0.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -30,27 +31,37 @@
     </ItemGroup>
 
     <Choose>
-        <When Condition="'$(TargetFramework)' == 'Net472'">
-            <!-- Roslyn 311 Testing -->
-            <PropertyGroup>
+		<!-- Roslyn 311 Testing -->
+		<When Condition="'$(TargetFramework)' == 'Net462'">
+			<PropertyGroup>
+				<LangVersion>9.0</LangVersion>
                 <DefineConstants>$(DefineConstants);ROSLYN311</DefineConstants>
             </PropertyGroup>
-
             <ItemGroup>
                 <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.11.0" PrivateAssets="all" />
                 <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0" PrivateAssets="all" />
-                <ProjectReference Include="..\WittmannUSA.SourceGenerators\WittmannUSA.SourceGenerators.Roslyn311.csproj" />
+				<ProjectReference Include="..\..\src\Mvvm.Controls.SourceGenerators\SourceGenerators.Roslyn311.csproj" />
             </ItemGroup>
-
         </When>
-        <Otherwise>
-            <!-- Roslyn 410 Testing -->
+
+		<!-- Roslyn 410 Testing -->
+        <When Condition="'$(TargetFramework)' == 'net8.0-Windows'">
             <ItemGroup>
                 <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.10.0" PrivateAssets="all" />
                 <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.10.0" PrivateAssets="all" />
-                <ProjectReference Include="..\WittmannUSA.SourceGenerators\WittmannUSA.SourceGenerators.Roslyn410.csproj" />
+				<ProjectReference Include="..\..\src\Mvvm.Controls.SourceGenerators\SourceGenerators.Roslyn410.csproj" />
             </ItemGroup>
-        </Otherwise>
+        </When>
+
+		<!-- Roslyn 500 Testing -->
+		<When Condition="'$(TargetFramework)' == 'net10.0-windows'">
+			<ItemGroup>
+				<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="5.30.0" PrivateAssets="all" />
+				<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.30.0" PrivateAssets="all" />
+				<ProjectReference Include="..\..\src\Mvvm.Controls.SourceGenerators\SourceGenerators.Roslyn500.csproj" />
+			</ItemGroup>
+		</When>
+		
     </Choose>
 
 </Project>

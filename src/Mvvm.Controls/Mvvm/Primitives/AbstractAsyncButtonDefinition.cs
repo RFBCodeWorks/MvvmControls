@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
+#nullable enable
+
 namespace RFBCodeWorks.Mvvm.Primitives
 {
     /// <summary>
@@ -19,7 +21,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
     /// </summary>
     public abstract class AbstractAsyncButtonDefinition : ControlBase, IButtonDefinition, ICommand
     {
-        private string _displayText;
+        private string _displayText = string.Empty;
 
         /// <inheritdoc/>
         public virtual string DisplayText
@@ -52,10 +54,10 @@ namespace RFBCodeWorks.Mvvm.Primitives
         public void NotifyCanExecuteChanged(object? sender, EventArgs e) => NotifyCanExecuteChanged();
 
         /// <inheritdoc/>
-        public abstract event EventHandler CanExecuteChanged;
+        public abstract event EventHandler? CanExecuteChanged;
 
-        void ICommand.Execute(object parameter) => ExecuteAsync().Wait();
-        bool ICommand.CanExecute(object parameter)
+        void ICommand.Execute(object? parameter) => ExecuteAsync().Wait();
+        bool ICommand.CanExecute(object? parameter)
         {
             base.IsEnabled = CanExecute();
             return base.IsEnabled;

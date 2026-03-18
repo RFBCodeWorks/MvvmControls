@@ -2,14 +2,23 @@
     
     <!-- ###################   Version Info ###############  -->
     <Import Project="..\Mvvm.Version.targets" />
-    
+
+	<!-- TARGETS -->
+	<PropertyGroup>
+		<TargetFrameworks>
+			net462;
+			net48;
+			net6.0-windows;
+			net8.0-windows;
+			net10.0-windows;
+		</TargetFrameworks>
+	</PropertyGroup>
+	
     <PropertyGroup>
-        <!-- Target Frameworks are above a 'Choose' block for nuget requirements -->
         <RootNamespace>RFBCodeWorks</RootNamespace>
         <AssemblyName>RFBCodeWorks.Mvvm.Controls</AssemblyName>
-        <LangVersion>9.0</LangVersion>
+        <LangVersion>Latest</LangVersion>
         <Platforms>AnyCPU</Platforms>
-        <PackingEnabled>true</PackingEnabled>
         <!-- 
             LTG: Isolate WPF out of this project
             Issues : 
@@ -22,10 +31,12 @@
         <UseWinforms>false</UseWinforms>
         
         <!-- Nuget Stuff -->      
-        
         <PackageReleaseNotes>
             - Add XmlnsDefinition properties for easier XAML setup
-            
+            - Added Source Generators
+			- Deprecated .Net5.0 support
+			- Added .Net
+			
             Breaking Changes (Namespace/Class name adjustments):
             - Relocate ReactiveStyles.Helpers to the Behaviors namespace to reduce XAML namespacing requirements.
             - Relocate Mvvm.XmlLinq.Controls.TreeViewItems into Mvvm.Specialized
@@ -65,16 +76,10 @@
         <ProjectReference Include="..\Mvvm.IViewModel\Mvvm.IViewModel.csproj" />
     </ItemGroup>
 
-    <!-- TARGETS -->
-    <PropertyGroup>
-        <TargetFrameworks>
-            net472;
-            net48;
-            netcoreapp3.1;
-            net5.0-windows;
-            net6.0-windows;
-        </TargetFrameworks>
-    </PropertyGroup>
+	<!-- Enable nuget Packing via Directory.Build.Targets -->
+	<PropertyGroup Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'AppVeyor'">
+		<PackingEnabled>true</PackingEnabled>
+	</PropertyGroup>
     
     <!-- Standard Packages - Must support all targets-->
     <ItemGroup>
@@ -98,33 +103,19 @@
     <ItemGroup Condition="'$(PackingEnabled)' == 'true'">
 
         <!-- .targets file for nuget package -->
-        <Content
-            Pack="true" Visible="false"
-            Include="..\RFBCodeWorks.Mvvm.Controls.targets"
-            PackagePath="buildTransitive/"
-            />
+        <Content Pack="true" Visible="false" Include="..\RFBCodeWorks.Mvvm.Controls.targets" PackagePath="buildTransitive/" />
 
         <!--roslyn3.11-->
-        <ProjectReference
-            Include="..\Mvvm.Controls.SourceGenerators\SourceGenerators.Roslyn311.csproj"
-            ReferenceOutputAssembly="false"
-            />
-        <Content
-            Pack="true" Visible="false"
-            Include="..\Mvvm.Controls.SourceGenerators\.bin\$(Configuration)\311\RFBCodeWorks.Mvvm.SourceGenerators.dll"
-            PackagePath="analyzers/dotnet/roslyn3.11/cs/"
-            />
+        <ProjectReference Include="..\Mvvm.Controls.SourceGenerators\SourceGenerators.Roslyn311.csproj" ReferenceOutputAssembly="false" />
+        <Content Pack="true" Visible="false" Include="..\Mvvm.Controls.SourceGenerators\.bin\$(Configuration)\311\RFBCodeWorks.Mvvm.SourceGenerators.dll" PackagePath="analyzers/dotnet/roslyn3.11/cs/" />
 
         <!--roslyn4.10-->
-        <ProjectReference
-            Include="..\Mvvm.Controls.SourceGenerators\SourceGenerators.Roslyn410.csproj"
-            ReferenceOutputAssembly="false"
-            />
-        <Content
-            Pack="true" Visible="false"
-            Include="..\Mvvm.Controls.SourceGenerators\.bin\$(Configuration)\410\RFBCodeWorks.Mvvm.SourceGenerators.dll"
-            PackagePath="analyzers/dotnet/roslyn4.10/cs/"
-            />
+        <ProjectReference Include="..\Mvvm.Controls.SourceGenerators\SourceGenerators.Roslyn410.csproj" ReferenceOutputAssembly="false" />
+        <Content Pack="true" Visible="false" Include="..\Mvvm.Controls.SourceGenerators\.bin\$(Configuration)\410\RFBCodeWorks.Mvvm.SourceGenerators.dll" PackagePath="analyzers/dotnet/roslyn4.10/cs/" />
+	
+	    <!--roslyn5.00-->
+        <ProjectReference Include="..\Mvvm.Controls.SourceGenerators\SourceGenerators.Roslyn500.csproj" ReferenceOutputAssembly="false" />
+        <Content Pack="true" Visible="false" Include="..\Mvvm.Controls.SourceGenerators\.bin\$(Configuration)\500\RFBCodeWorks.Mvvm.SourceGenerators.dll" PackagePath="analyzers/dotnet/roslyn5.0/cs/" />
     </ItemGroup>
 
     <!-- WPF - Specific Item -->
@@ -147,8 +138,8 @@
         <!-- NetFramework and other targets should specify latest package -->
         <Otherwise>
             <ItemGroup>
-                <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
-                <PackageReference Include="System.Drawing.Common" Version="8.0.21" />
+                <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
+                <PackageReference Include="System.Drawing.Common" Version="10.0.5" />
             </ItemGroup>
         </Otherwise>
     </Choose>

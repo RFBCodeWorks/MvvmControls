@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace RFBCodeWorks.Mvvm
 {
 
     internal static class ExtensionMethods
     {
-        public static void ThrowIfNull<T>(this T value, string? paramName)
+        public static void ThrowIfNull<T>(this T value, string paramName)
         {
             if (value is null) ThrowArgNull(paramName);
         }

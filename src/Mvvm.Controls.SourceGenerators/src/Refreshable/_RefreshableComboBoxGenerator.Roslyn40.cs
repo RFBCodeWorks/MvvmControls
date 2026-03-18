@@ -28,33 +28,7 @@ namespace RFBCodeWorks.Mvvm
 
             var candidateCompilation = candidates.Combine(compilationData);
 
-            context.RegisterSourceOutput(candidateCompilation, (context, candidateProvider) =>
-            {
-                context.CancellationToken.ThrowIfCancellationRequested();
-
-                var candidate = candidateProvider.Left;
-                var compData = candidateProvider.Right;
-
-                if (candidate.Values.Length == 0) return;
-
-                if (Diagnostics.IsLanguageVersionTooLow(compData.LanguageVersion, Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp8, out var diagnostic, () => candidate.ContainingType.Locations.FirstOrDefault()))
-                {
-                    context.ReportDiagnostic(diagnostic);
-                    return;
-                }
-
-                var emitter = new RefreshableSelectorEmitter(context.CancellationToken);
-                foreach(var item in candidate.Values)
-                {
-                    context.CancellationToken.ThrowIfCancellationRequested();
-                    emitter.EmitProperty(item, context.ReportDiagnostic);
-                }
-
-                if (emitter.Writer is not null)
-                {
-                    context.AddSource(emitter.Writer.SuggestedFileName, emitter.Writer.ToSourceText());
-                }
-            });
+            context.RegisterSourceOutput(candidateCompilation, RefreshableSelectorGeneratorRoslyn40.RegisterSourceOutput);
         }
     }
 }

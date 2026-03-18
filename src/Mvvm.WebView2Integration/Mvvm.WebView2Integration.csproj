@@ -1,23 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-      <TargetFrameworks>net472;net48;netcoreapp3.1;net5.0-windows;net6.0-windows;net8.0-windows;</TargetFrameworks>
+      <TargetFrameworks>
+		  net472;
+		  net48;
+		  net6.0-windows;
+		  net8.0-windows;
+		  net10.0-windows;
+	  </TargetFrameworks>
       <RootNamespace>RFBCodeWorks.Mvvm.WebView2Integration</RootNamespace>
       <AssemblyName>RFBCodeWorks.Mvvm.WebView2Integration</AssemblyName>
       <LangVersion>9.0</LangVersion>
       <Platforms>AnyCPU</Platforms>
       <UseWPF>true</UseWPF>
 
-      
       <!-- Nuget Stuff -->
       <DocumentationFile>$(BaseOutputPath)\$(Configuration)\\$(AssemblyName).xml</DocumentationFile>
       
       <!-- ###################   Version Info ###############  -->
-      <Version>1.0.3.0</Version>
+      <Version>1.0.4.0</Version>
       <PackageReleaseNotes>
-          - Added UriConverter to convert from URI to string and back
-		  Updated Navigation
-      </PackageReleaseNotes>
+		  - Added .Net10 target
+		  - Removed deprecated targets  .Net5.0  and netcoreapp3.1
+		  - Updated WebView2 nuget packet version to 1.0.3856.49 (latest as of 3/18/2026)
+	  </PackageReleaseNotes>
       <!-- #################################  -->
       
       <Configurations>Debug;Release;AppVeyor</Configurations>
@@ -43,7 +49,7 @@ xmlns:MyWebView="clr-namespace:RFBCodeWorks.Mvvm.WebView2Integration;assembly=RF
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3537.50" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3856.49" />
   </ItemGroup>
     
 	<!-- Enable nuget Packing via Directory.Build.Targets -->

@@ -3,6 +3,8 @@ using System;
 using System.ComponentModel;
 using System.Windows.Input;
 
+#nullable enable
+
 namespace RFBCodeWorks.Mvvm.Primitives
 {
     /// <summary>
@@ -19,10 +21,10 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <inheritdoc/>
         public virtual string DisplayText
         {
-            get { return ButtonTextField; }
-            set { SetProperty(ref ButtonTextField, value, nameof(DisplayText)); }
+            get { return displayText; }
+            set { SetProperty(ref displayText, value, nameof(DisplayText)); }
         }
-        private string ButtonTextField;
+        private string displayText = string.Empty;
 
         /// <summary>
         /// Returns the result of the last <see cref="ICommand.CanExecute(object)"/> call.
@@ -46,10 +48,10 @@ namespace RFBCodeWorks.Mvvm.Primitives
         #region < ICommand Explicit Implementation >
 
         /// <inheritdoc/>
-        public abstract event EventHandler CanExecuteChanged;
+        public abstract event EventHandler? CanExecuteChanged;
         
-        void ICommand.Execute(object parameter) => this.Execute();
-        bool ICommand.CanExecute(object parameter)
+        void ICommand.Execute(object? parameter) => this.Execute();
+        bool ICommand.CanExecute(object? parameter)
         {
             base.IsEnabled = CanExecute();
             return base.IsEnabled;

@@ -1,27 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net472;net48;netcoreapp3.1;net5.0-windows;</TargetFrameworks>
+        <TargetFrameworks>
+			net462;
+			net48;
+			net6.0-windows;
+			net8.0-windows;
+			net10.0-windows;
+		</TargetFrameworks>
         <UseWpf>true</UseWpf>
         <RootNamespace>RFBCodeWorks.Mvvm.Dialogs</RootNamespace>
         <AssemblyName>RFBCodeWorks.Mvvm.Dialogs</AssemblyName>
                 
         <!-- ###################   Version Info ###############  -->
-        <Version>1.0.2.0</Version>
+        <Version>1.0.4.0</Version>
         <PackageReleaseNotes>
-            - Added build targets for Net6 and Net7.
-            - Updated StrongName Key
+            - Added build targets for .net8-Windows and .net10-windows
+			- Deprecated support for .netCore3.1 and .net5.0-windows
         </PackageReleaseNotes>
         <!-- #################################  -->
 
         <Configurations>Debug;Release;AppVeyor</Configurations>
     </PropertyGroup>
 
-    <!-- Decide which nuget package to utilize -->
     <PropertyGroup>
-        <!-- Custom Property UseOfficalPackage is used to determine when the official package vs the nuget package from RFBCodeworks should be used -->
-        <UseOfficialPackage>net462|net472|net48|net480|net6.0-windows|net7.0-windows</UseOfficialPackage>
-        <DeprecatedPackage>netcoreapp3.1|net5.0-windows</DeprecatedPackage>
         <Description>
             This dll relies on MvvmDialogs.IDialogService
 
@@ -54,22 +56,16 @@
             - Since this package also targets .NetCoreApp3.1 and .Net5, which have been deprecate by the original maintainer, these will depend on a seperate nuget package that retains the required functionality for this library. (Clone of main repo, just updated targets)
         </Description>
     </PropertyGroup>
-	
-    <ItemGroup>
-        <!-- Official -->
-        <PackageReference Include="MvvmDialogs" Version="9.1.0" Condition="$(UseOfficialPackage.Contains('$(TargetFramework)'))" />
-        <!-- Deprecated package - Maintained by RFBCodeworks -->
-        <PackageReference Include="MvvmDialogs_.NetCore" Version="9.1.0" Condition="$(DeprecatedPackage.Contains('$(TargetFramework)'))"/>
+
+	<ItemGroup>
+        <PackageReference Include="MvvmDialogs" Version="9.1.2" />
+		<ProjectReference Include="..\Mvvm.IViewModel\Mvvm.IViewModel.csproj" />
     </ItemGroup>
 
 	<!-- Enable nuget Packing via Directory.Build.Targets -->
 	<PropertyGroup Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'AppVeyor'">
 		<PackingEnabled>true</PackingEnabled>
     </PropertyGroup>
-	
-    <ItemGroup>
-        <ProjectReference Include="..\Mvvm.IViewModel\Mvvm.IViewModel.csproj" />
-    </ItemGroup>
     <ItemGroup>
         <None Include="Readme.md">
             <PackagePath></PackagePath>

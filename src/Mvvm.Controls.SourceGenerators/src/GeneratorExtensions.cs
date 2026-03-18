@@ -9,6 +9,8 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace RFBCodeWorks.Mvvm.SourceGenerators
 {
     internal static partial class GeneratorExtensions

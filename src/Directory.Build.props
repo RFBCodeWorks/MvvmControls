@@ -14,20 +14,8 @@
 		
 	</PropertyGroup>
 	
-	<!-- Nuget Information Below -->
-	<PropertyGroup>
-		<Company />
-		<Authors>Robert Brenckman</Authors>
-        <Copyright>Copyright 2025</Copyright>
-		<PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
-		<PackageReadmeFile>Readme.md</PackageReadmeFile>
-        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-        <PackageLicenseExpression></PackageLicenseExpression>
-	</PropertyGroup>
-	
 	<ItemGroup>
-		<None Include="..\..\LICENSE.txt" Link="LICENSE.txt">
+		<None Include="..\..\LICENSE.txt">
 			<PackagePath></PackagePath>
 			<Pack>True</Pack>
 		</None>

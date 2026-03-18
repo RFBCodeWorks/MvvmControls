@@ -1,5 +1,7 @@
 ﻿using System;
 
+#nullable enable
+
 namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
@@ -24,7 +26,7 @@ namespace RFBCodeWorks.Mvvm
         /// A function that returns a string of text. <br/>
         /// This will be used to apply the result to the <see cref="Text"/> property when the <see cref="Refresh()"/> method is invoked
         /// </summary>
-        public Func<string> GetText { get; init; }
+        public Func<string>? GetText { get; init; }
 
         /// <summary>
         /// The text to display
@@ -34,7 +36,7 @@ namespace RFBCodeWorks.Mvvm
             get { return TextField; }
             set { SetProperty(ref TextField, value, nameof(Text)); }
         }
-        private string TextField;
+        private string TextField = string.Empty;
 
         /// <summary>
         /// Flag for Textboxes to set if they are ReadOnly or not

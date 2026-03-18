@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Media.Animation;
+
+#nullable enable
 
 namespace RFBCodeWorks.Mvvm.Specialized
 {
     /// <summary>
     /// ViewModel for a ComboBox that is filled with integers
     /// </summary>
-    public class IntegerPicker : ViewModelBase
+    public partial class IntegerPicker : ViewModelBase
     {
         /// <summary>
         /// Generate a new int[] array between 0 and <paramref name="max"/>
@@ -37,7 +40,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
                 i++;
             }
             if (includeMax) list.Add(max);
-            return list.ToArray();
+            return [.. list];
         }
 
         /// <summary>
@@ -45,39 +48,43 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// </summary>
         /// <returns/>
         /// <inheritdoc cref="GenerateArray(int, int, bool)"/>
-        public IntegerPicker(int max, bool includeMax, ViewModelBase parent = null) : base(parent) 
+        public IntegerPicker(int max, bool includeMax, ViewModelBase? parent = null) : base(parent) 
         {
             Range = GenerateArray(max, includeMax);
-            AllowNegatives = false;
+            allowNegatives = false;
         }
 
         /// <inheritdoc cref="IntegerPicker.IntegerPicker(int, bool, ViewModelBase)"/>
-        public IntegerPicker(int min, int max, bool includeMax = false, ViewModelBase parent = null) : base(parent)
+        public IntegerPicker(int min, int max, bool includeMax = false, ViewModelBase? parent = null) : base(parent)
         {
             Range = GenerateArray(min, max, includeMax);
-            AllowNegatives = min < 0;
+            allowNegatives = min < 0;
         }
 
         /// <inheritdoc cref="IntegerPicker.IntegerPicker(int, bool, ViewModelBase)"/>
         public IntegerPicker(params int[] values) : base()
         {
             Range = values;
-            AllowNegatives = values.Any((i) => i < 0);
+            allowNegatives = values.Any((i) => i < 0);
         }
 
         /// <inheritdoc cref="IntegerPicker.IntegerPicker(int, bool, ViewModelBase)"/>
         public IntegerPicker(IViewModel parent, params int[] values) : base(parent)
         {
             Range = values;
-            AllowNegatives = values.Any((i) => i < 0);
+            allowNegatives = values.Any((i) => i < 0);
         }
+
+        private readonly bool allowNegatives;
+        private int ValueField;
+        private bool updatingValue;
+        private string stringValue = "*";
+        private string numberFormat = "#";
 
         /// <summary>
         /// The range of numbers
         /// </summary>
         public int[] Range { get; }
-
-        private bool AllowNegatives;
 
         /// <summary>
         /// Binding for integer-Only comboxes
@@ -103,8 +110,35 @@ namespace RFBCodeWorks.Mvvm.Specialized
                 }
             }
         }
-        private int ValueField;
-        private bool updatingValue;
+
+        //lang=regex
+        private const string ANI = "^[-][0-9]+$";
+        //lang=regex
+        private const string ANW = "^[-][[0-9*?]+$";
+        //lang=regex
+        private const string DNI = "^[0-9]+$";
+        //lang=regex
+        private const string DNW = "^[[0-9*?]+$";
+#if NET8_0_OR_GREATER
+        [GeneratedRegex(ANI, RegexOptions.Compiled)]
+        private static partial Regex AllowNegativesIntegerRegex();
+
+        [GeneratedRegex(ANW, RegexOptions.Compiled)]
+        private static partial Regex AllowNegativesWildcardRegex();
+
+        [GeneratedRegex(DNI, RegexOptions.Compiled)]
+        private static partial Regex DisallowNegativesIntegerRegex();
+
+        [GeneratedRegex(DNW, RegexOptions.Compiled)]
+        private static partial Regex DisallowNegativesWildcardRegex();
+#else
+        private static Regex? ANIR, ANWR, DNIR, DNWR;
+        private static Regex AllowNegativesIntegerRegex() => ANIR ??= new(ANI, RegexOptions.Compiled);
+        private static Regex AllowNegativesWildcardRegex() => ANWR ??= new(ANW, RegexOptions.Compiled);
+        private static Regex DisallowNegativesIntegerRegex() => DNIR ??= new(DNI, RegexOptions.Compiled);
+        private static Regex DisallowNegativesWildcardRegex() => DNWR ??= new(DNW, RegexOptions.Compiled);
+#endif
+
 
         /// <summary>
         /// Unsafe binding that accepts wildcards in the form of an asterisk. <br/>
@@ -112,12 +146,12 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// </summary>
         public string UnsafeValue
         {
-            get { return string.IsNullOrWhiteSpace(StringValueField) ? Value.ToString() : StringValueField.Trim(); }
+            get { return string.IsNullOrWhiteSpace(stringValue) ? Value.ToString() : stringValue.Trim(); }
             set {
                 
                 if (updatingValue)
                 {
-                    SetProperty(ref StringValueField, value, nameof(UnsafeValue));
+                    SetProperty(ref stringValue, value, nameof(UnsafeValue));
                     OnUnsafeValueUpdated();
                     return;
                 }
@@ -125,21 +159,22 @@ namespace RFBCodeWorks.Mvvm.Specialized
                 updatingValue = true;
                 string val = value?.Trim() ?? string.Empty;
 
-                Regex intMatch = AllowNegatives ? new Regex("^[-][0-9]+$", RegexOptions.Compiled) : new Regex("^[0-9]+$", RegexOptions.Compiled);
-                Regex wildcardMatch = AllowNegatives ? new Regex("^[-][[0-9*?]+$", RegexOptions.Compiled) : new Regex("^[[0-9*?]+$", RegexOptions.Compiled);
+                Regex intMatch = allowNegatives ? AllowNegativesIntegerRegex() : DisallowNegativesIntegerRegex();
+                Regex wildcardMatch = allowNegatives ? AllowNegativesWildcardRegex() : DisallowNegativesWildcardRegex();
 
                 //Value = zero
-                if (val == string.Empty)
+                if (value is null || val == string.Empty)
                 {
-                    SetProperty(ref StringValueField, val, nameof(UnsafeValue));
+                    SetProperty(ref stringValue, val, nameof(UnsafeValue));
                     OnUnsafeValueUpdated();
                     Value = 0;
                 }
 
+
                 //Check for integer-only string
                 else if (intMatch.IsMatch(val))
                 {
-                    SetProperty(ref StringValueField, val, nameof(UnsafeValue));
+                    SetProperty(ref stringValue, val, nameof(UnsafeValue));
                     OnUnsafeValueUpdated();
                     
                     //Update the VALUE property
@@ -149,7 +184,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
                 // Check for wildcards
                 else if (wildcardMatch.IsMatch(val))
                 {
-                    SetProperty(ref StringValueField, val, nameof(UnsafeValue));
+                    SetProperty(ref stringValue, val, nameof(UnsafeValue));
                     OnUnsafeValueUpdated();
                 }
 
@@ -161,7 +196,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
                 updatingValue = false;
             }
         }
-        private string StringValueField = "*";
+        
 
 
         /// <summary>
@@ -169,10 +204,10 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// </summary>
         public string NumberFormat
         {
-            get { return NumberFormatField; }
-            set { SetProperty(ref NumberFormatField, value, nameof(NumberFormat)); }
+            get { return numberFormat; }
+            set { SetProperty(ref numberFormat, value, nameof(NumberFormat)); }
         }
-        private string NumberFormatField = "#";
+        
 
 
         #region < ValueUpdated >
@@ -185,7 +220,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// <summary>
         /// 
         /// </summary>
-        public event ValueUpdatedHandler ValueUpdated;
+        public event ValueUpdatedHandler? ValueUpdated;
 
         /// <summary> Raises the ValueUpdated event </summary>
         protected virtual void OnValueUpdated()
@@ -212,7 +247,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         /// <summary>
         /// 
         /// </summary>
-        public event UnsafeValueUpdatedHandler UnsafeValueUpdated;
+        public event UnsafeValueUpdatedHandler? UnsafeValueUpdated;
 
         /// <summary> Raises the UnsafeValueUpdated event </summary>
         protected virtual void OnUnsafeValueUpdated()
@@ -225,6 +260,7 @@ namespace RFBCodeWorks.Mvvm.Specialized
         {
             UnsafeValueUpdated?.Invoke(this, e);
         }
+
 
         #endregion
 

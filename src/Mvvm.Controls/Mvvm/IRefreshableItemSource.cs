@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
+#nullable enable
+
 namespace RFBCodeWorks.Mvvm
 {
     /// <inheritdoc cref="IRefreshableItemSource" />

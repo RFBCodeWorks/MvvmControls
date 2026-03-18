@@ -45,6 +45,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter")]
         public static bool NodeSelector(SyntaxNode node, CancellationToken token = default)
         {
+            token.ThrowIfCancellationRequested();
             return node is MethodDeclarationSyntax method && method.AttributeLists.Count > 0;
         }
 
@@ -60,7 +61,8 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         /// Generates any diagnostic Data for a <see cref="RefreshableSelectorData"/> struct
         /// </summary>
         public static DataOrDiagnostics<RefreshableSelectorData> GetInfoOrDiagnostic(SyntaxNode targetNode, SemanticModel semanticModel, ISymbol TargetSymbol, AttributeData attributeData, CancellationToken token)
-        { 
+        {
+            token.ThrowIfCancellationRequested();
             if (TargetSymbol is not IMethodSymbol symbol) return default;
             if (Diagnostics.IsNotPartialClass(targetNode, token, out var diagnostic))
             {
@@ -123,6 +125,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             }
 
             // get the selectedValue type
+            token.ThrowIfCancellationRequested();
             var selectedValueType = GetSelectedValueType(attributeData, token);
 
             /*
@@ -234,6 +237,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             
             foreach (var attribute in data.TargetSymbol.GetAttributes())
             {
+                token.ThrowIfCancellationRequested();
                 switch (attribute.AttributeClass.ToDisplayString(SymbolFormats.NameAndContainingTypes))
                 {
                     case OnDataChangedAttributeData.QualifiedName_SelectionChanged:

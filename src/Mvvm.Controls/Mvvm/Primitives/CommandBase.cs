@@ -3,6 +3,8 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
+#nullable enable
+
 namespace RFBCodeWorks.Mvvm.Primitives
 {
     /// <summary>
@@ -31,7 +33,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         }
 
         /// <inheritdoc/>
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
 
         private static readonly INotifyArgs SubscribedArgs = new(nameof(SubscribeToCommandManager));
 
@@ -67,7 +69,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void NotifyCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 
-        bool ICommand.CanExecute(object parameter) => true;
-        void ICommand.Execute(object parameter) { }
+        bool ICommand.CanExecute(object? parameter) => true;
+        void ICommand.Execute(object? parameter) { }
     }
 }

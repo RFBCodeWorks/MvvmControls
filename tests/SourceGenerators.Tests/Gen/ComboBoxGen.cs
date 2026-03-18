@@ -25,7 +25,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
                 refresh: () =>
             {
                 WasSecondaryCollectionRefreshedOnSelectionChange = true;
-                return Array.Empty<object>();
+                return [];
             });
 
         }
@@ -59,9 +59,9 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
         }
 
         [ComboBox(PropertyName = "PropertyNameTest")]
-        private int[] PropertyName()
+        private static int[] PropertyName()
         {
-            return Array.Empty<int>();
+            return [];
         }
 
         [TriggersRefresh(nameof(_refreshableItemSource))]
@@ -72,7 +72,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
         private List<int> SyncCollection()
         {
             WasRefreshed = true;
-            return new List<int>() { 0, 1, 2, 3, 4, 5 };
+            return [0, 1, 2, 3, 4, 5];
         }
 
         [TriggersRefresh(nameof(_refreshableItemSource))]
@@ -83,7 +83,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
         public async Task<int[]> AsyncCollection()
         {
             await Task.Delay(125, default);
-            return SyncCollection().ToArray();
+            return [.. SyncCollection()];
         }
 
         [TriggersRefresh(nameof(_refreshableItemSource))]
@@ -94,7 +94,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
         public async Task<int[]> CancellableAsyncCollection(CancellationToken token)
         {
             await Task.Delay(500, token);
-            return SyncCollection().ToArray();
+            return [.. SyncCollection()];
         }
 
         private bool CanRefresh() =>IsRefreshable;

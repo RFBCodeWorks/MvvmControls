@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis;
 using RFBCodeWorks.Mvvm.SourceGenerators;
 using RFBCodeWorks.Mvvm.SourceGenerators.src;
 using RFBCodeWorks.Mvvm.SourceGenerators.Refreshable;
+using System;
 
 namespace RFBCodeWorks.Mvvm
 {
@@ -28,24 +29,32 @@ namespace RFBCodeWorks.Mvvm
 
             var candidateCompilation = candidates.Combine(compilationData);
 
-            context.RegisterSourceOutput(candidateCompilation, (context, candidateProvider) =>
+            context.RegisterSourceOutput(candidateCompilation, RegisterSourceOutput);
+        }
+
+
+        internal static void RegisterSourceOutput(SourceProductionContext context, (GroupedCandidates<RefreshableSelectorDataAndTriggers> candidates, CompilationData compData) data)
+        {
+            if (context.CancellationToken.IsCancellationRequested || data.candidates.Values.Length == 0) 
+                return;
+            
+            var compData = data.compData;
+            var candidates = data.candidates;
+
+            Func<Location> getLocation = null;
+            try
             {
-                context.CancellationToken.ThrowIfCancellationRequested();
 
-                var candidate = candidateProvider.Left;
-                var compData = candidateProvider.Right;
-
-                if (candidate.Values.Length == 0) return;
-
-                if (Diagnostics.IsLanguageVersionTooLow(compData.LanguageVersion, Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp8, out var diagnostic, () => candidate.ContainingType.Locations.FirstOrDefault()))
+                if (Diagnostics.IsLanguageVersionTooLow(compData.LanguageVersion, Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp8, out var diagnostic, () => candidates.ContainingType.Locations.FirstOrDefault()))
                 {
                     context.ReportDiagnostic(diagnostic);
                     return;
                 }
 
                 var emitter = new RefreshableSelectorEmitter(context.CancellationToken);
-                foreach(var item in candidate.Values)
+                foreach (var item in candidates.Values)
                 {
+                    getLocation = item.SelectorData.TargetNode.GetLocation;
                     context.CancellationToken.ThrowIfCancellationRequested();
                     emitter.EmitProperty(item, context.ReportDiagnostic);
                 }
@@ -54,7 +63,11 @@ namespace RFBCodeWorks.Mvvm
                 {
                     context.AddSource(emitter.Writer.SuggestedFileName, emitter.Writer.ToSourceText());
                 }
-            });
+            }catch(OperationCanceledException){ }
+            catch(Exception e)
+            {
+                context.ReportDiagnostic(Diagnostics.CreateExceptionDiagnostic(e, getLocation?.Invoke()));
+            }
         }
     }
 }

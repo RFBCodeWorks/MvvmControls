@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFrameworks>netstandard2.0;</TargetFrameworks>
         <LangVersion>8.0</LangVersion>
         <Platforms>AnyCPU</Platforms>
         <AssemblyName>RFBCodeWorks.Mvvm.IViewModel</AssemblyName>
@@ -37,10 +37,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Update="Readme.md">
+      <None Include=".\Readme.md">
         <PackagePath></PackagePath>
         <Pack>True</Pack>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 

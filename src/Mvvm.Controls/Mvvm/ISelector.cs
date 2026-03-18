@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
+#nullable enable
+
 namespace RFBCodeWorks.Mvvm
 {
+
     /// <summary>
     /// Interface for Selectors
     /// </summary>
@@ -16,13 +19,13 @@ namespace RFBCodeWorks.Mvvm
         /// <summary>
         /// Gets the SelectedItem from the Selector
         /// </summary>
-        object SelectedItem { get; set; }
+        object? SelectedItem { get; set; }
 
         /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}"/>
-        object SelectedValue { get; set; }
+        object? SelectedValue { get; set; }
 
         /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectedValuePath"/>
-        string SelectedValuePath { get; }
+        string? SelectedValuePath { get; }
 
         /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectedIndex"/>
         int SelectedIndex { get; set; }
@@ -36,6 +39,6 @@ namespace RFBCodeWorks.Mvvm
         /// <summary>
         /// Gets the SelectedItem from the Selector
         /// </summary>
-        new T SelectedItem { get; set; }
+        new T? SelectedItem { get; set; }
     }
 }

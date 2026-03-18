@@ -4,7 +4,7 @@
     <AssemblyName>WebView2Tester</AssemblyName>
 	<StartupObject></StartupObject>
 	<OutputType>WinExe</OutputType>
-    <TargetFrameworks>net472;</TargetFrameworks>
+    <TargetFrameworks>net48;</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <Authors>Robert Brenckman</Authors>
     <Company>Wittmann USA</Company>

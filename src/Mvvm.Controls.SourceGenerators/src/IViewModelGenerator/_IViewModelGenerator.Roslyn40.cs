@@ -1,8 +1,9 @@
-﻿using System.Linq;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using RFBCodeWorks.Mvvm.SourceGenerators;
-using RFBCodeWorks.Mvvm.SourceGenerators.src;
 using RFBCodeWorks.Mvvm.SourceGenerators.Refreshable;
+using RFBCodeWorks.Mvvm.SourceGenerators.src;
+using System;
+using System.Linq;
 
 namespace RFBCodeWorks.Mvvm
 {
@@ -24,26 +25,34 @@ namespace RFBCodeWorks.Mvvm
 
             var candidateCompilation = candidates.Combine(compilationData);
 
-            context.RegisterSourceOutput(candidateCompilation, (context, candidateProvider) =>
+            context.RegisterSourceOutput(candidateCompilation, static (context, candidateProvider) =>
             {
-                context.CancellationToken.ThrowIfCancellationRequested();
-
-                var candidate = candidateProvider.Left;
-                var compData = candidateProvider.Right;
-
-                if (Diagnostics.IsLanguageVersionTooLow(compData.LanguageVersion, Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp8, out var diagnostic, () => candidate.TargetSymbol.ContainingType.Locations.FirstOrDefault()))
+                try
                 {
-                    context.ReportDiagnostic(diagnostic);
-                    return;
+                    context.CancellationToken.ThrowIfCancellationRequested();
+
+                    var candidate = candidateProvider.Left;
+                    var compData = candidateProvider.Right;
+
+                    if (Diagnostics.IsLanguageVersionTooLow(compData.LanguageVersion, Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp8, out var diagnostic, () => candidate.TargetSymbol.ContainingType.Locations.FirstOrDefault()))
+                    {
+                        context.ReportDiagnostic(diagnostic);
+                        return;
+                    }
+
+                    context.CancellationToken.ThrowIfCancellationRequested();
+
+                    var writer = IViewModelEmitter.Emit(candidate.TargetNode, candidate.TargetSymbol, context.ReportDiagnostic, context.CancellationToken);
+
+                    if (writer is not null)
+                    {
+                        context.AddSource(writer.SuggestedFileName, writer.ToSourceText());
+                    }
                 }
-
-                context.CancellationToken.ThrowIfCancellationRequested();
-
-                var writer = IViewModelEmitter.Emit(candidate.TargetNode, candidate.TargetSymbol, context.ReportDiagnostic, context.CancellationToken);
-
-                if (writer is not null)
+                catch (OperationCanceledException) { }
+                catch (Exception ex)
                 {
-                    context.AddSource(writer.SuggestedFileName, writer.ToSourceText());
+                    context.ReportDiagnostic(Diagnostics.CreateExceptionDiagnostic(ex, candidateProvider.Left.TargetNode.GetLocation()));
                 }
             });
         }
