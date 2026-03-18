@@ -23,7 +23,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             ViewModel.Model = new ObjectModel(false);
             void Run() => TestCommand.Execute(false);
             //Verify an exception declaring an invalid type was passed into the method that took a parameter
-            Assert.ThrowsException<ArgumentException>(Run);
+            Assert.Throws<ArgumentException>(Run);
             
             //Verify No Exceptions Thrown for Valid Input
             TestCommand.Execute(null);

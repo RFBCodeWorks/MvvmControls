@@ -4,5 +4,9 @@
 	<!-- Set the base output path -->
     <BaseOutputPath>.\.bin\</BaseOutputPath>
     <BaseIntermediateOutputPath>.\.obj\</BaseIntermediateOutputPath>
+	  
+	  <!-- Strong Named Key exists in root - this is relative to csproj file -->
+	  <SignAssembly>true</SignAssembly>
+	  <AssemblyOriginatorKeyFile>..\..\MvvmControls.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 </Project>

@@ -13,12 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mvvm.Controls.Tests", "test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleWPF", "src\ExampleWPF\ExampleWPF.csproj", "{BD3C4277-A7B6-4110-88F4-D22850412685}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F7F23A78-3D3B-40F2-9FC0-B4B70B15378A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solution Items", "{F7F23A78-3D3B-40F2-9FC0-B4B70B15378A}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		.runsettings = .runsettings
 		appveyor.yml = appveyor.yml
-		src\Mvvm.Version.targets = src\Mvvm.Version.targets
 		MvvmControls.snk = MvvmControls.snk
 		README.md = README.md
 		src\RFBCodeWorks.Mvvm.Controls.targets = src\RFBCodeWorks.Mvvm.Controls.targets
@@ -45,9 +43,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Roslyn40", "Roslyn40", "{14212462-ECA6-4BCA-BBF5-0B0B8EBDD873}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SourceGenerators", "SourceGenerators", "{768DA011-2CBB-443A-9CC6-5B7E5B33988B}"
-	ProjectSection(SolutionItems) = preProject
-		src\Mvvm.Controls.SourceGenerators\SourceGenerators.ImportSdk.targets = src\Mvvm.Controls.SourceGenerators\SourceGenerators.ImportSdk.targets
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Roslyn500", "Roslyn500", "{65914427-CF5C-4F51-B43C-53D85597460F}"
 EndProject
@@ -56,6 +51,31 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceGenerators.Tests.Roslyn500", "tests\SourceGenerators.Tests\SourceGenerators.Tests.Roslyn500.csproj", "{252C4577-F63A-9FB5-A212-B4D6B4C2446A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceGenerators.Tests.Roslyn500.Gen", "tests\SourceGenerators.Tests\SourceGenerators.Tests.Roslyn500.Gen.csproj", "{318568A2-7E8E-CD8A-DBB1-010C6ED6697B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit Tests", "Unit Tests", "{BDCCC684-E6F1-42A4-BAC9-576D592C21F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{4C2B60FA-BBB7-4E86-B882-DEBE90AB5CC0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{8C353917-300C-4EF1-93A2-4C9C22FDE284}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solution Items", "{5E9C07AD-4BD2-4110-B459-48B2EB6D10D8}"
+	ProjectSection(SolutionItems) = preProject
+		src\Mvvm.Controls.SourceGenerators\Directory.Build.targets = src\Mvvm.Controls.SourceGenerators\Directory.Build.targets
+		src\Mvvm.Controls.SourceGenerators\SourceGenerators.ImportSdk.targets = src\Mvvm.Controls.SourceGenerators\SourceGenerators.ImportSdk.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solution Items", "{0137E659-099E-4584-AF33-1EC9BB049535}"
+	ProjectSection(SolutionItems) = preProject
+		.runsettings = .runsettings
+		tests\Directory.Build.props = tests\Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Solution Items", ".Solution Items", "{2AE88BFF-EE81-4981-8153-06A5F00169FC}"
+	ProjectSection(SolutionItems) = preProject
+		src\Directory.Build.props = src\Directory.Build.props
+		src\Directory.Build.targets = src\Directory.Build.targets
+		src\Mvvm.Version.targets = src\Mvvm.Version.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -362,18 +382,28 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{4B4E66FE-5094-4EDC-8FA4-B8F828DF4356} = {4C2B60FA-BBB7-4E86-B882-DEBE90AB5CC0}
+		{F2070053-83E2-4EAF-A80F-54AEC844D0C0} = {4C2B60FA-BBB7-4E86-B882-DEBE90AB5CC0}
+		{759021FE-B314-45EC-8133-44AE65EB839B} = {4C2B60FA-BBB7-4E86-B882-DEBE90AB5CC0}
+		{70F1F67C-BDE4-40DA-8493-273235C6A2F8} = {BDCCC684-E6F1-42A4-BAC9-576D592C21F3}
+		{BD3C4277-A7B6-4110-88F4-D22850412685} = {8C353917-300C-4EF1-93A2-4C9C22FDE284}
+		{E5522D5B-8561-4C6F-992B-2BDE1DE5D607} = {4C2B60FA-BBB7-4E86-B882-DEBE90AB5CC0}
+		{A12C135F-4A15-43B4-BB5A-8F2D06ADD6F1} = {8C353917-300C-4EF1-93A2-4C9C22FDE284}
 		{2B6B9688-EFB8-4C4F-8412-83D9694ECDDF} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{823CF2C3-B983-41E1-986A-C55B6922DA70} = {14212462-ECA6-4BCA-BBF5-0B0B8EBDD873}
-		{95B7F1E8-A86C-A2A4-AC3B-E29086E1003D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-		{40DFF43B-8E2D-905B-8EC8-8DFB8B38B126} = {14212462-ECA6-4BCA-BBF5-0B0B8EBDD873}
+		{95B7F1E8-A86C-A2A4-AC3B-E29086E1003D} = {BDCCC684-E6F1-42A4-BAC9-576D592C21F3}
+		{40DFF43B-8E2D-905B-8EC8-8DFB8B38B126} = {BDCCC684-E6F1-42A4-BAC9-576D592C21F3}
 		{50B8EA44-94CD-75D7-B211-81EDA08A18FC} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{E643974D-0B2B-5C85-8497-9F4DC04096A9} = {14212462-ECA6-4BCA-BBF5-0B0B8EBDD873}
 		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {768DA011-2CBB-443A-9CC6-5B7E5B33988B}
 		{14212462-ECA6-4BCA-BBF5-0B0B8EBDD873} = {768DA011-2CBB-443A-9CC6-5B7E5B33988B}
 		{65914427-CF5C-4F51-B43C-53D85597460F} = {768DA011-2CBB-443A-9CC6-5B7E5B33988B}
 		{61720E7D-0823-424C-1A41-B8B2B47FCAB1} = {65914427-CF5C-4F51-B43C-53D85597460F}
-		{252C4577-F63A-9FB5-A212-B4D6B4C2446A} = {65914427-CF5C-4F51-B43C-53D85597460F}
+		{252C4577-F63A-9FB5-A212-B4D6B4C2446A} = {BDCCC684-E6F1-42A4-BAC9-576D592C21F3}
 		{318568A2-7E8E-CD8A-DBB1-010C6ED6697B} = {65914427-CF5C-4F51-B43C-53D85597460F}
+		{5E9C07AD-4BD2-4110-B459-48B2EB6D10D8} = {768DA011-2CBB-443A-9CC6-5B7E5B33988B}
+		{0137E659-099E-4584-AF33-1EC9BB049535} = {BDCCC684-E6F1-42A4-BAC9-576D592C21F3}
+		{2AE88BFF-EE81-4981-8153-06A5F00169FC} = {4C2B60FA-BBB7-4E86-B882-DEBE90AB5CC0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D35D29CE-2CAD-4BB1-8DF0-F0C534F3F865}

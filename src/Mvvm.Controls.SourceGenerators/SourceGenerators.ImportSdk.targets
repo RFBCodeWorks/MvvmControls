@@ -40,7 +40,8 @@
     <ItemGroup>
         <None Remove="*.csproj" />
         <None Remove="*.zip" />
-        <Compile Remove=".\src\Directory.Build.props" />
+		<None Remove=".\*.targets" />
+		<Compile Remove=".\src\Directory.Build.props" />
         <Compile Remove=".\src\Directory.Build.targets" />
     </ItemGroup>
 

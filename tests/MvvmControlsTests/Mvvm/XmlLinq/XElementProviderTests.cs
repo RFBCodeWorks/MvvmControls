@@ -12,14 +12,14 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
         {
             var p = new XElementWrapper("parent");
             Assert.IsNotNull(new XElementProvider("name", p));
-            Assert.ThrowsException<ArgumentNullException>(() => new XElementProvider("name", null));
-            Assert.ThrowsException<ArgumentException>(() => new XElementProvider("", p));
+            Assert.Throws<ArgumentNullException>(() => new XElementProvider("name", null));
+            Assert.Throws<ArgumentException>(() => new XElementProvider("", p));
             Assert.IsNotNull(new XElementProvider("name", p, null, null));
         }
 
         [TestMethod()]
-        [DataRow(data1: true)]
-        [DataRow(data1: false)]
+        [DataRow(data: true)]
+        [DataRow(data: false)]
         public void TreeCreationTest(bool discriminate)
         {
             var p = new XContainerProvider() ;
@@ -55,8 +55,8 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
         }
 
         [TestMethod()]
-        [DataRow(data1: true)]
-        [DataRow(data1: false)]
+        [DataRow(data: true)]
+        [DataRow(data: false)]
         public void RefreshTest(bool discriminate)
         {
             var p = new XElementWrapper("parent") { DiscriminateDescendantChanged = discriminate };
@@ -74,8 +74,8 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
         }
 
         [TestMethod()]
-        [DataRow(data1: true)]
-        [DataRow(data1: false)]
+        [DataRow(data: true)]
+        [DataRow(data: false)]
         public void RemoveTest(bool discriminate)
         {
             var p = new XElementWrapper("parent") { DiscriminateDescendantChanged = discriminate };
@@ -89,8 +89,8 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
         }
 
         [TestMethod()]
-        [DataRow(data1: true)]
-        [DataRow(data1: false)]
+        [DataRow(data: true)]
+        [DataRow(data: false)]
         public void CreateXElementTest(bool discriminate)
         {
             var p = new XElementWrapper("parent") { DiscriminateDescendantChanged = discriminate };
@@ -102,8 +102,8 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
         }
 
         [TestMethod()]
-        [DataRow(data1: true)]
-        [DataRow(data1: false)]
+        [DataRow(data: true)]
+        [DataRow(data   : false)]
         public void ValueSetTest(bool discriminate)
         {
             var p = new XElementWrapper("parent") { DiscriminateDescendantChanged = discriminate };

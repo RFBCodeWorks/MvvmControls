@@ -107,7 +107,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             {
                 Console.WriteLine("Current Line# 103");
                 ThrowError = false;
-                assertTask = Assert.ThrowsExceptionAsync<OperationCanceledException>(() => cmd.ExecuteAsync(), "\n\nOperationCancelledExpection was not passed to caller!");
+                assertTask = Assert.ThrowsAsync<OperationCanceledException>(() => cmd.ExecuteAsync(), "\n\nOperationCancelledExpection was not passed to caller!");
                 await Task.Delay(2);
                 cmd.Cancel();
                 await assertTask;
@@ -118,7 +118,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             {
                 Console.WriteLine("Current Line# 113");
                 ThrowError = true;
-                await Assert.ThrowsExceptionAsync<ArgumentException>(() => cmd.ExecuteAsync(), "\n\nArgumentException was not passed to caller!");
+                await Assert.ThrowsAsync<ArgumentException>(() => cmd.ExecuteAsync(), "\n\nArgumentException was not passed to caller!");
                 Assert.IsFalse(CancelHandled, "\n\nCancel was handled unexpectedly");
                 Assert.IsFalse(ErrorHandled, "\n\nError was handled unexpectedly");
             }

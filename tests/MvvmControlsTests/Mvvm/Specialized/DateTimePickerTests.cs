@@ -15,9 +15,9 @@ namespace RFBCodeWorks.Mvvm.Specialized.Tests
         public void ValidateArrays()
         {
             var picker = new DateTimePicker();
-            Assert.ThrowsException<NotImplementedException>(() => picker.Hours24[0] = 5); // Validates that the array is immutable.
-            Assert.ThrowsException<NotImplementedException>(() => picker.Hours12.Add(5)); // Validates that the array is immutable.
-            Assert.ThrowsException<NotImplementedException>(() => picker.MinutesSeconds.Clear()); // Validates that the array is immutable.
+            Assert.Throws<NotImplementedException>(() => picker.Hours24[0] = 5); // Validates that the array is immutable.
+            Assert.Throws<NotImplementedException>(() => picker.Hours12.Add(5)); // Validates that the array is immutable.
+            Assert.Throws<NotImplementedException>(() => picker.MinutesSeconds.Clear()); // Validates that the array is immutable.
             Assert.AreEqual(24, picker.Hours24.Count);
             Assert.AreEqual(12, picker.Hours12.Count);
             Assert.AreEqual(60, picker.MinutesSeconds.Count);

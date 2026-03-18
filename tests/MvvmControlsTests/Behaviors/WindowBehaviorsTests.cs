@@ -16,8 +16,8 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
     public class WindowBehaviorsTests
     {
         [TestMethod]
-        [DataRow(data1: true, DisplayName = "Subscribed")]
-        [DataRow(data1: false, DisplayName = "Unsubcribed")]
+        [DataRow(data: true, DisplayName = "Subscribed")]
+        [DataRow(data: false, DisplayName = "Unsubcribed")]
         public void IWindowActivatedHandlerTest(bool subscribe)
         {
             Window w = new(), w2 = new();
@@ -53,8 +53,8 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
         }
 
         [TestMethod()]
-        [DataRow(data1: true, DisplayName = "Subscribed")]
-        [DataRow(data1: false, DisplayName = "Unsubcribed")]
+        [DataRow(data: true, DisplayName = "Subscribed")]
+        [DataRow(data: false, DisplayName = "Unsubcribed")]
         public void IWindowClosingHandlerTest(bool subscribe)
         {
             Window w = new();
@@ -94,8 +94,8 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
         }
 
         [TestMethod()]
-        [DataRow(data1: true, DisplayName = "Subscribed")]
-        [DataRow(data1: false, DisplayName = "Unsubcribed")]
+        [DataRow(data: true, DisplayName = "Subscribed")]
+        [DataRow(data: false, DisplayName = "Unsubcribed")]
         public void IWindowLoadingHandlerTest(bool subscribe)
         {
             Window w = new();

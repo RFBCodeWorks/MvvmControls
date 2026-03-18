@@ -155,7 +155,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
         [TestMethod()]
         public void RemoveTest()
         {
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.Throws<InvalidOperationException>(() =>
             {
                 var obj = new XContainerProvider(new XDocument(new XElement("root")));
                 obj.Remove();

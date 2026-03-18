@@ -80,7 +80,7 @@ namespace RFBCodeWorks.WPF.Controls.Tests
             Assert.AreEqual(g.AutoColumnWidth, g.ColumnDefinitions[4].Width, "\n\n Width was not set for last column!");
             Assert.AreEqual(g.AutoRowHeight, g.RowDefinitions[4].Height, "\n\n Height was not set for last row!");
 
-            Assert.ThrowsException<ArgumentException>(() => g.Padding = "INVALID");
+            Assert.Throws<ArgumentException>(() => g.Padding = "INVALID");
             
         }
     }

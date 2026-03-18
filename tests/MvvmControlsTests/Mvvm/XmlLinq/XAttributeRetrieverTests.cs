@@ -11,8 +11,8 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
         {
             var p = new XElementWrapper("parent");
             Assert.IsNotNull(new XAttributeRetriever("name", p));
-            Assert.ThrowsException<ArgumentNullException>(() => new XElementProvider("name", null));
-            Assert.ThrowsException<ArgumentException>(() => new XElementProvider("", p));
+            Assert.Throws<ArgumentNullException>(() => new XElementProvider("name", null));
+            Assert.Throws<ArgumentException>(() => new XElementProvider("", p));
         }
 
         [TestMethod()]

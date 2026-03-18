@@ -67,9 +67,9 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 
 
         [TestMethod()]
-        [DataRow(data1: true, DisplayName = "Test Object: " + nameof(XElementWrapper))]
+        [DataRow(data: true, DisplayName = "Test Object: " + nameof(XElementWrapper))]
         //[DataRow(data1: false, DisplayText = "Test Object: " + nameof(XAttributeWrapper))]
-        [DataRow(data1: null, DisplayName = "Test Object: " + nameof(XDocumentWrapper))]
+        [DataRow(data: null, DisplayName = "Test Object: " + nameof(XDocumentWrapper))]
         public void ModelTest_XElementWrapper(bool? isElement)
         {
             //Added and Removed are only fired by LINQ provider objects, and as such are not expected to fire here.
