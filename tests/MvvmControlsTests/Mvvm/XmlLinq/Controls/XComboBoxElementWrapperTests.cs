@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RFBCodeWorks.Mvvm.Tests;
-using RFBCodeWorks.Mvvm.Tests.Helpers;
+using RFBCodeWorks.Mvvm.TestHelpers;
 using System.Windows.Controls;
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Controls.Tests

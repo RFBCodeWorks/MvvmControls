@@ -1,10 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Xml.Linq;
+using RFBCodeWorks.Mvvm.Tests;
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class XElementProviderTests
     {
         [TestMethod]
@@ -17,7 +18,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.IsNotNull(new XElementProvider("name", p, null, null));
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DataRow(data: true)]
         [DataRow(data: false)]
         public void TreeCreationTest(bool discriminate)
@@ -54,7 +55,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Console.WriteLine(p.XContainer);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DataRow(data: true)]
         [DataRow(data: false)]
         public void RefreshTest(bool discriminate)
@@ -73,7 +74,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.AreNotSame(n1, e.XElement, "Expected the XElementProvider to provide n2, since n1 was removed.");
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DataRow(data: true)]
         [DataRow(data: false)]
         public void RemoveTest(bool discriminate)
@@ -88,7 +89,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.IsNull(e.XElement);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DataRow(data: true)]
         [DataRow(data: false)]
         public void CreateXElementTest(bool discriminate)
@@ -101,7 +102,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.IsNotNull(e.XElement);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DataRow(data: true)]
         [DataRow(data   : false)]
         public void ValueSetTest(bool discriminate)
@@ -116,7 +117,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.AreEqual("TestValue", v.Value);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void CanBeCreatedTest()
         {
             var p = new XContainerProvider();

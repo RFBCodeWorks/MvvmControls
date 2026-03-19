@@ -1,13 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Xml.Linq;
+using RFBCodeWorks.Mvvm.Tests;
+
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class XContainerProviderTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void XContainerProviderTest()
         {
             var obj = new XContainerProvider();
@@ -16,9 +18,9 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             bool wasAdded = false;
             bool wasRemoved = false;
             bool descChanged = false;
-            void AddedHandler(object sender, EventArgs e) => wasAdded = true;
-            void RemovedHandler(object sender, EventArgs e) => wasRemoved= true;
-            void DescHandler(object sender, EventArgs e) => descChanged= true;
+            void AddedHandler(object? sender, EventArgs e) => wasAdded = true;
+            void RemovedHandler(object? sender, EventArgs e) => wasRemoved= true;
+            void DescHandler(object? sender, EventArgs e) => descChanged= true;
 
             obj.Added += AddedHandler;
             obj.Removed += RemovedHandler;
@@ -79,7 +81,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.IsFalse(descChanged, " -- DescendantChanged fired unexpectedly!");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void XContainerProviderTest1()
         {
             var obj = new XContainerProvider();
@@ -95,7 +97,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.IsTrue(obj.IsNodeAvailable);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void CreateXElementTest()
         {
             XElement root = new("rootElement");
@@ -126,7 +128,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             {
                 Value = "100"
             }; 
-            doc.Root.Add(x);
+            doc.Root!.Add(x);
             x.Add(y);
             y.Add(z);
             z.Add(val);
@@ -141,18 +143,18 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 
             // Test
             Assert.IsTrue(el3.CanBeCreated);
-            Assert.IsInstanceOfType(el3.CreateXElement(), typeof(XElement));
+            el3.CreateXElement().AssertIsOfType<XElement>();
 
             root.XContainer = null;
             Assert.IsFalse(el3.CanBeCreated, "Should not be able to be created when no XDocument is provided.");
-            Assert.IsNull(el3.CreateXElement());
+            el3.CreateXElement().AssertIsNull();
 
             root.XContainer = XDocument.Load(fp);
             Assert.IsTrue(el3.CanBeCreated, "Cannot be created after loading XDocument");
-            Assert.IsInstanceOfType(el3.CreateXElement(), typeof(XElement));
+            el3.CreateXElement().AssertIsOfType<XElement>();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void RemoveTest()
         {
             Assert.Throws<InvalidOperationException>(() =>

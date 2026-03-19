@@ -8,15 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using RFBCodeWorks.Mvvm.Tests;
+
 
 namespace RFBCodeWorks.WPF.Behaviors.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class WindowBehaviorTests2
     {
         public WindowBehaviorTests2()
         {
-            handler = new();
+            Handler = new();
         }
 
         private Window GetWindow(string windowTitle)
@@ -37,17 +39,19 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
             w.Content = g;
         }
 
-        private WindowHandlerObj handler { get; set; }
+        private WindowHandlerObj? Handler { get; set; } = new();
 
         [TestCleanup]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1013:Public method should be marked as test", Justification = "MSTest")]
         public void Complete()
         {
-            handler = null;
+            Handler = null;
         }
 
         private void CheckSubscription(Window TestWindow, Window Window2, bool isSubscribed)
         {
-            TestWindow.DataContext = handler;
+            Assert.IsNotNull(Handler);
+            TestWindow.DataContext = Handler;
             SetWindowContent(TestWindow);
             Window2.Show();
             Console.Write("\nShowing Window -- ");
@@ -62,11 +66,11 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
             Window2.Close();
             if (isSubscribed)
             {
-                handler.CancelClosing = true;
+                Handler.CancelClosing = true;
                 Console.Write("\nClosing Window -- ");
                 TestWindow.Close();
                 Assert.IsTrue(TestWindow.IsActive);
-                handler.CancelClosing = false;
+                Handler.CancelClosing = false;
                 Console.Write("\nClosing Window -- ");
             }
             else
@@ -76,18 +80,18 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
             TestWindow.Close();
             Assert.IsFalse(TestWindow.IsActive);
 
-            Assert.AreEqual(isSubscribed, handler.WasLoaded, "Window Loaded Test Failed");
-            Assert.AreEqual(isSubscribed, handler.WasActivated, "Window Activated Test Failed");
-            Assert.AreEqual(isSubscribed, handler.WasClosing, "Window Closing Test Failed");
-            Assert.AreEqual(isSubscribed, handler.WasClosed, "Window Closed Test Failed");
+            Assert.AreEqual(isSubscribed, Handler.WasLoaded, "Window Loaded Test Failed");
+            Assert.AreEqual(isSubscribed, Handler.WasActivated, "Window Activated Test Failed");
+            Assert.AreEqual(isSubscribed, Handler.WasClosing, "Window Closing Test Failed");
+            Assert.AreEqual(isSubscribed, Handler.WasClosed, "Window Closed Test Failed");
             //Assert.AreEqual(isSubscribed, handler.WasContentRendered, "Window ContentRendered Test Failed");  //ContentRendered always failed, but works properly in example app
-            Assert.AreEqual(isSubscribed, handler.WasDeactivated, "Window Deactivated Test Failed");
-            Assert.AreEqual(isSubscribed, handler.GotFocus, "Window GotFocus test failed");
-            Assert.AreEqual(isSubscribed, handler.LostFocus, "Window LostFocus test failed");
+            Assert.AreEqual(isSubscribed, Handler.WasDeactivated, "Window Deactivated Test Failed");
+            Assert.AreEqual(isSubscribed, Handler.GotFocus, "Window GotFocus test failed");
+            Assert.AreEqual(isSubscribed, Handler.LostFocus, "Window LostFocus test failed");
             
         }
 
-        private void Subscribe(Window window, WindowHandlerObj value)
+        private static void Subscribe(Window window, WindowHandlerObj? value)
         {
             WindowBehaviors.SetIWindowActivatedHandler(window, value);
             WindowBehaviors.SetIWindowClosingHandler(window, value);
@@ -95,19 +99,20 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
             WindowBehaviors.SetIWindowLoadingHandler(window, value);
         }
 
-        [TestMethod()]
+        [STATestMethod]
         public void SubscribeTest()
         {
             var TestWindow = GetWindow("TestWindow");
-            Subscribe(TestWindow, handler);
+            Subscribe(TestWindow, Handler);
             CheckSubscription(TestWindow, new(), true);
         }
 
-        [TestMethod()]
+        [STATestMethod]
         public void UnsubscribeTest()
         {
+            Assert.IsNotNull(Handler);
             var TestWindow = GetWindow("TestWindow");
-            Subscribe(TestWindow, handler);
+            Subscribe(TestWindow, Handler);
             Subscribe(TestWindow, null);
             CheckSubscription(TestWindow, new(), false);
         }
@@ -125,7 +130,7 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
 
             public bool CancelClosing;
 
-            public void OnWindowClosed(object sender, EventArgs e)
+            public void OnWindowClosed(object? sender, EventArgs e)
             {
                 WasClosed = true;
                 Console.WriteLine("Window Closed");
@@ -141,36 +146,36 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
                 e.Cancel = CancelClosing;
             }
 
-            public void OnWindowContentRendered(object sender, EventArgs e)
+            public void OnWindowContentRendered(object? sender, EventArgs e)
             {
                 WasContentRendered = true;
                 Console.WriteLine("Window Content Rendered");
             }
 
-            public void OnWindowLoaded(object sender, EventArgs e)
+            public void OnWindowLoaded(object? sender, EventArgs e)
             {
                 WasLoaded = true;
                 Console.WriteLine("Window Loaded");
             }
 
-            public void OnWindowActivated(object sender, EventArgs e)
+            public void OnWindowActivated(object? sender, EventArgs e)
             {
                 WasActivated = true;
                 Console.WriteLine("Window Activated");
             }
 
-            public void OnWindowDeactivated(object sender, EventArgs e)
+            public void OnWindowDeactivated(object? sender, EventArgs e)
             {
                 WasDeactivated = true;
                 Console.WriteLine("Window De-Activated");
             }
 
-            public void OnUIElementGotFocus(object sender, EventArgs e)
+            public void OnUIElementGotFocus(object? sender, EventArgs e)
             {
                 GotFocus = true;
             }
 
-            public void OnUIElementLostFocus(object sender, EventArgs e)
+            public void OnUIElementLostFocus(object? sender, EventArgs e)
             {
                 LostFocus = true;
             }

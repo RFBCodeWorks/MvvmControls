@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RFBCodeWorks.Mvvm.Tests;
 
 namespace RFBCodeWorks.Mvvm.Specialized.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class DateTimePickerTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void ValidateArrays()
         {
             var picker = new DateTimePicker();
@@ -29,7 +30,7 @@ namespace RFBCodeWorks.Mvvm.Specialized.Tests
             Assert.AreEqual(59, picker.MinutesSeconds.Last());
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_UpdatingSelectedTime()
         {
             var picker = new DateTimePicker();
@@ -57,7 +58,7 @@ namespace RFBCodeWorks.Mvvm.Specialized.Tests
             Assert.AreEqual("PM", picker.SelectedAmPm);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void Convert24Hours()
         {
             var picker = new DateTimePicker();
@@ -103,7 +104,7 @@ namespace RFBCodeWorks.Mvvm.Specialized.Tests
 
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_UpdatingSelectedDateTime()
         {
             var picker = new DateTimePicker();

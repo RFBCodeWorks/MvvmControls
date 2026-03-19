@@ -7,17 +7,11 @@ using System.Threading.Tasks;
 
 namespace RFBCodeWorks.Mvvm
 {
-
-#if !GENERATORS
     /// <summary>
     /// Adds the <see cref="RFBCodeWorks.Mvvm.IViewModel"/> interface to a class.
     /// </summary>    
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public sealed class IViewModelAttribute : Attribute
-#else
-    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-    internal sealed class IViewModelAttribute : Attribute
-#endif
     {
 
     }
@@ -27,11 +21,7 @@ namespace RFBCodeWorks.Mvvm
     /// <br/> Functions similar to <see cref="CommunityToolkit.Mvvm.Input.RelayCommand"/>
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-#if GENERATORS
-    internal sealed class ButtonAttribute : Attribute
-#else
     public sealed class ButtonAttribute : Attribute
-#endif
     {
         /// <summary>
         /// A custom name to use for the generated property.
@@ -76,22 +66,14 @@ namespace RFBCodeWorks.Mvvm
     /// Apply to a method that returns IList&lt;T&gt; to generate a <see cref="RefreshableComboBoxDefinition{T, V}"/> property.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-#if GENERATORS
-    internal sealed class ComboBoxAttribute : SelectorAttribute
-#else
     public sealed class ComboBoxAttribute : SelectorAttribute
-#endif
     { }
 
     /// <summary>
     /// Apply to a method that returns IList&lt;T&gt; to generate a <see cref="RefreshableListBoxDefinition{T, V}"/> property.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-#if GENERATORS
-    internal sealed class ListBoxAttribute : SelectorAttribute
-#else
     public sealed class ListBoxAttribute : SelectorAttribute
-# endif
     { }
 
     /// <summary>
@@ -99,11 +81,7 @@ namespace RFBCodeWorks.Mvvm
     /// </summary>
     /// <remarks>The Selector does not have specialized properties that a listbox or combobox would have, such as <see cref="IComboBox.IsDropDownOpen"/></remarks>
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
-#if GENERATORS
-    internal class SelectorAttribute : Attribute
-#else
     public class SelectorAttribute : Attribute
-# endif
     {
         /// <summary>
         /// If true, get the collection the first time the collection property is requested.
@@ -155,11 +133,7 @@ namespace RFBCodeWorks.Mvvm
     /// <br/> - Methods with either <see cref="ComboBoxAttribute"/> or <see cref="ListBoxAttribute"/>
     /// </remarks>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Field, Inherited = false, AllowMultiple = true)]
-#if GENERATORS
-    internal sealed class OnSelectionChangedAttribute : Attribute
-#else
     public sealed class OnSelectionChangedAttribute : Attribute
-# endif
     {
         /// <inheritdoc cref="OnSelectionChangedAttribute"/>
         /// <param name="commandsToNotify"><inheritdoc cref="CommandsToNotify" path="*"/></param>
@@ -208,11 +182,7 @@ namespace RFBCodeWorks.Mvvm
     /// <br/> - Methods with either <see cref="ComboBoxAttribute"/>, <see cref="ListBoxAttribute"/>, or <see cref="SelectorAttribute"/>
     /// </remarks>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Field, Inherited = false, AllowMultiple = true)]
-#if GENERATORS
-    internal sealed class OnCollectionChangedAttribute : Attribute
-#else
     public sealed class OnCollectionChangedAttribute : Attribute
-#endif
     {
         /// <inheritdoc cref="OnCollectionChangedAttribute"/>
         /// <param name="commandsToNotify"><inheritdoc cref="CommandsToNotify" path="*"/></param>
@@ -259,11 +229,7 @@ namespace RFBCodeWorks.Mvvm
     /// </para>
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Field, AllowMultiple = true, Inherited = false)]
-#if GENERATORS
-    internal sealed class TriggersRefreshAttribute : Attribute
-#else
     public sealed class TriggersRefreshAttribute : Attribute
-#endif
     {
         /// <inheritdoc cref="TriggersRefreshAttribute"/>
         public TriggersRefreshAttribute(params string[] selectorNames)

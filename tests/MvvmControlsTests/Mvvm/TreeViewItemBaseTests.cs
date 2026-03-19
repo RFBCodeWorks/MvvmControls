@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace RFBCodeWorks.Mvvm.Primitives.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class TreeViewItemBaseTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void DeselectedEventTest()
         {
             bool selectRaised = false;
@@ -27,12 +27,12 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             Assert.IsFalse(selectRaised, "\n\nSelected was raised incorrectly");
             Assert.IsFalse(childSelectRaised, "\n\nChildSelected was raised incorrectly");
 
-            void AcknowledgeSelect(object sender, EventArgs e) => selectRaised = true;
-            void AcknowledgeDeselect(object sender, EventArgs e) => deselectRaised = true;
-            void AcknowledgeChildSelect(object sender, EventArgs e) => childSelectRaised = true;
+            void AcknowledgeSelect(object? sender, EventArgs e) => selectRaised = true;
+            void AcknowledgeDeselect(object? sender, EventArgs e) => deselectRaised = true;
+            void AcknowledgeChildSelect(object? sender, EventArgs e) => childSelectRaised = true;
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void SelectedEventTest()
         {
             bool selectRaised = false;
@@ -48,12 +48,12 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             Assert.IsFalse(deselectRaised, "\n\nDeselected was raised incorrectly");
             Assert.IsFalse(childSelectRaised, "\n\nChildSelected was raised incorrectly");
 
-            void AcknowledgeSelect(object sender, EventArgs e) => selectRaised = true;
-            void AcknowledgeDeselect(object sender, EventArgs e) => deselectRaised= true;
-            void AcknowledgeChildSelect(object sender, EventArgs e) => childSelectRaised = true;
+            void AcknowledgeSelect(object? sender, EventArgs e) => selectRaised = true;
+            void AcknowledgeDeselect(object? sender, EventArgs e) => deselectRaised= true;
+            void AcknowledgeChildSelect(object? sender, EventArgs e) => childSelectRaised = true;
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ChildSelectedEventBubbleUpTest()
         {
             bool eventRaised = false;
@@ -71,10 +71,10 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             child2.IsSelected = true;
             Assert.IsTrue(eventRaised, "Child 2 Event was not raised");
 
-            void Acknowledge(object sender, EventArgs e) => eventRaised = true;
+            void Acknowledge(object? sender, EventArgs e) => eventRaised = true;
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ChildSelectedEventBubbleUpTest2()
         {
             // Test the DIrectory Child Selected
@@ -85,7 +85,7 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             firstItem.IsSelected = true;
 
             Assert.IsTrue(eventRaised, "Child 1 Event was not raised");
-            void Acknowledge(object sender, EventArgs e) => eventRaised = true;
+            void Acknowledge(object? sender, EventArgs e) => eventRaised = true;
         }
 
         private class TreeItem : TreeViewItemBase

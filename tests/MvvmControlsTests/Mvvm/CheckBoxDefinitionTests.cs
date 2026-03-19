@@ -6,11 +6,11 @@ using Behaviors = RFBCodeWorks.WPF.Behaviors;
 
 namespace RFBCodeWorks.Mvvm.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class CheckBoxDefinitionTest : ToggleButtonDefinitionTest
     {
         public CheckBoxDefinitionTest() : this(new()) { }
-        public CheckBoxDefinitionTest(CheckBoxDefinition controlDef) : base(controlDef)
+        protected CheckBoxDefinitionTest(CheckBoxDefinition controlDef) : base(controlDef)
         {
             ControlDefinition = controlDef;
         }

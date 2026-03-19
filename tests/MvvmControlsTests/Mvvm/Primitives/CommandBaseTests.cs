@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RFBCodeWorks.Mvvm.Primitives;
 using RFBCodeWorks.Mvvm.Tests;
-using RFBCodeWorks.Mvvm.Tests.Helpers;
+using RFBCodeWorks.Mvvm.TestHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,99 +10,90 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using CommunityToolkit.Mvvm.Input;
 
 namespace RFBCodeWorks.Mvvm.Primitives.Tests
 {
-    [TestClass()]
-    public class CommandBaseTests
+    [STATestClass]
+    public class PrimitiveCommandBaseTests : CommandBaseTests
     {
-
-        private class ConcreteCommand : CommandBase 
+        protected override CommandBase GetCommand() => new ConcreteCommand();
+        public class ConcreteCommand : CommandBase
         {
-            public ConcreteCommand() : base(false)
+            public ConcreteCommand() : base()
             {
             }
         }
+    }
 
-        protected virtual CommandBase GetCommand() => new ConcreteCommand();
+    /// <summary>
+    /// Base for shared functionality of <see cref="CommandBase"/> testing
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public abstract class CommandBaseTests
+    {
+        protected abstract CommandBase GetCommand();
 
-
-        private void CommandManagerTest()
-        {
-            bool requerySuggested = false;
-            void Handler(object o, EventArgs e) { requerySuggested = true; }
-            EventHandler handler = Handler;
-
-            Assert.IsNotNull(handler);
-            Assert.IsFalse(requerySuggested);
-
-            System.Windows.Input.CommandManager.RequerySuggested += handler;
-            CommandManagerHelper.InvalidateRequerySuggested("CommandManager Test");
-
-            //await Task.Delay(100);
-            Assert.IsNotNull(handler);
-            Assert.IsTrue(requerySuggested, "\nCommandManager.RequerySuggested was not raised!");
-            Console.WriteLine("- Success");
-            System.Windows.Input.CommandManager.RequerySuggested -= handler;
-        }
-
-        [TestMethod()]
-        public void SubscribeToCommandManagerTest()
+        [STATestMethod]
+        public async Task SubscribeToCommandManagerTest()
         {
             //Create the command
             bool reacted = false;
-            void Reaction(object sender, EventArgs e) => reacted = true;
-            CommandManagerTest();
+            void Reaction(object? sender, EventArgs e) => reacted = true;
+            
             var cmd = GetCommand();
             cmd.CanExecuteChanged += Reaction;
 
             //Ensure that it IS NOT RAISED when requery is suggested
             Assert.IsFalse(reacted);
             cmd.SubscribeToCommandManager = false;
-            CommandManagerHelper.InvalidateRequerySuggested("Not Subscribed Test");
+            await CommandManagerHelper.InvalidateRequerySuggested("Not Subscribed Test");
             Assert.IsFalse(reacted, "\nCanExecuteChanged was raised unexpectedly!");
             Console.WriteLine("- Success");
 
             // Ensure that setting value to TRUE causes it to listen to CommandManager
             cmd.SubscribeToCommandManager = true;
-            CommandManagerHelper.InvalidateRequerySuggested("Subscribed Test");
+            await CommandManagerHelper.InvalidateRequerySuggested("Subscribed Test");
             Assert.IsTrue(reacted, "\nCanExecuteChanged was never raised!");
             Console.WriteLine("- Success");
 
             // Ensure that setting value back to false works
             cmd.SubscribeToCommandManager = false;
             reacted = false;
-            CommandManagerHelper.InvalidateRequerySuggested("Not Subscribed Test");
+            await CommandManagerHelper.InvalidateRequerySuggested("Not Subscribed Test");
             Assert.IsFalse(reacted, "\nCanExecuteChanged was raised unexpectedly!");
             Console.WriteLine("- Success");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void NotifyCanExecuteChangedTest()
         {
             bool reacted = false;
-            void Reaction(object sender, EventArgs e) => reacted = true;
+            void Reaction(object? sender, EventArgs e) => reacted = true;
 
             Assert.IsFalse(reacted);
-            var cmd = new ConcreteCommand() { SubscribeToCommandManager = false };
+            var cmd = GetCommand();
+            cmd.SubscribeToCommandManager = false;
             cmd.CanExecuteChanged += Reaction;
             cmd.NotifyCanExecuteChanged();
             cmd.CanExecuteChanged -= Reaction;
-            Assert.IsTrue(reacted);
+            Assert.IsTrue(reacted, $"\n > {nameof(IRelayCommand.CanExecuteChanged)} was not raised.");
         }
 
-        [TestMethod()]
-        public void NotifyCanExecuteChangedTest1()
+        [TestMethod]
+        public void NotifyCanExecuteChangedEventHandlerTest()
         {
             bool reacted = false;
-            void Reaction(object sender, EventArgs e) => reacted = true;
+            void Reaction(object? sender, EventArgs e) => reacted = true;
 
             Assert.IsFalse(reacted);
-            var cmd = new ConcreteCommand() { SubscribeToCommandManager = false };
+            var cmd = GetCommand();
+            cmd.SubscribeToCommandManager = false;
             cmd.CanExecuteChanged += Reaction;
-            cmd.NotifyCanExecuteChanged(null, null);
+            cmd.NotifyCanExecuteChanged(null, EventArgs.Empty);
             cmd.CanExecuteChanged -= Reaction;
-            Assert.IsTrue(reacted);
+            Assert.IsTrue(reacted, $"\n > {nameof(IRelayCommand.CanExecuteChanged)} was not raised.");
         }
     }
 }

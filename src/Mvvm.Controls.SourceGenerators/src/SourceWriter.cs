@@ -13,8 +13,6 @@ using System.Runtime.CompilerServices;
 
 #nullable enable
 #nullable disable warnings
-
-[assembly: InternalsVisibleTo(assemblyName: "RFBCodeWorks.Mvvm.SourceGenerators.Test")]
 namespace RFBCodeWorks.Mvvm.SourceGenerators
 {
     [DefaultValue(1)]

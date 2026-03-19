@@ -1,13 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RFBCodeWorks.Mvvm.XmlLinq.ValueSetters;
 using System.Xml.Linq;
+using RFBCodeWorks.Mvvm.Tests;
+
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class XmlIntegerSetterTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_XElementProdiver()
         {
             XDocumentWrapper doc = new XDocumentWrapper(new XElement("RootElement"));
@@ -15,7 +17,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             TextIXValueProvider(new XElementProvider("TestElement", ParentProvider), false, false);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_XAttributeProvider()
         {
             XDocumentWrapper doc = new XDocumentWrapper(new XElement("RootElement"));
@@ -23,7 +25,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             TextIXValueProvider(new XElementProvider("TestElement", ParentProvider), false, true);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_XElementWrapper()
         {
             XDocumentWrapper doc = new XDocumentWrapper(new XElement("RootElement"));
@@ -33,7 +35,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             TextIXValueProvider(el, true, false);
         }
 
-        //[TestMethod()]
+        //[TestMethod]
         //public void ModelTest_XAttributeWrapper()
         //{
         //    XDocumentWrapper doc = new XDocumentWrapper(new XElement("RootElement"));
@@ -78,6 +80,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             provider.Parent.CreateXElement();
             if (provider is IXAttributeProvider attr)
             {
+                provider.Parent.XObject.AssertIsNotNull();
                 provider.Parent.XObject.SetAttributeValue(attr.Name, true);
                 setValue1();
                 setValue2();

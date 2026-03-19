@@ -6,15 +6,9 @@ using System.Windows.Input;
 
 namespace RFBCodeWorks.Mvvm.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class ObjectViewModelTests
     {
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            
-        }
-
         /// <summary>
         /// Run through the various tests for this ICommand
         /// </summary>
@@ -38,7 +32,7 @@ namespace RFBCodeWorks.Mvvm.Tests
         private void CommandTests(TestViewModel ViewModel, IRelayCommand TestCommand)
         {
             //Command should not be able to execute without the object being set
-            ViewModel.Model = null;
+            ViewModel.Model = null!;
             Assert.IsFalse(TestCommand.CanExecute(null));
 
             //Set the object
@@ -51,7 +45,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             Assert.IsTrue(ViewModel.Model?.CommandResult);
 
             //Set back to null and verify CanExecute returns false
-            ViewModel.Model = null;
+            ViewModel.Model = null!;
             Assert.IsFalse(TestCommand.CanExecute(null));
 
             //Set Expected result to false  and try again
@@ -61,7 +55,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             Assert.IsFalse(ViewModel.Model?.CommandResult);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ObjectViewModel_EventTests()
         {
             var ViewModel = new TestViewModel();
@@ -210,7 +204,7 @@ namespace RFBCodeWorks.Mvvm.Tests
     {
         public PropClass(bool state, PropClass2 parent) { ExpectedState = state; Parent = parent; }
         PropClass2 Parent { get; }
-        public bool State { get => (bool)Parent.Parent.CommandResult; private set { Parent.Parent.SetResult(); } }
+        public bool State { get => (bool)(Parent?.Parent?.CommandResult ?? throw new NullReferenceException()); private set { Parent.Parent.SetResult(); } }
         public bool ExpectedState { get; }
         public void SetState() => State = ExpectedState;
         public void SetState(string obj) => State = ExpectedState;

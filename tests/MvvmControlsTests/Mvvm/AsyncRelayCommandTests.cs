@@ -1,15 +1,17 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using RFBCodeWorks.Mvvm.Input;
 using RFBCodeWorks.Mvvm.Primitives;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace RFBCodeWorks.Mvvm.Tests
 {
-    [TestClass()]
+    [STATestClass]
     public class AsyncRelayCommandTests : Primitives.Tests.CommandBaseTests
     {
         private Task GetTask() => GetTask(new CancellationTokenSource().Token);
@@ -20,9 +22,9 @@ namespace RFBCodeWorks.Mvvm.Tests
             int i = 0;
             while (i < 25)
             {
-                if (ThrowError) throw new ArgumentException();
+                if (ThrowError) throw new ArgumentException("");
                 token.ThrowIfCancellationRequested();
-                await Task.Delay(2);
+                await Task.Delay(3, token);
                 i++;
             }
         }
@@ -40,58 +42,52 @@ namespace RFBCodeWorks.Mvvm.Tests
         private void HandleError(Exception e) => ErrorHandled = true;
         internal static async Task AwaitCompletion(IAsyncRelayCommand cmd) { while (cmd.IsRunning) await Task.Delay(1); }
 
-        private async Task TestCanExecute(AsyncRelayCommand cmd, bool methodSupplied = false)
+        private async Task TestCanExecuteAsync(AsyncRelayCommand cmd, bool methodSupplied = false)
         {
-            Console.WriteLine("Current Line# 41");
             ExpectedCanExecute = true;
-            Assert.AreEqual(ExpectedCanExecute, cmd.CanExecute(), "\n\nCanExecute returned FALSE when expected TRUE");
+            Assert.AreEqual(ExpectedCanExecute, cmd.CanExecute(), $"\n\nCanExecute returned FALSE when expected TRUE\nLine # : {new StackFrame(true).GetFileLineNumber()}");
             if (methodSupplied)
             {
                 ExpectedCanExecute = false;
-                Assert.IsFalse(cmd.CanExecute(), "\n\nCanExecute returned TRUE with invalid input");
+                Assert.IsFalse(cmd.CanExecute(), $"\n\nCanExecute returned TRUE with invalid input\nLine # : {new StackFrame(true).GetFileLineNumber()}");
                 ExpectedCanExecute = true;
             }
 
             cmd.AllowConcurrentExecution = true;
-            _ = cmd.ExecuteAsync();
-            var task = cmd.ExecutionTask;
-            Console.WriteLine("Current Line# 54");
-            Assert.IsNotNull(task, "ExecutionTask Property was not set!");
-            Assert.IsTrue(cmd.CanExecute(), "\n\nCanExecute returned FALSE when expected TRUE");
-            Assert.IsTrue(cmd.IsRunning, "\n\nIsRunning returned FALSE while task was running");
+            var task = cmd.ExecuteAsync();
+            Assert.IsNotNull(cmd.ExecutionTask, $"ExecutionTask Property was not set!\nLine # : {new StackFrame(true).GetFileLineNumber()}");
+            Assert.IsTrue(cmd.CanExecute(), $"\n\nCanExecute returned FALSE when expected TRUE\nLine # : {new StackFrame(true).GetFileLineNumber()}");
+            Assert.IsTrue(cmd.IsRunning, $"\n\nIsRunning returned FALSE while task was running\nLine # : {new StackFrame(true).GetFileLineNumber()}");
             await task;
-            Assert.IsFalse(cmd.IsRunning, "\n\nIsRunning returned TRUE after task completed");
+            Assert.IsFalse(cmd.IsRunning, $"\n\nIsRunning returned TRUE after task completed\nLine # : {new StackFrame(true).GetFileLineNumber()}");
 
             cmd.AllowConcurrentExecution = false;
             task = cmd.ExecuteAsync();
-            Assert.IsFalse(cmd.CanExecute(), "\n\nCanExecute Returned TRUE while task was executing and AllowConcurrentExecution was false");
+            Assert.IsFalse(cmd.CanExecute(), $"\n\nCanExecute Returned TRUE while task was executing and AllowConcurrentExecution was false\nLine # : {new StackFrame(true).GetFileLineNumber()}");
             await task;
 
             //Test Cancellation
-            Console.WriteLine("Current Line# 67");
             cmd.AllowConcurrentExecution = true;
             var t1 = cmd.ExecuteAsync();
             var t2 = cmd.ExecuteAsync();
             var t3 = cmd.ExecuteAsync();
-            Assert.AreNotSame(t1, t2, "\n\n Task1 and Task2 are the same take when expected to be different");
-            Assert.AreNotSame(t1, t3, "\n\n Task1 and Task3 are the same take when expected to be different");
-            Assert.AreNotSame(t2, t3, "\n\n Task2 and Task3 are the same take when expected to be different");
-            Assert.IsFalse(cmd.IsCancellationRequested, "\n\n IsCancellationRequested is TRUE prior to being cancelled");
+            Assert.AreNotSame(t1, t2, $"\n\n Task1 and Task2 are the same take when expected to be different\nLine # : {new StackFrame(true).GetFileLineNumber()}");
+            Assert.AreNotSame(t1, t3, $"\n\n Task1 and Task3 are the same take when expected to be different\nLine # : {new StackFrame(true).GetFileLineNumber()}");
+            Assert.AreNotSame(t2, t3, $"\n\n Task2 and Task3 are the same take when expected to be different\nLine # : {new StackFrame(true).GetFileLineNumber()}");
+            Assert.IsFalse(cmd.IsCancellationRequested, $"\n\n IsCancellationRequested is TRUE prior to being cancelled\nLine # : {new StackFrame(true).GetFileLineNumber()}");
             if (cmd.CanBeCanceled)
             {
-                Console.WriteLine("Current Line# 78");
                 cmd.SwallowCancellations = false;
                 cmd.Cancel();
-                Assert.IsTrue(cmd.IsCancellationRequested, "\n\nIsCancellationRequested is FALSE when expected to be true");
+                Assert.IsTrue(cmd.IsCancellationRequested, $"\n\nIsCancellationRequested is FALSE when expected to be true\nLine # : {new StackFrame(true).GetFileLineNumber()}");
                 while (cmd.IsRunning) { await Task.Delay(3); }
                 await Task.Delay(10);
-                Assert.IsTrue(t3.IsCanceled, "\n\n Task3 was not cancelled");
-                Assert.IsTrue(t2.IsCanceled, "\n\n Task2 was not cancelled");
-                Assert.IsTrue(t1.IsCanceled, "\n\n Task1 was not cancelled");
+                Assert.IsTrue(t3.IsCanceled, $"\n\n Task3 was not cancelled\nLine # : {new StackFrame(true).GetFileLineNumber()}");
+                Assert.IsTrue(t2.IsCanceled, $"\n\n Task2 was not cancelled\nLine # : {new StackFrame(true).GetFileLineNumber()}");
+                Assert.IsTrue(t1.IsCanceled, $"\n\n Task1 was not cancelled\nLine # : {new StackFrame(true).GetFileLineNumber()}");
             }
             else
             {
-                Console.WriteLine("Current Line# 90");
                 await Task.WhenAll(t1, t2, t3);
             }
             TestIAsyncRelayCommand(cmd);
@@ -105,33 +101,32 @@ namespace RFBCodeWorks.Mvvm.Tests
             Task assertTask;
             if (!hasCancellationHandler && !hasErrorHandler && isCancellable)
             {
-                Console.WriteLine("Current Line# 103");
                 ThrowError = false;
-                assertTask = Assert.ThrowsAsync<OperationCanceledException>(() => cmd.ExecuteAsync(), "\n\nOperationCancelledExpection was not passed to caller!");
+                var func = cmd.ExecuteAsync;
+                assertTask = Assert.ThrowsAsync<OperationCanceledException>(func, $"\n\nOperationCancelledExpection was not passed to caller!\nLine # : {new StackFrame(true).GetFileLineNumber()}");
                 await Task.Delay(2);
                 cmd.Cancel();
                 await assertTask;
-                Assert.IsFalse(CancelHandled, "\n\nCancel was handled unexpectedly");
-                Assert.IsFalse(ErrorHandled, "\n\nError was handled unexpectedly");
+                Assert.IsFalse(CancelHandled, $"\n\nCancel was handled unexpectedly\nLine # : {new StackFrame(true).GetFileLineNumber()}");
+                Assert.IsFalse(ErrorHandled, $"\n\nError was handled unexpectedly\nLine # : {new StackFrame(true).GetFileLineNumber()}");
             }
             else if (!hasErrorHandler)
             {
-                Console.WriteLine("Current Line# 113");
                 ThrowError = true;
-                await Assert.ThrowsAsync<ArgumentException>(() => cmd.ExecuteAsync(), "\n\nArgumentException was not passed to caller!");
-                Assert.IsFalse(CancelHandled, "\n\nCancel was handled unexpectedly");
-                Assert.IsFalse(ErrorHandled, "\n\nError was handled unexpectedly");
+                var func = cmd.ExecuteAsync;
+                await Assert.ThrowsAsync<ArgumentException>(func, $"\n\nArgumentException was not passed to caller!\nLine # : {new StackFrame(true).GetFileLineNumber()}");
+                Assert.IsFalse(CancelHandled, $"\n\nCancel was handled unexpectedly\nLine # : {new StackFrame(true).GetFileLineNumber()}");
+                Assert.IsFalse(ErrorHandled, $"\n\nError was handled unexpectedly\nLine # : {new StackFrame(true).GetFileLineNumber()}");
             }
             else if (!hasCancellationHandler && isCancellable)
             {
-                Console.WriteLine("Current Line# 122");
                 ThrowError = false;
                 assertTask = cmd.ExecuteAsync();
                 await Task.Delay(2);
                 cmd.Cancel();
                 await AwaitCompletion(cmd);
-                Assert.IsFalse(CancelHandled, "\n\nCancel was handled unexpectedly");
-                Assert.IsFalse(ErrorHandled, "\n\nOperationCancelledExpection was not handled by the Error Handler!");
+                Assert.IsFalse(CancelHandled, $"\n\nCancel was handled unexpectedly\nLine # : {new StackFrame(true).GetFileLineNumber()}");
+                Assert.IsFalse(ErrorHandled, $"\n\nOperationCancelledExpection was not handled by the Error Handler!\nLine # : {new StackFrame(true).GetFileLineNumber()}");
             }
             ThrowError = false;
 
@@ -139,30 +134,28 @@ namespace RFBCodeWorks.Mvvm.Tests
             CancelHandled = false;
             if (hasCancellationHandler)
             {
-                Console.WriteLine("Current Line# 137");
-                Assert.IsFalse(cmd.CanBeCanceled, "\n\nCanBeCanceled returned TRUE while the task was not started");
+                Assert.IsFalse(cmd.CanBeCanceled, $"\n\nCanBeCanceled returned TRUE while the task was not started\nLine # : {new StackFrame(true).GetFileLineNumber()}");
                 Task v = cmd.ExecuteAsync();
-                Assert.IsTrue(cmd.CanBeCanceled, "\n\nCanBeCanceled returned FALSE while a Cancellable task was running");
+                Assert.IsTrue(cmd.CanBeCanceled, $"\n\nCanBeCanceled returned FALSE while a Cancellable task was running\nLine # : {new StackFrame(true).GetFileLineNumber()}");
                 await v;
-                Assert.IsFalse(CancelHandled, "\n\nCancellation was handled while task was not cancelled");
+                Assert.IsFalse(CancelHandled, $"\n\nCancellation was handled while task was not cancelled\nLine # : {new StackFrame(true).GetFileLineNumber()}");
                 v = cmd.ExecuteAsync();
                 await Task.Delay(5);
                 cmd.Cancel();
                 await v.ContinueWith((t) => { });
-                Assert.IsTrue(CancelHandled, "\n\nCancellation was not handled when it was expected to be handled");
+                Assert.IsTrue(CancelHandled, $"\n\nCancellation was not handled when it was expected to be handled\nLine # : {new StackFrame(true).GetFileLineNumber()}");
             }
 
             //Test Error Handling
             ErrorHandled = false;
             if (hasErrorHandler)
             {
-                Console.WriteLine("Current Line# 154");
                 ThrowError = false;
                 await cmd.ExecuteAsync();
-                Assert.IsFalse(ErrorHandled, "\n\nErrorHandled was raised unexpectedly");
+                Assert.IsFalse(ErrorHandled, $"\n\nErrorHandled was raised unexpectedly\nLine # : {new StackFrame(true).GetFileLineNumber()}");
                 ThrowError = true;
                 _ = cmd.ExecuteAsync();
-                Assert.IsTrue(ErrorHandled, "\n\nError was not handled when it was expected to be handled");
+                Assert.IsTrue(ErrorHandled, $"\n\nError was not handled when it was expected to be handled\nLine # : {new StackFrame(true).GetFileLineNumber()}");
                 ThrowError = false;
             }
         }
@@ -180,100 +173,92 @@ namespace RFBCodeWorks.Mvvm.Tests
             _ = cmd.RunningTasks;
         }
 
-        [TestMethod("Cancelleable Task")]
-        public void AsyncRelayCommandTest1()
+        [STATestMethod(DisplayName ="Cancelleable Task")]
+        public async Task AsyncRelayCommandTest1()
         {
             AsyncRelayCommand cmd = new AsyncRelayCommand(cancelableExecute: GetTask);
-            TestCanExecute(cmd).Wait();
-            TestExceptionThrowing(cmd, hasErrorHandler: false, hasCancellationHandler: false).Wait();
+            await TestCanExecuteAsync(cmd);
+            await TestExceptionThrowing(cmd, hasErrorHandler: false, hasCancellationHandler: false);
         }
 
-        [TestMethod("Cancelleable Task + Error Handling")]
-        public void AsyncRelayCommandTest2()
+        [STATestMethod(DisplayName ="Cancelleable Task + Error Handling")]
+        public async Task AsyncRelayCommandTest2()
         {
             AsyncRelayCommand cmd = new AsyncRelayCommand(GetTask, errorHandler: HandleError);
-            TestCanExecute(cmd).Wait();
-
-            TestExceptionThrowing(cmd, hasErrorHandler: true, hasCancellationHandler: false).Wait();
+            await TestCanExecuteAsync(cmd);
+            await TestExceptionThrowing(cmd, hasErrorHandler: true, hasCancellationHandler: false);
         }
 
-        [TestMethod("Cancelleable Task + Cancellation Handling")]
-        public void AsyncRelayCommandTest3()
+        [STATestMethod(DisplayName ="Cancelleable Task + Cancellation Handling")]
+        public async Task AsyncRelayCommandTest3()
         {
             AsyncRelayCommand cmd = new AsyncRelayCommand(cancelableExecute: GetTask, cancelReaction: HandleCancellation);
-            TestCanExecute(cmd).Wait();
-
-            TestExceptionThrowing(cmd, hasErrorHandler: false, hasCancellationHandler: true).Wait();
+            await TestCanExecuteAsync(cmd);
+            await TestExceptionThrowing(cmd, hasErrorHandler: false, hasCancellationHandler: true);
         }
 
-        [TestMethod("Cancelleable Task + CanExecuteValidation")]
-        public void AsyncRelayCommandTest4()
+        [STATestMethod(DisplayName ="Cancelleable Task + CanExecuteValidation")]
+        public async Task AsyncRelayCommandTest4()
         {
             AsyncRelayCommand cmd = new AsyncRelayCommand(cancelableExecute: GetTask, CanExecute);
-            TestCanExecute(cmd, true).Wait();
-            TestExceptionThrowing(cmd, hasErrorHandler: false, hasCancellationHandler: false).Wait();
+            await TestCanExecuteAsync(cmd, true);
+            await TestExceptionThrowing(cmd, hasErrorHandler: false, hasCancellationHandler: false);
         }
 
-        [TestMethod("Cancelleable Task + CanExecuteValidation + Error Handling")]
-        public void AsyncRelayCommandTest5()
+        [STATestMethod(DisplayName ="Cancelleable Task + CanExecuteValidation + Error Handling")]
+        public async Task AsyncRelayCommandTest5()
         {
             AsyncRelayCommand cmd = new AsyncRelayCommand(cancelableExecute: GetTask, CanExecute, HandleError);
-            TestCanExecute(cmd, true).Wait();
-
-            TestExceptionThrowing(cmd, hasErrorHandler: true, hasCancellationHandler: false).Wait();
+            await TestCanExecuteAsync(cmd, true);
+            await TestExceptionThrowing(cmd, hasErrorHandler: true, hasCancellationHandler: false);
         }
 
-        [TestMethod("Cancelleable Task + CanExecuteValidation + Cancellation Handling")]
-        public void AsyncRelayCommandTest6()
+        [STATestMethod(DisplayName ="Cancelleable Task + CanExecuteValidation + Cancellation Handling")]
+        public async Task AsyncRelayCommandTest6()
         {
             AsyncRelayCommand cmd = new AsyncRelayCommand(cancelableExecute: GetTask, CanExecute, cancelReaction: HandleCancellation);
-            TestCanExecute(cmd, true).Wait();
-
-            TestExceptionThrowing(cmd, hasErrorHandler: false, hasCancellationHandler: true).Wait();
+            await TestCanExecuteAsync(cmd, true);
+            await TestExceptionThrowing(cmd, hasErrorHandler: false, hasCancellationHandler: true);
         }
 
-        [TestMethod("Cancelleable Task + CanExecuteValidation + Error Handling + Cancellation Handling")]
-        public void AsyncRelayCommandTest7()
+        [STATestMethod(DisplayName ="Cancelleable Task + CanExecuteValidation + Error Handling + Cancellation Handling")]
+        public async Task AsyncRelayCommandTest7()
         {
             AsyncRelayCommand cmd = new AsyncRelayCommand(cancelableExecute: GetTask, CanExecute, HandleError, HandleCancellation);
-            TestCanExecute(cmd, true).Wait();
-
-
-            TestExceptionThrowing(cmd, hasErrorHandler: true, hasCancellationHandler: true).Wait();
+            await TestCanExecuteAsync(cmd, true);
+            await TestExceptionThrowing(cmd, hasErrorHandler: true, hasCancellationHandler: true);
         }
 
-        [TestMethod("Non-Cancellable Task")]
-        public void AsyncRelayCommandTest11()
+        [STATestMethod(DisplayName ="Non-Cancellable Task")]
+        public async Task AsyncRelayCommandTest11()
         {
             AsyncRelayCommand cmd = new AsyncRelayCommand(execute: GetTask);
-            TestCanExecute(cmd, false).Wait();
-            TestExceptionThrowing(cmd, hasErrorHandler: false, hasCancellationHandler: false, isCancellable: false).Wait();
+            await TestCanExecuteAsync(cmd, false);
+            await TestExceptionThrowing(cmd, hasErrorHandler: false, hasCancellationHandler: false, isCancellable: false);
         }
 
-        [TestMethod("Non-Cancellable Task + CanExecuteValidation")]
-        public void AsyncRelayCommandTest9()
+        [STATestMethod(DisplayName ="Non-Cancellable Task + CanExecuteValidation")]
+        public async Task AsyncRelayCommandTest9()
         {
             AsyncRelayCommand cmd = new AsyncRelayCommand(execute: GetTask, CanExecute);
-            TestCanExecute(cmd, true).Wait();
-            TestExceptionThrowing(cmd, hasErrorHandler: false, hasCancellationHandler: false, isCancellable: false).Wait();
+            await TestCanExecuteAsync(cmd, true);
+            await TestExceptionThrowing(cmd, hasErrorHandler: false, hasCancellationHandler: false, isCancellable: false);
         }
 
-        [TestMethod("Non-Cancellable Task + Error Handling")]
-        public void AsyncRelayCommandTest8()
+        [STATestMethod(DisplayName ="Non-Cancellable Task + Error Handling")]
+        public async Task AsyncRelayCommandTest8()
         {
             AsyncRelayCommand cmd = new AsyncRelayCommand(execute: GetTask, errorHandler: HandleError);
-            TestCanExecute(cmd, false).Wait();
-
-            TestExceptionThrowing(cmd, hasErrorHandler: true, hasCancellationHandler: false, isCancellable: false).Wait();
+            await TestCanExecuteAsync(cmd, false);
+            await TestExceptionThrowing(cmd, hasErrorHandler: true, hasCancellationHandler: false, isCancellable: false);
         }
 
-        [TestMethod("Non-Cancellable Task + CanExecuteValidation + Error Handling")]
-        public void AsyncRelayCommandTest10()
+        [STATestMethod(DisplayName ="Non-Cancellable Task + CanExecuteValidation + Error Handling")]
+        public async Task AsyncRelayCommandTest10()
         {
             AsyncRelayCommand cmd = new AsyncRelayCommand(execute: GetTask, CanExecute, HandleError);
-            TestCanExecute(cmd, true).Wait();
-
-            TestExceptionThrowing(cmd, hasErrorHandler: true, hasCancellationHandler: false, isCancellable: false).Wait();
+            await TestCanExecuteAsync(cmd, true);
+            await TestExceptionThrowing(cmd, hasErrorHandler: true, hasCancellationHandler: false, isCancellable: false);
         }
     }
 }

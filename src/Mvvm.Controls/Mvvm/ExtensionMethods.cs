@@ -15,7 +15,7 @@ namespace RFBCodeWorks.Mvvm
         {
             if (value is null) ThrowArgNull(paramName);
         }
-        private static void ThrowArgNull(string paramName) => throw new ArgumentNullException(paramName);
+        private static void ThrowArgNull(string? paramName) => throw new ArgumentNullException(paramName);
 
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace RFBCodeWorks.Mvvm
             yield break;
         }
 
-        public static async void FireAndForgetErrorHandling(this Task task, Action<Exception> errorHandler, bool swallowTaskCancelled = true)
+        public static async void FireAndForgetErrorHandling(this Task task, Action<Exception>? errorHandler, bool swallowTaskCancelled = true)
         {
             try
             {

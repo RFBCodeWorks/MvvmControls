@@ -15,6 +15,11 @@
     <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
     <Import Project="..\Mvvm.Version.targets" />
 
+	<PropertyGroup>
+		<SignAssembly>True</SignAssembly>
+		<AssemblyOriginatorKeyFile>..\..\MvvmControls.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+
 	<!-- Source Generator compile props -->
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
@@ -47,7 +52,7 @@
 
     <!-- Add any required files -->
     <ItemGroup>
-        <Compile Include="..\Mvvm.Controls\Mvvm\Attributes.cs" />
+		<ProjectReference Include="..\Mvvm.Controls\Mvvm.Controls.csproj" />
     </ItemGroup>
 
     <!-- Misc. Properties -->

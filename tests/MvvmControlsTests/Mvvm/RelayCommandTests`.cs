@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace RFBCodeWorks.Mvvm.Tests
 {
-    [TestClass()]
-    public class RelayCommandTests2 : Primitives.Tests.CommandBaseTests
+    [STATestClass]
+    public class RelayCommandParameterTests : Primitives.Tests.CommandBaseTests
     {
-
+        public RelayCommandParameterTests() { Initialize(); }
 
         protected override CommandBase GetCommand() => new RelayCommand<int>(CommandAction);
 
@@ -24,19 +24,20 @@ namespace RFBCodeWorks.Mvvm.Tests
         private static void HandleError(Exception e) => ErrorHandled = true;
 
         [TestInitialize]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1013:Public method should be marked as test", Justification = "<Pending>")]
         public void Initialize()
         {
             WasExecuted = false;
             ErrorHandled = false;
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void RelayCommandTest()
         {
             Assert.IsNotNull(new RelayCommand<int>(CommandAction));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void RelayCommandTest1()
         {
             var cmd = new RelayCommand<int>(ThrowError,HandleError);
@@ -51,7 +52,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             }
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void RelayCommandTest2()
         {
             var cmd = new RelayCommand<int>(CommandAction, CanExecute);
@@ -59,7 +60,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             Assert.IsFalse(cmd.CanExecute(0), "\nCanExecute returns true unexpectedly");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void RelayCommandTest3()
         {
             var cmd = new RelayCommand<int>(ThrowError, CanExecute, HandleError);
@@ -74,7 +75,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             }
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void CanExecuteTest()
         {
             var cmd = new RelayCommand<int>(CommandAction);
@@ -84,7 +85,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             Assert.IsTrue(cmd.CanExecute(1), "\nCanExecute returns false unexpectedly");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ExecuteTest()
         {
             var cmd = new RelayCommand<int>(CommandAction);

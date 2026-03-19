@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using Behaviors = RFBCodeWorks.WPF.Behaviors;
+using RFBCodeWorks.Mvvm.Tests;
 
 namespace RFBCodeWorks.Mvvm.Primitives.Tests
 {
 
-    [TestClass()]
+    [TestClass]
     public class ToggleButtonDefinitionTest : ControlBaseTests
     {
         public ToggleButtonDefinitionTest() : this(new()) { }
 
-        public ToggleButtonDefinitionTest(ToggleButtonDefinition controlDef) : base(controlDef)
+        protected ToggleButtonDefinitionTest(ToggleButtonDefinition controlDef) : base(controlDef)
         {
             ControlDefinition = controlDef;
         }
@@ -76,7 +77,7 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             return cntrl;
         }
 
-        [TestMethod]
+        [STATestMethod]
         public void ControlTest_IsChecked()
         {
             var toggle = GetControl() as ToggleButton;

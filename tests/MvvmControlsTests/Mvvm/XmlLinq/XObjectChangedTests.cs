@@ -1,14 +1,16 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RFBCodeWorks.Mvvm.Tests;
 using System;
 using System.Linq;
 using System.Xml.Linq;
+
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 {
     /// <summary>
     /// ShowCase how the 'Changed' event propogates onto an XElement object
     /// </summary>
-    [TestClass()]
+    [TestClass]
     public class XObjectChangedTests
     {
 
@@ -17,6 +19,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             var x = new XElement("TestElement");
             x.Changed += (o, e) =>
             {
+                o.AssertIsNotNull();
                 Console.WriteLine(
                     $"\nSender Type: {o.GetType()}" +
                     $"\nEventArgs: {e.ObjectChange}" +
@@ -25,25 +28,25 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             return x;
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_AddChildElement()
         {
             var x = getElement();
             x.Add(new XElement("Child_1"));
             Console.WriteLine("\n--------------------------  Remove the first child  ------------------------------");
-            x.Element("Child_1").Remove();
+            x.Element("Child_1")!.Remove();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_AddChildElements()
         {
             var x = getElement();
             x.Add(new XElement("Child_1"), new XElement("Child_2"), new XElement("Child_3"));
             Console.WriteLine("\n--------------------------  Remove the first child  ------------------------------");
-            x.Element("Child_1").Remove();
+            x.Element("Child_1")!.Remove();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_Attribute()
         {
             var x = getElement();
@@ -62,7 +65,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             x.SetAttributeValue(attrName, null);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_SetValue()
         {
             var x = getElement();
@@ -73,7 +76,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Console.WriteLine("--------------------------------------------------------\n Removing the value\n");
             x.Value = "";
         }
-        [TestMethod()]
+        [TestMethod]
         public void MicrosoftExample_TextNodes()
         {
             XElement xmlTree = new XElement("Root", "Content");

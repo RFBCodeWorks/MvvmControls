@@ -1,17 +1,19 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Xml.Linq;
+using RFBCodeWorks.Mvvm.Tests;
+
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 {
 
-    [TestClass()]
+    [TestClass]
     public class XProviderTests
     {
         internal IXElementProvider GetXElementProvider(IXElementProvider parent) => new XElementProvider(XWrapperTests.XElementName, parent);
         internal IXAttributeProvider GetXAttributeProvider(IXElementProvider parent) => new XAttributeRetriever(XWrapperTests.AttributeName, parent);
 
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_IXElementProvider()
         {
             var doc = XWrapperTests.GetXDoc();
@@ -25,7 +27,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.IsNull(attr.XObject);
 
             Console.WriteLine("\n------------------------------------------- With Element");
-            doc.Root.Add(XWrapperTests.GetXElement);
+            doc.Root!.Add(XWrapperTests.GetXElement);
             Assert.IsNotNull(element.XObject);
             Console.WriteLine(doc.ToString());
 
@@ -77,21 +79,24 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
         /// <summary>
         /// ShowCase how the 'Changed' event propogates through an XML tree
         /// </summary>
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_XObjectCHanged()
         {
-            
+
+#pragma warning disable CS0219 // Variable is assigned but its value is never used
             bool rootChanged = false, Raised_Root = false;
             bool LevelChange_1 = false, Raised_1 = false;
             bool LevelChange_2 = false, Raised_2 = false;
             bool LevelChange_3 = false, Raised_3 = false;
             bool LevelChange_4 = false, Raised_4 = false;
             bool AttrChanged = false, Raised_Attr = false;
+#pragma warning restore CS0219 // Variable is assigned but its value is never used
 
-            object Sender = null;
-            void EvalSender(object sender, EventArgs e)
+            object? Sender = null;
+            void EvalSender(object? sender, EventArgs e)
             {
                 Sender = sender;
+                sender.AssertIsOfType<XObject>();
                 Console.WriteLine($"Sender Node: {((XObject)sender)}");
             }
 
@@ -102,15 +107,16 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             var Level4 = new XElement("Level4");
             var Level3Attr = new XAttribute("Attr", "false");
 
-            void rootChange(object sender, EventArgs e) { rootChanged = sender == Root; Raised_Root = true; }
-            void level1Change(object sender, EventArgs e) {LevelChange_1 = sender == Level1; Raised_1 = true; }
-            void level2Change(object sender, EventArgs e) {LevelChange_2 = sender == Level2; Raised_2 = true; }
-            void level3Change(object sender, EventArgs e) {LevelChange_3 = sender == Level3; Raised_3 = true; }
-            void level4Change(object sender, EventArgs e) {LevelChange_4 = sender == Level4; Raised_4 = true; }
-            void AttrChange(object sender, EventArgs e) { AttrChanged = sender == Level3Attr; Raised_Attr = true; }
+            void rootChange(object? sender, EventArgs e) { rootChanged = sender == Root; Raised_Root = true; }
+            void level1Change(object? sender, EventArgs e) {LevelChange_1 = sender == Level1; Raised_1 = true; }
+            void level2Change(object? sender, EventArgs e) {LevelChange_2 = sender == Level2; Raised_2 = true; }
+            void level3Change(object? sender, EventArgs e) {LevelChange_3 = sender == Level3; Raised_3 = true; }
+            void level4Change(object? sender, EventArgs e) {LevelChange_4 = sender == Level4; Raised_4 = true; }
+            void AttrChange(object? sender, EventArgs e) { AttrChanged = sender == Level3Attr; Raised_Attr = true; }
 
             void reset()
             {
+                Raised_Root = false;
                 Raised_1 = false;
                 Raised_2 = false;
                 Raised_3 = false;

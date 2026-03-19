@@ -1,13 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RFBCodeWorks.Mvvm.Tests;
-using RFBCodeWorks.Mvvm.Tests.Helpers;
+using RFBCodeWorks.Mvvm.TestHelpers;
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
+
 namespace RFBCodeWorks.Mvvm.Primitives.Tests
 {
-    [TestClass()]
+    [TestClass]
     public abstract class SelectorTests : ItemSourceTests
     {
 
@@ -19,7 +20,7 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
         /// Set the ItemSourceDefinitionTests for the test methods
         /// </summary>
         /// <param name="definition"></param>
-        public SelectorTests(SelectorDefinition<SelectorTestItem, SelectorTestItem[], string> definition) : base(definition)
+        protected SelectorTests(SelectorDefinition<SelectorTestItem, SelectorTestItem[], string> definition) : base(definition)
         {
             ControlDefinition = definition;
         }
@@ -54,11 +55,13 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             List<string> propNameChanging = new();
             ControlDefinition.PropertyChanging += (o, e) =>
             {
+                Assert.IsNotNull(e?.PropertyName);
                 propChanging++;
                 propNameChanging.Add(e.PropertyName);
             };
             ControlDefinition.PropertyChanged += (o, e) =>
             {
+                Assert.IsNotNull(e?.PropertyName);
                 propChanged++;
                 propNameChanged.Add(e.PropertyName);
             };
@@ -74,12 +77,12 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             ControlDefinition.SelectedItem = 4;
             Assert.AreEqual(1, selectedItemChanged, "SelectedItemChanged event raised incorrect number of times");
             Assert.AreEqual(((IList<SelectorTestItem>)ControlDefinition.Items).IndexOf(ControlDefinition.SelectedItem), ControlDefinition.SelectedIndex, "\nSelectedIndex was not properly updated after setting the SelectedItem");
-            Assert.IsTrue(propNameChanging.Contains(nameof(ControlDefinition.SelectedIndex)), "\nPropertyChanging does not contain SelectedIndex");
-            Assert.IsTrue(propNameChanged.Contains(nameof(ControlDefinition.SelectedIndex)), "\nPropertyChanged does not contain SelectedIndex");
-            Assert.IsTrue(propNameChanging.Contains(nameof(ControlDefinition.SelectedItem)), "\nPropertyChanging does not contain SelectedItem");
-            Assert.IsTrue(propNameChanged.Contains(nameof(ControlDefinition.SelectedItem)), "\nPropertyChanged does not contain SelectedItem");
-            Assert.IsTrue(propNameChanging.Contains(nameof(ControlDefinition.SelectedValue)), "\nPropertyChanging does not contain SelectedItem");
-            Assert.IsTrue(propNameChanged.Contains(nameof(ControlDefinition.SelectedValue)), "\nPropertyChanged does not contain SelectedItem");
+            Assert.Contains(nameof(ControlDefinition.SelectedIndex), propNameChanging, "\nPropertyChanging does not contain SelectedIndex");
+            Assert.Contains(nameof(ControlDefinition.SelectedIndex), propNameChanged, "\nPropertyChanged does not contain SelectedIndex");
+            Assert.Contains(nameof(ControlDefinition.SelectedItem), propNameChanging, "\nPropertyChanging does not contain SelectedItem");
+            Assert.Contains(nameof(ControlDefinition.SelectedItem), propNameChanged, "\nPropertyChanged does not contain SelectedItem");
+            Assert.Contains(nameof(ControlDefinition.SelectedValue), propNameChanging, "\nPropertyChanging does not contain SelectedItem");
+            Assert.Contains(nameof(ControlDefinition.SelectedValue), propNameChanged, "\nPropertyChanged does not contain SelectedItem");
             Assert.AreEqual(3, propChanging, "\nPropertyChanging event raised incorrect number of times");
             Assert.AreEqual(3, propChanged, "\nPropertyChanged event raised incorrect number of times");
             propNameChanged.Clear();
@@ -88,12 +91,12 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             ControlDefinition.SelectedIndex = 2;
             Assert.AreEqual(2, selectedItemChanged, "SelectedItemChanged event raised incorrect number of times");
             Assert.AreEqual(ControlDefinition.Items[ControlDefinition.SelectedIndex], ControlDefinition.SelectedItem, "\nSelectedItem was not properly updated after setting the SelectedIndex");
-            Assert.IsTrue(propNameChanging.Contains(nameof(ControlDefinition.SelectedIndex)), "\nPropertyChanging does not contain SelectedIndex");
-            Assert.IsTrue(propNameChanged.Contains(nameof(ControlDefinition.SelectedIndex)), "\nPropertyChanged does not contain SelectedIndex");
-            Assert.IsTrue(propNameChanging.Contains(nameof(ControlDefinition.SelectedItem)), "\nPropertyChanging does not contain SelectedItem");
-            Assert.IsTrue(propNameChanged.Contains(nameof(ControlDefinition.SelectedItem)), "\nPropertyChanged does not contain SelectedItem");
-            Assert.IsTrue(propNameChanging.Contains(nameof(ControlDefinition.SelectedValue)), "\nPropertyChanging does not contain SelectedItem");
-            Assert.IsTrue(propNameChanged.Contains(nameof(ControlDefinition.SelectedValue)), "\nPropertyChanged does not contain SelectedItem");
+            Assert.Contains(nameof(ControlDefinition.SelectedIndex), propNameChanging, "\nPropertyChanging does not contain SelectedIndex");
+            Assert.Contains(nameof(ControlDefinition.SelectedIndex), propNameChanged, "\nPropertyChanged does not contain SelectedIndex");
+            Assert.Contains(nameof(ControlDefinition.SelectedItem), propNameChanging, "\nPropertyChanging does not contain SelectedItem");
+            Assert.Contains(nameof(ControlDefinition.SelectedItem), propNameChanged, "\nPropertyChanged does not contain SelectedItem");
+            Assert.Contains(nameof(ControlDefinition.SelectedValue), propNameChanging, "\nPropertyChanging does not contain SelectedItem");
+            Assert.Contains(nameof(ControlDefinition.SelectedValue), propNameChanged, "\nPropertyChanged does not contain SelectedItem");
             Assert.AreEqual(6, propChanging, "\nPropertyChanging event raised incorrect number of times");
             Assert.AreEqual(6, propChanged, "\nPropertyChanged event raised incorrect number of times");
             propNameChanged.Clear();
@@ -101,7 +104,7 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
 
         }
 
-        [TestMethod]
+        [STATestMethod]
         public void ControlTest_SelectedValuePath()
         {
             var selector = GetSelector();
@@ -110,11 +113,12 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             ControlDefinition.SelectedValue = "One";
             Assert.AreEqual(ControlDefinition.SelectedItem, selector.SelectedItem);
             Assert.AreEqual(ControlDefinition.SelectedIndex, selector.SelectedIndex);
+            Assert.IsNotNull(ControlDefinition.SelectedItem);
             Assert.AreEqual(ControlDefinition.SelectedItem.Name, selector.SelectedValue);
             Assert.AreEqual(ControlDefinition.SelectedValue, selector.SelectedValue);
         }
 
-        [TestMethod]
+        [STATestMethod]
         public void ControlTest_SelectedIndex()
         {
             var selector = GetSelector() as System.Windows.Controls.Primitives.Selector;
@@ -123,7 +127,9 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             // Adjust the Index of the MVVM object, which then updates the 
             ControlDefinition.SelectedIndex = 0;
             Assert.AreEqual(ControlDefinition.SelectedItem, selector.SelectedItem);
+            
             Assert.AreEqual(ControlDefinition.SelectedIndex, selector.SelectedIndex);
+            Assert.IsNotNull(ControlDefinition.SelectedItem);
             Assert.AreEqual(ControlDefinition.SelectedItem.Name, selector.SelectedValue);
             Assert.AreEqual(ControlDefinition.SelectedValue, selector.SelectedValue);
 
@@ -134,7 +140,7 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             Assert.AreEqual(ControlDefinition.SelectedValue, selector.SelectedValue);
         }
 
-        [TestMethod]
+        [STATestMethod]
         public void ControlTest_SelectedItem()
         {
             var selector = GetSelector() as System.Windows.Controls.Primitives.Selector;

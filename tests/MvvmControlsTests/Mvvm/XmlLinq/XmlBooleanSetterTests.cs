@@ -1,10 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
+using RFBCodeWorks.Mvvm.Tests;
 using RFBCodeWorks.Mvvm.XmlLinq.ValueSetters;
 using System.Xml.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class XmlBooleanSetterTests
     {
         private void ModelTest_Null(XBooleanSetter obj)
@@ -23,7 +25,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.AreNotEqual(obj.XValueProvider is XAttributeRetriever, obj.XValueProvider.IsNodeAvailable);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void CreateBinarySetterTest()
         {
             var obj = XBooleanSetter.CreateBinarySetter(new XElementWrapper("test"));
@@ -36,7 +38,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             ModelTest_Null(obj);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void CreateStandardStringSetterTest()
         {
             var obj = XBooleanSetter.CreateStandardStringSetter(new XElementWrapper("test"));
@@ -50,7 +52,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
         }
 
 
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_XElementProdiver()
         {
             XDocumentWrapper doc = new XDocumentWrapper(new XElement("RootElement"));
@@ -58,7 +60,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             TextIXValueProvider(new XElementProvider("TestElement", ParentProvider), false);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_XAttributeProvider()
         {
             XDocumentWrapper doc = new XDocumentWrapper(new XElement("RootElement"));
@@ -66,7 +68,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             TextIXValueProvider(new XAttributeRetriever("TestAttribute", ParentProvider), false);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_XElementWrapper()
         {
             XDocumentWrapper doc = new XDocumentWrapper(new XElement("RootElement"));
@@ -76,7 +78,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             TextIXValueProvider(el, true);
         }
 
-        //[TestMethod()]
+        //[TestMethod]
         //public void ModelTest_XAttributeWrapper()
         //{
         //    XDocumentWrapper doc = new XDocumentWrapper(new XElement("RootElement"));
@@ -123,6 +125,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 
             if (provider is IXAttributeProvider attr)
             {
+                provider.Parent.XObject.AssertIsNotNull();
                 provider.Parent.XObject.SetAttributeValue(attr.Name, true);
                 setValue1();
                 setValue2();

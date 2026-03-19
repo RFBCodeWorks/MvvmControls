@@ -1,22 +1,24 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
+using RFBCodeWorks.Mvvm.TestHelpers;
 using RFBCodeWorks.Mvvm.Tests;
-using RFBCodeWorks.Mvvm.Tests.Helpers;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RFBCodeWorks.Mvvm.Primitives.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class ItemSourceTests : ControlBaseTests
     {
-        public ItemSourceTests() :this(new()) { }
+
+        public ItemSourceTests() :this(new())  { }
 
         /// <summary>
         /// Set the ItemSourceDefinitionTests for the test methods
         /// </summary>
         /// <param name="definition"></param>
-        public ItemSourceTests(ItemSource<SelectorTestItem, SelectorTestItem[]> definition) : base(definition)
+        protected ItemSourceTests(ItemSource<SelectorTestItem, SelectorTestItem[]> definition) : base(definition)
         {
             ControlDefinition = definition;
         }
@@ -56,12 +58,14 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             bool itemsChanged = false;
             ControlDefinition.PropertyChanging += (o, e) =>
             {
+                Assert.IsNotNull(e?.PropertyName);
                 propChanging++;
                 propNameChanging = e.PropertyName;
                 itemsChanging |= e.PropertyName == nameof(ControlDefinition.Items);
             };
             ControlDefinition.PropertyChanged += (o, e) =>
             {
+                Assert.IsNotNull(e?.PropertyName);
                 propChanged++;
                 propNameChanged = e.PropertyName;
                 itemsChanged |= e.PropertyName == nameof(ControlDefinition.Items);
@@ -81,11 +85,13 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             string propNameChanging = "";
             ControlDefinition.PropertyChanging += (o, e) =>
             {
+                Assert.IsNotNull(e?.PropertyName);
                 propChanging++;
                 propNameChanging = e.PropertyName;
             };
             ControlDefinition.PropertyChanged += (o, e) =>
             {
+                Assert.IsNotNull(e?.PropertyName);
                 propChanged++;
                 propNameChanged = e.PropertyName;
             };
@@ -97,7 +103,7 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             Assert.AreEqual(nameof(ControlDefinition.DisplayMemberPath), propNameChanged);
         }
 
-        [TestMethod]
+        [STATestMethod]
         public virtual void ControlTest_DisplayMemberPath()
         {
             var itemCntrl = GetItemsControl();
@@ -105,7 +111,7 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             Assert.AreEqual(ControlDefinition.DisplayMemberPath, itemCntrl.DisplayMemberPath, "DisplayMemberPath does not match the ControlDefinition");
         }
 
-        [TestMethod]
+        [STATestMethod]
         public virtual void ControlTest_Items()
         {
             var itemCntrl = GetItemsControl();

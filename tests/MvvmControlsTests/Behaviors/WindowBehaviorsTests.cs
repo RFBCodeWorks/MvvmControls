@@ -12,15 +12,15 @@ using System.Windows;
 
 namespace RFBCodeWorks.WPF.Behaviors.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class WindowBehaviorsTests
     {
-        [TestMethod]
+        [STATestMethod]
         [DataRow(data: true, DisplayName = "Subscribed")]
         [DataRow(data: false, DisplayName = "Unsubcribed")]
         public void IWindowActivatedHandlerTest(bool subscribe)
         {
-            Window w = new(), w2 = new();
+            Window? w = new(), w2 = new();
             try
             {
 
@@ -38,7 +38,7 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
                 w.Show();
                 Assert.AreEqual(subscribe, handler.WasActivated, " -- 'WasActivated' check failed.");
                 Assert.IsFalse(handler.WasDeactivated, " -- 'WasDeactivated' was true unexpectedly.");
-                
+
                 w2.Activate();
                 Assert.AreEqual(subscribe, handler.WasDeactivated, subscribe ? " -- 'WasDeactivated' was not set after window was deactivated" : "");
             }
@@ -48,11 +48,9 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
                 w.Close();
                 w2.Close();
             }
-            w = null;
-            w2 = null;
         }
 
-        [TestMethod()]
+        [STATestMethod]
         [DataRow(data: true, DisplayName = "Subscribed")]
         [DataRow(data: false, DisplayName = "Unsubcribed")]
         public void IWindowClosingHandlerTest(bool subscribe)
@@ -89,11 +87,10 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
                     WindowBehaviors.SetIWindowClosingHandler(w, null); 
                     w.Close();
                 } catch { }
-                w = null;
             }
         }
 
-        [TestMethod()]
+        [STATestMethod]
         [DataRow(data: true, DisplayName = "Subscribed")]
         [DataRow(data: false, DisplayName = "Unsubcribed")]
         public void IWindowLoadingHandlerTest(bool subscribe)
@@ -118,7 +115,6 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
             {
                 WindowBehaviors.SetIWindowLoadingHandler(w, null);
                 w.Close();
-                w = null;
             }
         }
 

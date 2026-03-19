@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Controls.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class XCheckBoxElementProviderTests : XCheckBoxElementWrapperTests
     {
 
@@ -12,14 +12,14 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Controls.Tests
     }
 
 
-    [TestClass()]
+    [TestClass]
     public class XCheckBoxAttributeTests : XCheckBoxElementWrapperTests
     {
 
         public XCheckBoxAttributeTests() : base(new XCheckBox(new XAttributeRetriever("TestAttr", new XElementWrapper("Parent")), BooleanConverter.StoreAsBinary)) { }
     }
     
-    [TestClass()]
+    [TestClass]
     public class XCheckBoxElementWrapperTests : CheckBoxDefinitionTest
     {
 

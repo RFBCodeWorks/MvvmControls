@@ -6,13 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using RFBCodeWorks.Mvvm.Tests;
 
 namespace RFBCodeWorks.WPF.Controls.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class AutoStackGridTests
     {
-        [TestMethod()]
+        [STATestMethod]
         public void AutoStackGridTest()
         {
             var btn1 = new Button();

@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+
+#nullable enable
 
 namespace RFBCodeWorks.Mvvm.Primitives
 {
@@ -35,16 +38,15 @@ namespace RFBCodeWorks.Mvvm.Primitives
         #region < Constructors >
 
         /// <inheritdoc cref="AbstractAsyncCommand.AbstractAsyncCommand(bool, Action{Exception})"/>
-        protected AbstractAsyncCommand(Action<Exception> errorHandler = null) : this(true, errorHandler) { }
+        protected AbstractAsyncCommand(Action<Exception>? errorHandler = null) : this(true, errorHandler) { }
 
         /// <summary> Initialize the object </summary>
         /// <param name="subscribeToCommandManager"><inheritdoc cref="CommandBase.SubscribeToCommandManager" path="*"/></param>
         /// <param name="errorHandler">The error handler to use if an error occurs when executing via <see cref="ICommand.Execute(object)"/> interface method</param>
-        protected AbstractAsyncCommand(bool subscribeToCommandManager, Action<Exception> errorHandler = null) : base(subscribeToCommandManager)
+        protected AbstractAsyncCommand(bool subscribeToCommandManager, Action<Exception>? errorHandler = null) : base(subscribeToCommandManager)
         {
             ErrorHandler = errorHandler;
-            runningTasks = new ObservableCollection<Task>();
-            runningTasks.CollectionChanged += RunningTasks_CollectionChanged;
+            runningTasks = [];
         }
 
         #endregion
@@ -52,17 +54,19 @@ namespace RFBCodeWorks.Mvvm.Primitives
         #region < Properties and Events >
         
         /// <summary>An action that will take place if the task throws an exception</summary>
-        protected readonly Action<Exception> ErrorHandler;
+        protected readonly Action<Exception>? ErrorHandler;
         private readonly ObservableCollection<Task> runningTasks;
+        private object collectionLock = new object();
+        private bool isRunning;
 
         /// <inheritdoc />
         public IEnumerable<Task> RunningTasks => runningTasks;
 
         /// <inheritdoc/>
-        public Task ExecutionTask { get; private set; }
+        public Task? ExecutionTask { get; private set; }
 
         /// <inheritdoc/>
-        public bool IsRunning => runningTasks.Any();
+        public bool IsRunning => isRunning;
 
         /// <inheritdoc/>
         public abstract bool CanBeCanceled { get; }
@@ -79,16 +83,26 @@ namespace RFBCodeWorks.Mvvm.Primitives
         public async Task ExecuteAsync()
         {
             Task runningTask = StartTask();
-            lock (runningTask)
+            lock (collectionLock)
+            {
                 runningTasks.Add(runningTask);
+                ExecutionTask = runningTask;
+            }
             try
             {
+                SetProperty(ref isRunning, true, nameof(IsRunning));
+                OnPropertyChanged(nameof(ExecutionTask));
+                OnPropertyChanged(nameof(CanBeCanceled));
+                NotifyCanExecuteChanged();
                 await runningTask;
             }
             finally
             {
-                lock (runningTasks)
+                lock (collectionLock)
+                {
                     runningTasks.Remove(runningTask);
+                    SetProperty(ref isRunning, runningTasks.Count > 0, nameof(IsRunning));
+                }
             }
         }
 
@@ -109,22 +123,11 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <returns> The inverse of <see cref="IsRunning"/> </returns>
         protected bool NoneRunning() => !IsRunning;
 
-        /// <summary> Notify that a new task has started / completed </summary>
-        private void RunningTasks_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-            {
-                ExecutionTask = runningTasks.Last();
-            }
-            OnPropertyChanged(INotifyArgs.Empty);
-            NotifyCanExecuteChanged();
-        }
-
         #region < Interface Implementations >
 
-        bool ICommand.CanExecute(object parameter) => CanExecute();
-        void ICommand.Execute(object parameter) => ExecuteAsync().FireAndForgetErrorHandling(ErrorHandler);
-        Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object parameter) => ExecuteAsync();
+        bool ICommand.CanExecute(object? parameter) => CanExecute();
+        void ICommand.Execute(object? parameter) => ExecuteAsync().FireAndForgetErrorHandling(ErrorHandler);
+        Task CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.ExecuteAsync(object? parameter) => ExecuteAsync();
 
         #endregion
     }

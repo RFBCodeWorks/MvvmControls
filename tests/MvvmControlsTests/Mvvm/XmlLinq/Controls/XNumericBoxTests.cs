@@ -6,10 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using RFBCodeWorks.Mvvm.Tests;
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Controls.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class XNumericBoxTests
     {
         private XElementProvider GetXElement()
@@ -21,13 +22,13 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Controls.Tests
             return node;
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_ControlDefinition()
         {
             Assert.IsNotNull(new XNumericBox(GetXElement()) as IControlDefinition);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ModelTest_ValueUpdate()
         {
             var node = GetXElement();
@@ -73,7 +74,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Controls.Tests
             //AssertPropertyChanged(7);
 
 
-            void Box_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+            void Box_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
             {
                 test = true;
             }

@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using RFBCodeWorks.Mvvm.Primitives;
 using RFBCodeWorks.Mvvm.Primitives.Tests;
 using Behaviors = RFBCodeWorks.WPF.Behaviors;
-using RFBCodeWorks.Mvvm.Tests.Helpers;
+using RFBCodeWorks.Mvvm.TestHelpers;
 using System.Windows.Controls.Primitives;
 
 namespace RFBCodeWorks.Mvvm.Tests
@@ -44,7 +44,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             return cmb;
         }
 
-        [TestMethod]
+        [STATestMethod]
         public void ControlTest_IsDropDownOpen()
         {
             var cmb = GetSelector() as ComboBox;

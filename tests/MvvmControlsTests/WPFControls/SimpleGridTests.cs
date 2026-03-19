@@ -5,15 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RFBCodeWorks.Mvvm.Tests;
 
 namespace RFBCodeWorks.WPF.Controls.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class SimpleGridTests
     {
-
-
-        [TestMethod()]
+        [STATestMethod]
         public void CreateGrid()
         {
             var g = new SimpleGrid();
@@ -36,7 +35,7 @@ namespace RFBCodeWorks.WPF.Controls.Tests
             Assert.AreEqual(4, g.ColumnCount, "\n\n Column does not match expected count!");
         }
 
-        [TestMethod()]
+        [STATestMethod]
         public void AssignPadding()
         {
             var g = new SimpleGrid

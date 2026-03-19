@@ -7,10 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
+using RFBCodeWorks.Mvvm.Tests;
 
 namespace RFBCodeWorks.WPF.Controls.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class NumericUpDownTests
     {
         private void ModelTest_UpDown<T, I>(T cntrl, I zero, I min, I max, I betweenMinMax, I belowMin, I aboveMax)
@@ -133,7 +134,7 @@ namespace RFBCodeWorks.WPF.Controls.Tests
 
 
 
-        [TestMethod()]
+        [STATestMethod]
         public void IntegerUpDown()
         {
             var cntrl = new IntegerUpDown();
@@ -141,7 +142,7 @@ namespace RFBCodeWorks.WPF.Controls.Tests
             ModelTest_UpDown(cntrl, 0, -100, 100, 25, -500, 500);
         }
 
-        [TestMethod()]
+        [STATestMethod]
         public void DecimalUpDown()
         {
             var cntrl = new DecimalUpDown();

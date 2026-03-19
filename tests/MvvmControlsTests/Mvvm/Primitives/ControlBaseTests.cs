@@ -1,13 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Windows;
+using RFBCodeWorks.Mvvm.Tests;
 
 namespace RFBCodeWorks.Mvvm.Primitives.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class ControlBaseTests
     {
         public ControlBaseTests() :this(new()) { }
+        
         /// <summary>
         /// Set the ControlDefinition for the test methods
         /// </summary>
@@ -20,9 +22,11 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
         protected ControlBase ControlDefinition { get; }
 
         [TestCleanup]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1013:Public method should be marked as test", Justification = "Converted From MS Test")]
         public virtual void TestCleanup() { }
 
         [TestInitialize]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1013:Public method should be marked as test", Justification = "Converted From MS Test")]
         public virtual void TestInitialize() { }
 
         protected virtual System.Windows.Controls.Control GetControl()
@@ -42,12 +46,12 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             ControlDefinition.PropertyChanging += (o, e) =>
             {
                 propChanging++;
-                propNameChanging = e.PropertyName;
+                propNameChanging = e.PropertyName!;
             };
             ControlDefinition.PropertyChanged += (o, e) =>
             {
                 propChanged++;
-                propNameChanged = e.PropertyName;
+                propNameChanged = e.PropertyName!;
             };
             ControlDefinition.ToolTip = "NewToolTip";
             Assert.AreEqual("NewToolTip", ControlDefinition.ToolTip);
@@ -71,12 +75,12 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             ControlDefinition.PropertyChanging += (o, e) =>
             {
                 propChanging++;
-                propNameChanging = e.PropertyName;
+                propNameChanging = e.PropertyName!;
             };
             ControlDefinition.PropertyChanged += (o, e) =>
             {
                 propChanged++;
-                propNameChanged = e.PropertyName;
+                propNameChanged = e.PropertyName!;
             };
             Assert.IsTrue(ControlDefinition.IsEnabled);
             ControlDefinition.IsEnabled = false;
@@ -124,7 +128,7 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
             Assert.AreEqual(Visibility.Visible, ControlDefinition.Visibility);
         }
 
-        [TestMethod]
+        [STATestMethod]
         public void ControlTest_Visibility()
         {
                 var cntrl = GetControl();
@@ -139,7 +143,7 @@ namespace RFBCodeWorks.Mvvm.Primitives.Tests
                 Assert.AreEqual(Visibility.Visible, cntrl.Visibility, "Control did not become Visible when ViewModel set IsVisible");
         }
 
-        [TestMethod]
+        [STATestMethod]
         public void ControlTest_IsEnabled()
         {
             var cntrl = GetControl();

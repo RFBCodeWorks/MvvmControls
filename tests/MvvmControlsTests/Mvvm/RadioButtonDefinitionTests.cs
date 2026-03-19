@@ -6,11 +6,11 @@ using Behaviors = RFBCodeWorks.WPF.Behaviors;
 
 namespace RFBCodeWorks.Mvvm.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class RadioButtonDefinitionTest : ToggleButtonDefinitionTest
     {
         public RadioButtonDefinitionTest() : this(new()) { }
-        public RadioButtonDefinitionTest(RadioButtonDefinition controlDef) : base(controlDef)
+        protected RadioButtonDefinitionTest(RadioButtonDefinition controlDef) : base(controlDef)
         {
             ControlDefinition = controlDef;
         }
@@ -31,7 +31,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             Assert.IsFalse(ControlDefinition.IsThreeState);
         }
 
-        [TestMethod]
+        [STATestMethod]
         public void ControlTest_GroupName()
         {
             var radioBtn = GetControl() as RadioButton;

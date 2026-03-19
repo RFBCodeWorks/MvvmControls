@@ -6,13 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using RFBCodeWorks.Mvvm.Tests;
+
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class XElementSorterTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void SetAttributeValueTest()
         {
             var root = new XContainerProvider(new XElement("root"));
@@ -27,7 +29,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.IsTrue(root.ProvidedElement.FirstAttribute == attr2.XAttribute);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void AddChildTest()
         {
             var root = new XContainerProvider(new XElement("root"));
@@ -51,11 +53,11 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.IsTrue(el2.XElement.FirstNode == el2_1.XElement, "Child Nodes were not sorted");
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void SortChildTest()
         {
             var doc = new XDocumentWrapper(new XElement("RootNode"));
-            doc.Root.Add(
+            doc.Root!.Add(
                 new XElement("B"),
                 new XElement("C"),
                 new XElement("Z"),
@@ -65,7 +67,8 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
                 );
 
             doc.ChildSorter.SortChildren(doc.Root);
-
+            doc.Root.FirstNode.AssertIsNotNull();
+            doc.Root.LastNode.AssertIsNotNull();
             Assert.IsTrue(doc.Root.FirstNode.GetName() == "A");
             Assert.IsTrue(doc.Root.LastNode.GetName() == "Z");
         }

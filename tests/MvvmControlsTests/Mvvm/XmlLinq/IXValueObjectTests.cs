@@ -1,13 +1,17 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
+using RFBCodeWorks.Mvvm.Tests;
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class IXValueObjectTests
     {
+        public IXValueObjectTests() { TestInit(); }
+
         [TestInitialize]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1013:Public method should be marked as test", Justification = "Converted from MS Test")]
         public void TestInit() 
         {
             WasValueChanged = false;
@@ -15,7 +19,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 
         private bool WasValueChanged = false;
 
-        private void X_ValueChanged(object sender, EventArgs e)
+        private void X_ValueChanged(object? sender, EventArgs e)
         {
             WasValueChanged = true;
         }
@@ -37,7 +41,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             }
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void XAttributeRetrieverTest()
         {
             var p = new XElementWrapper("parent");
@@ -50,7 +54,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             RemoveNode(n);
             
             Console.WriteLine("\n\n-------- NULL TEST - Do Not Create Value--------");
-            x.Value = null;
+            x.Value = null!;
             Console.WriteLine(p);
             Assert.IsFalse(n.IsNodeAvailable, "Node exists when not expected");
             AssertValueChanged(false);
@@ -69,13 +73,13 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             AssertValueChanged(true);
 
             Console.WriteLine("\n\n-------- NULL TEST --------");
-            x.Value = null;
+            x.Value = null!;
             Console.WriteLine(p);
             Assert.IsFalse(n.IsNodeAvailable, "Node exists when not expected");
             AssertValueChanged(true);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void XElementProviderTest()
         {
             var p = new XElementWrapper("parent");
@@ -88,7 +92,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             RemoveNode(n);
 
             Console.WriteLine("\n\n-------- NULL TEST - Do Not Create Value--------");
-            x.Value = null;
+            x.Value = null!;
             Console.WriteLine(p);
             Assert.IsFalse(n.IsNodeAvailable, "Node exists when not expected");
             AssertValueChanged(false);
@@ -110,7 +114,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             
 
             Console.WriteLine("\n\n-------- NULL TEST --------");
-            x.Value = null;
+            x.Value = null!;
             Console.WriteLine(p);
             AssertValueChanged(true);
             Assert.IsTrue(n.IsNodeAvailable, "Value Node Unexpectedly Removed");
@@ -118,7 +122,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void XElementWrapperTest()
         {
             var n = new XElementWrapper("ValueNode");
@@ -132,7 +136,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             //Assert.IsFalse(x.IsNodeAvailable, "Node was expected to be removed");
 
             Console.WriteLine("\n\n-------- NULL TEST - Do Not Create Value--------");
-            x.Value = null;
+            x.Value = null!;
             Console.WriteLine(n);
             Assert.IsFalse(n.Nodes().Any(), "ValueNode should not have child XText nodes");
             AssertValueChanged(false);
@@ -151,7 +155,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             AssertValueChanged(true);
             
             Console.WriteLine("\n\n-------- NULL TEST --------");
-            x.Value = null;
+            x.Value = null!;
             Console.WriteLine(n);
             Assert.IsFalse(n.Nodes().Any(), "ValueNode should not have child XText nodes");
             AssertValueChanged(true);

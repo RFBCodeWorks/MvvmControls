@@ -1,12 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using RFBCodeWorks.Mvvm.Tests;
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class XAttributeRetrieverTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void XAttributeRetrieverTest()
         {
             var p = new XElementWrapper("parent");
@@ -15,7 +16,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.Throws<ArgumentException>(() => new XElementProvider("", p));
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void RefreshTest()
         {
             var p = new XElementWrapper("parent");
@@ -25,7 +26,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.IsNotNull(a.XAttribute);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void RemoveTest()
         {
             var p = new XElementWrapper("parent");
@@ -36,7 +37,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.IsNull(a.XAttribute);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ValueSetTest()
         {
             var p = new XElementWrapper("parent");

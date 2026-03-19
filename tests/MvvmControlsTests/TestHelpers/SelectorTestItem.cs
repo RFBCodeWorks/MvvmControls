@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.Mvvm.Tests.Helpers
+namespace RFBCodeWorks.Mvvm.TestHelpers
 {
     public record SelectorTestItem(int Value, string Name)
     {

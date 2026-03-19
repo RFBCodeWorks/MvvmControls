@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Controls.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class XRadioButtonElementProviderTests : XRadioButtonElementWrapperTests
     {
 
@@ -12,14 +12,14 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Controls.Tests
     }
 
 
-    [TestClass()]
+    [TestClass]
     public class XRadioButtonAttributeTests : XRadioButtonElementWrapperTests
     {
 
         public XRadioButtonAttributeTests() : base(new XRadioButton(new XAttributeRetriever("TestAttr", new XElementWrapper("Parent")), BooleanConverter.StoreAsBinary)) { }
     }
 
-    [TestClass()]
+    [TestClass]
     public class XRadioButtonElementWrapperTests : RadioButtonDefinitionTest
     {
         public XRadioButtonElementWrapperTests(): this(new XRadioButton(new XElementWrapper("TestElement"), BooleanConverter.StoreAsBinary)) { }
