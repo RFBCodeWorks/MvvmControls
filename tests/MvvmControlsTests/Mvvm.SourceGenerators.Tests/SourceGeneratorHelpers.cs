@@ -12,7 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace RFBCodeWorks.Mvvm.Tests.TestHelpers
+namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests
 {
     internal static class SourceGeneratorHelpers
     {

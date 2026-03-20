@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 
-namespace RFBCodeWorks.Mvvm.TestHelpers
+namespace RFBCodeWorks.Mvvm.Tests
 {
     ///<summary>This is a helper to allow the CommandManager to function during unit testing</summary>
     // https://stackoverflow.com/questions/12033798/why-doesnt-relaycommand-raisecanexecutechanged-work-in-a-unit-test

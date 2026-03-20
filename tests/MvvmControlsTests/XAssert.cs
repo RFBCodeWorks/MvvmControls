@@ -7,16 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace System.Diagnostics.CodeAnalysis
-{
-#if NETFRAMEWORK
-    [AttributeUsage(validOn: AttributeTargets.Parameter)]
-    internal class NotNullAttribute : Attribute {}
-#endif
-}
-
-
-namespace RFBCodeWorks.Mvvm.Tests
+namespace RFBCodeWorks
 {
     /// <summary>
     /// Wrapper class for throwing customized messages with XUnit

@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RFBCodeWorks.Mvvm.Tests;
-using RFBCodeWorks.Mvvm.TestHelpers;
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;

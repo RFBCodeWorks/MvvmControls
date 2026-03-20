@@ -16,10 +16,8 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
     [TestClass]
     public class WindowBehaviorTests2
     {
-        public WindowBehaviorTests2()
-        {
-            Handler = new();
-        }
+        private WindowHandlerObj? GetHandler => new();
+
 
         private Window GetWindow(string windowTitle)
         {
@@ -39,17 +37,11 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
             w.Content = g;
         }
 
-        private WindowHandlerObj? Handler { get; set; } = new();
-
-        [TestCleanup]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1013:Public method should be marked as test", Justification = "MSTest")]
-        public void Complete()
-        {
-            Handler = null;
-        }
+        
 
         private void CheckSubscription(Window TestWindow, Window Window2, bool isSubscribed)
         {
+            var Handler = GetHandler;
             Assert.IsNotNull(Handler);
             TestWindow.DataContext = Handler;
             SetWindowContent(TestWindow);
@@ -102,6 +94,7 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
         [STATestMethod]
         public void SubscribeTest()
         {
+            var Handler = GetHandler;
             var TestWindow = GetWindow("TestWindow");
             Subscribe(TestWindow, Handler);
             CheckSubscription(TestWindow, new(), true);
@@ -110,6 +103,7 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
         [STATestMethod]
         public void UnsubscribeTest()
         {
+            var Handler = GetHandler;
             Assert.IsNotNull(Handler);
             var TestWindow = GetWindow("TestWindow");
             Subscribe(TestWindow, Handler);

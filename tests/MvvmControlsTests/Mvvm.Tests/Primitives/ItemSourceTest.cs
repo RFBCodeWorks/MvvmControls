@@ -1,5 +1,4 @@
 ﻿
-using RFBCodeWorks.Mvvm.TestHelpers;
 using RFBCodeWorks.Mvvm.Tests;
 using System.Linq;
 using System.Windows.Controls;
