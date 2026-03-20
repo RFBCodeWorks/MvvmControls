@@ -18,17 +18,14 @@ namespace RFBCodeWorks.Mvvm.Tests
         protected override CommandBase GetCommand() => new RelayCommand(new Action(() => { }));
 
         private static bool WasExecuted = false;
-        private static bool ErrorHandled = false;
+        
         private static void CommandAction() { WasExecuted = true; }
         private static void ThrowError() { throw new Exception(); }
-        private static void HandleError(Exception e) => ErrorHandled = true;
 
         [TestInitialize]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "xUnit1013:Public method should be marked as test", Justification = "Converted from MS Test")]
         public void Initialize()
         {
             WasExecuted = false;
-            ErrorHandled = false;
         }
 
         [TestMethod]
@@ -40,7 +37,8 @@ namespace RFBCodeWorks.Mvvm.Tests
         [TestMethod]
         public void RelayCommandTest1()
         {
-            var cmd = new RelayCommand(ThrowError,HandleError);
+            bool errorHandled = false;
+            var cmd = new RelayCommand(ThrowError, (e) => errorHandled = true);
             Assert.IsTrue(cmd.CanExecute(), "\nCanExecute returns false unexpectedly");
             try
             {
@@ -48,7 +46,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             }
             finally
             {
-                Assert.IsTrue(ErrorHandled, "\nError was not handled");
+                Assert.IsTrue(errorHandled, "\nError was not handled");
             }
         }
 
@@ -62,7 +60,8 @@ namespace RFBCodeWorks.Mvvm.Tests
         [TestMethod]
         public void RelayCommandTest3()
         {
-            var cmd = new RelayCommand(ThrowError, canExecute: () => true, HandleError);
+            bool errorHandled = false;
+            var cmd = new RelayCommand(ThrowError, canExecute: () => true, (e) => errorHandled = true);
             Assert.IsTrue(cmd.CanExecute(), "\nCanExecute returns false unexpectedly");
             try
             {
@@ -70,7 +69,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             }
             finally
             {
-                Assert.IsTrue(ErrorHandled, "\nError was not handled");
+                Assert.IsTrue(errorHandled, "\nError was not handled");
             }
         }
 

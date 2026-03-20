@@ -101,6 +101,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             Task assertTask;
             if (!hasCancellationHandler && !hasErrorHandler && isCancellable)
             {
+                Console.WriteLine(" > Testing Cancellation");
                 ThrowError = false;
                 var func = cmd.ExecuteAsync;
                 assertTask = Assert.ThrowsAsync<OperationCanceledException>(func, $"\n\nOperationCancelledExpection was not passed to caller!\nLine # : {new StackFrame(true).GetFileLineNumber()}");
@@ -112,6 +113,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             }
             else if (!hasErrorHandler)
             {
+                Console.WriteLine(" > Testing Error is returned to caller");
                 ThrowError = true;
                 var func = cmd.ExecuteAsync;
                 await Assert.ThrowsAsync<ArgumentException>(func, $"\n\nArgumentException was not passed to caller!\nLine # : {new StackFrame(true).GetFileLineNumber()}");
@@ -120,6 +122,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             }
             else if (!hasCancellationHandler && isCancellable)
             {
+                Console.WriteLine(" > Testing OperationCancelledExceptions are ignored");
                 ThrowError = false;
                 assertTask = cmd.ExecuteAsync();
                 await Task.Delay(2);
@@ -134,6 +137,8 @@ namespace RFBCodeWorks.Mvvm.Tests
             CancelHandled = false;
             if (hasCancellationHandler)
             {
+                Console.WriteLine(" > Testing OperationCancelledExceptions are ignored");
+
                 Assert.IsFalse(cmd.CanBeCanceled, $"\n\nCanBeCanceled returned TRUE while the task was not started\nLine # : {new StackFrame(true).GetFileLineNumber()}");
                 Task v = cmd.ExecuteAsync();
                 Assert.IsTrue(cmd.CanBeCanceled, $"\n\nCanBeCanceled returned FALSE while a Cancellable task was running\nLine # : {new StackFrame(true).GetFileLineNumber()}");

@@ -13,20 +13,12 @@ using RFBCodeWorks.Mvvm.Tests;
 
 namespace RFBCodeWorks.WPF.Behaviors.Tests
 {
-    [TestClass]
+    [STATestClass]
     public class WindowBehaviorTests2
     {
-        private WindowHandlerObj? GetHandler => new();
+        private static Window GetWindow(string windowTitle) => new() { Title = windowTitle };
 
-
-        private Window GetWindow(string windowTitle)
-        {
-            var w = new Window();
-            w.Title = windowTitle;
-            return w;
-        }
-
-        private void SetWindowContent(Window w)
+        private static void SetWindowContent(Window w)
         {
             var g = new Grid();
             var s = new StackPanel();
@@ -39,12 +31,14 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
 
         
 
-        private void CheckSubscription(Window TestWindow, Window Window2, bool isSubscribed)
+        private static async Task CheckSubscription(Window TestWindow, WindowHandlerObj eventHandler, bool isSubscribed)
         {
-            var Handler = GetHandler;
-            Assert.IsNotNull(Handler);
-            TestWindow.DataContext = Handler;
+            Assert.IsNotNull(TestWindow);
+            Assert.IsNotNull(eventHandler);
+
             SetWindowContent(TestWindow);
+            Window Window2 = new();
+                        
             Window2.Show();
             Console.Write("\nShowing Window -- ");
             TestWindow.Show();
@@ -56,31 +50,35 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
             ((Button)((StackPanel)((Grid)TestWindow.Content).Children[0]).Children[1]).Focus(); // simulate the button getting focus
             Window2.Focus();
             Window2.Close();
+            TestWindow.Focus();
+            Assert.IsTrue(TestWindow.IsActive, "\n Test Window should be active at this point.");
+            
+            bool closed = false;
+            TestWindow.Closed += (o, e) => { Console.Write("Closed Event Occurred."); closed = true; };
+           
             if (isSubscribed)
             {
-                Handler.CancelClosing = true;
+                eventHandler.CancelClosing = true;
                 Console.Write("\nClosing Window -- ");
                 TestWindow.Close();
-                Assert.IsTrue(TestWindow.IsActive);
-                Handler.CancelClosing = false;
-                Console.Write("\nClosing Window -- ");
+                Assert.IsTrue(TestWindow.IsActive, "\n Failed to prevent window closure");
+                Assert.IsFalse(closed);
+                eventHandler.CancelClosing = false;
             }
-            else
-            {
-                Console.Write("\nClosing Window -- ");
-            }
+            Console.Write("\nClosing Window -- ");
             TestWindow.Close();
-            Assert.IsFalse(TestWindow.IsActive);
-
-            Assert.AreEqual(isSubscribed, Handler.WasLoaded, "Window Loaded Test Failed");
-            Assert.AreEqual(isSubscribed, Handler.WasActivated, "Window Activated Test Failed");
-            Assert.AreEqual(isSubscribed, Handler.WasClosing, "Window Closing Test Failed");
-            Assert.AreEqual(isSubscribed, Handler.WasClosed, "Window Closed Test Failed");
-            //Assert.AreEqual(isSubscribed, handler.WasContentRendered, "Window ContentRendered Test Failed");  //ContentRendered always failed, but works properly in example app
-            Assert.AreEqual(isSubscribed, Handler.WasDeactivated, "Window Deactivated Test Failed");
-            Assert.AreEqual(isSubscribed, Handler.GotFocus, "Window GotFocus test failed");
-            Assert.AreEqual(isSubscribed, Handler.LostFocus, "Window LostFocus test failed");
+            await Task.Delay(3).ConfigureAwait(true);
+            Assert.IsTrue(closed);
             
+            
+            Assert.AreEqual(isSubscribed, eventHandler.WasLoaded, "Window Loaded Test Failed");
+            Assert.AreEqual(isSubscribed, eventHandler.WasActivated, "Window Activated Test Failed");
+            Assert.AreEqual(isSubscribed, eventHandler.WasClosing, "Window Closing Test Failed");
+            Assert.AreEqual(isSubscribed, eventHandler.WasClosed, "Window Closed Test Failed");
+            //Assert.AreEqual(isSubscribed, handler.WasContentRendered, "Window ContentRendered Test Failed");  //ContentRendered always failed, but works properly in example app
+            Assert.AreEqual(isSubscribed, eventHandler.WasDeactivated, "Window Deactivated Test Failed");
+            Assert.AreEqual(isSubscribed, eventHandler.GotFocus, "Window GotFocus test failed");
+            Assert.AreEqual(isSubscribed, eventHandler.LostFocus, "Window LostFocus test failed");
         }
 
         private static void Subscribe(Window window, WindowHandlerObj? value)
@@ -92,23 +90,24 @@ namespace RFBCodeWorks.WPF.Behaviors.Tests
         }
 
         [STATestMethod]
-        public void SubscribeTest()
+        public async Task SubscribeTest()
         {
-            var Handler = GetHandler;
             var TestWindow = GetWindow("TestWindow");
-            Subscribe(TestWindow, Handler);
-            CheckSubscription(TestWindow, new(), true);
+            var handler = new WindowHandlerObj();
+            Subscribe(TestWindow, handler);
+            await CheckSubscription(TestWindow, handler, true);
         }
 
         [STATestMethod]
-        public void UnsubscribeTest()
+        public async Task UnsubscribeTest()
         {
-            var Handler = GetHandler;
-            Assert.IsNotNull(Handler);
+            var originalHandler = new WindowHandlerObj();
+            Assert.IsNotNull(originalHandler);
+
             var TestWindow = GetWindow("TestWindow");
-            Subscribe(TestWindow, Handler);
+            Subscribe(TestWindow, originalHandler);
             Subscribe(TestWindow, null);
-            CheckSubscription(TestWindow, new(), false);
+            await CheckSubscription(TestWindow, originalHandler, false);
         }
 
         internal class WindowHandlerObj : IWindowActivatedHandler, IWindowClosingHandler, IWindowLoadingHandler, IWindowFocusHandler
