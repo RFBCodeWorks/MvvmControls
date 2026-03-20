@@ -73,7 +73,8 @@
     </PropertyGroup>
 	
     <ItemGroup>
-        <ProjectReference Include="..\Mvvm.IViewModel\Mvvm.IViewModel.csproj" />
+		<ProjectReference Include="..\Mvvm.IViewModel\Mvvm.IViewModel.csproj" />
+		<ProjectReference Include="..\Mvvm.Controls.Attributes\SourceGenerators.Attributes.csproj" />
     </ItemGroup>
 
 	<!-- Enable nuget Packing via Directory.Build.Targets -->
@@ -85,11 +86,6 @@
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />        
     </ItemGroup>
-    
-	<!-- Enable nuget Packing via Directory.Build.Targets -->
-	<PropertyGroup Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'AppVeyor'">
-		<PackingEnabled>true</PackingEnabled>
-    </PropertyGroup>
     
     <ItemGroup>
         <None Include="..\..\Readme.md" Link="Readme.md">
@@ -117,6 +113,24 @@
         <ProjectReference Include="..\Mvvm.Controls.SourceGenerators\SourceGenerators.Roslyn500.csproj" ReferenceOutputAssembly="false" />
         <Content Pack="true" Visible="false" Include="..\Mvvm.Controls.SourceGenerators\.bin\$(Configuration)\500\RFBCodeWorks.Mvvm.SourceGenerators.dll" PackagePath="analyzers/dotnet/roslyn5.0/cs/" />
     </ItemGroup>
+
+	<!-- Package the Source Generator Attributes dll -->
+	<PropertyGroup>
+		<TargetsForTfmSpecificBuildOutput>
+			$(TargetsForTfmSpecificBuildOutput);
+			IncludeReferencedProjectDlls
+		</TargetsForTfmSpecificBuildOutput>
+	</PropertyGroup>
+
+	<Target Name="IncludeReferencedProjectDlls">
+		<ItemGroup>
+			<!-- This gets the built outputs of project references -->
+			<_ProjectReferenceOutputs Include="@(ReferencePath)" Condition="false" />
+		</ItemGroup>
+		<ItemGroup>
+			<BuildOutputInPackage Include="@(_ProjectReferenceOutputs)" />
+		</ItemGroup>
+	</Target>
 
     <!-- WPF - Specific Item -->
     <Choose>
