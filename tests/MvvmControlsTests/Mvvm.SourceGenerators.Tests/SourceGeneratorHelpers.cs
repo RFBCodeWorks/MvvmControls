@@ -5,8 +5,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17,21 +19,42 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests
     internal static class SourceGeneratorHelpers
     {
 
+        /// <summary>
+        /// Read the specified file from the 'GeneratorInputs' to be submitted as SourceText into the compilation.
+        /// </summary>
+        /// <param name="className"></param>
+        /// <returns></returns>
+        public static string ReadSourceText(string className)
+        {
+            var assembly = typeof(SourceGeneratorHelpers).Assembly;
+            try
+            {
+                using var stream = assembly.GetManifestResourceStream($"RFBCodeWorks.Mvvm.SourceGenerators.Tests.GeneratorInputs.{className}.cs")!;
+                using var reader = new StreamReader(stream);
+                string fileContents = reader.ReadToEnd();
+                return fileContents;
+            }
+            catch (Exception ex)
+            {
+                throw new AssertFailedException($"Unable to read resource : '{className}'.\nInner Exception:\n{ex.Message}", ex);
+            }
+        }
+
 #if ROSLYN_311
-        public static (Compilation compilation, ImmutableArray<Diagnostic> diagnostics) RunSourceGenerator
-        (this ISourceGenerator generator, string inputSource)
+        public static (CSharpCompilation compilation, ImmutableArray<Diagnostic> diagnostics) RunSourceGenerator
+        (this ISourceGenerator generator, params string[] inputSource)
             => RunSourceGenerator(inputSource, out var _, generator);
 
-        public static (Compilation compilation, ImmutableArray<Diagnostic> diagnostics) RunSourceGenerator
+        public static (CSharpCompilation compilation, ImmutableArray<Diagnostic> diagnostics) RunSourceGenerator
         (this ISourceGenerator generator, string inputSource, out GeneratorDriverRunResult runResult)
-            => RunSourceGenerator(inputSource, out runResult,  generator);
+            => RunSourceGenerator([inputSource], out runResult,  generator);
         
-        public static (Compilation compilation, ImmutableArray<Diagnostic> diagnostics) RunSourceGenerator
+        public static (CSharpCompilation compilation, ImmutableArray<Diagnostic> diagnostics) RunSourceGenerator
         (string inputSource, params ISourceGenerator[] generators)
-            => RunSourceGenerator(inputSource, out var _, generators);
+            => RunSourceGenerator([inputSource], out var _, generators);
 
-        public static (Compilation compilation, ImmutableArray<Diagnostic> diagnostics) RunSourceGenerator(
-            string inputSource, 
+        public static (CSharpCompilation compilation, ImmutableArray<Diagnostic> diagnostics) RunSourceGenerator(
+            string[] inputSource, 
             out GeneratorDriverRunResult runResult, 
             params ISourceGenerator[] generators
             )
@@ -45,25 +68,25 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests
                 out var diagnostics);
 
             runResult = driver.GetRunResult();
-
-            return (outputCompilation, diagnostics);
+            Assert.IsInstanceOfType<CSharpCompilation>(outputCompilation);
+            return ((CSharpCompilation)outputCompilation, diagnostics);
         }
 #else
-        public static (Compilation compilation, ImmutableArray<Diagnostic> diagnostics) RunSourceGenerator(this IIncrementalGenerator generator, string inputSource)
+        public static (CSharpCompilation compilation, ImmutableArray<Diagnostic> diagnostics) RunSourceGenerator(this IIncrementalGenerator generator, params string[] inputSource)
             => RunSourceGenerator(inputSource, out _, generator);
 
-        public static (Compilation compilation, ImmutableArray<Diagnostic> diagnostics) RunSourceGenerator(
+        public static (CSharpCompilation compilation, ImmutableArray<Diagnostic> diagnostics) RunSourceGenerator(
             string inputSource,
             params IIncrementalGenerator[] generators)
-            => RunSourceGenerator(inputSource, out var _, generators);
+            => RunSourceGenerator([inputSource], out var _, generators);
 
-        public static (Compilation compilation, ImmutableArray<Diagnostic> diagnostics) RunSourceGenerator(
-            string inputSource,
+        public static (CSharpCompilation compilation, ImmutableArray<Diagnostic> diagnostics) RunSourceGenerator(
+            string[] inputSource,
             out GeneratorDriverRunResult runResult,
             params IIncrementalGenerator[] generators)
         {
             var compilation = CreateCompilation(inputSource);
-
+            Assert.IsNotNull(compilation);
             var driver = CSharpGeneratorDriver.Create(generators);
             driver = (CSharpGeneratorDriver)driver.RunGeneratorsAndUpdateCompilation(
                 compilation,
@@ -71,12 +94,12 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests
                 out var diagnostics);
 
             runResult = driver.GetRunResult();
-
-            return (outputCompilation, diagnostics);
+            Assert.IsInstanceOfType<CSharpCompilation>(outputCompilation);
+            return ((CSharpCompilation)outputCompilation, diagnostics);
         }
 #endif
 
-        static void AddMetadataReference(this List<MetadataReference> list, string assemblyName)
+        private static void AddMetadataReference(this List<MetadataReference> list, string assemblyName)
         {
             var assembly = Assembly.Load(assemblyName);
             if (!string.IsNullOrWhiteSpace(assembly.Location))
@@ -84,7 +107,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests
                 list.Add(MetadataReference.CreateFromFile(assembly.Location));
             }
         }
-        static void AddMetadataReference<T>(this List<MetadataReference> list)
+        private static void AddMetadataReference<T>(this List<MetadataReference> list)
         {
             var location = typeof(T).Assembly.Location;
             if (!string.IsNullOrWhiteSpace(location))
@@ -93,12 +116,9 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests
             }
         }
 
-        private static Compilation CreateCompilation(string inputSource)
+        private static CSharpCompilation CreateCompilation(params string[] inputSource)
         {
-            SyntaxTree[] syntaxTrees = 
-            [
-                CSharpSyntaxTree.ParseText(inputSource)
-            ];
+            SyntaxTree[] syntaxTrees = [.. inputSource.Select(s =>CSharpSyntaxTree.ParseText(s))];
 
             var references = new List<MetadataReference>();
 
@@ -220,7 +240,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests
             Assert.IsTrue(generatedTree is not null, "Expected a generated syntax tree, but it was null.");
         }
 
-        public static void AssertCompilationHasNoErrors(this Compilation compilation)
+        public static void AssertCompilationHasNoErrors(this CSharpCompilation compilation)
         {
             var compilationDiagnostics = compilation.GetDiagnostics();
             var errors = compilationDiagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToArray();
@@ -240,7 +260,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests
             }
         }
 
-        public static void AssertHasDiagnostic(this Compilation compilation, string diagnosticID)
+        public static void AssertHasDiagnostic(this CSharpCompilation compilation, string diagnosticID)
         {
             var compilationDiagnostics = compilation.GetDiagnostics();
 
@@ -248,24 +268,28 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests
             Assert.IsTrue(0 < diags.Length, $"Diagnostic ID {{{diagnosticID}}} was not found.");
         }
 
-        public static INamedTypeSymbol AssertGetTypeByName(this Compilation compilation, string typeName)
+        public static INamedTypeSymbol AssertGetTypeByName(this CSharpCompilation compilation, string typeName)
         {
             var typeSymbol = compilation.GetTypeByMetadataName(typeName);
             Assert.IsNotNull(typeSymbol, $"Type '{typeName}' not found in compilation.");
             return typeSymbol;
         }
 
-        public static void AssertOnConstructedMethod(this INamedTypeSymbol classSymbol)
+        /// <summary>
+        /// Gets the type by name from the <paramref name="compilation"/>, then constructs an instance using the parameterless constructor
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="compilation"></param>
+        /// <returns></returns>
+        public static object ConstructInstance(this CSharpCompilation compilation, Type type)
         {
-            // Verify OnConstructed partial method exists
-            var onConstructedMethod = classSymbol.GetMembers("OnConstructed")
-                .OfType<IMethodSymbol>()
-                .FirstOrDefault();
-
-            Assert.IsNotNull(onConstructedMethod, "OnConstructed method not found");
-            Assert.IsTrue(onConstructedMethod.IsPartialDefinition || onConstructedMethod.PartialImplementationPart != null, "OnConstructed should be a partial method");
-            Assert.AreEqual(0, onConstructedMethod.Parameters.Length, "OnConstructed should have no parameters");
-            Assert.AreEqual(SpecialType.System_Void, onConstructedMethod.ReturnType.SpecialType, "OnConstructed should return void");
+            using var ms = new MemoryStream();
+            var emission = compilation.Emit(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            var assy = Assembly.Load(ms.ToArray());
+            var objType = assy.GetType(type.FullName!);
+            Assert.IsNotNull(objType);
+            return Activator.CreateInstance(objType)!;
         }
 
         /// <summary>
@@ -313,7 +337,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests
             if (generatedTree != null)
             {
                 var generatedText = generatedTree.GetText().ToString();
-                Console.WriteLine("\n\n=== Generated Source Code (Injected Required=true) ===");
+                Console.WriteLine("\n\n=== Generated Source Code ===");
                 Console.WriteLine(generatedText);
                 Console.WriteLine("=== End Generated Source ===");
             }

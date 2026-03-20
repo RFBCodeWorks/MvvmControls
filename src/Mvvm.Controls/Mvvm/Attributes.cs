@@ -47,16 +47,19 @@ namespace RFBCodeWorks.Mvvm
 
         /// <summary>
         /// If true, allows multiple concurrent executions of an async method.
+        /// <br/> Default = <see langword="false"/>.
         /// </summary>
         public bool AllowConcurrentExecutions { get; set; }
 
         /// <summary>
         /// If true (async only), exceptions flow to the TaskScheduler instead of rethrowing.
+        /// <br/> Default = <see langword="false"/>.
         /// </summary>
         public bool FlowExceptionsToTaskScheduler { get; set; }
 
         /// <summary>
         /// If true (async only), also generates a “Cancel” command for the operation.
+        /// <br/> Default = <see langword="false"/>.
         /// </summary>
         public bool IncludeCancelCommand { get; set; }
 

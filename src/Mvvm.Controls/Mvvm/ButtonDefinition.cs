@@ -127,7 +127,7 @@ namespace RFBCodeWorks.Mvvm
 
 
         /// <inheritdoc cref="Toolkit.RelayCommand{T}.CanExecute(T)"/>
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             if (_enabled is false) return false;
             bool result = _command is null ? _canExecute() : _command.CanExecute(parameter);

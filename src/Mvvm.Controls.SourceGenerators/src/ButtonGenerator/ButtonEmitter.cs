@@ -29,7 +29,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
             _token.ThrowIfCancellationRequested();
 
             // get method info
-            if (data.TargetSymbol is not IMethodSymbol symbol) return;
+            if (data.TargetSymbol is not IMethodSymbol methodSymbol) return;
 
             // get strings
             ReadOnlySpan<char> fieldName, propName;
@@ -42,7 +42,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
                 propName.Slice(1).CopyTo(fc.Slice(2));
                 fieldName = fc;
             }
-            else if (Diagnostics.TryGetPropertyName(symbol, "Button", out fieldName, out propName) is Diagnostic nameDiag)
+            else if (Diagnostics.TryGetPropertyName(methodSymbol, "Button", out fieldName, out propName) is Diagnostic nameDiag)
             {
                 reportDiagnostic(nameDiag);
                 return;
@@ -52,9 +52,9 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
             var parmeterType = string.Empty;
             if (data.TargetSymbol.Parameters.Length >= 1)
             {
-                if (!isAsync || isAsync && symbol.Parameters[0].Type.Name != nameof(CancellationToken))
+                if (!isAsync || isAsync && methodSymbol.Parameters[0].Type.Name != nameof(CancellationToken))
                 {
-                    parmeterType = $"<{symbol.Parameters[0].Type.ToDisplayString(SymbolFormats.FullyQualifiedFormat)}>";
+                    parmeterType = $"<{methodSymbol.Parameters[0].Type.ToDisplayString(SymbolFormats.FullyQualifiedFormat)}>";
                 }
             }
 
@@ -63,7 +63,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
             // get writer
             if (Writer is null)
             {
-                Writer ??= new SourceWriter(_token).WriteFileHeader(symbol.ContainingType);
+                Writer ??= new SourceWriter(_token).WriteFileHeader(methodSymbol.ContainingType);
             }
             else
             {
@@ -94,11 +94,11 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
             
             if (isAsync)
             {
-                const string CommunityToolkitAsyncCommand = "new global::CommunityToolkit.Mvvm.Input.AsyncRelayCommand(";
-                //const string RFBCodewWorksAsyncCommand = "new global::RFBCodeWorks.Mvvm.Input.AsyncRelayCommand(";
+                const string CommunityToolkitAsyncCommand = "new global::CommunityToolkit.Mvvm.Input.AsyncRelayCommand{0}(";
+                
 
                 // create a new command
-                Writer.Write(CommunityToolkitAsyncCommand).Write(symbol.Name);
+                Writer.Write(CommunityToolkitAsyncCommand, parmeterType).Write(methodSymbol.Name);
                 if (string.IsNullOrWhiteSpace(data.CanExecute) is false)
                 {
                     Writer.Write(',').Write(' ').Write(data.CanExecute);
