@@ -96,3 +96,9 @@ jobs:
         dotnet pack ./src/Mvvm.Dialogs/Mvvm.Dialogs.csproj --configuration Release --no-build --output ./artifacts
         dotnet pack ./src/Mvvm.IViewModel/Mvvm.IViewModel.csproj --configuration Release --no-build --output ./artifacts
         dotnet pack ./src/Mvvm.WebView2Integration/Mvvm.WebView2Integration.csproj --configuration Release --no-build --output ./artifacts
+        
+    - name: Upload NuGet packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-packages
+        path: ./artifacts/*.nupkg

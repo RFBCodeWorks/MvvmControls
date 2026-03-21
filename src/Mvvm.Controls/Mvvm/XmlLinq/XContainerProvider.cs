@@ -41,7 +41,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         XObject IXObjectProvider.XObject => ProvidedElement;
         XElement IXElementProvider.XObject => ProvidedElement;
         
-        /// <inheritdoc>
+        /// <inheritdoc/>
         public bool CanRaiseAddedOrRemovedEvents => true;
 
         /// <summary>
