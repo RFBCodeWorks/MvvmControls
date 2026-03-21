@@ -32,12 +32,13 @@
         <!-- Nuget Stuff -->      
         <PackageReleaseNotes>
             - Add XmlnsDefinition properties for easier XAML setup
-            - Added Source Generators
+            - Added Source Generators for VS2019, VS2022, VS2026
 			- Deprecated .Net5.0 support
 			- Added .Net
 			
             Breaking Changes (Namespace/Class name adjustments):
-            - Relocate ReactiveStyles.Helpers to the Behaviors namespace to reduce XAML namespacing requirements.
+            - Many Namespaces and some constructors have been adjusted or removed. This was to clean up collisions with CommunityToolkit.Mvvm.
+			- Relocate ReactiveStyles.Helpers to the Behaviors namespace to reduce XAML namespacing requirements.
             - Relocate Mvvm.XmlLinq.Controls.TreeViewItems into Mvvm.Specialized
             - Normalize Specialized TreeViewItems names:
             --- TreeViewFileInfo -&gt; FileInfoTreeViewItem
@@ -52,7 +53,9 @@
         <Description>
             This is a Library designed to ease working within an MVVM framework, and is meant to consolidate boiler-plate ViewModel interactions for common WPF controls into pre-built classes.
 
-            ## Example - A simplified ComboBox Experience
+            ## Source Generator Attributes:
+			[Button] - Like a [RelayCommand], but with bindings for DisplayText and ToolTip
+			[Selector] / [ComboBox] / [ListBox] - Generate the ComboBox/ListBox Selectors instead of mapping them ytouself!
 
             A ComboBoxDefinition has the following properties that the ViewModel may interact with, and are easily bound within the XAML using a single binding.
 
