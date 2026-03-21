@@ -17,7 +17,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
 {
     [DefaultValue(1)]
     [Flags]
-    internal enum Attributes
+    public enum Attributes
     {
         /// <inheritdoc cref="SourceWriter.GeneratedCodeAttribute"/>
         GeneratedCodeAttribute = 1,
@@ -44,7 +44,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
     /// <br/> - Avoid interpolated strings with more than 3 arguments unless using WriteFormattable().
     /// <br/> - Prefer to use overloads that accept a 'format' with args.
     /// </remarks>
-    internal sealed class SourceWriter
+    public sealed class SourceWriter
     {
         /// <summary> Prevent the user from viewing the mebmber within the editor </summary>
         public const string EditorBrowsableNever = "[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]";
