@@ -74,6 +74,7 @@
 	
     <ItemGroup>
 		<ProjectReference Include="..\Mvvm.IViewModel\Mvvm.IViewModel.csproj" />
+		<ProjectReference Include="..\Mvvm.Controls.Attributes\SourceGenerators.Attributes.csproj" />
     </ItemGroup>
 
 	<!-- Enable nuget Packing via Directory.Build.Targets -->

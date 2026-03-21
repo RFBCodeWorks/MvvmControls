@@ -52,8 +52,7 @@
 
     <!-- Add any required files -->
     <ItemGroup>
-		<ProjectReference Include="..\Mvvm.Controls\Mvvm.Controls.csproj" />
-		<Compile Include="..\Mvvm.Controls\Mvvm\Attributes.cs" />
+		<ProjectReference Include="..\Mvvm.Controls.Attributes\SourceGenerators.Attributes.csproj" />
     </ItemGroup>
 
     <!-- Misc. Properties -->
