@@ -30,7 +30,7 @@
                 </StackPanel.Resources>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Source : "/>
-                    <TextBox Text="{Binding NavHandler.TextboxUrl, Mode=OneWay}" MinWidth="400" x:Name="uriInput"/>
+                    <TextBox Text="{Binding NavHandler.TextboxUri, Mode=OneWay}" MinWidth="400" x:Name="uriInput"/>
                     <Button Content="Go" Command="{Binding NavHandler.NavigateCommand}" CommandParameter="{Binding  ElementName=uriInput, Path=Text}" Padding="10, 0" Margin="5,0"/>
                 </StackPanel>
                 <TextBlock Text="{Binding IsEdgeClientInstalled}"/>

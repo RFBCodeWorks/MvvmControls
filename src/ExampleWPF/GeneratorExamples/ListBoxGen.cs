@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
+#nullable enable
+
 namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
 {
     /// <summary>
@@ -59,10 +61,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
         [OnSelectionChanged(nameof(_selectionCommand))]
         [OnSelectionChanged(Action =nameof(SelectionChanged))]
         [ListBox(CanRefresh = nameof(CanRefresh))]
-        private List<int> SyncCollection()
+        private int[] SyncCollection()
         {
             WasRefreshed = true;
-            return new List<int>() { 0, 1, 2, 3, 4, 5 };
+            return new int[] { 0, 1, 2, 3, 4, 5 };
         }
 
         [TriggersRefresh(nameof(_refreshableItemSource))]
@@ -73,7 +75,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
         public async Task<int[]> AsyncCollection()
         {
             await Task.Delay(125, default);
-            return SyncCollection().ToArray();
+            return SyncCollection();
         }
 
         [TriggersRefresh(nameof(_refreshableItemSource))]
@@ -84,7 +86,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
         public async Task<int[]> CancellableAsyncCollection(CancellationToken token)
         {
             await Task.Delay(350, token);
-            return SyncCollection().ToArray();
+            return SyncCollection();
         }
 
         private bool CanRefresh() => IsRefreshable;
