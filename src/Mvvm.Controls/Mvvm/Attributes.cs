@@ -20,7 +20,6 @@ namespace RFBCodeWorks.Mvvm
 #if GENERATORS
     internal sealed class IViewModelAttribute : Attribute
 #else
-    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public sealed class IViewModelAttribute : Attribute
 #endif
     {
