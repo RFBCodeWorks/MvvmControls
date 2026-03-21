@@ -91,4 +91,8 @@ jobs:
       run: dotnet test
 
     - name: Pack Nuget Packages
-      run: dotnet pack $env:Solution_Name --configuration ${{ matrix.configuration }} --no-build --output ./artifacts
+      run: |
+        dotnet pack ./src/Mvvm.Controls/Mvvm.Controls.csproj --configuration Release --no-build --output ./artifacts
+        dotnet pack ./src/Mvvm.Dialogs/Mvvm.Dialogs.csproj --configuration Release --no-build --output ./artifacts
+        dotnet pack ./src/Mvvm.IViewModel/Mvvm.IViewModel.csproj --configuration Release --no-build --output ./artifacts
+        dotnet pack ./src/Mvvm.WebView2Integration/Mvvm.WebView2Integration.csproj --configuration Release --no-build --output ./artifacts
