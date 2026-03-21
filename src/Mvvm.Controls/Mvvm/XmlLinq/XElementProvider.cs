@@ -118,6 +118,9 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         }
         private bool CanBeCreatedField;
 
+        /// <inheritdoc/>
+        public bool CanRaiseAddedOrRemovedEvents => true;
+
         /// <summary>
         /// Use Xml.Linq to retrieve the first element with a matching <see cref="Name"/> from the parent node
         /// </summary>

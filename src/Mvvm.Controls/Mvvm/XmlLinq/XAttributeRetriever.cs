@@ -83,6 +83,9 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         }
         private bool CanBeCreatedField;
 
+        /// <inheritdoc/>
+        public bool CanRaiseAddedOrRemovedEvents => true;
+
         /// <summary>
         /// If TRUE, Allow the XAttribute to be removed from its parent XElement by setting it to a null value. 
         /// <br/> If FALSE, do not accept null values.

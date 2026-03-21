@@ -36,18 +36,16 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
     {
         /// <summary>
         /// Occurs when this node is added to the tree.
+        /// <br/> This would be raised when the XML.Linq query changes from returning null to returning an object, and signals to children IXObjectProviders they should check for their existence within the tree.
+        /// <br/> Note: not all wrappers will raise this. See <see cref="CanRaiseAddedOrRemovedEvents"/>
         /// </summary>
-        /// <remarks>
-        /// This would be raised when the XML.Linq query changes from returning null to returning an object, and signals to children IXObjectProviders they should check for their existence within the tree.
-        /// </remarks>
         event EventHandler Added;
 
         /// <summary>
         /// Occurs when this node is removed from the tree
+        /// <br/> This would be raised when the XML.Linq query changes from returning an object to returning null, causing all IXObjectProviders children to also return null.
+        /// <br/> Note: not all wrappers will raise this. See <see cref="CanRaiseAddedOrRemovedEvents"/>
         /// </summary>
-        /// <remarks>
-        /// This would be raised when the XML.Linq query changes from returning an object to returning null, causing all IXObjectProviders children to also return null.
-        /// </remarks>
         event EventHandler Removed;
 
         /// <summary>
@@ -72,6 +70,11 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// </summary>
         /// <returns>TRUE if the XElement node can be created, otherwise false.</returns>
         bool CanBeCreated { get; set; }
+
+        /// <summary>
+        /// <see langword="true"/> if this object can raise the <see cref="Added"/> and <see cref="Removed"/> events, other <see langword="false"/> 
+        /// </summary>
+        bool CanRaiseAddedOrRemovedEvents { get; }
 
         /// <inheritdoc cref="XNode.Remove"/>
         void Remove();

@@ -12,28 +12,24 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// <inheritdoc cref="XDocument.XDocument()"/>
         public XDocumentWrapper() : base()
         {
-            SubScribe();
             base.Changed += XObjectChanged;
         }
 
         /// <inheritdoc cref="XDocument.XDocument(XDocument)"/>
         public XDocumentWrapper(XDocument other) : base(other)
         {
-            SubScribe();
             base.Changed += XObjectChanged;
         }
 
         /// <inheritdoc cref="XDocument.XDocument(object[])"/>
         public XDocumentWrapper(params object[] content) : base(content)
         {
-            SubScribe();
             base.Changed += XObjectChanged;
         }
 
         /// <inheritdoc cref="XDocument.XDocument(XDeclaration, object[])"/>
         public XDocumentWrapper(XDeclaration declaration, params object[] content) : base(declaration, content)
         {
-            SubScribe();
             base.Changed += XObjectChanged;
         }
 
@@ -42,11 +38,9 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// <inheritdoc/>
         public event EventHandler DescendantChanged;
 
-        private event EventHandler IXRemoved;
-        private event EventHandler IXAdded;
-
-        event EventHandler IXObjectProvider.Removed { add { IXRemoved += value; } remove { IXRemoved -= value; } }
-        event EventHandler IXObjectProvider.Added { add { IXAdded += value; } remove { IXAdded -= value; } }
+        event EventHandler IXObjectProvider.Added { add { } remove { } }
+        event EventHandler IXObjectProvider.Removed { add { } remove { } }
+        
         IXElementProvider IXObjectProvider.Parent => null;
         string IXElementProvider.Name => Root?.Name.LocalName;
         XObject IXObjectProvider.XObject => base.Root;
@@ -70,29 +64,23 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
 
         bool IXObjectProvider.CanBeCreated { get => IsNodeAvailable; set { } }
 
+        /// <inheritdoc/>
+        public bool CanRaiseAddedOrRemovedEvents => false;
+
         private void XObjectChanged(object sender, XObjectChangeEventArgs e)
         {
-            if (sender == this | sender == this.Root)
+            switch (e.ObjectChange)
             {
-                switch (e.ObjectChange)
-                {
-                    case XObjectChange.Value:
-                    case XObjectChange.Name:
-                        OnPropertyChanged("");
-                        break;   
-                        
-                    case XObjectChange.Add:
-                        IXAdded?.Invoke(sender, new());
-                        break;
+                case XObjectChange.Value:
+                case XObjectChange.Name:
+                    OnPropertyChanged(INotifyArgs.Empty);
+                    break;
 
-                    case XObjectChange.Remove:
-                        IXRemoved?.Invoke(sender, new());
-                        break;
-                }
-            }
-            else if (e.ObjectChange == XObjectChange.Remove || e.ObjectChange == XObjectChange.Add)
-            {
-                DescendantChanged?.Invoke(this, EventArgs.Empty);
+                case XObjectChange.Add:
+                case XObjectChange.Remove:
+                    DescendantChanged?.Invoke(this, EventArgs.Empty);
+                    OnPropertyChanged(nameof(Root));
+                    break;
             }
         }
 
@@ -109,11 +97,6 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(this, e ?? INotifyArgs.Empty);
-        }
-
-        private void SubScribe()
-        {
-            base.Changed += (o, e) => OnPropertyChanged();
         }
 
         XElement IXElementProvider.CreateXElement()

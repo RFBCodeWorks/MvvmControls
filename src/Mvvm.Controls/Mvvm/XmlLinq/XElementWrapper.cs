@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
+
+#nullable enable
 
 namespace RFBCodeWorks.Mvvm.XmlLinq
 {
@@ -43,20 +46,27 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
             base.Changed += XElementChanged;
         }
 
-        // These will never be raised since this object will never be notified of the change
-        event EventHandler IXObjectProvider.Added { add { } remove { } }
-        event EventHandler IXObjectProvider.Removed { add { } remove { } }
-        IXElementProvider IXObjectProvider.Parent => this.Parent != null ? new XElementWrapper(this.Parent) : null;
+        IXElementProvider IXObjectProvider.Parent
+            => this.Parent is XElementWrapper xw ? xw
+            : this.Parent is not null ? new XElementWrapper(this.Parent)
+            : null!;
 
         /// <inheritdoc/>
-        public event EventHandler DescendantChanged;
+        public event EventHandler? DescendantChanged;
         /// <inheritdoc/>
-        public event EventHandler ValueChanged;
+        public event EventHandler? ValueChanged;
         /// <inheritdoc/>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        private readonly XElement OriginalElement;
-        private readonly XStreamingElement OriginalSteamingElement;
+        event EventHandler? IXObjectProvider.Added { add { } remove { } }
+        event EventHandler? IXObjectProvider.Removed { add { } remove { } }
+
+        private readonly XElement? OriginalElement;
+        private readonly XStreamingElement? OriginalSteamingElement;
+        private IXElementSorter? ChildSorterField;
+
+        /// <inheritdoc/>
+        public bool CanRaiseAddedOrRemovedEvents => false;
 
         /// <summary>
         /// <inheritdoc cref="XObjectChangedEventEvaluation.XElementChanged(object, XObjectChangeEventArgs, XElement, bool)" path="/param[@name='discriminateDescendants']" />
@@ -106,10 +116,9 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         /// <remarks>If not specified, uses the default implementation of <see cref="XElementSorter"/></remarks>
         public IXElementSorter ChildSorter
         {
-            get => ChildSorterField ?? XElementSorter.DefaultSorter;
+            get => ChildSorterField ??= XElementSorter.DefaultSorter;
             set => ChildSorterField = value;
         }
-        private IXElementSorter ChildSorterField;
 
         string IXElementProvider.Name => this.Name.LocalName;
         string IXValueObject.Name => this.Name.LocalName;
@@ -125,7 +134,9 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
             return this;
         }
 
-        private void XElementChanged(object sender, XObjectChangeEventArgs e)
+        
+
+        private void XElementChanged(object? sender, XObjectChangeEventArgs e)
         {
             var result = XObjectChangedEventEvaluation.XElementChanged(sender, e, this, DiscriminateDescendantChanged);
             switch (result)

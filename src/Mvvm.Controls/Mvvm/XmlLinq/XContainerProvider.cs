@@ -40,6 +40,9 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
         bool IXObjectProvider.CanBeCreated { get => IsNodeAvailable; set { } }
         XObject IXObjectProvider.XObject => ProvidedElement;
         XElement IXElementProvider.XObject => ProvidedElement;
+        
+        /// <inheritdoc>
+        public bool CanRaiseAddedOrRemovedEvents => true;
 
         /// <summary>
         /// The XContainer object to provide

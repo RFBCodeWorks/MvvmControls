@@ -38,7 +38,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 
             doc.Root!.Add(xElement);
             Assert.IsTrue(XDocEvent); XDocEvent = false;
-            
+
             xElement.Add(xAttr);
             Assert.IsTrue(XDocEvent); XDocEvent = false;
             Assert.IsFalse(XElementEvent); XElementEvent = false;
@@ -46,12 +46,6 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             xAttr.Value = "true";
             Assert.IsTrue(XDocEvent); XDocEvent = false;
             Assert.IsFalse(XElementEvent); XElementEvent = false;
-            //Assert.IsTrue(XAttributeEvent); XAttributeEvent = false;
-
-            //void XAttr_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-            //{
-            //    XAttributeEvent = true;
-            //}
 
             void XElement_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
             {
@@ -64,95 +58,112 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             }
         }
 
-        private static XElementWrapper XElFunc => new XElementWrapper("ElementWrapper");
-        //private static XAttributeWrapper XAttrFunc => new XAttributeWrapper("AttributeWrapper", "AttributeValue");
-
+        [TestMethod]
+        public void XElementWrapperTest_XDocumentWrapper()
+        {
+            var doc = GetXDoc();
+            doc.Root!.Add(new XElement(Level1Element));
+            IXObjectProviderTest(doc, doc, new XElement("Test"));
+        }
 
         [TestMethod]
-        [DataRow(data: true, DisplayName = "Test Object: " + nameof(XElementWrapper))]
-        //[DataRow(data1: false, DisplayText = "Test Object: " + nameof(XAttributeWrapper))]
-        [DataRow(data: null, DisplayName = "Test Object: " + nameof(XDocumentWrapper))]
-        public void ModelTest_XElementWrapper(bool? isElement)
+        public void XElementWrapperTest_XElementWrapper()
+        {
+            var provider = new XElementWrapper(Level1Element);
+            var xdoc = new XDocument(new XElement("RootElement", provider));
+
+            IXObjectProviderTest(
+                xDocument: xdoc,
+                provider: provider,
+                elementToAddOrRemove: new XElement("Test")
+                );
+        }
+
+        const string Level1Element = nameof(Level1Element);
+        const string Level2Element = nameof(Level2Element);
+
+        /// <param name="provider">The provider to test</param>
+        /// <param name="xDocument"></param>
+        private static void IXObjectProviderTest(IXObjectProvider provider, XDocument xDocument, XElement elementToAddOrRemove)
         {
             //Added and Removed are only fired by LINQ provider objects, and as such are not expected to fire here.
             //Descendant changed SHOULD fire for XElement.
             //ValueChanged should fire for both, and so should Changed.
 
-            IXObjectProvider? provider = isElement is null ? GetXDoc() : (bool)isElement ? (IXObjectProvider)XElFunc : null;// XAttrFunc;
+            #region < Test Setup >
 
-            Assert.IsNotNull(provider);
-            Assert.IsNotNull(provider.XObject);
-            provider.GetName().AssertIsOfType<string>();
+            Assert.IsNotNull(provider?.XObject);
+            Assert.IsNotNull(xDocument);
+            Assert.IsNotNull(elementToAddOrRemove);
 
-            bool addedFired = false;
-            bool removedFired = false;
-            bool descendantFired = false;
-            bool valueFired = false;
+            bool raisedDescendantChanged = false;
+            bool raisedValueChanged = false;
 
-            void Provider_Added(object? sender, EventArgs e) => addedFired = true;
-            void Provider_Removed(object? sender, EventArgs e) => removedFired = true;
-            void Provider_DescendantChanged(object? sender, EventArgs e) => descendantFired = true;
-            void Provider_ValueChanged(object? sender, EventArgs e) => valueFired = true;
-
-            provider.Added += Provider_Added;
-            provider.Removed += Provider_Removed;
-            if (provider is IXElementProvider XProvider)
-                XProvider.DescendantChanged += Provider_DescendantChanged;
-            XDocument XDoc;
-            XElement? el = new XElement("Level1Element");
-            XElement? el2 = new XElement("Element2");
-            if (isElement != null)
+            void Reset()
             {
-                XDoc = new XDocument(new XElement("RootElement", el, new XElement("Level1Element")));
-                el = XDoc.Root!.Element("Level1Element");
-            }else
-            {
-                XDoc = (XDocument)provider;
-                XDoc.Root!.Add(el);
+                raisedDescendantChanged = false;
+                raisedValueChanged = false;
             }
 
+            void Provider_DescendantChanged(object? sender, EventArgs e) => raisedDescendantChanged = true;
+            void Provider_ValueChanged(object? sender, EventArgs e) => raisedValueChanged = true;
 
-            if (isElement != null) el!.Add(provider); else el!.Add(el2);
-            Assert.IsFalse(addedFired);
-            Assert.IsFalse(removedFired);
-            Assert.AreEqual(provider == XDoc, descendantFired);
-            Assert.IsFalse(valueFired);
+            if (provider is IXElementProvider xp) { xp.DescendantChanged += Provider_DescendantChanged; }
+            if (provider is IXValueObject vp) { vp.ValueChanged += Provider_ValueChanged; }
 
-            if (isElement != null) provider.Remove(); else el2.Remove(); 
-            Assert.IsFalse(addedFired);
-            Assert.IsFalse(removedFired);
-            Assert.AreEqual(provider == XDoc, descendantFired);
-            Assert.IsFalse(valueFired);
+            #endregion < Test Setup >
 
-            if (isElement != null)
+            XElement documentElement = xDocument.Root!.Element(Level1Element).AssertIsOfType<XElement>();
+
+            // Test 1 - Add the new element to the provider document element
+            try
+            {
+                Reset();
+                documentElement.Add(elementToAddOrRemove);
+                Assert.IsFalse(raisedValueChanged);
+                Assert.IsTrue(raisedDescendantChanged);
+            }
+            catch (Exception e)
+            {
+                throw new AssertFailedException($"Failed Test 1 - (Adding sub-element)\n{e.Message}");
+            }
+
+            // Test 2 - Remove the new element
+            try
+            {
+                Reset();
+                elementToAddOrRemove.Remove();
+                Assert.IsFalse(raisedValueChanged);
+                Assert.IsTrue(raisedDescendantChanged);
+            }
+            catch (Exception e)
+            {
+                throw new AssertFailedException($"Failed Test 2 - (Removing sub-element)\n{e.Message}");
+            }
+
+            /// Test 3 - Updating the value
+            /// This test does not apply to the <see cref="XDocumentWrapper">
+            /// Only applies to the <see cref="XElementWrapper">
+            if (provider is IXValueObject valueProvider)
             {
                 //Indicate that the value has changed, but added/removed/descendant changed are not fired
                 // XElement objects send their 'value' changes as 'XTEST sender, and 'Add/Remove' types
-                var valueObj = (IXValueObject)provider;
-                valueObj.ValueChanged += Provider_ValueChanged;
-                valueObj.XObject.AssertIsNotNull();
-                valueObj.XObject.Changed += (o, e) => { Console.WriteLine($"\nValue Changed Test:\n Sender Type: {o!.GetType()}\nEventArgs: {e.ObjectChange}"); };
-                Console.WriteLine($"\nSetting value from: '{valueObj.Value}' to 'UpdateValue_1'");
-                valueObj.Value = "UpdateValue_1";
-                Console.WriteLine($"\nSetting value from: '{valueObj.Value}' to 'UpdateValue_2'");
-                valueObj.Value = "UpdateValue_2";
-                Assert.IsTrue(valueFired);
-                Assert.IsFalse(addedFired);
-                Assert.IsFalse(removedFired);
-                Assert.IsFalse(descendantFired);
+                try
+                {
+                    valueProvider.Value = "UpdateValue_1";
+                    Reset();
+                    valueProvider.Value = "UpdateValue_2";
+                    Assert.IsTrue(raisedValueChanged);
+                    Assert.IsFalse(raisedDescendantChanged);
+                }
+                catch (Exception e)
+                {
+                    throw new AssertFailedException($"Failed Test 3 - ({nameof(IXValueObject)}.{nameof(IXValueObject.ValueChanged)} Test)\n{e.Message}");
+                }
             }
-            if (isElement ?? true)
-            {
-                var x = provider.XObject as XElement;
-                x?.Add(new XElement("TestAdd"));
-                Assert.IsTrue(descendantFired);
-            }
-            else
-            {
-
-            }
+        }  // IXObjectProviderTest
 
 
-        }        
+
     }
 }
