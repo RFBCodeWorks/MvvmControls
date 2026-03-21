@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Xml.Linq;
 using RFBCodeWorks.Mvvm.Tests;
@@ -92,12 +92,11 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             bool AttrChanged = false, Raised_Attr = false;
 #pragma warning restore CS0219 // Variable is assigned but its value is never used
 
-            object? Sender = null;
+            XObject? Sender = null;
             void EvalSender(object? sender, EventArgs e)
             {
-                Sender = sender;
-                sender.AssertIsOfType<XObject>();
-                Console.WriteLine($"Sender Node: {((XObject)sender)}");
+                Sender = sender.AssertIsOfType<XObject>();
+                Console.WriteLine($"Sender Node: {Sender}");
             }
 
             var Root = new XElement("Root");
