@@ -2,7 +2,7 @@
 
   <PropertyGroup>
       <TargetFrameworks>
-		  net472;
+		  net462;
 		  net48;
 		  net6.0-windows;
 		  net8.0-windows;
