@@ -272,9 +272,8 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         /// <summary>
         /// Immediately write the indent to the line
         /// </summary>
-        /// <remarks>Internal to all unit test</remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void Indent()
+        public void Indent()
         {
             _sb.Append(IndentationChar, CharsPerIndentation * _indentation);
             _isOnNewLine = false;
