@@ -1,4 +1,4 @@
-﻿
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace RFBCodeWorks
     {
         public static void AssertIsNotNull([NotNull] this object? obj) => Assert.IsNotNull(obj);
         public static void AssertIsNull(this object? obj) => Assert.IsNull(obj);
-        public static void AssertIsOfType<T>(this object? obj) => Assert.IsInstanceOfType(obj, typeof(T));
+        public static T AssertIsOfType<T>(this object? obj) => Assert.IsInstanceOfType<T>(obj);
 
         public static Task ThrowAsync<T>(this Func<Task> func, string? message = "") 
             where T : Exception
