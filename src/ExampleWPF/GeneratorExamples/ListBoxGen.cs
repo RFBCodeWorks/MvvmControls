@@ -56,6 +56,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
             WasSelectionChangeMethodRun = false;    
         }
 
+        /// <summary>
+        /// Gets a collection of integers 0-5
+        /// </summary>
+        /// <returns></returns>
         [TriggersRefresh(nameof(_refreshableItemSource))]
         [OnCollectionChanged(nameof(_collectionCommand))]
         [OnSelectionChanged(nameof(_selectionCommand))]

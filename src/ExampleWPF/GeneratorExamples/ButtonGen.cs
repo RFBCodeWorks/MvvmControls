@@ -36,6 +36,9 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
             _CanExecuteWasEvaluated = false;
         }
 
+        /// <summary>
+        /// Set <see cref="_WasExecuted"/> to <see langword="true"/>
+        /// </summary>
         [Button(DisplayText = ButtonGen.DisplayText, Tooltip = "RUN THE METHOD")]
         private void Run_() => _WasExecuted = true;
 

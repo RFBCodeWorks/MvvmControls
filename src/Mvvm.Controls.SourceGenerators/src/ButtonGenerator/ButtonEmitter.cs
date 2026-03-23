@@ -1,9 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using RFBCodeWorks.Mvvm.SourceGenerators.src;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
@@ -78,14 +74,13 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
                 .WriteLine();
 
             // write the property comment
+            Writer.WriteLine("/// <summary>").WriteLine("/// Generated <see cref=\"{0}\"/> for <see cref=\"{1}\"/>", buttonType.SanitizeForXmlComment(), data.TargetSymbol.Name);
             if (data.TargetSymbol.GetDocumentationCommentXml(null, false, _token) is string comment && comment.Contains("<summary>"))
             {
-                Writer.WriteLine(comment);
-            } else
-            {
-                Writer.WriteLine("/// <summary> Generated <see cref=\"{0}\"/> for <see cref=\"{1}\"/> </summary>", buttonType.SanitizeForXmlComment(), data.TargetSymbol.Name);
+                Writer.WriteLine("/// <para/><inheritdoc cref=\"{0}\" path=\"/summary\" />", data.TargetSymbol.Name);
             }
-            
+            Writer.WriteLine("/// </summary>").WriteLine("/// <inheritdoc cref=\"{0}\" />", data.TargetSymbol.Name);
+
             // write the property
             Writer
                 .WriteAttributes(Attributes.GeneratedCodeAttribute | Attributes.ExcludeFromCodeCoverage)

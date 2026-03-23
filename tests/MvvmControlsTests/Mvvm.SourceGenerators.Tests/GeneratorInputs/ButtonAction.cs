@@ -10,6 +10,9 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.GeneratorInputs
     {
         public bool RunSuccess { get; set; }
 
+        /// <summary>
+        /// Perform an Action
+        /// </summary>
         [Button]
         private void Run() => RunSuccess = true;
     }

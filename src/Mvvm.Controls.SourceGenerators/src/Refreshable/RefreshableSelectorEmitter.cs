@@ -1,10 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
-using RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 
 namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
@@ -66,22 +63,20 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                 .WriteLine("private {0}? {1};".AsSpan(), propType.AsSpan(), fieldName)
                 .WriteLine();
 
-            // write the property comment
+            /* write the property comment
+             * params
+             * 0 = fully qualified type of ISelector
+             * 1 = Sanitized type name to use as the link text
+             * 2 = method name the attribute was applied to
+             */
+            const string summaryFormatString = "/// Generated <see cref=\"{0}{{T, TList,  TSelectedValue}}\">{1}</see> for <see cref=\"{2}\"/>";
+            
+            Writer.WriteLine("/// <summary>").WriteLine(summaryFormatString, data.TypeToGenerate, propType.SanitizeForXmlComment("global::RFBCodeWorks.Mvvm"), data.TargetSymbol.Name);
             if (data.TargetSymbol.GetDocumentationCommentXml(null, false, _token) is string comment && comment.Contains("<summary>"))
             {
-                var xmlDoc = comment.SanitizieDocumentationCommentXml().Split('\n');
-                foreach(var line in xmlDoc)
-                {
-                    if (!string.IsNullOrWhiteSpace(line))
-                    {
-                        Writer.WriteLine("/// {0}", line.Trim());
-                    }
-                }
+                Writer.WriteLine("/// <para/><inheritdoc cref=\"{0}\" path=\"/summary\" />", data.TargetSymbol.Name);
             }
-            else
-            {
-                Writer.WriteLine("/// <summary> Generated <see cref=\"{0}\"/> for <see cref=\"{1}\"/> </summary>", propType.SanitizeForXmlComment(), data.TargetSymbol.Name);
-            }
+            Writer.WriteLine("/// </summary>").WriteLine("/// <inheritdoc cref=\"{0}\" />", data.TargetSymbol.Name);
 
             // write the property
             Writer

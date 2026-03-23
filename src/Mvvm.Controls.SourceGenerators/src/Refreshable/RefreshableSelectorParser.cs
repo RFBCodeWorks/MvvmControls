@@ -37,7 +37,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         private const string GlobalQualifiedListBox = "global::RFBCodeWorks.Mvvm.RefreshableListBoxDefinition";
         private const string GlobalQualifiedSelector = "global::RFBCodeWorks.Mvvm.RefreshableSelector";
 
-        private static readonly SymbolDisplayFormat CollectionTypeFormat = SymbolDisplayFormat.FullyQualifiedFormat
+        public static readonly SymbolDisplayFormat CollectionTypeFormat = SymbolDisplayFormat.FullyQualifiedFormat
             .WithMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.UseSpecialTypes)
             .WithLocalOptions(SymbolDisplayLocalOptions.IncludeType)
             .WithMemberOptions(SymbolDisplayMemberOptions.IncludeType);
@@ -140,7 +140,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                     suffix,
                     targetNode as MethodDeclarationSyntax,
                     symbol, semanticModel, attributeData,
-                    arrayType.ElementType.ToDisplayString(CollectionTypeFormat),
+                    arrayType.ElementType,
                     arrayType.ToDisplayString(CollectionTypeFormat),
                     selectedValueType,
                     isAsync, isCancellable
@@ -159,7 +159,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                     suffix,
                     targetNode as MethodDeclarationSyntax,
                     symbol, semanticModel, attributeData,
-                    elementType.ToDisplayString(CollectionTypeFormat),
+                    elementType,
                     namedReturnType.ToDisplayString(CollectionTypeFormat),
                     selectedValueType,
                     isAsync, isCancellable

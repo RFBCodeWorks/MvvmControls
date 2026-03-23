@@ -8,9 +8,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
     internal readonly struct RefreshableSelectorData : IEquatable<RefreshableSelectorData>
     {
         public SyntaxNode TargetNode { get; }
-        public ISymbol TargetSymbol { get; }
+        public IMethodSymbol TargetSymbol { get; }
         public SemanticModel SemanticModel { get; }
         public AttributeData AttributeData { get; }
+        public ITypeSymbol ElementType { get;  }
 
         // Attribute-specific members:
         public readonly string PropertySuffix;
@@ -20,7 +21,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         public readonly string CanRefresh;
 
         public readonly string CombinedType;
-        public readonly string ElementType;
+        public readonly string ElementTypeString;
         public readonly string SelectedValueType;
         public readonly string CollectionType;
 
@@ -37,10 +38,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             string typeToGenerate,
             string propertySuffix,
             SyntaxNode syntaxNode,
-            ISymbol symbol,
+            IMethodSymbol symbol,
             SemanticModel semanticModel,
             AttributeData attributeData,
-            string elementType, 
+            ITypeSymbol elementType,
             string collectionType, 
             string selectedValueType,
             bool isAsync, bool isCancellable
@@ -52,12 +53,13 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             TargetSymbol = symbol ?? throw new ArgumentNullException(nameof(symbol));
             SemanticModel = semanticModel ?? throw new ArgumentNullException(nameof(semanticModel));
             AttributeData = attributeData ?? throw new ArgumentNullException(nameof(attributeData));
+            ElementType = elementType ?? throw new ArgumentNullException(nameof(elementType));
 
             // process the submitted parameters
-            ElementType = elementType;
+            ElementTypeString = elementType.ToDisplayString(RefreshableSelectorParser.CollectionTypeFormat);
             CollectionType = collectionType;
             SelectedValueType = string.IsNullOrWhiteSpace(selectedValueType) ? "global::System.Object" : selectedValueType;
-            CombinedType = $"<{ElementType}, {CollectionType}, {SelectedValueType}>";
+            CombinedType = $"<{ElementTypeString}, {CollectionType}, {SelectedValueType}>";
             IsAsync = isAsync;
             IsCancellable = isCancellable;
 

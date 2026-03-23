@@ -59,16 +59,20 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
         public static bool IsNotEmptyOrWhiteSpace(this string text) => !string.IsNullOrWhiteSpace(text);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static string SanitizeForXmlComment(this string text)
+        public static string SanitizeForXmlComment(this string text, string? nameSpaceToStrip = null)
         {
-            return text.Replace("<", "&lt;").Replace(">", "&lt;").Replace("\"", "'").Trim();
+            if (!string.IsNullOrWhiteSpace(nameSpaceToStrip) && text.StartsWith(nameSpaceToStrip, StringComparison.OrdinalIgnoreCase))
+            {
+                text = text.Substring(nameSpaceToStrip!.Length).Trim('.');
+            }
+            return text.Replace("<", "&lt;").Replace(">", "&gt;").Replace("\"", "'").Trim();
         }
 
         /// <summary>
         /// Strips out the &lt;member&gt; nodes that are returned from <see cref="ISymbol.GetDocumentationCommentXml(CancellationToken)"/>. 
         /// </summary>
         /// <returns></returns>
-        public static string SanitizieDocumentationCommentXml(this string documentationCommentXml)
+        public static string SanitizeDocumentationCommentXml(this string documentationCommentXml)
         {
             if (string.IsNullOrEmpty(documentationCommentXml))
                 return string.Empty;
