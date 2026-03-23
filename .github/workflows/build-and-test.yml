@@ -95,7 +95,7 @@ jobs:
         dotnet pack ./src/Mvvm.WebView2Integration/Mvvm.WebView2Integration.csproj --configuration Release --no-build --output ./artifacts
         
     - name: Upload NuGet packages
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: nuget-packages
         path: ./artifacts/*.nupkg
