@@ -146,7 +146,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
             {
                 if (IsDefaultState)
                 {
-                    base.IsEnabled = CanExecute();
+                    base.IsEnabled = DefaultCanExecute();
                 }
                 else
                 {
@@ -163,13 +163,11 @@ namespace RFBCodeWorks.Mvvm.Primitives
         {
             if (IsDefaultState)
             {
-                if (DefaultCanExecute())
-                    DefaultExecute();
+                DefaultExecute();
             }
             else
             {
-                if (AlternateCanExecute())
-                    AlternateExecute();
+                AlternateExecute();
             }
         }
 
