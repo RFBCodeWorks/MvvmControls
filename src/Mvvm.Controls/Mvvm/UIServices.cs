@@ -1,89 +1,157 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+
+#nullable enable
 
 namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
     /// Contains helper methods for UI, so far just one for showing a waitcursor
     /// </summary>
-    public static class UIServices
+    public static partial class UIServices
     {
         /// <summary>
-        /// Set the cursor to use when <see cref="SetBusyState()"/> is called
+        /// Returns the singleton <see cref="ICursorService"/> that uses <see cref="System.Windows.Application.Current"/>.Dispatcher to interact with <see cref="Mouse.OverrideCursor"/>
         /// </summary>
-        /// <remarks>Default is <see cref="Cursors.Wait"/></remarks>
-        public static Cursor BusyCursor { get; set; } = Cursors.Wait;
+        /// <returns></returns>
+        public static ICursorService GetApplicationDispatcherCursorService() => ApplicationDispatchCursorService.GetSerivce();
         
-        /// <summary>
-        ///   A value indicating whether the UI is currently busy
-        /// </summary>
-        private static bool IsBusy;
-
-        private static DispatcherTimer _dispatcherTimer;
-
-        /// <summary>
-        /// Sets the cursor to some cursor type if the BusyCursor is not active
-        /// </summary>
+        /// <inheritdoc cref="ICursorService.BusyCursor"/>
+        [Obsolete("Prefer usage of RFBCodeWorks.Mvvm.ICursorService within ViewModels. Calling this from WPF Code-Behind is fine.", false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public static Cursor BusyCursor 
+        { 
+            get => GetApplicationDispatcherCursorService().BusyCursor; 
+            set => GetApplicationDispatcherCursorService().BusyCursor = value; 
+        }
+        
+        /// <inheritdoc cref="ICursorService.OverrideCursor(Cursor)"/>
+        [Obsolete($"This method requires an STAThread. Prefer usage of {nameof(RFBCodeWorks)}.{nameof(RFBCodeWorks.Mvvm)}.{nameof(RFBCodeWorks.Mvvm.ICursorService)}", false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static void SetCursor(Cursor cursor)
-        {
-            if (!IsBusy)
-                Mouse.OverrideCursor = cursor;
-        }
+            => GetApplicationDispatcherCursorService().OverrideCursor(cursor);
 
-        /// <summary>
-        /// Resets the cursor to the default functionality
-        /// </summary>
+        /// <inheritdoc cref="ICursorService.Reset"/>
+        [Obsolete($"This method requires an STAThread. Prefer usage of {nameof(RFBCodeWorks)}.{nameof(RFBCodeWorks.Mvvm)}.{nameof(RFBCodeWorks.Mvvm.ICursorService)}", false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static void ResetCursor()
-        {
-            if (!IsBusy)
-                Mouse.OverrideCursor = null;
-        }
+        => GetApplicationDispatcherCursorService().Reset();
 
-        /// <summary>
-        /// Sets cursor to the <see cref="BusyCursor"/> to indicate application is performing a long-running action
-        /// </summary>
-        /// <remarks>Automatically resets cursor on Application.Idle</remarks>
+        /// <inheritdoc cref="ICursorService.SetBusy"/>
+        [Obsolete($"This method requires an STAThread. Prefer usage of {nameof(RFBCodeWorks)}.{nameof(RFBCodeWorks.Mvvm)}.{nameof(RFBCodeWorks.Mvvm.ICursorService)}", false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static void SetBusyState()
-        {
-            SetBusyState(true);
-        }
+            => GetApplicationDispatcherCursorService().SetBusy();
 
-        /// <summary>
-        /// Attempt to call <see cref="SetBusyState()"/>. Will only set the busy state of the cursor if called from a UI thread.
-        /// </summary>
+        /// <inheritdoc cref="ICursorService.SetBusy"/>
+        [Obsolete($"This method requires an STAThread. Prefer usage of {nameof(RFBCodeWorks)}.{nameof(RFBCodeWorks.Mvvm)}.{nameof(RFBCodeWorks.Mvvm.ICursorService)}", false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static void TrySetBusyState()
-        {
-            try { System.Windows.Application.Current?.Dispatcher?.Invoke(SetBusyState); } catch{ }
-        }
+            => GetApplicationDispatcherCursorService().SetBusy();
 
-        /// <summary>
-        /// Sets the busystate to busy or not busy.
-        /// </summary>
-        /// <param name="busy">if set to <c>true</c> the application is now busy.</param>
-        private static void SetBusyState(bool busy)
+
+        private class ApplicationDispatchCursorService : ICursorService
         {
-            if (busy != IsBusy)
+            private ApplicationDispatchCursorService()
             {
-                IsBusy = busy;
-                Mouse.OverrideCursor = busy ? BusyCursor : null;
+                timer = new DispatcherTimer(TimeSpan.FromMilliseconds(1), DispatcherPriority.ApplicationIdle, SetBusyStateFalse, Application.Current.Dispatcher)
+                { IsEnabled = false, Tag = nameof(ICursorService) };
+            }
 
-                _dispatcherTimer ??= new DispatcherTimer(TimeSpan.FromSeconds(0), DispatcherPriority.ApplicationIdle, SetBusyStateFalse, System.Windows.Application.Current.Dispatcher);
-                _dispatcherTimer.IsEnabled = IsBusy;
+            public static ICursorService GetSerivce ()
+            {
+                if (applicationService is null) 
+                {
+                    if (Application.Current is null)
+                    {
+                        throw new InvalidOperationException($"Application.Current is null - Unable to construct {typeof(ApplicationDispatchCursorService).FullName}");
+                    }
+                    if (Application.Current.Dispatcher is null)
+                    {
+                        throw new InvalidOperationException($"Application.Current.Dispatcher is null - Unable to construct {typeof(ApplicationDispatchCursorService).FullName}");
+                    }
+                    if (Application.Current.Dispatcher.Thread.GetApartmentState() != ApartmentState.STA)
+                    {
+                        throw new InvalidOperationException($"Application.Current.Dispatcher is not {nameof(ApartmentState)}.{nameof(ApartmentState.STA)} - Unable to construct {typeof(ApplicationDispatchCursorService).FullName}");
+                    }
+                    applicationService = new();
+                }
+                return applicationService;
+            }
+
+            private static ApplicationDispatchCursorService? applicationService;
+
+            private readonly DispatcherTimer timer;
+            private Cursor busyCursor = Cursors.Wait;
+            private Cursor? previousCursor;
+
+            public Cursor BusyCursor { get => busyCursor; set => busyCursor = value ?? Cursors.Wait; }
+            public bool IsBusy { get; private set; }
+
+            public void SetBusy()
+            {
+                if (Application.Current.Dispatcher.CheckAccess())
+                    SetBusyCursor();
+                else
+                    Application.Current.Dispatcher.Invoke(SetBusyCursor, CancellationToken.None);
+            }
+
+            private void SetBusyCursor(CancellationToken token = default)
+            {
+                if (!IsBusy && !token.IsCancellationRequested)
+                {
+                    IsBusy = true;
+                    if (previousCursor != BusyCursor)
+                        previousCursor = Mouse.OverrideCursor;
+
+                    Mouse.OverrideCursor = BusyCursor;
+                    timer.IsEnabled = true;
+                }
+            }
+
+            public Task SetBusyAsync(CancellationToken token)
+            {
+                token.ThrowIfCancellationRequested();
+                if (Application.Current.Dispatcher.CheckAccess())
+                {
+                    SetBusyCursor(token);
+                    return Task.CompletedTask;
+                }
+                else
+                    return Application.Current.Dispatcher.BeginInvoke(SetBusyCursor, token).Task;
+            }
+
+            public void OverrideCursor(Cursor cursor)
+            {
+                previousCursor = cursor;
+                if (!IsBusy)
+                {
+                    try { Mouse.OverrideCursor = cursor; } catch { }
+                }
+            }
+
+            public void Reset()
+            {
+                if (Application.Current.Dispatcher.CheckAccess())
+                    SetBusyStateFalse(null, EventArgs.Empty);
+                else
+                    Application.Current.Dispatcher.BeginInvoke(SetBusyStateFalseDelegate);
+            }
+
+            private void SetBusyStateFalseDelegate() => SetBusyStateFalse(null, EventArgs.Empty);
+            private void SetBusyStateFalse(object? sender, EventArgs e)
+            {
+                IsBusy = false;
+                timer.IsEnabled = false;
+                if (Mouse.OverrideCursor == BusyCursor)
+                    Mouse.OverrideCursor = previousCursor;
             }
         }
 
-        /// <summary>
-        /// Handles the Tick event of the dispatcherTimer control.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private static void SetBusyStateFalse(object sender, EventArgs e)
-        {
-            if (sender is DispatcherTimer dispatcherTimer)
-            {
-                SetBusyState(false);
-            }
-        }
     }
 }
