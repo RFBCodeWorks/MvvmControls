@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.GeneratorInputs
     public partial class ButtonTaskAllowConcurrentExecutionsFalse
     {
         public bool RunSuccess { get; set; }
-        public int DelayPeriod { get; set; } = 10;
+        public int DelayPeriod { get; set; } = 250;
 
         [Button(AllowConcurrentExecutions = false)]
         private async Task Run()
