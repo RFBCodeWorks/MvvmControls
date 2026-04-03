@@ -14,7 +14,7 @@ namespace RFBCodeWorks.Mvvm
     /// <remarks>
     /// Default Implementations:
     /// <br/> - <see cref="UIServices.GetMockCursorService"/> : an object that can be used for unit testing or if the STAThread for WPF is unavailable.
-    /// <br/> - <see cref="UIServices.GetApplicationDispatcherCursorService"/> : Uses <see cref="Application.Current"/>.Dispatcher to update the <see cref="Mouse.OverrideCursor"/>
+    /// <br/> - <see cref="UIServices.GetDispatcherCursorService"/> : Uses <see cref="Application.Current"/>.Dispatcher to update the <see cref="Mouse.OverrideCursor"/>
     /// <para/>Prefer this over <see cref="UIServices.SetBusyState()"/>. 
     /// </remarks>
     public interface ICursorService

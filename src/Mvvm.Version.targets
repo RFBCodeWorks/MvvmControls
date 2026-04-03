@@ -3,9 +3,11 @@
 
     <!-- Set the Version Information for entire solution -->
     <PropertyGroup>
-        <Version>2.0.0.4</Version>
+        <Version>2.0.0.5</Version>
 		<PackageReleaseNotes>
-			Added generators for VS-2026
+- Added generators for VS-2026
+- RFBCodeWorks.Mvvm.UIServices methods are now marked obsolete. Use ICursorService instead.
+- Added UIServices.GetMockCursorService() and UIServices.GetDispatcherCursorService() to provide implementations of ICursorService
 		</PackageReleaseNotes>
     </PropertyGroup>
 

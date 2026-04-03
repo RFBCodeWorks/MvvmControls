@@ -19,40 +19,40 @@ namespace RFBCodeWorks.Mvvm
         /// Returns the singleton <see cref="ICursorService"/> that uses <see cref="System.Windows.Application.Current"/>.Dispatcher to interact with <see cref="Mouse.OverrideCursor"/>
         /// </summary>
         /// <returns></returns>
-        public static ICursorService GetApplicationDispatcherCursorService() => ApplicationDispatchCursorService.GetSerivce();
+        public static ICursorService GetDispatcherCursorService() => ApplicationDispatchCursorService.GetSerivce();
         
         /// <inheritdoc cref="ICursorService.BusyCursor"/>
         [Obsolete("Prefer usage of RFBCodeWorks.Mvvm.ICursorService within ViewModels. Calling this from WPF Code-Behind is fine.", false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static Cursor BusyCursor 
         { 
-            get => GetApplicationDispatcherCursorService().BusyCursor; 
-            set => GetApplicationDispatcherCursorService().BusyCursor = value; 
+            get => GetDispatcherCursorService().BusyCursor; 
+            set => GetDispatcherCursorService().BusyCursor = value; 
         }
         
         /// <inheritdoc cref="ICursorService.OverrideCursor(Cursor)"/>
         [Obsolete($"This method requires an STAThread. Prefer usage of {nameof(RFBCodeWorks)}.{nameof(RFBCodeWorks.Mvvm)}.{nameof(RFBCodeWorks.Mvvm.ICursorService)}", false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static void SetCursor(Cursor cursor)
-            => GetApplicationDispatcherCursorService().OverrideCursor(cursor);
+            => GetDispatcherCursorService().OverrideCursor(cursor);
 
         /// <inheritdoc cref="ICursorService.Reset"/>
         [Obsolete($"This method requires an STAThread. Prefer usage of {nameof(RFBCodeWorks)}.{nameof(RFBCodeWorks.Mvvm)}.{nameof(RFBCodeWorks.Mvvm.ICursorService)}", false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static void ResetCursor()
-        => GetApplicationDispatcherCursorService().Reset();
+        => GetDispatcherCursorService().Reset();
 
         /// <inheritdoc cref="ICursorService.SetBusy"/>
         [Obsolete($"This method requires an STAThread. Prefer usage of {nameof(RFBCodeWorks)}.{nameof(RFBCodeWorks.Mvvm)}.{nameof(RFBCodeWorks.Mvvm.ICursorService)}", false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static void SetBusyState()
-            => GetApplicationDispatcherCursorService().SetBusy();
+            => GetDispatcherCursorService().SetBusy();
 
         /// <inheritdoc cref="ICursorService.SetBusy"/>
         [Obsolete($"This method requires an STAThread. Prefer usage of {nameof(RFBCodeWorks)}.{nameof(RFBCodeWorks.Mvvm)}.{nameof(RFBCodeWorks.Mvvm.ICursorService)}", false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static void TrySetBusyState()
-            => GetApplicationDispatcherCursorService().SetBusy();
+            => GetDispatcherCursorService().SetBusy();
 
 
         private class ApplicationDispatchCursorService : ICursorService

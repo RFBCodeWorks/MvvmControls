@@ -279,7 +279,7 @@ namespace RFBCodeWorks.WPF.Behaviors
             var multiDrop = GetMultiDropTarget(sender, e);
             if (multiDrop is not null)
             {
-                UIServices.GetApplicationDispatcherCursorService().SetBusy();
+                UIServices.GetDispatcherCursorService().SetBusy();
                 multiDrop.Item1.OnFileDrop(sender, multiDrop.Item2);
                 //return;
             }
@@ -287,7 +287,7 @@ namespace RFBCodeWorks.WPF.Behaviors
             var drop = GetDropTarget(sender, e);
             if (drop is not null)
             {
-                UIServices.GetApplicationDispatcherCursorService().SetBusy();
+                UIServices.GetDispatcherCursorService().SetBusy();
                 drop.Item1.OnFileDrop(sender, drop.Item2);
                 //return;
             }

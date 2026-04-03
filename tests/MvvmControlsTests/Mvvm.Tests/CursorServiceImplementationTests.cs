@@ -29,7 +29,7 @@ namespace RFBCodeWorks.Mvvm.Tests
     [STATestClass]
     public class CursorServiceTests_DispatchService : CursorServiceImplementationTests<ICursorService>
     {
-        protected override ICursorService GetService() => UIServices.GetApplicationDispatcherCursorService();
+        protected override ICursorService GetService() => UIServices.GetDispatcherCursorService();
         protected override Task PumpDispatcher()
         {
             ApplicationInitializer.PumpDispatcher();
