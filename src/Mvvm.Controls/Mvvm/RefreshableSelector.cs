@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,8 +25,6 @@ namespace RFBCodeWorks.Mvvm
     /// <typeparam name="TList"></typeparam>
     /// <typeparam name="TSelectedValue"></typeparam>
     public class RefreshableSelector<T, TList, TSelectedValue> : Primitives.SelectorDefinition<T, TList, TSelectedValue>, 
-        ICommand,
-        IRelayCommand,
         ISelector, 
         ISelector<T>,
         IRefreshableItemSource,
@@ -92,21 +90,6 @@ namespace RFBCodeWorks.Mvvm
         public RefreshableSelector(Func<CancellationToken, Task<TList>> refreshAsyncCancellable) : this(refreshAsyncCancellable, null, null, null) { }
 
         /* Members  */
-
-        event EventHandler? ICommand.CanExecuteChanged
-        {
-            add 
-            {
-                if (RefreshCommand is not InactiveButton)
-                {
-                    RefreshCommand.CanExecuteChanged += value;
-                }
-            }
-            remove
-            {
-                RefreshCommand.CanExecuteChanged -= value;
-            }
-        }
 
         private IRelayCommand? _refreshCommand;
         private ICommand? _cancelRefreshCommand;
@@ -228,6 +211,7 @@ namespace RFBCodeWorks.Mvvm
 
         /// <inheritdoc/>
         public void Refresh(object? sender, EventArgs e) => RefreshCommand.Execute(null);
+        
         /// <inheritdoc/>
         public void Refresh(object? sender, RoutedEventArgs e) => RefreshCommand.Execute(null);
 
@@ -270,13 +254,5 @@ namespace RFBCodeWorks.Mvvm
                 await Task.Run(RefreshAction, token);
             }
         }
-
-        /// <summary>
-        /// Notify the <see cref="RefreshCommand"/>
-        /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
-        public void NotifyCanExecuteChanged() => _refreshCommand?.NotifyCanExecuteChanged();
-        bool ICommand.CanExecute(object? parameter) => _refreshCommand?.CanExecute(parameter) ?? false;
-        void ICommand.Execute(object? parameter) => _refreshCommand?.Execute(parameter);
     }
 }
