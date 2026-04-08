@@ -51,7 +51,7 @@ namespace RFBCodeWorks.Mvvm
             : base(onCollectionChanged, onSelectionChanged, EmptyCollection)
         {
             _refresh = refresh;
-            _canRefresh = canRefresh;
+            _canRefresh = canRefresh ?? ReturnTrue;
             itemsInitialized = !refreshOnFirstCollectionRequest;
         }
 
@@ -68,7 +68,7 @@ namespace RFBCodeWorks.Mvvm
         {
             _cancellableRefreshAsync = (c) => refreshAsync();
             _cancelRefreshCommand = InactiveButton.Instance;
-            _canRefresh = canRefresh;
+            _canRefresh = canRefresh ?? ReturnTrue;
             itemsInitialized = !refreshOnFirstCollectionRequest;
         }
 
@@ -82,7 +82,7 @@ namespace RFBCodeWorks.Mvvm
             : base(onCollectionChanged, onSelectionChanged, EmptyCollection)
         {
             _cancellableRefreshAsync = refreshAsyncCancellable;
-            _canRefresh = canRefresh;
+            _canRefresh = canRefresh ?? ReturnTrue;
             itemsInitialized = !refreshOnFirstCollectionRequest;
         }
 
@@ -95,7 +95,7 @@ namespace RFBCodeWorks.Mvvm
         private ICommand? _cancelRefreshCommand;
         private bool itemsInitialized;
         private int _isRefreshing;
-        private readonly Func<bool>? _canRefresh;
+        private readonly Func<bool> _canRefresh;
         private readonly Func<TList>? _refresh;
         private readonly Func<CancellationToken, Task<TList>>? _cancellableRefreshAsync;
         private Task? _isRefreshingTcs;
@@ -146,14 +146,15 @@ namespace RFBCodeWorks.Mvvm
         {
             if (_refresh is not null)
             {
-                return new RelayCommand(RefreshAction, _canRefresh ?? ReturnTrue);
+                return new RelayCommand(RefreshAction, _canRefresh);
             }
             else if (_cancellableRefreshAsync is not null)
             {
-                return new AsyncRelayCommand(RefreshTask, _canRefresh ?? ReturnTrue, AsyncRelayCommandOptions.None);
+                return new AsyncRelayCommand(RefreshTask, _canRefresh, AsyncRelayCommandOptions.None);
             }
             return InactiveButton.Instance;
         }
+
         private ICommand GetCancelCommand()
         {
             if (_cancellableRefreshAsync is null)
@@ -182,16 +183,17 @@ namespace RFBCodeWorks.Mvvm
         {
             if (token.IsCancellationRequested) return Task.FromCanceled(token);
 
-            // check if already refreshing
+            // check if already refreshing -- if _isRefreshing = 0, set to 1 and return 0
             if (Interlocked.CompareExchange(ref _isRefreshing, 1, 0) == 1 && _isRefreshingTcs is not null)
             {
                 return _isRefreshingTcs;
             }
 
             // this thread starts the refresh
-            _isRefreshingTcs = DoRefreshTask(token);
+            var task =  DoRefreshTask(token);
+            _isRefreshingTcs = task;
             OnPropertyChanged(nameof(IsRefreshing));
-            return _isRefreshingTcs;
+            return task;
         }
 
         private async Task DoRefreshTask(CancellationToken token)
@@ -230,29 +232,34 @@ namespace RFBCodeWorks.Mvvm
         }
 
         /// <inheritdoc/>
-        public async Task RefreshAsync(CancellationToken token)
+        /// <remarks>
+        /// If currently refreshing, returns the underlying task.
+        /// </remarks>
+        public Task RefreshAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
-            if (RefreshCommand.CanExecute(null) is false) 
-                return;
 
             if (RefreshCommand is IAsyncRelayCommand asyncCmd)
             {
-                // need to create a cancellation event here
-                if (token.CanBeCanceled)
+                using var cancellationReg = token.Register(asyncCmd.Cancel);
+                if (asyncCmd.IsRunning)
                 {
-                    using var cancellation = token.Register(() => asyncCmd.Cancel());
-                    await asyncCmd.ExecuteAsync(token);
+                    return asyncCmd.ExecutionTask!;
                 }
-                else
-                {
-                    await  asyncCmd.ExecuteAsync(token);
-                }
+                return asyncCmd.ExecuteAsync(token);
             }
-            else if (_refresh is not null && (_canRefresh??ReturnTrue).Invoke())
+            else if (_refresh is not null)
             {
-                await Task.Run(RefreshAction, token);
+                if (IsRefreshing)
+                {
+                    return _isRefreshingTcs!;
+                }
+                if (_canRefresh())
+                {
+                    return _isRefreshingTcs = Task.Run(RefreshAction, token);
+                }
             }
+            return Task.CompletedTask;
         }
     }
 }
