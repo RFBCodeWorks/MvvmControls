@@ -49,16 +49,20 @@ namespace RFBCodeWorks.Mvvm.Tests
         private T? cursorService;
         protected T CursorService => cursorService ??= GetService();
 
+        private readonly SemaphoreSlim testGate = new(1);
+
         /// <summary>
         /// Gets or sets the test context which provides information about and functionality for the current test run.
         /// </summary>
         public TestContext TestContext { get; set; }
 
         [TestInitialize]
-        public void TestInitialize()
+        public async Task TestInitialize()
         {
+            await testGate.WaitAsync(TestContext.CancellationToken);
+            TestContext.WriteLine($"Type of CursorService : {typeof(T).FullName}");
             cursorService = GetService();
-            PumpDispatcher().Wait();
+            await PumpDispatcher();
         }
 
         [TestCleanup]
@@ -71,6 +75,7 @@ namespace RFBCodeWorks.Mvvm.Tests
                 TestContext?.WriteLine("Service was busy, reset called");
             }
             await PumpDispatcher();
+            testGate.Release();
         }
 
         #region Property Tests

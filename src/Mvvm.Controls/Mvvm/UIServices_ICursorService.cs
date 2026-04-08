@@ -73,6 +73,9 @@ namespace RFBCodeWorks.Mvvm
             private Cursor busyCursor = Cursors.Wait;
             private Cursor? previousCursor;
 
+            /// <summary>
+            /// An event raised when the <see cref="Cursor"/> property is updated.
+            /// </summary>
             public event EventHandler? CursorChanged;
 
             /// <summary>
@@ -91,10 +94,13 @@ namespace RFBCodeWorks.Mvvm
                 }
             }
 
-            public Cursor BusyCursor { get => busyCursor; set => busyCursor = value ?? Cursors.Wait; } 
+            /// <inheritdoc/>
+            public Cursor BusyCursor { get => busyCursor; set => busyCursor = value ?? Cursors.Wait; }
 
+            /// <inheritdoc/>
             public bool IsBusy { get; set; }
 
+            /// <inheritdoc/>
             public void SetBusy()
             {
                 if (Cursor != BusyCursor)
@@ -104,6 +110,7 @@ namespace RFBCodeWorks.Mvvm
                 IsBusy = true;
             }
 
+            /// <inheritdoc/>
             public Task SetBusyAsync(CancellationToken token)
             {
                 token.ThrowIfCancellationRequested();
@@ -111,6 +118,7 @@ namespace RFBCodeWorks.Mvvm
                 return Task.CompletedTask;
             }
 
+            /// <inheritdoc/>
             public void OverrideCursor(Cursor cursor) 
             {
                 previousCursor = cursor;
