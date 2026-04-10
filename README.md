@@ -72,7 +72,7 @@ These classes are the base classes the main objects are derived from, and follow
 	   - Refresh() - Invokes GetText() to update the Text property
 	   - Refresh(object, eventargs) - Provides a way to automatically refresh the Text property by subscribing the object to an external event
 
-## A simplified ComboBox Experience
+## A simplified ComboBox/Listbox Experience
  
 A ComboBox has the following properties that the ViewModel may interact with:
 - ItemSource (The items within the drop-down)
@@ -85,20 +85,25 @@ A ComboBox has the following properties that the ViewModel may interact with:
   
   
  This can all be set up within the ViewModel like so:
-```
-public class MyViewModel {
+```C#
+public partial class  MyViewModel
+{
+    [ListBox]  // Generates a listbox property "FilesListBox { get; }
+    [ComboBox]  // Generates a ComboBox property "FilesComboBox { get; }
+    [Selector]  // Generates a ComboBox property "FilesSelector { get; }
+    [OnSelectionChanged]
+    [OnCollectionChanged(nameof(CommandToNotify))]
+	private Task<FileInfo[]> GetFiles() { } // logic to get files
 
-  public MyViewModel()
-  {
-   MyComboBox = new ComboBoxDefinition<string>()
-   {
-     ItemSource = new string[] { "Index0", "Index1", "Index2", "Index3" }
-   };
-   ComboBoxDefinition.SelectedItemChanged += NewItemSelected;
-  }
-  public ComboBoxDefinition<string> MyComboBox { get; }
+    partial void OnFilesSelectorSelectionChanged() { } // do Something when the Selector.SelectedItem changes
+}
 
-  private void NewItemSelected(object sender, EventArgs e) { /* React to item selection */ } 
+// example generated code:
+public partial class MyViewModel
+{
+   // private fields for each property
+   
+   public RefreshableSelector<FileInfo, FileInfo[], object> FilesSelector => filesSelector ??= new ( refreshFunc: GetFiles );
 }
 ```  
 And the corresponding xaml:
@@ -115,9 +120,7 @@ This library utilizes C#9.0 for init setters.
  - The file 'CSharp9_MissingComponents.cs' is already included within this library, so the file can just be included in your project to provide the necesary components, then include the following in your project file: `<LangVersion>9.0</LangVersion>`
 
 Build Targets:
-- .NetFramework `net472`, `net480`
-- `.NetCoreApp3.1`
-- `.Net5.0-windows`
-- `.Net6.0-windows`
-- `.Net7.0-windows`
+- .NetFramework `net462`, `net480`
+- `.Net8.0-windows`
+- `.Net10.0-windows`
 
