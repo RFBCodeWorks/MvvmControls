@@ -12,6 +12,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         public SemanticModel SemanticModel { get; }
         public AttributeData AttributeData { get; }
         public ITypeSymbol ElementType { get;  }
+        public bool SupportsMultiSelect { get; }
 
         // Attribute-specific members:
         public readonly string PropertySuffix;
@@ -96,6 +97,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
                     
                     case nameof(SelectorAttribute.PropertyName):
                         PropertyName = (kvp.Value.Value as string).Trim('_', ' ').Trim();
+                        break;
+
+                    case nameof(ListBoxAttribute.SupportsMultiSelect):
+                        SupportsMultiSelect = (kvp.Value.Value is bool multiSelectBool) && multiSelectBool;
                         break;
                 }
             }

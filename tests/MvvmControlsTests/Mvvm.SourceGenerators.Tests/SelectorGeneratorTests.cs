@@ -25,17 +25,6 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests
     }
 
     [TestClass]
-    public class ListBoxGeneratorTests : SelectorGeneratorTests
-    {
-#if ROSLYN_311
-        protected override string GetGeneratorName() => "ListBox";
-#else
-        protected override IIncrementalGenerator GetGenerator() => new RefreshableListBoxGeneratorRoslyn40();
-#endif
-        protected override void AssertImplementInterface(object instance) => Assert.IsInstanceOfType<IListBox>(instance);
-    }
-
-    [TestClass]
     public class SelectorGeneratorTests
     {
 #if ROSLYN_311
@@ -51,7 +40,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests
         /// </summary>
 
         /// <param name="GeneratedObject"></param>
-        record SelectorWrapper(object GeneratedObject, INamedTypeSymbol NamedTypeSymbol)
+        protected record SelectorWrapper(object GeneratedObject, INamedTypeSymbol NamedTypeSymbol)
         {
             public string SelectorName { get; set; } = "NAME NOT SET";
 
@@ -67,7 +56,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests
             public ISelector Selector => GetProperty<ISelector>(SelectorName);
         }
 
-        private SelectorWrapper GetSelector(Type typeToConstruct, Func<string, string>? getAdditionalText = null)
+        protected SelectorWrapper GetSelector(Type typeToConstruct, Func<string, string>? getAdditionalText = null)
         {
             var fileContents = SourceGeneratorHelpers.ReadSourceText(typeToConstruct.Name);
             Assert.IsNotEmpty(fileContents);

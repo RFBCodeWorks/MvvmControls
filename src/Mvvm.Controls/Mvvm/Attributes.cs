@@ -99,7 +99,13 @@ namespace RFBCodeWorks.Mvvm
 #else
     public sealed class ListBoxAttribute : SelectorAttribute
 #endif
-    { }
+    {
+        /// <summary>
+        /// Whether the ListBox supports multiple selection. 
+        /// <br/>If true, a partial method "On{name}SelectedItemsChanged()" will be generated that allows hooking into the property change event for the SelectedItems collection.
+        /// </summary>
+        public bool SupportsMultiSelect { get; set; }
+    }
 
     /// <summary>
     /// Apply to a method that returns IList&lt;T&gt; to generate a <see cref="RefreshableSelector{T, TList, TSelectedValue}"/> property.

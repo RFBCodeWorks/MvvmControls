@@ -119,6 +119,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             Debug.WriteLine($"DEBUG : fileName [{Path.GetFileName(Writer.SuggestedFileName)}] : Indentation after writing OnSelectionChanged: {Writer.Indentation}");
             Debug.Assert(Writer.Indentation == 3);
 
+            // OnSelectedItemsChanged (ListBox multi-select only)
+            if (dataAndTriggers.SelectorData.SupportsMultiSelect)
+                WriteOnSelectedItemsChanged(Writer, dataAndTriggers, propName, _token);
+
             // write the remainder of the constructor for the button
             bool tt = !string.IsNullOrWhiteSpace(data.ToolTip);
             bool dp = !string.IsNullOrWhiteSpace(data.DisplayMemberPath);
@@ -135,9 +139,19 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             }
             Writer.EndBlock(true, true);
 
-            WritePartialMethods(Writer, propName, dataAndTriggers.CollectionChanged.HasData, dataAndTriggers.SelectionChanged.HasData);
+            WritePartialMethods(Writer, propName, dataAndTriggers.CollectionChanged.HasData, dataAndTriggers.SelectionChanged.HasData, dataAndTriggers.SelectorData.SupportsMultiSelect);
 
             Debug.Assert(Writer.Indentation == 2);
+        }
+
+        /// <summary>
+        /// Generates the case for the OnSelectedItemsChanged callback, which is only applicable to ListBox selectors with multi-select enabled. 
+        /// </summary>
+        /// <returns>true if the partial method should be generated, otherwise false</returns>
+        private void WriteOnSelectedItemsChanged(SourceWriter writer, RefreshableSelectorDataAndTriggers dataAndTriggers, ReadOnlySpan<char> propName, CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+            writer.Write(',').WriteLine().WriteLine("onMultiSelect: On{0}SelectedItemsChanged", propName);
         }
 
         /// <summary>
@@ -241,21 +255,30 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
             }
         }
 
-        private static void WritePartialMethods(SourceWriter writer, ReadOnlySpan<char> propertyName, bool onCollection, bool onSelection)
+
+        private static void WritePartialMethods(SourceWriter writer, ReadOnlySpan<char> propertyName, bool onCollection, bool onSelection, bool onListboxMultiSelect)
         {
             if (onCollection)
                 writer
                     .WriteLine()
-                    .WriteLine("/// <summary> Called when the collection of <see cref=\"{0}\"/> changes. </summary>", propertyName)
+                    .WriteLine("/// <summary> This method is called when the <see cref=\"{0}\"/>.Items collection is swapped out. </summary>", propertyName)
                     .WriteAttributes(Attributes.GeneratedCodeAttribute | Attributes.ExcludeFromCodeCoverage)
                     .WriteLine("partial void On{0}CollectionChanged();", propertyName);
 
             if (onSelection)
                 writer
                     .WriteLine()
-                    .WriteLine("/// <summary> Called when the selection of <see cref=\"{0}\"/> changes. </summary>", propertyName)
+                    .WriteLine("/// <summary> This method is called when the <see cref=\"{0}\"/>.SelectedItem is changed. </summary>", propertyName)
                     .WriteAttributes(Attributes.GeneratedCodeAttribute | Attributes.ExcludeFromCodeCoverage)
                     .WriteLine("partial void On{0}SelectionChanged();", propertyName);
+
+            if (onListboxMultiSelect)
+                writer
+                    .WriteLine()
+                    .WriteLine("/// <summary> This method is called when the <see cref=\"{0}\"/>.SelectedItems collection is swapped out. </summary>", propertyName)
+                    .WriteLine("/// <remarks> Only generated for ListBox selectors with multi-select enabled. </remarks>")
+                    .WriteAttributes(Attributes.GeneratedCodeAttribute | Attributes.ExcludeFromCodeCoverage)
+                    .WriteLine("partial void On{0}SelectedItemsChanged();", propertyName);
         }
     }
 }
