@@ -102,7 +102,10 @@ namespace RFBCodeWorks.Mvvm
     {
         /// <summary>
         /// Whether the ListBox supports multiple selection. 
-        /// <br/>If true, a partial method "On{name}SelectedItemsChanged()" will be generated that allows hooking into the property change event for the SelectedItems collection.
+        /// <br/>If <see langword="true"/>, the following changes occur:
+        /// <br/> - Sets the SelectionMode = <see cref="System.Windows.Controls.SelectionMode.Multiple"/>
+        /// <br/> - A partial method "On{name}SelectedItemsChanged()" will be generated that is called when the collection is updated.
+        /// <para/> Note : The partial method is assigned to the constructor directly. As such, it must be implemented to prevent compile errors.
         /// </summary>
         public bool SupportsMultiSelect { get; set; }
     }

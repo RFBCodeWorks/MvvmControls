@@ -97,6 +97,11 @@ namespace RFBCodeWorks.Mvvm.Primitives
         [ObservableProperty]
         private string _displayMemberPath = DefaultDisplayMemberPath;
 
+        /// <inheritdoc cref="IListBox.HasItems" />
+        /// <remarks>Can be used as a null check against <see cref="Items"/></remarks>
+        [System.Diagnostics.CodeAnalysis.MemberNotNullWhen(true, nameof(Items))]
+        public bool HasItems => Items is not null && Items.Count > 0;
+
         /// <summary>
         /// Binding for <see cref="System.Windows.Controls.ItemsControl.ItemsSource"/>
         /// </summary>

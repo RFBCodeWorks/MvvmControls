@@ -121,21 +121,22 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
 
             // OnSelectedItemsChanged (ListBox multi-select only)
             if (dataAndTriggers.SelectorData.SupportsMultiSelect)
-                WriteOnSelectedItemsChanged(Writer, dataAndTriggers, propName, _token);
+                WriteOnSelectedItemsChanged(Writer, propName, _token);
 
             // write the remainder of the constructor for the button
             bool tt = !string.IsNullOrWhiteSpace(data.ToolTip);
             bool dp = !string.IsNullOrWhiteSpace(data.DisplayMemberPath);
             bool sv = !string.IsNullOrWhiteSpace(data.SelectedValuePath);
-            if (tt || dp || sv)
+            if (tt || dp || sv || dataAndTriggers.SelectorData.SupportsMultiSelect)
             {
                 Writer
                     .EndBlock(true, false)  // close out the constructor ')'
                     .BeginBlock()           // Open properties scope {
+                    .WriteLineIf(dataAndTriggers.SelectorData.SupportsMultiSelect, $@"SelectionMode = global::System.Windows.Controls.SelectionMode.Multiple", trailingComma: tt || dp || sv)
                     .WriteLineIf(tt, $@"{nameof(SelectorAttribute.ToolTip)}  = {{0}}", data.ToolTip, trailingComma: dp || sv)
                     .WriteLineIf(dp, $@"{nameof(SelectorAttribute.DisplayMemberPath)}  = {{0}}", data.DisplayMemberPath, trailingComma: sv)
                     .WriteLineIf(sv, $@"{nameof(SelectorAttribute.SelectedValuePath)}  = {{0}}", data.SelectedValuePath)
-                    ;
+                    ;                
             }
             Writer.EndBlock(true, true);
 
@@ -148,10 +149,10 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
         /// Generates the case for the OnSelectedItemsChanged callback, which is only applicable to ListBox selectors with multi-select enabled. 
         /// </summary>
         /// <returns>true if the partial method should be generated, otherwise false</returns>
-        private void WriteOnSelectedItemsChanged(SourceWriter writer, RefreshableSelectorDataAndTriggers dataAndTriggers, ReadOnlySpan<char> propName, CancellationToken token)
+        private void WriteOnSelectedItemsChanged(SourceWriter writer, ReadOnlySpan<char> propName, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
-            writer.Write(',').WriteLine().WriteLine("onMultiSelect: On{0}SelectedItemsChanged", propName);
+            writer.Write(',').WriteLine().WriteLine("onSelectedItemsChanged: On{0}SelectedItemsChanged", propName);
         }
 
         /// <summary>

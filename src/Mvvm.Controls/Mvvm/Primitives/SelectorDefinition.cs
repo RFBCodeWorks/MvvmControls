@@ -56,6 +56,16 @@ namespace RFBCodeWorks.Mvvm.Primitives
         public event PropertyOfTypeChangedEventHandler<TSelectedValue> SelectedValueChanged;
 
         /// <summary>
+        /// Value indicating when the <see langword="SelectedItem"/> property is not null and that the <see langword="SelectedIndex"/> falls within the valid range.
+        /// </summary>
+        /// <remarks>
+        /// - <see cref="SelectedItem"/>
+        /// <br/> - <see cref="SelectedIndex"/>
+        /// </remarks>
+        [System.Diagnostics.CodeAnalysis.MemberNotNullWhen(true, nameof(SelectedItem))]
+        public bool IsItemSelected => Items is not null && SelectedIndex >= 0 && SelectedIndex < Items.Count;
+
+        /// <summary>
         /// Specify the property name/path to use as the <see cref="SelectedValue"/> of the <see cref="SelectedItem"/>
         /// </summary>
         /// <remarks>

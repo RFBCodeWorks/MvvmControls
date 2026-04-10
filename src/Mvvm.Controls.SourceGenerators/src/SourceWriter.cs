@@ -630,6 +630,21 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators
 
         /// <inheritdoc cref="WriteLine(string, string[])"/>
         /// <param name="arg1"/><param name="trailingComma"/><param name="writeIfTrue"/>
+        public SourceWriter WriteLineIf(bool writeIfTrue, string line, bool trailingComma)
+        {
+            if (writeIfTrue)
+            {
+                if (_isOnNewLine && _indentation > 0) Indent();
+                _sb.Append(line);
+                if (trailingComma) _sb.Append(',');
+                _sb.AppendLine();
+                _isOnNewLine = true;
+            }
+            return this;
+        }
+
+        /// <inheritdoc cref="WriteLine(string, string[])"/>
+        /// <param name="arg1"/><param name="trailingComma"/><param name="writeIfTrue"/>
         public SourceWriter WriteLineIf(bool writeIfTrue, string format, string arg1, bool trailingComma)
         {
             if (writeIfTrue)

@@ -27,6 +27,19 @@ namespace System.Runtime.CompilerServices
     }
 }
 
+namespace System.Diagnostics.CodeAnalysis
+{
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method, AllowMultiple = true)]
+    internal sealed class MemberNotNullWhenAttribute(bool returnValue, params string[] members) : Attribute
+    {
+        /// <summary>Gets the return value condition.</summary>
+        public bool ReturnValue { get; } = returnValue;
+
+        /// <summary>Gets field or property member names.</summary>
+        public string[] Members { get; } = members;
+    }
+}
+
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning restore IDE0130 // Namespace does not match folder structure
 #endif

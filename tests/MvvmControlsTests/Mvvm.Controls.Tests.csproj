@@ -34,6 +34,7 @@
       <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\ButtonTaskCanExecute.cs" />
       <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\ButtonTaskCanExecuteInteger.cs" />
       <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\ButtonTaskIncludeCancelCommand.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\Listbox_SupportsMultiSelectFalse.cs" />
       <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\Selector_OnCollectionChanged_SelectLastItem.cs" />
       <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\Selector_OnCollectionChanged_SelectFirstItem.cs" />
       <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\Selector.cs" />

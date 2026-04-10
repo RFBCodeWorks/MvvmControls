@@ -68,7 +68,19 @@ namespace RFBCodeWorks.Mvvm
 
         /// <summary>Create a new ListBox </summary>
         /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
-        public ListBoxDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, TList collection = default) : base(onCollectionChanged, onSelectionChanged, collection) { }
+        /// <param name="collection"/>
+        /// <param name="onCollectionChanged"/>
+        /// <param name="onSelectionChanged"/>
+        /// <param name="onSelectedItemsChanged">
+        /// A action to run when the <see cref="SelectedItems"/> collection is swapped out for another collection.
+        /// </param>
+        public ListBoxDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, Action onSelectedItemsChanged = null, TList collection = default) 
+            : base(onCollectionChanged, onSelectionChanged, collection) 
+        {
+            this.onSelectedItemsChanged = onSelectedItemsChanged;
+        }
+
+        private readonly Action? onSelectedItemsChanged = null;
 
         /// <summary>
         /// Occurs after the <see cref="SelectedItems"/> has been updated
@@ -76,10 +88,8 @@ namespace RFBCodeWorks.Mvvm
         public event EventHandler SelectedItemsChanged;
 
         /// <inheritdoc/>
-        public bool HasItems => Items?.Any() ?? false;
-
-        /// <inheritdoc/>
-        public bool HasItemsSelected => SelectedItems?.Any() ?? false;
+        [System.Diagnostics.CodeAnalysis.MemberNotNullWhen(true, nameof(SelectedItems))]
+        public bool HasItemsSelected => SelectedItems is not null && SelectedItems.Count > 0;
 
         /// <summary>
         /// Check if the <see cref="SelectionMode"/> is not <see cref="System.Windows.Controls.SelectionMode.Single"/>
@@ -89,8 +99,11 @@ namespace RFBCodeWorks.Mvvm
         /// <summary>
         /// Allows binding to the SelectedItems property of a listbox via the <see cref="RFBCodeWorks.WPF.Behaviors.Base.MultiItemSelectionBehavior{T}"/> behavior
         /// </summary>
+        /// <remarks>
+        /// Use <see cref="HasItemsSelected"/> as a guard statement before iterating.
+        /// </remarks>
         [ObservableProperty]
-        private IList<T> _selectedItems;
+        private IList<T>? _selectedItems;
 
         /// <inheritdoc/>
         [ObservableProperty]
@@ -101,13 +114,17 @@ namespace RFBCodeWorks.Mvvm
             get => (IList)SelectedItems;
             set
             {
-                if (value is IList<T> list)
+                if (value is null)
+                {
+                    SelectedItems = null;
+                }
+                else if (value is IList<T> list)
                 {
                     SelectedItems = list;
                 }
                 else if (value is IReadOnlyList<T> rd)
                 {
-                    SelectedItems = rd.ToList();
+                    SelectedItems = [.. rd];
                 }
                 else
                 {
@@ -122,6 +139,7 @@ namespace RFBCodeWorks.Mvvm
         protected virtual void OnSelectedItemsChanged()
         {
             SelectedItemsChanged?.Invoke(this, EventArgs.Empty);
+            onSelectedItemsChanged?.Invoke();
         }
     }
 
@@ -131,26 +149,21 @@ namespace RFBCodeWorks.Mvvm
     /// <inheritdoc cref="ListBoxDefinition{T, TList,  TSelectedValue}"/>
     public class ListBoxDefinition<T> : ListBoxDefinition<T, IList<T>, object>
     {
-        /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition()"/>
+        /// <inheritdoc cref="ListBoxDefinition{T, TList, TSelectedValue}.ListBoxDefinition()"/>
         public ListBoxDefinition() { }
 
-        /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
-        public ListBoxDefinition(IList<T> collection) : this(null, null, collection) { }
+        /// <inheritdoc cref="ListBoxDefinition{T, TList, TSelectedValue}.ListBoxDefinition(TList)"/>
+        public ListBoxDefinition(IList<T> collection) : base(collection) { }
 
-        /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
-        public ListBoxDefinition(params T[] collection) : this(null, null, collection) { }
+        /// <inheritdoc cref="ListBoxDefinition{T, TList, TSelectedValue}.ListBoxDefinition(TList)"/>
+        public ListBoxDefinition(params T[] collection) : base(collection) { }
 
-        /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
-        public ListBoxDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, params T[] collection) : base(onCollectionChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
+        /// <inheritdoc cref="ListBoxDefinition{T, TList, TSelectedValue}.ListBoxDefinition(Action, Action, Action, TList)"/>
+        public ListBoxDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, Action onSelectedItemsChanged = null, params T[] collection) : base(onCollectionChanged, onSelectionChanged, onSelectedItemsChanged, collection ?? Array.Empty<T>()) { }
 
 
-        /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
-        public ListBoxDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, IList<T> collection = default) : base(onCollectionChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
+        /// <inheritdoc cref="ListBoxDefinition{T, TList, TSelectedValue}.ListBoxDefinition(Action, Action, Action, TList)"/>
+        public ListBoxDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, Action onSelectedItemsChanged = null, IList<T> collection = default) : base(onCollectionChanged, onSelectionChanged, onSelectedItemsChanged, collection ?? Array.Empty<T>()) { }
     }
 
     /// <summary>
@@ -159,25 +172,20 @@ namespace RFBCodeWorks.Mvvm
     /// <inheritdoc cref="ListBoxDefinition{T, TList,  TSelectedValue}"/>
     public class ListBoxDefinition<T, TSelectedValue> : ListBoxDefinition<T, IList<T>, TSelectedValue>
     {
-        /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition()"/>
+        /// <inheritdoc cref="ListBoxDefinition{T, TList, TSelectedValue}.ListBoxDefinition()"/>
         public ListBoxDefinition() { }
 
-        /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
-        public ListBoxDefinition(IList<T> collection) : this(null, null, collection) { }
+        /// <inheritdoc cref="ListBoxDefinition{T, TList, TSelectedValue}.ListBoxDefinition(TList)"/>
+        public ListBoxDefinition(IList<T> collection) : base(collection) { }
 
-        /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
-        public ListBoxDefinition(params T[] collection) : this(null, null, collection) { }
+        /// <inheritdoc cref="ListBoxDefinition{T, TList, TSelectedValue}.ListBoxDefinition(TList)"/>
+        public ListBoxDefinition(params T[] collection) : base(collection) { }
 
-        /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
-        public ListBoxDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, params T[] collection) : base(onCollectionChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
+        /// <inheritdoc cref="ListBoxDefinition{T, TList, TSelectedValue}.ListBoxDefinition(Action, Action, Action, TList)"/>
+        public ListBoxDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, Action onSelectedItemsChanged = null, params T[] collection) : base(onCollectionChanged, onSelectionChanged, onSelectedItemsChanged, collection ?? Array.Empty<T>()) { }
 
-        /// <summary>Create a new ComboBox </summary>
-        /// <inheritdoc cref="Primitives.SelectorDefinition{T, TList, TItemValue}.SelectorDefinition(Action, Action, TList)"/>
-        public ListBoxDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, IList<T> collection = default) : base(onCollectionChanged, onSelectionChanged, collection ?? Array.Empty<T>()) { }
+        /// <inheritdoc cref="ListBoxDefinition{T, TList, TSelectedValue}.ListBoxDefinition(Action, Action, Action, TList)"/>
+        public ListBoxDefinition(Action onCollectionChanged = null, Action onSelectionChanged = null, Action onSelectedItemsChanged = null, IList<T> collection = default) : base(onCollectionChanged, onSelectionChanged, onSelectedItemsChanged, collection ?? Array.Empty<T>()) { }
     }
 
 }
