@@ -28,7 +28,7 @@
             
         </Description>
         <PackageTags>Mvvm, ViewModel</PackageTags>        
-		<Configurations>Debug;Release;AppVeyor</Configurations>
+		<Configurations>Debug;Release</Configurations>
     </PropertyGroup>
 	
 	<!-- Enable nuget Packing via Directory.Build.Targets -->

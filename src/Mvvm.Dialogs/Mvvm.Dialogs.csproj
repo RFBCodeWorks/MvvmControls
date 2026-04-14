@@ -20,7 +20,7 @@
         </PackageReleaseNotes>
         <!-- #################################  -->
 
-        <Configurations>Debug;Release;AppVeyor</Configurations>
+        <Configurations>Debug;Release</Configurations>
     </PropertyGroup>
 
     <PropertyGroup>

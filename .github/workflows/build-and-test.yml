@@ -40,14 +40,13 @@ name: Build and Test
 
 on:
   push:
-    branches: [ "master", "SourceGenerators" ]
+    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
 jobs:
 
   build:
-
     strategy:
       matrix:
         configuration: [Release]
@@ -56,9 +55,8 @@ jobs:
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
     env:
-      Solution_Name: RFBCodeWorks.Mvvm.sln                        # Replace with your solution name, i.e. MyWpfApp.sln.
-      Test_Project_Path: ./tests/MvvmControlsTests/Mvvm.Controls.Tests.csproj                 # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
-
+      Solution_Name: RFBCodeWorks.Mvvm.sln                        
+      
     steps:
     - name: Checkout
       uses: actions/checkout@v6
@@ -88,6 +86,7 @@ jobs:
       run: dotnet test
 
     - name: Pack Nuget Packages
+      if: github.event_name == 'push'
       run: |
         dotnet pack ./src/Mvvm.Controls/Mvvm.Controls.csproj --configuration Release --no-build --output ./artifacts
         dotnet pack ./src/Mvvm.Dialogs/Mvvm.Dialogs.csproj --configuration Release --no-build --output ./artifacts
@@ -95,7 +94,8 @@ jobs:
         dotnet pack ./src/Mvvm.WebView2Integration/Mvvm.WebView2Integration.csproj --configuration Release --no-build --output ./artifacts
         
     - name: Upload NuGet packages
+      if: github.event_name == 'push'
       uses: actions/upload-artifact@v6
       with:
-        name: nuget-packages
+        name: RfbCodeworks.MvvmControls.NugetPackages
         path: ./artifacts/*.nupkg

@@ -9,7 +9,7 @@
 		</TargetFrameworks>
         <RootNamespace>RFBCodeWorks</RootNamespace>
         <IsPackable>false</IsPackable>
-        <Configurations>Debug;Release;AppVeyor</Configurations>
+        <Configurations>Debug;Release</Configurations>
         <UseWPF>true</UseWPF>
 		<Nullable>enable</Nullable>
     </PropertyGroup>

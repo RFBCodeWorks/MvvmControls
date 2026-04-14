@@ -71,7 +71,7 @@
             &lt;ComboBox MvvmControls:ControlDefinitions.ComboBoxDefinition="{Binding MyComboBox}" /&gt;
         </Description>
 
-        <Configurations>Debug;Release;AppVeyor</Configurations>
+        <Configurations>Debug;Release</Configurations>
     </PropertyGroup>
 	
     <ItemGroup>
