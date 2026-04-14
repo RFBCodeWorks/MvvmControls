@@ -1,10 +1,5 @@
 ﻿using RFBCodeWorks.Mvvm;
 using RFBCodeWorks.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace ExampleWPF.ViewModels

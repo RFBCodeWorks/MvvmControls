@@ -1,5 +1,4 @@
 using System.Runtime.InteropServices;
-using System.Reflection;
 using System.Windows.Markup;
 
 [assembly: System.Windows.ThemeInfo(System.Windows.ResourceDictionaryLocation.None, System.Windows.ResourceDictionaryLocation.SourceAssembly)]

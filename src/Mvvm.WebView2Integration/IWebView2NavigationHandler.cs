@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WebView = Microsoft.Web.WebView2.Core;
+﻿using WebView = Microsoft.Web.WebView2.Core;
 
 namespace RFBCodeWorks.Mvvm.WebView2Integration
 {

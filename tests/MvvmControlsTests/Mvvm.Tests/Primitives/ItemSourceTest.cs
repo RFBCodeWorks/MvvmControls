@@ -1,8 +1,6 @@
 ﻿
 using RFBCodeWorks.Mvvm.Tests;
-using System.Linq;
 using System.Windows.Controls;
-using System.Windows.Input;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RFBCodeWorks.Mvvm.Primitives.Tests

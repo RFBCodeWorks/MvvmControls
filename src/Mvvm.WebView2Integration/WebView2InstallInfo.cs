@@ -1,12 +1,6 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using static System.Net.WebRequestMethods;
 
 namespace RFBCodeWorks.Mvvm.WebView2Integration
 {

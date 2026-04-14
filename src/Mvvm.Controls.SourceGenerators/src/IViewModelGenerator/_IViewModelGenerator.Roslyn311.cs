@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Collections.Immutable;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using RFBCodeWorks.Mvvm.SourceGenerators;
 using RFBCodeWorks.Mvvm.SourceGenerators.Refreshable;
@@ -27,7 +25,6 @@ namespace RFBCodeWorks.Mvvm
         public void Initialize(GeneratorInitializationContext context)
         {
             context.ForAttributeWithMetaDataName(ViewModelContextReceiver.Create);
-            GeneratorExtensions.DebuggerLaunch();
         }
 
         public void Execute(GeneratorExecutionContext context)

@@ -1,14 +1,8 @@
 ﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MvvmDialogs.FrameworkDialogs.MessageBox;
 using DialogResult = System.Windows.MessageBoxResult;
 using MessageBoxButtons = System.Windows.MessageBoxButton;
-using MessageBoxIcon= System.Windows.MessageBoxImage;
+using MessageBoxIcon = System.Windows.MessageBoxImage;
 using MessageBoxOptions = System.Windows.MessageBoxOptions;
 using BaseMsg = MvvmDialogs.FrameworkDialogs.MessageBox.MessageBoxSettings;
 

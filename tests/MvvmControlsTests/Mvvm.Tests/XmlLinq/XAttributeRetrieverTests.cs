@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using RFBCodeWorks.Mvvm.Tests;
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 {

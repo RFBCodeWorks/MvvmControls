@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Security;
+﻿using System;
 
 namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.GeneratorInputs
 {

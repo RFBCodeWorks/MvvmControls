@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 #nullable enable
 
@@ -50,7 +49,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
             => this.Parent is XElementWrapper xw ? xw
             : this.Parent is IXElementProvider xp ? xp
             : this.Parent is not null ? new XElementWrapper(this.Parent)
-            : null!;
+            : null;
 
         /// <inheritdoc/>
         public event EventHandler? DescendantChanged;

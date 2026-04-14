@@ -1,9 +1,5 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis;
-using RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Linq;
 

@@ -1,7 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Windows;
-using RFBCodeWorks.Mvvm.Tests;
 
 namespace RFBCodeWorks.Mvvm.Primitives.Tests
 {

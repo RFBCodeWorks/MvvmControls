@@ -22,7 +22,7 @@
       <PackageReleaseNotes>
 		  - Added .Net10 target
 		  - Removed deprecated targets  .Net5.0  and netcoreapp3.1
-		  - Updated WebView2 nuget packet version to 1.0.3856.49 (latest as of 3/18/2026)
+		  - Updated WebView2 nuget package version to 1.0.3856.49 (latest as of 3/18/2026)
 	  </PackageReleaseNotes>
       <!-- #################################  -->
       

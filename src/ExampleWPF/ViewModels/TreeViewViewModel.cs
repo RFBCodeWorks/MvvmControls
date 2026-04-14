@@ -1,9 +1,5 @@
 ﻿using RFBCodeWorks.Mvvm;
-using RFBCodeWorks.Mvvm.DialogServices;
 using RFBCodeWorks.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ExampleWPF.ViewModels
 {

@@ -3,7 +3,6 @@
 
 using System;
 using System.Text;
-using System.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using System.Threading;
 using Microsoft.CodeAnalysis;

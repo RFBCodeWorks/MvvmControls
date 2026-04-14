@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RFBCodeWorks.Mvvm.XmlLinq.ValueSetters;
 using System.Xml.Linq;
-using RFBCodeWorks.Mvvm.Tests;
 
 
 namespace RFBCodeWorks.Mvvm.XmlLinq.Tests

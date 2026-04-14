@@ -2,7 +2,6 @@
 using RFBCodeWorks.Mvvm.Input;
 using System;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace RFBCodeWorks.Mvvm.Tests
 {

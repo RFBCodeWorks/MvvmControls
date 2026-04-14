@@ -1,5 +1,4 @@
 ﻿using RFBCodeWorks.Mvvm;
-using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.Windows.Data;
 

@@ -1,14 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RFBCodeWorks.Mvvm;
-using RFBCodeWorks.WPF.Behaviors;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using RFBCodeWorks.Mvvm.Tests;
 
 
 namespace RFBCodeWorks.WPF.Behaviors.Tests

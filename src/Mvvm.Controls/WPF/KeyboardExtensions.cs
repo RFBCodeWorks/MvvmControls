@@ -1,6 +1,4 @@
 ﻿using System.Windows.Input;
-using System.Linq;
-using System.Collections.ObjectModel;
 
 namespace RFBCodeWorks.WPF
 {

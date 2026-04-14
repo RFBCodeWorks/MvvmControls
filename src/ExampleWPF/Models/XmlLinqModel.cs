@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Linq;
-using RFBCodeWorks.Mvvm.XmlLinq;
-using RFBCodeWorks.Mvvm.XmlLinq.ValueSetters;
+﻿using RFBCodeWorks.Mvvm.XmlLinq;
 using RFBCodeWorks.Mvvm.XmlLinq.Controls;
 
 namespace ExampleWPF.Models

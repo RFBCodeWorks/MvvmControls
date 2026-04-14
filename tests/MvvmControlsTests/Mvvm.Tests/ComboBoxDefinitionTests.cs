@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Windows.Controls;
-using RFBCodeWorks.Mvvm.Primitives;
 using RFBCodeWorks.Mvvm.Primitives.Tests;
 using Behaviors = RFBCodeWorks.WPF.Behaviors;
 using System.Windows.Controls.Primitives;

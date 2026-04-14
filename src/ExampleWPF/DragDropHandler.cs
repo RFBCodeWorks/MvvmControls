@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
-using RFBCodeWorks.Mvvm;
 using RFBCodeWorks.Mvvm.DragAndDrop;
 
 namespace ExampleWPF

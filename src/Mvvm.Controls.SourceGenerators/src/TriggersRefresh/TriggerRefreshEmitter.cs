@@ -1,9 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using RFBCodeWorks.Mvvm.SourceGenerators.Refreshable;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable

@@ -1,6 +1,4 @@
-﻿using RFBCodeWorks.Mvvm.Primitives;
-
-namespace RFBCodeWorks.Mvvm
+﻿namespace RFBCodeWorks.Mvvm
 {
     internal static class EventArgSingletons
     {

@@ -2,9 +2,7 @@
 using RFBCodeWorks.Mvvm.Input;
 using RFBCodeWorks.WPF.Behaviors;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;

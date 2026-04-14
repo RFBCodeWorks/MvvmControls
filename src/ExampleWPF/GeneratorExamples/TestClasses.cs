@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
+﻿namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.Gen
 {
     public partial class Generic<T>
     {

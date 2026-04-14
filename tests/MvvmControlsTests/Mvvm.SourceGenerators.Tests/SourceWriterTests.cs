@@ -1,8 +1,6 @@
 ﻿
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RFBCodeWorks.Mvvm.Tests;
 using System;
-using System.Resources;
 
 namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests
 {

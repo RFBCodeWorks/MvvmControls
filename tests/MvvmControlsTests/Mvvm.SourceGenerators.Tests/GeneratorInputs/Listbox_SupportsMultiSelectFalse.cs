@@ -1,8 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Security;
-
-namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.GeneratorInputs
+﻿namespace RFBCodeWorks.Mvvm.SourceGenerators.Tests.GeneratorInputs
 {
     public partial class Listbox_SupportsMultiSelectFalse
     {

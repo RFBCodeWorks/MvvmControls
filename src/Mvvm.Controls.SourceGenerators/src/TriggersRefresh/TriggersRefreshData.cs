@@ -1,11 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Collections.Generic;
-using System.Threading;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
-using System.Diagnostics;
 
 namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
 {

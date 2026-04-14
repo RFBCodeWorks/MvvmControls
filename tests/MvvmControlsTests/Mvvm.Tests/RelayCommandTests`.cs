@@ -2,10 +2,6 @@
 using RFBCodeWorks.Mvvm.Input;
 using RFBCodeWorks.Mvvm.Primitives;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RFBCodeWorks.Mvvm.Tests
 {
