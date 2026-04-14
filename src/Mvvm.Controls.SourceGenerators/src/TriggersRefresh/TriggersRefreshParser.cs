@@ -13,7 +13,7 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
     {
         public const string QualifiedName = "RFBCodeWorks.Mvvm." + nameof(RFBCodeWorks.Mvvm.TriggersRefreshAttribute);
         public const string ObservablePropertyAttribute = nameof(ObservablePropertyAttribute);
-        public const string ObservablePropertyAttributeFullyQualified = "CommunityToolkit.Mvvm.ComponentModel" + ObservablePropertyAttribute;
+        public const string ObservablePropertyAttributeFullyQualified = "CommunityToolkit.Mvvm.ComponentModel." + ObservablePropertyAttribute;
 
         /// <summary> Roslyn 311 selector -> Gather FieldDeclarationSyntax nodes which will then be trasnformed </summary>
         public static bool Selector(SyntaxNode node)
