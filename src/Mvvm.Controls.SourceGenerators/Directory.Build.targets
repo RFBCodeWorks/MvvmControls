@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<!-- Disable signing on source generators - not required for wpf deployment -->
+	<PropertyGroup>
+		<PackingEnabled>false</PackingEnabled>
+	</PropertyGroup>
+</Project>

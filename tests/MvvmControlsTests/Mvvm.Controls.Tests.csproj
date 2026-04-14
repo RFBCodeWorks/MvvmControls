@@ -1,0 +1,100 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+
+        <TargetFrameworks>
+			net48;
+			net8.0-windows;
+			net10.0-windows;
+		</TargetFrameworks>
+        <RootNamespace>RFBCodeWorks</RootNamespace>
+        <IsPackable>false</IsPackable>
+        <Configurations>Debug;Release</Configurations>
+        <UseWPF>true</UseWPF>
+		<Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\..\MvvmControls.snk</AssemblyOriginatorKeyFile>
+    </PropertyGroup>
+
+
+    <!-- Include the Source Generator Inputs as embedded resources. These are also compiled to allow ease of writing the tests. -->
+    <ItemGroup>
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\ButtonAction.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\ButtonActionCanExecute.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\ButtonCanExecuteInteger.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\ButtonPropertyDisplayText.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\ButtonPropertyName.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\ButtonPropertyToolTip.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\ButtonTask.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\ButtonTaskAllowConcurrentExecutionsFalse.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\ButtonTaskAllowConcurrentExecutionsTrue.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\ButtonTaskCanExecute.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\ButtonTaskCanExecuteInteger.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\ButtonTaskIncludeCancelCommand.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\Listbox_SupportsMultiSelectFalse.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\Selector_OnCollectionChanged_SelectLastItem.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\Selector_OnCollectionChanged_SelectFirstItem.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\Selector.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\SelectorCanRefresh.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\Selector_OnCollectionChanged.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\Listbox_SupportsMultiSelect.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\Selector_OnSelectionChanged.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\SelectorPropertyDisplaymemberPath.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\SelectorPropertyName.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\SelectorRefreshOnInitializeFalse.cs" />
+      <EmbeddedResource Include="Mvvm.SourceGenerators.Tests\GeneratorInputs\SelectorSelectedValue.cs" />
+    </ItemGroup>
+    
+    <ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
+        <PackageReference Include="MSTest.TestAdapter" Version="4.1.0" />
+        <PackageReference Include="MSTest.TestFramework" Version="4.1.0" />
+        <PackageReference Include="coverlet.collector" Version="8.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Mvvm.Controls\Mvvm.Controls.csproj" />
+    </ItemGroup>
+	
+    <Choose>
+		<!-- Roslyn 500 Testing -->
+		<When Condition="'$(TargetFramework)' == 'net10.0-windows'">
+			<PropertyGroup>
+				<DefineConstants>ROSLYN_5;$(DefineConstants)</DefineConstants>
+			</PropertyGroup>
+			<ItemGroup>
+				<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.3.0" PrivateAssets="all" />
+				<ProjectReference Include="..\..\src\Mvvm.Controls.SourceGenerators\SourceGenerators.Roslyn500.csproj" />
+			</ItemGroup>
+		</When>
+
+		<!-- Roslyn 410 Testing -->
+		<When Condition="'$(TargetFramework)' == 'net8.0-Windows'">
+			<PropertyGroup>
+				<LangVersion>12.0</LangVersion>
+				<DefineConstants>ROSLYN_410;$(DefineConstants)</DefineConstants>
+			</PropertyGroup>
+			<ItemGroup>
+				<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.10.0" PrivateAssets="all" />
+				<ProjectReference Include="..\..\src\Mvvm.Controls.SourceGenerators\SourceGenerators.Roslyn410.csproj" />
+			</ItemGroup>
+		</When>
+		
+		<!-- Roslyn 311 Testing -->
+		<When Condition="'$(TargetFramework)' == 'Net48'">
+			<PropertyGroup>
+				<LangVersion>12.0</LangVersion>
+                <DefineConstants>ROSLYN_311;$(DefineConstants)</DefineConstants>
+            </PropertyGroup>
+            <ItemGroup>
+                <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.11.0" PrivateAssets="all" />
+				<ProjectReference Include="..\..\src\Mvvm.Controls.SourceGenerators\SourceGenerators.Roslyn311.csproj" />
+            </ItemGroup>
+        </When>		
+		
+    </Choose>
+
+</Project>

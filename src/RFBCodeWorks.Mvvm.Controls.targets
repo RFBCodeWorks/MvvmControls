@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Targets File to include in nuget pkg for Source Generators -->
+<Project>
+    <!-- Remove Source Analyzers depending on build environment -->
+    <!-- Use 'DisableRFBCodeWorksMvvmGenerators' in your project file to disable these analyzers completely.-->
+    <Target Name="_RFBCW_MVVM_GatherSourceGenerators">
+        <ItemGroup>
+            <_RFBCW_MVVM_Analyzer Include="@(Analyzer)" Condition="'%(Analyzer.NuGetPackageId)' == 'RFBCodeWorks.Mvvm.Controls'" />
+        </ItemGroup>
+    </Target>
+
+    <!-- Forward these analyzers to consumers 
+    <ItemGroup Condition="'$(DisableRFBCodeWorksMvvmGenerators)' != 'true'">
+        <Analyzer Include="$(MSBuildThisFileDirectory)..\analyzers\dotnet\cs\*\RFBCodeWorks.Mvvm.SourceGenerators.dll" />
+    </ItemGroup>
+    -->
+
+    <!-- Remove analyzers targeting roslyn4.x in VS2019 -->
+    <Target Name="_RFBCodeWorks_Remove_Roslyn4_MvvmAnalyzers_VS2019"
+            Condition="'$(SupportsRoslynComponentVersioning)' != 'true'"
+            AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+            DependsOnTargets="_RFBCW_MVVM_GatherSourceGenerators">
+        <ItemGroup>
+            <Analyzer Remove="@(_RFBCW_MVVM_Analyzer)" Condition="$([System.String]::Copy('%(_RFBCW_MVVM_Analyzer.Identity)').IndexOf('roslyn4')) &gt;= 0"/>
+        </ItemGroup>
+    </Target>
+
+    <!-- Remove analyzers targeting roslyn3.x in VS2022 -->
+    <Target Name="_RFBCodeWorks_Remove_Roslyn3_MvvmAnalyzers"
+            Condition="'$(SupportsRoslynComponentVersioning)' == 'true'"
+            AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+            DependsOnTargets="_RFBCW_MVVM_GatherSourceGenerators">
+        <ItemGroup>
+            <Analyzer Remove="@(_RFBCW_MVVM_Analyzer)" Condition="$([System.String]::Copy('%(_RFBCW_MVVM_Analyzer.Identity)').IndexOf('roslyn3')) &gt;= 0"/>
+        </ItemGroup>
+    </Target>
+
+    <!-- Remove all analyzers if 'DisableRFBCodeWorksMvvmGenerators' set true in project file -->
+    <Target Name="_RFBCodeWorks_Mvvm_SourceGenerators_RemoveAnalyzers"
+            Condition="'$(DisableRFBCodeWorksMvvmGenerators)' == 'true'"
+            AfterTargets="ResolvePackageDependenciesForBuild;ResolveNuGetPackageAssets"
+            DependsOnTargets="_RFBCW_MVVM_GatherSourceGenerators">
+        <ItemGroup>
+            <Analyzer Remove="@(_RFBCW_MVVM_Analyzer)" />
+        </ItemGroup>
+    </Target>
+
+    <!-- Enabled Source Generators for WPF intermediate builds per https://github.com/dotnet/wpf/issues/810 -->
+    <PropertyGroup>
+        <DisplayWpkMarkupMessageRegex><![CDATA[^(net(standard2.*|5.0(-windows)?|4[0-9]{1,2}))$]]></DisplayWpkMarkupMessageRegex>
+        <DisplayWpfMarkupMessage>false</DisplayWpfMarkupMessage>
+    </PropertyGroup>
+    <PropertyGroup Condition="'true' == '$(UseWPF)' and '$(IncludePackageReferencesDuringMarkupCompilation)' != 'true'">
+        <DisplayWpfMarkupMessage>true</DisplayWpfMarkupMessage>
+        <IncludePackageReferencesDuringMarkupCompilation>true</IncludePackageReferencesDuringMarkupCompilation>
+    </PropertyGroup>
+
+    <Target Name="_RFBCodeWorks_Mvvm_SourceGenerators_WPF" BeforeTargets="Build" Condition="'$(DisplayWpfMarkupMessage)' == 'true' and  $([System.Text.RegularExpressions.Regex]::IsMatch('$(TargetFramework)', '$(DisplayWpkMarkupMessageRegex)'))">
+        <Message
+          Text="      🚨🚨🚨
+              Enabled 'IncludePackageReferencesDuringMarkupCompilation' to allow WPF Intermediate Compilation to run source generators.
+              Consider enabling the feature in the project file :  
+              &lt;IncludePackageReferencesDuringMarkupCompilation>true&lt;/IncludePackageReferencesDuringMarkupCompilation>
+      🚨🚨🚨
+      "
+          Importance="high"
+      />
+    </Target>
+</Project>

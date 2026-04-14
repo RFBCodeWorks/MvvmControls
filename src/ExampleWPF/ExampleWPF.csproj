@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>12.0</LangVersion>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mvvm.Dialogs\Mvvm.Dialogs.csproj" />
+    <ProjectReference Include="..\Mvvm.Controls\Mvvm.Controls.csproj" />
+    <ProjectReference Include="..\Mvvm.Controls.SourceGenerators\SourceGenerators.Roslyn500.csproj" ReferenceOutputAssembly="false" />
+    <Analyzer Include="..\Mvvm.Controls.SourceGenerators\.bin\$(Configuration)\500\RFBCodeWorks.Mvvm.SourceGenerators.dll" />
+  </ItemGroup>
+
+</Project>

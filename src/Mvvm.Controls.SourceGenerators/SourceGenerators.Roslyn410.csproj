@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup Label="AnalyzerProps">
+    <AnalyzerRoslynVersion>4.10</AnalyzerRoslynVersion>
+    <DefineConstants>ROSLYN_4_0_OR_GREATER;$(DefineConstants);</DefineConstants>
+  </PropertyGroup>
+
+  <!-- Move the ..\obj directory then explicitly import the SDK -->
+  <Import Project=".\SourceGenerators.ImportSdk.targets" />
+  <!-- -->
+
+  <!-- Include everything from the Legacy generator, exclude legacy generators and the obj and build folders -->
+  <ItemGroup>
+    <Compile Remove=".\**\*Roslyn3*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.10.0"  PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- Explicitly import the Sdk.targets  -->
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+</Project>

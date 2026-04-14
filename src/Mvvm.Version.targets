@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+    <!-- Set the Version Information for entire solution -->
+    <PropertyGroup>
+        <Version>2.0.1.0</Version>
+		<PackageReleaseNotes>
+- Added generators for VS-2026
+- RFBCodeWorks.Mvvm.UIServices methods are now marked obsolete. Use ICursorService instead.
+- Added UIServices.GetMockCursorService() and UIServices.GetDispatcherCursorService() to provide implementations of ICursorService
+		</PackageReleaseNotes>
+    </PropertyGroup>
+
+</Project>

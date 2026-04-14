@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This .targets file is for the ./src/ projects that get turned into nuget packages. -->
+<Project>
+	<!-- Always sign the assemblies to ensure friendly exposure is working -->
+	<PropertyGroup>
+		<SignAssembly>True</SignAssembly>
+	</PropertyGroup>
+
+	<!-- Only pack in release mode and if 'PackingEnabled' set 'true' -->
+	<PropertyGroup Condition="'$(PackingEnabled)' == 'true'">
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<DocumentationFile>$(OutputPath)/$(AssemblyName).xml</DocumentationFile>
+		
+		<PackageId>$(AssemblyName)</PackageId>
+        <Product>$(AssemblyName)</Product>
+		<PackageOutputPath>..\..\_OutputNuget\</PackageOutputPath>
+	</PropertyGroup>
+	
+	<!-- Nuget Information Below -->
+	<PropertyGroup>
+		<Company />
+		<Authors>Robert Brenckman</Authors>
+        <Copyright>Copyright 2025</Copyright>
+		<PackageProjectUrl>https://github.com/RFBCodeWorks/MvvmControls</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/RFBCodeWorks/MvvmControls</RepositoryUrl>
+		<PackageReadmeFile>Readme.md</PackageReadmeFile>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <PackageLicenseExpression></PackageLicenseExpression>
+	</PropertyGroup>
+	
+</Project>

@@ -1,0 +1,36 @@
+﻿namespace RFBCodeWorks.Mvvm
+{
+    internal static class EventArgSingletons
+    {
+        public static readonly INotifyArgs IsRefreshing = new(nameof(IsRefreshing));
+
+        public static readonly INotifyArgs Text = new(nameof(Text));
+        public static readonly INotifyArgs IsDropDownOpen = new(nameof(IsDropDownOpen));
+        public static readonly INotifyArgs IsEditable = new(nameof(IsEditable));
+        public static readonly INotifyArgs DisplayText = new(nameof(IDisplayTextProvider.DisplayText));
+        public static readonly INotifyArgs ToolTip = new(nameof(IToolTipProvider.ToolTip));
+
+        public static readonly INotifyArgs IsVisible = new(nameof(IControlDefinition.IsVisible));
+        public static readonly INotifyArgs Visibility = new(nameof(IControlDefinition.Visibility));
+        internal static readonly INotifyArgs HiddenMode = new(nameof(Primitives.ControlBase.HiddenMode));
+
+        public static readonly INotifyArgs SelectedIndex = new(nameof(RFBCodeWorks.Mvvm.ISelector.SelectedIndex));
+        public static readonly INotifyArgs SelectedItem = new(nameof(RFBCodeWorks.Mvvm.ISelector.SelectedItem));
+        public static readonly INotifyArgs SelectedValue = new(nameof(RFBCodeWorks.Mvvm.ISelector.SelectedValue));
+        public static readonly INotifyArgs IsEnabled = new(nameof(RFBCodeWorks.Mvvm.ISelector.IsEnabled));
+        public static readonly INotifyArgs IsDefaultState = new(nameof(RFBCodeWorks.Mvvm.Primitives.AbstractTwoStateButton.IsDefaultState));
+
+        public static readonly INotifyArgs Items = new(nameof(IItemSource.Items));
+        public static readonly INotifyArgs DisplayMemberPath = new(nameof(IItemSource.DisplayMemberPath));
+
+        /// <summary> Value </summary>
+        public static readonly INotifyArgs ValueChangedArgs = new INotifyArgs(nameof(Mvvm.IRangeControl.Value));
+
+        /// <summary> Minimum </summary>
+        public static readonly INotifyArgs MinimumChangedArgs = new INotifyArgs(nameof(Mvvm.IRangeControl.Minimum));
+
+        /// <summary> Maximum </summary>
+        public static readonly INotifyArgs MaximumChangedArgs = new INotifyArgs(nameof(Mvvm.IRangeControl.Maximum));
+
+    }
+}

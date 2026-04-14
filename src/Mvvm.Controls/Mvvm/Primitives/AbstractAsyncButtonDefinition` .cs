@@ -1,0 +1,93 @@
+﻿using CommunityToolkit.Mvvm.Input;
+using RFBCodeWorks.Mvvm.Input;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using System.Windows.Input;
+
+#nullable enable
+
+namespace RFBCodeWorks.Mvvm.Primitives
+{
+    /// <summary>
+    /// Abstract base object that inherits from the following:
+    /// <br/> - <see cref="ControlBase"/>
+    /// <br/> - <see cref="IRelayCommand"/>
+    /// <br/> - <see cref="ICommand"/> - Explicitly implemented. <see cref="ICommand.Execute(object)"/> will execute synchronously unless derived class overrides the ICommand.Execute(object) implementation.
+    /// <br/> - <see cref="IToolTipProvider"/>
+    /// <br/> - <see cref="INotifyPropertyChanged"/>
+    /// <br/> - <see cref="IButtonDefinition"/>
+    /// </summary>
+    public abstract class AbstractAsyncButtonDefinition<T> : ControlBase, IButtonDefinition, ICommand
+    {
+        /// <summary> Static method that can be used as the default Func{bool} for <see cref="ICommand.CanExecute(object)"/> </summary>
+        /// <returns><see langword="true"/></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [SuppressMessage("", "IDE0060")]
+        protected static bool ReturnTrue(T ignoredParameter) => true;
+
+        private string _displayText = string.Empty;
+
+        /// <inheritdoc/>
+        public virtual string DisplayText
+        {
+            get => _displayText;
+            set
+            {
+                if (!EqualityComparer<string>.Default.Equals(_displayText, value))
+                {
+                    OnPropertyChanging(EventArgSingletons.DisplayText);
+                    _displayText = value;
+                    OnPropertyChanged(EventArgSingletons.DisplayText);
+                }
+            }
+        }
+
+        /// <inheritdoc cref="ICommand.CanExecute(object)"/>
+        public abstract bool CanExecute(T parameter);
+
+        ///<summary> Start a task that accepts an input of type <typeparamref name="T"/></summary>
+        /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.IAsyncRelayCommand{T}.ExecuteAsync(T)"/>
+        public abstract Task ExecuteAsync(T parameter);
+
+        /// <inheritdoc cref="CommunityToolkit.Mvvm.Input.IAsyncRelayCommand.Cancel"/>
+        public abstract void Cancel();
+
+        /// <inheritdoc/>
+        public abstract void NotifyCanExecuteChanged();
+
+        /// <inheritdoc/>
+        public void NotifyCanExecuteChanged(object? sender, EventArgs e) => NotifyCanExecuteChanged();
+
+        #region < ICommand Explicit Implementation >
+
+        /// <inheritdoc/>
+        public abstract event EventHandler? CanExecuteChanged;
+
+        void ICommand.Execute(object? parameter)
+        {
+            // similar to community tookit
+            // https://github.com/CommunityToolkit/WindowsCommunityToolkit/blob/da6d7d3f6ca9914dbe86d7d394e9a4abef25c9b6/Microsoft.Toolkit.Mvvm/Input/AsyncRelayCommand%7BT%7D.cs#L151
+            _ = ExecuteAsync(AbstractCommand<T>.ThrowIfInvalidParameter(parameter));
+        }
+        
+        bool ICommand.CanExecute(object ?parameter)
+        {
+            // Special case a null value for a value type argument type.
+            // This ensures that no exceptions are thrown during initialization.
+            //https://github.com/CommunityToolkit/dotnet/blob/e8969781afe537ea41a964a15b4ccfee32e095df/src/CommunityToolkit.Mvvm/Input/RelayCommand%7BT%7D.cs#L87
+            if (parameter is null && default(T) is not null)
+            {
+                return false;
+            }
+            base.IsEnabled = CanExecute(AbstractCommand<T>.ThrowIfInvalidParameter(parameter));
+            return base.IsEnabled;
+        }
+
+        #endregion
+    }
+
+}
