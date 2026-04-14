@@ -43,7 +43,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
         //    TextIXValueProvider(el, true,true);
         //}
 
-        private void TextIXValueProvider(IXValueObject provider, bool isWrapper, bool isAttribute)
+        private static void TextIXValueProvider(IXValueObject provider, bool isWrapper, bool isAttribute)
         {
             var valueObj = new XStringSetter(provider);
             bool isAttributeProvider = provider is IXAttributeProvider;
@@ -75,6 +75,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             }
 
             AssertNodeExists(isWrapper);
+            Assert.IsNotNull(provider.Parent);
             provider.Parent.CreateXElement();
             if (provider is IXAttributeProvider attr)
             {

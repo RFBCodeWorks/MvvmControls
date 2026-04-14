@@ -7,7 +7,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
     [TestClass]
     public class XmlBooleanSetterTests
     {
-        private void ModelTest_Null(XBooleanSetter obj)
+        private static void ModelTest_Null(XBooleanSetter obj)
         {
             obj.IsThreeState = true;
             obj.Value = true;
@@ -33,7 +33,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.AreEqual("1", obj.XValueProvider.Value);
             obj.Value = false;
             Assert.AreEqual("0", obj.XValueProvider.Value);
-            ModelTest_Null(obj);
+            XmlBooleanSetterTests.ModelTest_Null(obj);
         }
 
         [TestMethod]
@@ -46,7 +46,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
             Assert.AreEqual("true", obj.XValueProvider.Value);
             obj.Value = false;
             Assert.AreEqual("false", obj.XValueProvider.Value);
-            ModelTest_Null(obj);
+            XmlBooleanSetterTests.ModelTest_Null(obj);
         }
 
 
@@ -86,7 +86,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
         //    TextIXValueProvider(el, true);
         //}
 
-        private void TextIXValueProvider(IXValueObject provider, bool isWrapper)
+        private static void TextIXValueProvider(IXValueObject provider, bool isWrapper)
         {
             var valueObj = XBooleanSetter.CreateBinarySetter(provider);
             bool isAttributeProvider = provider is IXAttributeProvider;
@@ -119,6 +119,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
 
             AssertNodeExists(isWrapper);
             Assert.IsFalse(valueObj.Value);
+            Assert.IsNotNull(provider.Parent);
             provider.Parent.CreateXElement();
 
             if (provider is IXAttributeProvider attr)
@@ -138,7 +139,7 @@ namespace RFBCodeWorks.Mvvm.XmlLinq.Tests
                 provider.Remove();
                 AssertNodeExists(false);
             }
-            ModelTest_Null(valueObj);
+            XmlBooleanSetterTests.ModelTest_Null(valueObj);
         }
     }
 }
