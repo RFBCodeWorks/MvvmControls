@@ -5,8 +5,8 @@
     xmlns:Primitives="clr-namespace:RFBCodeWorks.WPF.Controls.Primitives"
     xmlns:Converters="clr-namespace:RFBCodeWorks.WPF.Converters"
     >
-
-    <!-- Define the Control Templates for the NumericUpDowns -->
+    <!-- Define the template for the IPV4Textbox control in ./WPF/Controls/ -->
+    
     <ControlTemplate x:Key="MaskedStyle" TargetType="{x:Type local:IPV4TextBox}" >
         <local:MaskedTextBox 
             Mask="990.990.990.990"

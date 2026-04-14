@@ -3,11 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:RFBCodeWorks.WPF.Controls"
     xmlns:Primitives="clr-namespace:RFBCodeWorks.WPF.Controls.Primitives"
-    xmlns:ui="using:CommunityToolkit.Uwp.UI"
     >
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/RFBCodeWorks.Mvvm.Controls;component/WPF/Controls/IPV4TextBox/IPV4Textbox.xaml"/>
-        <ResourceDictionary Source="/RFBCodeWorks.Mvvm.Controls;component/WPF/Controls/NumericUpDowns/NumericUpDown.xaml"/>
+        <ResourceDictionary Source="/RFBCodeWorks.Mvvm.Controls;component/Themes/IPV4Textbox.xaml"/>
+        <ResourceDictionary Source="/RFBCodeWorks.Mvvm.Controls;component/Themes/NumericUpDown.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     

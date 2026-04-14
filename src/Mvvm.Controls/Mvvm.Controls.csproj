@@ -159,11 +159,11 @@
         </Otherwise>
     </Choose>
     <ItemGroup>
-        <Page Update="WPF.Controls\IPV4TextBox\Generic.xaml">
+        <Page Update="Themes\IPV4Textbox.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
             <SubType>Designer</SubType>
         </Page>
-        <Page Update="WPF.Controls\NumericUpDowns\Generic.xaml">
+        <Page Update="Themes\NumericUpDown.xaml">
             <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
             <SubType>Designer</SubType>
         </Page>

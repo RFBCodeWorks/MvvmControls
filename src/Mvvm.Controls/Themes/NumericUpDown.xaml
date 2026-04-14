@@ -5,6 +5,8 @@
     xmlns:Primitives="clr-namespace:RFBCodeWorks.WPF.Controls.Primitives"
     xmlns:Converters="clr-namespace:RFBCodeWorks.WPF.Converters"
     >
+    <!--  Style Dictionary for controls in ./WPF/Controls/NumericUpDowns/  -->
+    
     <Style TargetType="RepeatButton" x:Key="NumericButtonStyle">
         <Setter Property="Padding" Value="3"/>
         <Setter Property="Focusable" Value="False"/>
