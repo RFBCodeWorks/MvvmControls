@@ -67,7 +67,13 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <inheritdoc/>
         public abstract event EventHandler? CanExecuteChanged;
 
-        void ICommand.Execute(object? parameter) => ExecuteAsync(AbstractCommand<T>.ThrowIfInvalidParameter(parameter)).Wait();
+        void ICommand.Execute(object? parameter)
+        {
+            // similar to community tookit
+            // https://github.com/CommunityToolkit/WindowsCommunityToolkit/blob/da6d7d3f6ca9914dbe86d7d394e9a4abef25c9b6/Microsoft.Toolkit.Mvvm/Input/AsyncRelayCommand%7BT%7D.cs#L151
+            _ = ExecuteAsync(AbstractCommand<T>.ThrowIfInvalidParameter(parameter));
+        }
+        
         bool ICommand.CanExecute(object ?parameter)
         {
             // Special case a null value for a value type argument type.

@@ -98,11 +98,13 @@ namespace RFBCodeWorks.Mvvm.Primitives
             }
             finally
             {
+                bool isRunningNow;
                 lock (collectionLock)
                 {
                     runningTasks.Remove(runningTask);
-                    SetProperty(ref isRunning, runningTasks.Count > 0, nameof(IsRunning));
+                    isRunningNow = runningTasks.Count > 0;
                 }
+                SetProperty(ref isRunning, isRunningNow, nameof(IsRunning));
             }
         }
 

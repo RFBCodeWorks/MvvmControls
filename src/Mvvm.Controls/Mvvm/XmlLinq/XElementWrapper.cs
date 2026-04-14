@@ -46,8 +46,9 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
             base.Changed += XElementChanged;
         }
 
-        IXElementProvider IXObjectProvider.Parent
+        IXElementProvider? IXObjectProvider.Parent
             => this.Parent is XElementWrapper xw ? xw
+            : this.Parent is IXElementProvider xp ? xp
             : this.Parent is not null ? new XElementWrapper(this.Parent)
             : null!;
 

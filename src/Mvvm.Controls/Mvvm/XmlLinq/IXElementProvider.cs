@@ -50,9 +50,8 @@ namespace RFBCodeWorks.Mvvm.XmlLinq
 
         /// <summary>
         /// Get the parent IXElementProvider object. 
-        /// <br/> This will be null if the parent of the provider is an XDocument object, or if the object has no parent (does not reside within the tree)
         /// </summary>
-        IXElementProvider Parent { get; }
+        IXElementProvider? Parent { get; }
 
         /// <summary>
         /// Gets the XObject from the provider (Typically either an XAttribute or an XElement)

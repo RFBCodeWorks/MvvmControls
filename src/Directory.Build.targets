@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- This .targets file is for the ./src/ projects that get turrned into nuget packages. -->
+<!-- This .targets file is for the ./src/ projects that get turned into nuget packages. -->
 <Project>
 	<!-- Always sign the assemblies to ensure friendly exposure is working -->
 	<PropertyGroup>

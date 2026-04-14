@@ -56,7 +56,13 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <inheritdoc/>
         public abstract event EventHandler? CanExecuteChanged;
 
-        void ICommand.Execute(object? parameter) => ExecuteAsync().Wait();
+        void ICommand.Execute(object? parameter)
+        {
+            // same as community toolkit
+            // https://github.com/CommunityToolkit/WindowsCommunityToolkit/blob/da6d7d3f6ca9914dbe86d7d394e9a4abef25c9b6/Microsoft.Toolkit.Mvvm/Input/AsyncRelayCommand.cs#L147
+            _ = ExecuteAsync();
+        }
+
         bool ICommand.CanExecute(object? parameter)
         {
             base.IsEnabled = CanExecute();
