@@ -28,7 +28,9 @@ namespace RFBCodeWorks.Mvvm
         ISelector, 
         ISelector<T>,
         IRefreshableItemSource,
-        IRefreshableItemSource<T>
+        IRefreshableItemSource<T>,
+        IRefreshableSelector,
+        IRefreshableSelector<T>
         where TList : IList<T>
     {
 

@@ -9,6 +9,16 @@ using System.Windows;
 
 namespace RFBCodeWorks.Mvvm
 {
+    /// <summary>
+    /// Represents an <see cref="IRefreshableItemSource{T}"/> that is also an <see cref="ISelector{T}"/>
+    /// </summary>
+    public interface IRefreshableSelector<T> : IRefreshableItemSource<T>, ISelector<T>, IRefreshableSelector { }
+
+    /// <summary>
+    /// Represents an <see cref="IRefreshableItemSource"/> that is also an <see cref="ISelector"/>
+    /// </summary>
+    public interface IRefreshableSelector : IRefreshableItemSource, ISelector { }
+
     /// <inheritdoc cref="IRefreshableItemSource" />
     /// <inheritdoc cref="Primitives.ItemSource{T, E}"/>
     public interface IRefreshableItemSource<T> : IRefreshableItemSource, IItemSource<T> { }
@@ -18,6 +28,11 @@ namespace RFBCodeWorks.Mvvm
     /// </summary>
     public interface IRefreshableItemSource : IItemSource
     {
+        /// <summary>
+        /// A boolean value to indicate if the collection is currently refreshing.
+        /// </summary>
+        bool IsRefreshing { get; }
+
         /// <summary>
         /// A RelayCommand that can be used to refresh the collection
         /// </summary>
