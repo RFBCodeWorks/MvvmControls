@@ -92,7 +92,7 @@ namespace RFBCodeWorks.WPF.Behaviors
         }
 
         /// <summary>
-        /// Unbind Visibiltiy, IsEnabled, and ToolTip from the specified <paramref name="controlVM"/> if they are bound to that object.
+        /// Unbind Visibility, IsEnabled, and ToolTip from the specified <paramref name="controlVM"/> if they are bound to that object.
         /// </summary>
         /// <remarks>
         /// If not bound to the supplied <paramref name="controlVM"/>, the binding stays as is.

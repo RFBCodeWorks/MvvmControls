@@ -41,7 +41,8 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.Refreshable
 
         public bool Equals(OnDataChangedAttributeData other) =>
             CommandsToNotify.SequenceEqual(other.CommandsToNotify)
-            && ActionsToInvoke.SequenceEqual(other.ActionsToInvoke);
+            && ActionsToInvoke.SequenceEqual(other.ActionsToInvoke)
+            && SelectorActionsToInvoke.Equals(other.SelectorActionsToInvoke);
 
         public override bool Equals(object obj) => obj is OnDataChangedAttributeData other && Equals(other);
 

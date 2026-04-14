@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -54,8 +55,14 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// <summary>An action that will take place if the task throws an exception</summary>
         protected readonly Action<Exception>? ErrorHandler;
         private readonly ObservableCollection<Task> runningTasks;
-        private object collectionLock = new object();
         private bool isRunning;
+
+#if NET10_0_OR_GREATER
+        private readonly System.Threading.Lock collectionLock = new();
+#else
+        private readonly object collectionLock = new();
+#endif
+        
 
         /// <inheritdoc />
         public IEnumerable<Task> RunningTasks => runningTasks;
@@ -99,10 +106,15 @@ namespace RFBCodeWorks.Mvvm.Primitives
                 bool isRunningNow;
                 lock (collectionLock)
                 {
-                    runningTasks.Remove(runningTask);
+                    while (runningTasks.Remove(runningTask)) { } // remove all instances of this task -- should only be 1
                     isRunningNow = runningTasks.Count > 0;
+                    if (isRunningNow)
+                    {
+                        ExecutionTask = runningTasks[runningTasks.Count - 1];
+                    }
                 }
-                SetProperty(ref isRunning, isRunningNow, nameof(IsRunning));
+                OnPropertyChanged(nameof(ExecutionTask)); // notify completion or that it is now a different task
+                SetProperty(ref isRunning, isRunningNow, nameof(IsRunning));                
             }
         }
 

@@ -34,6 +34,14 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.ButtonGenerator
             SemanticModel = semanticModel ?? throw new ArgumentNullException(nameof(semanticModel));
             AttributeData = attributeData ?? throw new ArgumentNullException(nameof(attributeData));
 
+            PropertyName = "";
+            DisplayText = "";
+            ToolTip = "";
+            CanExecute = "";
+            AllowConcurrentExecutions = false;
+            FlowExceptionsToTaskScheduler = false;
+            IncludeCancelCommand = false;
+
             foreach (var kvp in attributeData.NamedArguments)
             {
                 switch (kvp.Key)

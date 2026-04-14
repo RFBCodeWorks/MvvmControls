@@ -74,6 +74,12 @@ namespace RFBCodeWorks.Mvvm.Input
         /// <summary>An action that will take place if the task throws an <see cref="OperationCanceledException"/>. The input parameter will be passed into this action when invoked.</summary>
         private readonly Action<T> CancelReaction;
 
+#if NET10_0_OR_GREATER
+        private readonly System.Threading.Lock cancellationTokenLock = new();
+#else
+        private readonly object cancellationTokenLock = new();
+#endif
+
         /// <summary>
         /// Set <see langword="true"/> to allow this command to start multiple tasks and run them concurrently. <br/>
         /// Default value is <see langword="false"/>
@@ -153,7 +159,7 @@ namespace RFBCodeWorks.Mvvm.Input
                 //Generate the cancellable task
                 var source = new CancellationTokenSource();
                 Task task = CancellableExecuteAction(parameter, source.Token);
-                lock (CancellationTokens)
+                lock (cancellationTokenLock)
                     CancellationTokens.Add(task, source);
 
                 try
@@ -172,7 +178,7 @@ namespace RFBCodeWorks.Mvvm.Input
                 }
                 finally
                 {
-                    lock (CancellationTokens)
+                    lock (cancellationTokenLock)
                         CancellationTokens.Remove(task);
                 }
             }
