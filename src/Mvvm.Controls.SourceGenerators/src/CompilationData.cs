@@ -51,34 +51,46 @@ namespace RFBCodeWorks.Mvvm.SourceGenerators.src
             if (compilation.Assembly
                 .GetAttributes()
                 .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == "System.Runtime.Versioning.TargetFrameworkAttribute")
-                ?.ConstructorArguments.FirstOrDefault().Value is string tfm)
+                ?.ConstructorArguments.FirstOrDefault().Value is string tfm
+                && TryParseTargetFrameworkMoniker(tfm, out var frameworkIdentifier, out var version))
             {
-                if (tfm.Contains("NETFramework"))
-                    return TargetFramework.NetFramework;
-
-                switch (tfm)
+                switch (frameworkIdentifier)
                 {
-                    case ".NETStandard,Version=v2.0": return TargetFramework.NetStandard2_0;
-                    case ".NETStandard,Version=v2.1": return TargetFramework.NetStandard2_1;
-                    case ".NETCoreApp,Version=v3.1": return TargetFramework.NetCore31;
-                    case ".NETCoreApp,Version=v5.0": return TargetFramework.Net5;
-                    case ".NETCoreApp,Version=v6.0": return TargetFramework.Net6;
-                    case ".NETCoreApp,Version=v7.0":
-                        return TargetFramework.Net7;
-                    case ".NETCoreApp,Version=v8.0": return TargetFramework.Net8_OrNewer;
-                    default:
-                        var match = Regex.Match(tfm, @"Version=v(?<major>\d+)(\.(?<minor>\d+))?");
-                        if (match.Success)
-                        {
-                            int major = int.Parse(match.Groups["major"].Value);
-                            if (major >= 8) return TargetFramework.Net8_OrNewer;
-                            if (major == 7) return TargetFramework.Net7;
-                            if (major == 3) return TargetFramework.NetStandard2_0;
-                        }
+                    case ".NETFramework":
+                        return TargetFramework.NetFramework;
+                    case ".NETStandard":
+                        if (version.Major == 2 && version.Minor == 0) return TargetFramework.NetStandard2_0;
+                        if (version.Major == 2 && version.Minor == 1) return TargetFramework.NetStandard2_1;
+                        break;
+                    case ".NETCoreApp":
+                        if (version.Major == 3 && version.Minor == 1) return TargetFramework.NetCore31;
+                        if (version.Major == 5) return TargetFramework.Net5;
+                        if (version.Major == 6) return TargetFramework.Net6;
+                        if (version.Major == 7) return TargetFramework.Net7;
+                        if (version.Major >= 8) return TargetFramework.Net8_OrNewer;
                         break;
                 }
             }
             return TargetFramework.Unknown;
+        }
+
+        private static bool TryParseTargetFrameworkMoniker(string tfm, out string frameworkIdentifier, out Version version)
+        {
+            frameworkIdentifier = null;
+            version = null;
+
+            var match = Regex.Match(tfm, @"^(?<identifier>[^,]+),Version=v(?<major>\d+)(\.(?<minor>\d+))?$");
+            if (!match.Success)
+            {
+                return false;
+            }
+
+            frameworkIdentifier = match.Groups["identifier"].Value;
+            var major = int.Parse(match.Groups["major"].Value);
+            var minorGroup = match.Groups["minor"];
+            var minor = minorGroup.Success ? int.Parse(minorGroup.Value) : 0;
+            version = new Version(major, minor);
+            return true;
         }
     }
 
