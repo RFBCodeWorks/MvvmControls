@@ -50,7 +50,7 @@ namespace RFBCodeWorks.Mvvm
         {
             _refresh = refresh;
             _canRefresh = canRefresh ?? ReturnTrue;
-            itemsInitialized = !refreshOnFirstCollectionRequest;
+            itemsInitialized = SetRequiresInitialization(refreshOnFirstCollectionRequest);
         }
 
         /// <inheritdoc cref="RefreshableSelector{T, TList, TSelectedValue}.RefreshableSelector(Func{TList}, Func{bool}, Action, Action, bool)"/>
@@ -67,7 +67,7 @@ namespace RFBCodeWorks.Mvvm
             _cancellableRefreshAsync = (c) => refreshAsync();
             _cancelRefreshCommand = InactiveButton.Instance;
             _canRefresh = canRefresh ?? ReturnTrue;
-            itemsInitialized = !refreshOnFirstCollectionRequest;
+            itemsInitialized = SetRequiresInitialization(refreshOnFirstCollectionRequest);
         }
 
         /// <inheritdoc cref="RefreshableSelector{T, TList, TSelectedValue}.RefreshableSelector(Func{TList}, Func{bool}, Action, Action, bool)"/>
@@ -81,7 +81,7 @@ namespace RFBCodeWorks.Mvvm
         {
             _cancellableRefreshAsync = refreshAsyncCancellable;
             _canRefresh = canRefresh ?? ReturnTrue;
-            itemsInitialized = !refreshOnFirstCollectionRequest;
+            itemsInitialized = SetRequiresInitialization(refreshOnFirstCollectionRequest);
         }
 
         /// <inheritdoc cref="RefreshableSelector{T, TList, TSelectedValue}.RefreshableSelector(Func{TList}, Func{bool}, Action, Action, bool)"/>
@@ -91,7 +91,7 @@ namespace RFBCodeWorks.Mvvm
 
         private IRelayCommand? _refreshCommand;
         private ICommand? _cancelRefreshCommand;
-        private bool itemsInitialized;
+        private int itemsInitialized;
         private int _isRefreshing;
         private readonly Func<bool> _canRefresh;
         private readonly Func<TList>? _refresh;
@@ -103,9 +103,8 @@ namespace RFBCodeWorks.Mvvm
         {
             get
             {
-                if (!itemsInitialized)
+                if (itemsInitialized.CompareExchange(1, -1))
                 {
-                    itemsInitialized = true;
                     RefreshCommand.Execute(null);
                 }
                 return base.Items;
@@ -113,7 +112,7 @@ namespace RFBCodeWorks.Mvvm
             set
             {
                 base.Items = value;
-                itemsInitialized = true;
+                itemsInitialized = 1;
             }
         }
 
@@ -125,10 +124,11 @@ namespace RFBCodeWorks.Mvvm
             get => _isRefreshing == 1;
             private set
             {
-                if (value != IsRefreshing)
+                int newValue = value ? 1 : 0;
+                if (_isRefreshing != newValue)
                 {
                     OnPropertyChanging(EventArgSingletons.IsRefreshing);
-                    _isRefreshing = value ? 1 : 0;
+                    _isRefreshing = newValue;
                     OnPropertyChanged(EventArgSingletons.IsRefreshing);
                 }
             }
@@ -165,10 +165,18 @@ namespace RFBCodeWorks.Mvvm
         private void RefreshAction()
         {
             if (_refresh is null) return;
+            var tcs = new TaskCompletionSource<bool>();
+            _isRefreshingTcs = tcs.Task;
             try
             {
                 IsRefreshing = true;
-                Items = _refresh();
+                var result = _refresh();
+                tcs.SetResult(true);
+                Items = result;
+            }
+            catch(Exception e)
+            {
+                tcs.SetException(e);
             }
             finally
             {
@@ -188,9 +196,10 @@ namespace RFBCodeWorks.Mvvm
             }
 
             // this thread starts the refresh
+            OnPropertyChanging(EventArgSingletons.IsRefreshing);
             var task =  DoRefreshTask(token);
             _isRefreshingTcs = task;
-            OnPropertyChanged(nameof(IsRefreshing));
+            OnPropertyChanged(EventArgSingletons.IsRefreshing);
             return task;
         }
 
@@ -203,10 +212,149 @@ namespace RFBCodeWorks.Mvvm
             }
             finally
             {
+                OnPropertyChanging(EventArgSingletons.IsRefreshing);
                 Interlocked.Exchange(ref _isRefreshing, 0);
-                OnPropertyChanged(nameof(IsRefreshing));
+                OnPropertyChanged(EventArgSingletons.IsRefreshing);
             }
         }
+
+        private void ResetInitializedState() => Interlocked.Exchange(ref itemsInitialized, 0);
+        private bool RequiresInitialization() => IsRefreshing == false && Interlocked.Exchange(ref itemsInitialized, 1) < 1;
+        private static int SetRequiresInitialization(bool refreshOnFirstCollectionRequest) => refreshOnFirstCollectionRequest ? -1 : 0;
+
+#if NET8_0_OR_GREATER
+        [System.Diagnostics.CodeAnalysis.DoesNotReturn]
+#endif
+        private static void ThrowRefreshFailedException(string message = "Collection initialization failed", Exception? innerException = null)
+            => throw new RefreshFailedException(message, innerException);
+
+        /// <summary>
+        /// Checks if the <see cref="Items"/> collection has been initialized.
+        /// <br/> Will only trigger a refresh if the collection has not been initialized yet.
+        /// </summary>
+        /// <param name="maxWaitTime">
+        /// <see langword="Note:"/>  
+        /// <br/> - This parameter will only take effect for asynchronous refreshes that respect cancellation, or if the refresh was already triggered from another thread.
+        /// <br/> - <see cref="EnsureInitializedAsync(CancellationToken)"/> should be preferred where possible, especially from a UI thread.
+        /// <para/> Maximum time delay to block the thread while waiting for an asynchronous refresh to complete.
+        /// <br/> If not specified, defaults to 3 seconds.
+        /// </param>
+        /// <exception cref="RefreshFailedException" />
+        /// <exception cref="OperationCanceledException" />
+        public void EnsureInitialized(TimeSpan? maxWaitTime = null)
+        {
+            // Call the specialized method for asynchronous waiting
+            if (RefreshCommand is IAsyncRelayCommand)
+            {
+                using CancellationTokenSource waitTime = new(maxWaitTime ?? TimeSpan.FromMilliseconds(3000));
+                try
+                {
+                    EnsureInitializedAsync(waitTime.Token).Wait(waitTime.Token);
+                    return;
+                }
+                catch (OperationCanceledException e) when (waitTime.IsCancellationRequested)
+                {
+                    ThrowRefreshFailedException("Exceeded maximum wait time for asynchronous collection initialization.", e);
+                }
+            }
+
+            // synchronous command logic
+            bool usingToken = false;
+            try
+            {
+                if (RequiresInitialization())
+                {
+                    if (RefreshCommand.CanExecute(null) == false)
+                    {
+                        ThrowRefreshFailedException("Unable to initialize collection: RefreshCommand.CanExecute() returned false");
+                    }
+                    else
+                    {
+                        RefreshCommand.Execute(null);
+                    }
+                }
+                else if (IsRefreshing && _isRefreshingTcs is not null)
+                {
+                    usingToken = true;
+                    using CancellationTokenSource waitTime = new(maxWaitTime ?? TimeSpan.FromMilliseconds(3000));
+                    _isRefreshingTcs.Wait(waitTime.Token);
+                }
+            }
+            catch (RefreshFailedException) { ResetInitializedState(); throw; }
+            catch (OperationCanceledException e) when (usingToken)
+            {
+                ResetInitializedState();
+                ThrowRefreshFailedException("Exceeded maximum wait time for collection initialization.", e);
+            }
+            catch (Exception e)
+            {
+                ResetInitializedState();
+                ThrowRefreshFailedException(innerException: e);
+            }
+            if (Items is null)
+            {
+                ResetInitializedState();
+                ThrowRefreshFailedException("Collection initialization failed: Items collection is null.");
+            }
+        }
+
+        /// <summary>
+        /// Checks if the collection has been initialized. 
+        /// <br/> Will only trigger a refresh if the collection has not been initialized yet.
+        /// </summary>
+        /// <exception cref="RefreshFailedException" />
+        /// <exception cref="OperationCanceledException" />
+        public async Task EnsureInitializedAsync(CancellationToken token)
+        {
+            try
+            {
+                if (RequiresInitialization())
+                {
+                    if (RefreshCommand.CanExecute(null) == false)
+                    {
+                        ThrowRefreshFailedException("Unable to initialize collection: RefreshCommand.CanExecute() returned false");
+                    }
+                    await RefreshAsync(token);
+                }
+                else if (RefreshCommand is IAsyncRelayCommand asyncCommand && asyncCommand.ExecutionTask is not null)
+                {
+                    var task = asyncCommand.ExecutionTask;
+                    if (task.Status < TaskStatus.RanToCompletion)
+                    {
+                        var tcs = new TaskCompletionSource<object>();
+                        using var reg = token.Register(() => tcs.SetCanceled());
+                        var completedTask = await Task.WhenAny(tcs.Task, task); // returns when cancellation is requested or the refresh task completes
+                        if (completedTask == tcs.Task)
+                        {
+                            token.ThrowIfCancellationRequested();
+                        }
+                    }
+                    await task;
+                }
+
+                else if (IsRefreshing)
+                {
+                    // handle synchronous refresh from another thread
+                    while (IsRefreshing)
+                    {
+                        await Task.Delay(50, token);
+                    }
+                }
+            }
+            catch (OperationCanceledException) { ResetInitializedState(); throw; }
+            catch (RefreshFailedException) { ResetInitializedState(); throw; }
+            catch (Exception e)
+            {
+                ResetInitializedState();
+                ThrowRefreshFailedException(innerException: e);
+            }
+            if (Items is null)
+            {
+                ResetInitializedState();
+                ThrowRefreshFailedException("Collection initialization failed: Items collection is null.");
+            }
+        }
+
         
 
         /// <inheritdoc/>

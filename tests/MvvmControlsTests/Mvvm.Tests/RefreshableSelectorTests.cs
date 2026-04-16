@@ -21,19 +21,147 @@ namespace RFBCodeWorks.Mvvm.Tests
             await Task.Delay(250, token);
             return GetIntegers();
         }
+        private static int[] Throws() => throw new NotImplementedException();
+        private async Task<int[]> ThrowsAsync()
+        {
+            await Task.Delay(100, TestContext.CancellationToken);
+            return Throws();
+        }
+
+        private static void AssertInitialCount(ISelector selector, bool refreshOnFirstRequest, bool isAsync)
+        {
+            if (refreshOnFirstRequest && !isAsync)
+                Assert.HasCount(6, selector.Items, "\n >> Collection was not refreshed when accessing Selector.Items");
+            else
+                Assert.HasCount(0, selector.Items, "\n >> Collection had values unexpectedly on first access of Selector.Items");
+        }
 
         [TestMethod]
         [DataRow(true)]
         [DataRow(false)]
-        public void Test_RefreshOnInitialize_Synchronous(bool enabled)
+        public void Test_EnsureInitialized_DoesNotRefreshIfAlreadyInitialized(bool refreshOnFirstRequest)
         {
-            var selector = new RefreshableSelector<int, int[], object>(GetIntegers, refreshOnFirstCollectionRequest: enabled);
-            
-            if (enabled)
-                Assert.HasCount(6, selector.Items);
-            else
-                Assert.HasCount(0, selector.Items);
+            int count = 0;
+            int[] Run() { count++; return GetIntegers(); }
+            var selector = new RefreshableSelector<int, int[], object>(Run, refreshOnFirstCollectionRequest: refreshOnFirstRequest);
+            AssertInitialCount(selector, refreshOnFirstRequest, false);
+            Assert.AreEqual(refreshOnFirstRequest ? 1 : 0, count);
 
+            // reset for ease of testing
+            count = 0;
+            selector.Refresh();
+            Assert.AreEqual(1, count, "\n >> count was not updated after refresh");
+            selector.EnsureInitialized();
+            Assert.AreEqual(1, count, "\n >> count was updated unexpected after EnsureInitialized");
+            Assert.HasCount(6, selector.Items, "\n >> Collection was not expected count after EnsureInitialized was called");
+        }
+
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public async Task Test_EnsureInitializedAsync_DoesNotRefreshIfAlreadyInitialized(bool refreshOnFirstRequest)
+        {
+            int count = 0;
+            Task<int[]> Run() { count++; return GetIntegersAsync(Token); }
+            var selector = new RefreshableSelector<int, int[], object>(Run, refreshOnFirstCollectionRequest: refreshOnFirstRequest);
+            AssertInitialCount(selector, refreshOnFirstRequest, true);
+            Assert.AreEqual(refreshOnFirstRequest ? 1 : 0, count);
+            await selector.EnsureInitializedAsync(Token); // waits for first refresh complete
+            Assert.AreEqual(1, count, "\n >> count was not updated on first refresh");
+
+            await selector.RefreshAsync(Token);
+            Assert.AreEqual(2, count, "\n >> count was not updated after refresh");
+            await selector.EnsureInitializedAsync(Token);
+            Assert.AreEqual(2, count, "\n >> count was updated unexpected after EnsureInitializedAsync");
+            Assert.HasCount(6, selector.Items, "\n >> Collection was not expected count after EnsureInitializedAsync was called");
+        }
+
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public void Test_EnsureInitialized(bool refreshOnFirstRequest)
+        {
+            var selector = new RefreshableSelector<int, int[], object>(GetIntegers, refreshOnFirstCollectionRequest: refreshOnFirstRequest);
+            AssertInitialCount(selector, refreshOnFirstRequest, false);
+            selector.EnsureInitialized();
+            Assert.HasCount(6, selector.Items, "\n >> Collection was not expected count after EnsureInitialized was called");
+        }
+
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public void Test_EnsureInitialized_AsynchronousRefresh(bool refreshOnFirstRequest)
+        {
+            var selector = new RefreshableSelector<int, int[], object>(GetIntegersAsync, refreshOnFirstCollectionRequest: refreshOnFirstRequest);
+            AssertInitialCount(selector, refreshOnFirstRequest, true);
+            selector.EnsureInitialized();
+            Assert.HasCount(6, selector.Items, "\n >> Collection was not expected count after EnsureInitialized was called");
+        }
+
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public async Task Test_EnsureInitializedAsync(bool refreshOnFirstRequest)
+        {
+            var selector = new RefreshableSelector<int, int[], object>(GetIntegersAsync, refreshOnFirstCollectionRequest: refreshOnFirstRequest);
+            AssertInitialCount(selector, refreshOnFirstRequest, true);
+            await selector.EnsureInitializedAsync(TestContext.CancellationToken);
+            Assert.HasCount(6, selector.Items, "\n >> Collection was not expected count after EnsureInitializedAsync was called");
+        }
+
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public async Task Test_EnsureInitializedAsync_SynchronousRefresh(bool refreshOnFirstRequest)
+        {
+            var selector = new RefreshableSelector<int, int[], object>(GetIntegers, refreshOnFirstCollectionRequest: refreshOnFirstRequest);
+            AssertInitialCount(selector, refreshOnFirstRequest, false);
+            await selector.EnsureInitializedAsync(TestContext.CancellationToken);
+            Assert.HasCount(6, selector.Items, "\n >> Collection was not expected count after EnsureInitializedAsync was called");
+        }
+
+        [TestMethod]
+        public void Test_EnsureInitialized_Throws_SynchronousRefresh()
+        {
+            var selector = new RefreshableSelector<int, int[], object>(Throws);
+            Assert.Throws<RefreshFailedException>(() => selector.EnsureInitialized());
+        }
+
+        [TestMethod]
+        public void Test_EnsureInitialized_Throws_AsynchronousRefresh()
+        {
+            var selector = new RefreshableSelector<int, int[], object>(ThrowsAsync);
+            Assert.Throws<RefreshFailedException>(() => selector.EnsureInitialized());
+        }
+
+        [TestMethod]
+        public void Test_EnsureInitialized_Throws_ExceedsWaitTime()
+        {
+            var selector = new RefreshableSelector<int, int[], object>(ThrowsAsync);
+            Assert.Throws<RefreshFailedException>(() => selector.EnsureInitialized(TimeSpan.Zero));
+        }
+
+        [TestMethod]
+        public async Task Test_EnsureInitializedAsync_Throws_SynchronousRefresh()
+        {
+            var selector = new RefreshableSelector<int, int[], object>(Throws);
+            await Assert.ThrowsAsync<RefreshFailedException>(() => selector.EnsureInitializedAsync(TestContext.CancellationToken));
+        }
+
+        [TestMethod]
+        public async Task Test_EnsureInitializedAsync_Throws_AsynchronousRefresh()
+        {
+            var selector = new RefreshableSelector<int, int[], object>(ThrowsAsync);
+            await Assert.ThrowsAsync<RefreshFailedException>(() => selector.EnsureInitializedAsync(TestContext.CancellationToken));
+        }
+
+        [TestMethod]
+        [DataRow(true)]
+        [DataRow(false)]
+        public void Test_RefreshOnInitialize_Synchronous(bool refreshOnFirstRequest)
+        {
+            var selector = new RefreshableSelector<int, int[], object>(GetIntegers, refreshOnFirstCollectionRequest: refreshOnFirstRequest);
+            AssertInitialCount(selector, refreshOnFirstRequest, false);
             Assert.IsFalse(selector.IsRefreshing);
         }
 
@@ -104,20 +232,28 @@ namespace RFBCodeWorks.Mvvm.Tests
 
             var t1 = command.ExecuteAsync(Token);
             Assert.HasCount(1, tasks);
+            
             var t2 = command.ExecuteAsync(Token);
             Assert.HasCount(2, tasks);
+
             await Assert.ThrowsAsync<OperationCanceledException>(() => t1);
-            Assert.IsTrue(t1.IsCompleted);
+            Assert.IsTrue(t1.IsCanceled);
+
             Assert.IsFalse(t2.IsCompleted);
+            factory.LastTCS!.SetResult([]);
+            Assert.IsTrue(t2.IsCompleted);
         }
         private class TaskFactory
         {
+            public TaskCompletionSource<int[]>? LastTCS { get; private set; }
+
             public event EventHandler<(TaskCompletionSource<int[]> tcs, CancellationTokenRegistration reg)>? Created;
             public Task<int[]> Create(CancellationToken token)
             {
                 var tcs = new TaskCompletionSource<int[]>();
                 var reg = token.Register(() => tcs.SetCanceled());
                 Created?.Invoke(this, (tcs, reg));
+                LastTCS = tcs;
                 return tcs.Task;
             }
         }

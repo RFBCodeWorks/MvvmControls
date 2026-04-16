@@ -93,6 +93,7 @@
             <PackagePath></PackagePath>
             <Pack>True</Pack>
         </None>
+		<None Remove="obj\**" />
     </ItemGroup>
 
 
