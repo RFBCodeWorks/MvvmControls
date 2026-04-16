@@ -52,7 +52,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             selector.Refresh();
             Assert.AreEqual(1, count, "\n >> count was not updated after refresh");
             selector.EnsureInitialized();
-            Assert.AreEqual(1, count, "\n >> count was updated unexpected after EnsureInitialize");
+            Assert.AreEqual(1, count, "\n >> count was updated unexpected after EnsureInitialized");
             Assert.HasCount(6, selector.Items, "\n >> Collection was not expected count after EnsureInitialized was called");
         }
 
@@ -72,8 +72,8 @@ namespace RFBCodeWorks.Mvvm.Tests
             await selector.RefreshAsync(Token);
             Assert.AreEqual(2, count, "\n >> count was not updated after refresh");
             await selector.EnsureInitializedAsync(Token);
-            Assert.AreEqual(2, count, "\n >> count was updated unexpected after EnsureInitialize");
-            Assert.HasCount(6, selector.Items, "\n >> Collection was not expected count after EnsureInitialized was called");
+            Assert.AreEqual(2, count, "\n >> count was updated unexpected after EnsureInitializedAsync");
+            Assert.HasCount(6, selector.Items, "\n >> Collection was not expected count after EnsureInitializedAsync was called");
         }
 
         [TestMethod]
@@ -128,7 +128,7 @@ namespace RFBCodeWorks.Mvvm.Tests
         }
 
         [TestMethod]
-        public void Test_EnsureInitialized_Throws_AynchronousRefresh()
+        public void Test_EnsureInitialized_Throws_AsynchronousRefresh()
         {
             var selector = new RefreshableSelector<int, int[], object>(ThrowsAsync);
             Assert.Throws<RefreshFailedException>(() => selector.EnsureInitialized());

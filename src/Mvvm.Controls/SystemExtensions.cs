@@ -7,9 +7,9 @@ namespace RFBCodeWorks
     internal static class SystemExtensions
     {
         /// <summary>
-        /// Compares the <paramref name="value"/> to the <paramref name="expectedValue"/>. If the match, set the value to <paramref name="newValue"/> and returns true.
+        /// Compares the <paramref name="value"/> to the <paramref name="expectedValue"/>. If they match, sets the value to <paramref name="newValue"/> and returns true.
         /// </summary>
-        /// <returns>Returns true if the original value = the <paramref name="expectedValue"/></returns>
+        /// <returns>Returns true if the original value equals the <paramref name="expectedValue"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool CompareExchange(this ref int value, int newValue, int expectedValue)
         {
