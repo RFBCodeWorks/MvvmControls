@@ -204,8 +204,9 @@ namespace RFBCodeWorks.Mvvm
             }
             finally
             {
+                OnPropertyChanging(EventArgSingletons.IsRefreshing);
                 Interlocked.Exchange(ref _isRefreshing, 0);
-                OnPropertyChanged(nameof(IsRefreshing));
+                OnPropertyChanged(EventArgSingletons.IsRefreshing);
             }
         }
 
