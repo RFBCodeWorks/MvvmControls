@@ -5,7 +5,7 @@ using System;
 namespace RFBCodeWorks.Mvvm
 {
     /// <summary>
-    /// An exception that occurs when the refresh of a <see cref="RefreshableSelector{T, TList, TSelectedValue}"/> fails to refresh
+    /// An exception thrown when a <see cref="RefreshableSelector{T, TList, TSelectedValue}"/> refresh operation fails.
     /// </summary>
     public class RefreshFailedException : Exception
     {
