@@ -1,4 +1,4 @@
-
+[![Build and Test](https://github.com/RFBCodeWorks/MvvmControls/actions/workflows/build-and-test.yml/badge.svg?branch=master&event=push)](https://github.com/RFBCodeWorks/MvvmControls/actions/workflows/build-and-test.yml)
 
 # MvvmControls
  This is a Library designed to ease working within an MVVM framework, and is meant to consolidate boiler-plate ViewModel interactions for common WPF controls into pre-built classes. 
