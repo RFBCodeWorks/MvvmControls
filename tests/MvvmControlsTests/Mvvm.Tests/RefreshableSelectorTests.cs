@@ -131,7 +131,7 @@ namespace RFBCodeWorks.Mvvm.Tests
         public void Test_EnsureInitialized_Throws_AsynchronousRefresh()
         {
             var selector = new RefreshableSelector<int, int[], object>(ThrowsAsync);
-            Assert.Throws<RefreshFailedException>(() => selector.EnsureInitialized());
+            Assert.Throws<RefreshFailedException>(() => selector.EnsureInitialized(TimeSpan.FromMinutes(10)));
         }
 
         [TestMethod]

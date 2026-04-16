@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -177,6 +178,7 @@ namespace RFBCodeWorks.Mvvm
             catch(Exception e)
             {
                 tcs.SetException(e);
+                throw;
             }
             finally
             {
@@ -255,6 +257,17 @@ namespace RFBCodeWorks.Mvvm
                 catch (OperationCanceledException e) when (waitTime.IsCancellationRequested)
                 {
                     ThrowRefreshFailedException("Exceeded maximum wait time for asynchronous collection initialization.", e);
+                }
+                catch (AggregateException eWaitForTask)
+                {
+                    // Is this just a wrapped exception?
+                    // https://gist.github.com/tintoy/0763a1f53ee62510e681a05f46772849
+                    AggregateException flattenedAggregate = eWaitForTask.Flatten();
+                    if (flattenedAggregate.InnerExceptions.Count != 1)
+                        throw; // Nope, genuine aggregate.
+
+                    // Yep, so rethrow (preserving original stack-trace).
+                    ThrowRefreshFailedException($"Collection Initialization failed: {flattenedAggregate.InnerExceptions[0].Message}", flattenedAggregate.InnerExceptions[0]);
                 }
             }
 
