@@ -1,10 +1,21 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace RFBCodeWorks
 {
     internal static class SystemExtensions
     {
+        /// <summary>
+        /// Compares the <paramref name="value"/> to the <paramref name="expectedValue"/>. If the match, set the value to <paramref name="newValue"/> and returns true.
+        /// </summary>
+        /// <returns>Returns true if the original value = the <paramref name="expectedValue"/></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool CompareExchange(this ref int value, int newValue, int expectedValue)
+        {
+            return Interlocked.CompareExchange(ref value, newValue, expectedValue) == expectedValue;
+        }
+
         /// <summary>
         /// Generic function to check if an object is null
         /// </summary>
