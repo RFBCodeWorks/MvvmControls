@@ -165,10 +165,18 @@ namespace RFBCodeWorks.Mvvm
         private void RefreshAction()
         {
             if (_refresh is null) return;
+            var tcs = new TaskCompletionSource<bool>();
+            _isRefreshingTcs = tcs.Task;
             try
             {
                 IsRefreshing = true;
-                Items = _refresh();
+                var result = _refresh();
+                tcs.SetResult(true);
+                Items = result;
+            }
+            catch(Exception e)
+            {
+                tcs.SetException(e);
             }
             finally
             {
@@ -235,6 +243,22 @@ namespace RFBCodeWorks.Mvvm
         /// <exception cref="OperationCanceledException" />
         public void EnsureInitialized(TimeSpan? maxWaitTime = null)
         {
+            // Call the specialized method for asynchronous waiting
+            if (RefreshCommand is IAsyncRelayCommand)
+            {
+                using CancellationTokenSource waitTime = new(maxWaitTime ?? TimeSpan.FromMilliseconds(3000));
+                try
+                {
+                    EnsureInitializedAsync(waitTime.Token).Wait(waitTime.Token);
+                    return;
+                }
+                catch (OperationCanceledException e) when (waitTime.IsCancellationRequested)
+                {
+                    ThrowRefreshFailedException("Exceeded maximum wait time for asynchronous collection initialization.", e);
+                }
+            }
+
+            // synchronous command logic
             bool usingToken = false;
             try
             {
@@ -244,25 +268,16 @@ namespace RFBCodeWorks.Mvvm
                     {
                         ThrowRefreshFailedException("Unable to initialize collection: RefreshCommand.CanExecute() returned false");
                     }
-                    if (RefreshCommand is IAsyncRelayCommand)
-                    {
-                        usingToken = true;
-                        using CancellationTokenSource waitTime = new(maxWaitTime ?? TimeSpan.FromMilliseconds(3000));
-                        RefreshAsync(waitTime.Token).Wait(waitTime.Token);
-                    }
                     else
                     {
                         RefreshCommand.Execute(null);
                     }
                 }
-                else if (IsRefreshing)
+                else if (IsRefreshing && _isRefreshingTcs is not null)
                 {
                     usingToken = true;
                     using CancellationTokenSource waitTime = new(maxWaitTime ?? TimeSpan.FromMilliseconds(3000));
-                    SpinWait.SpinUntil(() => waitTime.IsCancellationRequested || IsRefreshing == false);
-                    
-                    if (IsRefreshing) 
-                        waitTime.Token.ThrowIfCancellationRequested();
+                    _isRefreshingTcs.Wait(waitTime.Token);
                 }
             }
             catch (RefreshFailedException) { ResetInitializedState(); throw; }
@@ -301,7 +316,6 @@ namespace RFBCodeWorks.Mvvm
                     }
                     await RefreshAsync(token);
                 }
-
                 else if (RefreshCommand is IAsyncRelayCommand asyncCommand && asyncCommand.ExecutionTask is not null)
                 {
                     var task = asyncCommand.ExecutionTask;
