@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable enable
 
@@ -10,11 +11,18 @@ namespace RFBCodeWorks.Mvvm
 
     internal static class ExtensionMethods
     {
-        public static void ThrowIfNull<T>(this T value, string paramName)
+        public static void ThrowIfNull<T>([NotNull] this T value, string paramName)
         {
             if (value is null) ThrowArgNull(paramName);
         }
-        private static void ThrowArgNull(string? paramName) => throw new ArgumentNullException(paramName);
+
+        public static void ThrowInvalidOperationIfNull<T>([NotNull] this T value, string message)
+        {
+            if (value is null) ThrowInvalidOperation(message);
+        }
+
+        [DoesNotReturn] private static void ThrowArgNull(string? paramName) => throw new ArgumentNullException(paramName);
+        [DoesNotReturn] private static void ThrowInvalidOperation(string message) => throw new InvalidOperationException(message);
 
 
         /// <summary>

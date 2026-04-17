@@ -28,6 +28,12 @@ namespace System.Runtime.CompilerServices
 
 namespace System.Diagnostics.CodeAnalysis
 {
+    [AttributeUsage(validOn: AttributeTargets.Parameter)]
+    internal class NotNullAttribute : Attribute { }
+
+    [AttributeUsage(validOn: AttributeTargets.Method)]
+    internal class DoesNotReturnAttribute : Attribute { }
+
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method, AllowMultiple = true)]
     internal sealed class MemberNotNullWhenAttribute(bool returnValue, params string[] members) : Attribute
     {
