@@ -53,6 +53,26 @@ namespace RFBCodeWorks.Mvvm
         public Task RefreshAsync(CancellationToken token);
 
         /// <summary>
+        /// Checks if the <see cref="IItemSource.Items"/> collection has been initialized.
+        /// Will only trigger a refresh if the collection has not been initialized yet.
+        /// </summary>
+        /// <param name="maxWaitTime">
+        /// Maximum time to wait for an asynchronous refresh to complete.
+        /// If not specified, defaults to 3 seconds.
+        /// </param>
+        /// <exception cref="RefreshFailedException"/>
+        /// <exception cref="OperationCanceledException"/>
+        public void EnsureInitialized(TimeSpan? maxWaitTime = null);
+
+        /// <summary>
+        /// Checks if the <see cref="IItemSource.Items"/> collection has been initialized.
+        /// Will only trigger a refresh if the collection has not been initialized yet.
+        /// </summary>
+        /// <exception cref="RefreshFailedException"/>
+        /// <exception cref="OperationCanceledException"/>
+        public Task EnsureInitializedAsync(CancellationToken token);
+
+        /// <summary>
         /// Public EventHandler method to allow triggering the refresh via another object's event
         /// </summary>
         public void Refresh(object? sender, EventArgs e);
