@@ -1,0 +1,181 @@
+<Playlist Version="2.0">
+  <Rule Name="Includes" Match="Any">
+    <Rule Match="All">
+      <Property Name="Solution" />
+      <Rule Match="Any">
+        <Rule Match="All">
+          <Property Name="Project" Value="Mvvm.Controls.Tests (net10.0)" />
+          <Rule Match="Any">
+            <Rule Match="All">
+              <Property Name="Namespace" Value="RFBCodeWorks.Mvvm.Tests" />
+              <Rule Match="Any">
+                <Rule Match="All">
+                  <Property Name="Class" Value="RefreshableSelectorTests" />
+                  <Rule Match="Any">
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_EnsureInitialized_AsynchronousRefresh(System.Boolean)" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_EnsureInitialized_AsynchronousRefresh (False)" />
+                        <Property Name="DisplayName" Value="Test_EnsureInitialized_AsynchronousRefresh (True)" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_EnsureInitialized_DoesNotRefreshIfAlreadyInitialized(System.Boolean)" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_EnsureInitialized_DoesNotRefreshIfAlreadyInitialized (False)" />
+                        <Property Name="DisplayName" Value="Test_EnsureInitialized_DoesNotRefreshIfAlreadyInitialized (True)" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_EnsureInitialized_Throws_AsynchronousRefresh" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_EnsureInitialized_Throws_AsynchronousRefresh" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_EnsureInitialized_Throws_ExceedsWaitTime" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_EnsureInitialized_Throws_ExceedsWaitTime" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_EnsureInitialized_Throws_SynchronousRefresh" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_EnsureInitialized_Throws_SynchronousRefresh" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_EnsureInitialized(System.Boolean)" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_EnsureInitialized (False)" />
+                        <Property Name="DisplayName" Value="Test_EnsureInitialized (True)" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_EnsureInitializedAsync_DoesNotRefreshIfAlreadyInitialized(System.Boolean)" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_EnsureInitializedAsync_DoesNotRefreshIfAlreadyInitialized (False)" />
+                        <Property Name="DisplayName" Value="Test_EnsureInitializedAsync_DoesNotRefreshIfAlreadyInitialized (True)" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_EnsureInitializedAsync_SynchronousRefresh(System.Boolean)" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_EnsureInitializedAsync_SynchronousRefresh (False)" />
+                        <Property Name="DisplayName" Value="Test_EnsureInitializedAsync_SynchronousRefresh (True)" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_EnsureInitializedAsync_Throws_AsynchronousRefresh" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_EnsureInitializedAsync_Throws_AsynchronousRefresh" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_EnsureInitializedAsync_Throws_SynchronousRefresh" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_EnsureInitializedAsync_Throws_SynchronousRefresh" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_EnsureInitializedAsync(System.Boolean)" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_EnsureInitializedAsync (False)" />
+                        <Property Name="DisplayName" Value="Test_EnsureInitializedAsync (True)" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_Refresh" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_Refresh" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_Refresh_WhenMethodIsAsync" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_Refresh_WhenMethodIsAsync" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_RefreshAsync_Cancellation_NonCancellableTask" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_RefreshAsync_Cancellation_NonCancellableTask" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_RefreshAsync_Cancellation_ViaCancellationCommand" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_RefreshAsync_Cancellation_ViaCancellationCommand" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_RefreshAsync_Cancellation_ViaToken" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_RefreshAsync_Cancellation_ViaToken" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_RefreshAsync_MultipleCalls_ReturnsRunningTask" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_RefreshAsync_MultipleCalls_ReturnsRunningTask" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_RefreshAsync_MultipleCommandExecutions_CancelsOldTask" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_RefreshAsync_MultipleCommandExecutions_CancelsOldTask" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_RefreshAsync_WhenMethodIsSynchronous" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_RefreshAsync_WhenMethodIsSynchronous" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_RefreshOnInitialize_Asynchronous(System.Boolean)" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_RefreshOnInitialize_Asynchronous (False)" />
+                        <Property Name="DisplayName" Value="Test_RefreshOnInitialize_Asynchronous (True)" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_RefreshOnInitialize_Synchronous(System.Boolean)" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_RefreshOnInitialize_Synchronous (False)" />
+                        <Property Name="DisplayName" Value="Test_RefreshOnInitialize_Synchronous (True)" />
+                      </Rule>
+                    </Rule>
+                  </Rule>
+                </Rule>
+                <Rule Match="All">
+                  <Property Name="Class" Value="RefreshableSelectorSequenceTest" />
+                  <Rule Match="Any">
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_MultipleRefreshesOnSelector2" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_MultipleRefreshesOnSelector2" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_MultipleRefreshesOnSelector3" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_MultipleRefreshesOnSelector3" />
+                      </Rule>
+                    </Rule>
+                    <Rule Match="All">
+                      <Property Name="TestWithNormalizedFullyQualifiedName" Value="Test_MultipleRefreshWithCancellation" />
+                      <Rule Match="Any">
+                        <Property Name="DisplayName" Value="Test_MultipleRefreshWithCancellation" />
+                      </Rule>
+                    </Rule>
+                  </Rule>
+                </Rule>
+              </Rule>
+            </Rule>
+          </Rule>
+        </Rule>
+      </Rule>
+    </Rule>
+  </Rule>
+</Playlist>
