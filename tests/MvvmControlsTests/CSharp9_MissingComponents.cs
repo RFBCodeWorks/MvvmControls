@@ -4,14 +4,6 @@
 
 using System.ComponentModel;
 
-#if NETFRAMEWORK
-namespace System.Diagnostics.CodeAnalysis
-{
-    [AttributeUsage(validOn: AttributeTargets.Parameter)]
-    internal class NotNullAttribute : Attribute { }
-}
-#endif
-
 #if !NET5_0_OR_GREATER
 namespace ClassLibrary
 {

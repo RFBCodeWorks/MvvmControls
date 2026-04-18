@@ -136,11 +136,11 @@ namespace RFBCodeWorks.Mvvm.Primitives
                     OnItemSourceChanged(EventArgs.Empty);
                     OnPropertyChanged(EventArgSingletons.Items);
 
+                     // Invoke the optional action  passed to the constructor 
+                    _onCollectionChanged?.Invoke();
+
                     // invoke derived class requirements
                     OnItemsChanged();
-
-                    // Invoke the optional action  passed to the constructor 
-                    _onCollectionChanged?.Invoke();
                 }
             }
         }

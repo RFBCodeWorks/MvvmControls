@@ -1,0 +1,13 @@
+<Playlist Version="2.0">
+  <Rule Name="Includes" Match="Any">
+    <Rule Match="All">
+      <Property Name="Solution" />
+      <Rule Match="Any">
+        <Property Name="Class" Value="RefreshableSelectorTests" />
+        <Property Name="Class" Value="RefreshableSelectorSequenceTests" />
+        <Property Name="Class" Value="ComboBoxDefinitionTests" />
+        <Property Name="Class" Value="ListBoxDefinitionTests" />
+      </Rule>
+    </Rule>
+  </Rule>
+</Playlist>

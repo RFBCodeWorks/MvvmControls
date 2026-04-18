@@ -42,6 +42,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         private int? _selectedIndex = null;
         private bool _indexChanging;
         private bool _selectedValueChanging;
+        private bool _collectionChanging = false;
 
         /// <summary>
         /// Occurs after the <see cref="SelectedItem"/> has been updated
@@ -116,11 +117,6 @@ namespace RFBCodeWorks.Mvvm.Primitives
             }
         }
 
-        ///// <summary>
-        ///// Enable/Disable auto-updating of item and SelectedIndex if bound by the ItemSource binding definition attached property
-        ///// </summary>
-        //internal bool IsBoundByBehavior { get; set; }
-
         /// <summary>
         /// The index of the currently selected item within the ItemSource.
         /// </summary>
@@ -141,14 +137,15 @@ namespace RFBCodeWorks.Mvvm.Primitives
             }
             set
             {
-                if (_selectedIndex == value)
+
+                if (!_collectionChanging && _selectedIndex == value)
                 {
                     return; // no change;
                 }
-                else if (value >= 0 && (Items?.Count ?? 0) == 0) // deselect the item
+                else if (value >= 0 && (Items?.Count ?? 0) == 0) // throw if greater than collection count
                 {
                     // No items in collection
-                    throw new ArgumentOutOfRangeException($"SelectedIndex property can not be set when the collection has no items", nameof(SelectedIndex));
+                    throw new ArgumentOutOfRangeException(nameof(value), $"SelectedIndex property can not be set when the collection has no items");
                 }
                 else if (value < Items.Count)
                 {
@@ -178,25 +175,36 @@ namespace RFBCodeWorks.Mvvm.Primitives
                         RaiseSelectedValueChanged(oldSelectedValue);
                     }
                     _indexChanging = false;
+                    _collectionChanging = false;
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException($"SelectedIndex property was set to a value outside the valid range (expected value between -1 and number of items in the collection ( currently: {Items.Count} )", nameof(SelectedIndex));
+                    throw new ArgumentOutOfRangeException(nameof(value), $"SelectedIndex property was set to a value outside the valid range (expected value between -1 and number of items in the collection ( currently: {Items.Count} )");
                 }
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Flag that the collection is changing, 
+        /// so that the SelectedIndex and SelectedItem can be updated accordingly in <see cref="OnItemsChanged"/>
+        /// </summary>
         protected override void OnItemsChanging()
         {
-            base.OnItemsChanging();
+            _collectionChanging = true;
         }
 
-        /// <inheritdoc/>
+
+        /// <summary>
+        /// Sets the SelectedIndex to -1 if the collection has changed and the SelectedIndex or SelectedItem has not been updated during that collection change.
+        /// Also sets the SelectedIndex to -1 if the collection is cleared ( count == 0 ) or if the SelectedItem is null.
+        /// </summary>
         protected override void OnItemsChanged()
         {
-            SelectedIndex = -1;
-            base.OnItemsChanged();
+            if (_collectionChanging || SelectedItem is null || Items.Count == 0)
+            {
+                SelectedIndex = -1;
+            }
+            _collectionChanging = false;
         }
 
         /// <summary>
@@ -204,6 +212,10 @@ namespace RFBCodeWorks.Mvvm.Primitives
         /// </summary>
         partial void OnSelectedItemChanging(T value)
         {
+            // reset the flag that would reset the SelectedIndex to -1
+            // this accommodates scenarios where OnCollectionChanged is used to select an item from the new collection.
+            _collectionChanging = false;
+
             if (_indexChanging || _selectedValueChanging) return; // changing event raised in index setter
             OnPropertyChanging(EventArgSingletons.SelectedIndex);
             OnPropertyChanging(EventArgSingletons.SelectedValue);
@@ -231,6 +243,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
                 OnPropertyChanged(EventArgSingletons.SelectedValue);
                 RaiseSelectedValueChanged(oldSelectedValue);
             }
+
             // invoke the constructor supplied action
             _onSelectionChanged?.Invoke();
         }

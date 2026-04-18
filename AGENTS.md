@@ -8,20 +8,19 @@ This document provides guidance for AI agents and contributors working on the **
 
 MvvmControls is a WPF MVVM helper library that consolidates boiler-plate ViewModel interactions for common WPF controls into pre-built classes. It ships alongside a set of Roslyn source generators that reduce the amount of code a consumer needs to write.
 
-The solution (`RFBCodeWorks.Mvvm.sln`) is composed of the following projects:
-
-| Project | Path | Status |
+The solution (`RFBCodeWorks.Mvvm.sln`) is organized into the following logical components:
+| Component | Path / Projects | Status |
 |---|---|---|
 | **Mvvm.Controls** | `src/Mvvm.Controls/` | Primary library – active development |
-| **Mvvm.Controls.SourceGenerators** | `src/Mvvm.Controls.SourceGenerators/` | Source generators – active development |
+| **Source generators** | `src/SourceGenerators.Roslyn311/`, `src/SourceGenerators.Roslyn410/`, `src/SourceGenerators.Roslyn500/` | Roslyn-version-specific generator projects – active development |
 | Mvvm.IViewModel | `src/Mvvm.IViewModel/` | Interface-only library – largely complete |
 | Mvvm.Dialogs | `src/Mvvm.Dialogs/` | Dialog helpers – largely complete |
 | Mvvm.WebView2Integration | `src/Mvvm.WebView2Integration/` | WebView2 helpers – largely complete |
 | ExampleWPF | `src/ExampleWPF/` | Demo application – reference only |
-| MvvmControlsTests | `tests/MvvmControlsTests/` | Test project |
+| TestWebView2 | `src/TestWebView2/` | WebView2 sample/test application |
+| Mvvm.Controls.Tests | `tests/Mvvm.Controls.Tests/` | Test project |
 
-> **Focus your work on `Mvvm.Controls` and `Mvvm.Controls.SourceGenerators`**. The other libraries are considered feature-complete and should not need significant changes.
-
+> **Focus your work on `Mvvm.Controls` and the `SourceGenerators.Roslyn311/410/500` projects**. The other libraries are considered feature-complete and should not need significant changes.
 ---
 
 ## Build & Test
@@ -107,7 +106,7 @@ The source generator code is compiled three times against different Roslyn SDK v
 |---|---|---|
 | `SourceGenerators.Roslyn311.csproj` | 3.11 | VS2019, .NET Framework / older toolchains |
 | `SourceGenerators.Roslyn410.csproj` | 4.10 | VS2022 (current) |
-| `SourceGenerators.Roslyn500.csproj` | 5.0 | VS2026 / .NET 10 toolchain |
+| `SourceGenerators.Roslyn500.csproj` | 5.x | VS2026 / .NET 10 toolchain |
 
 All three projects share the same source files under `src/`. Version-specific files use the naming convention `*Roslyn311.cs` / `*Roslyn3*.cs` (excluded from Roslyn4+ builds).
 
