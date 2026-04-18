@@ -22,7 +22,7 @@ namespace RFBCodeWorks.Mvvm.Tests
         private int selector3RefreshCount;
 
 
-        private static int[] GetIntegers() => [0, 1, 2, 3, 4, 5];
+        private static int[] GetIntegers() => [5, 4, 3, 2, 1, 0];
 
         private async Task<int[]> GetIntegersAsync(CancellationToken token)
         {
@@ -33,35 +33,53 @@ namespace RFBCodeWorks.Mvvm.Tests
         private async Task<int[]> Selector2RefreshTask(CancellationToken token)
         {
                 var i = selector2RefreshCount++;
-                await Task.Delay(250, token);
-                return [i, i, i, i, i, i];
+                await Task.Delay(2500, token);
+                return [i, i + 1, i + 2];
         }
 
         private async Task<int[]> Selector3RefreshTask(CancellationToken token)
         {
                 var i = selector3RefreshCount++;
-                await Task.Delay(250, token);
-                return [i, i, i, i, i, i];
+                await Task.Delay(2500, token);
+                return [i];
         }
 
-        private static RefreshableSelector<T, T[], object> CreateSelector<T>(Func<CancellationToken, Task<T[]>> getItems, Action onCollectionChanged, Action? onSelectedItemChanged = null)
+        private static void SelectIfOnlyOneItem(IRefreshableSelector selector)
+        {
+            if (selector.Items.Count == 1)
+                selector.SelectedIndex = 0;
+        }
+
+        private static void SelectFirstItem(IRefreshableSelector selector)
+        {
+            if (selector.Items.Count > 0)
+                selector.SelectedIndex = 0;
+        }
+
+        private static RefreshableSelector<T, T[], object> CreateSelector<T>(
+            Func<CancellationToken, Task<T[]>> getItems, 
+            //Func<Task<T[]>> getItems, 
+            Action onCollectionChanged, 
+            Action? onSelectedItemChanged = null,
+            bool refreshOnFirstCollectionRequest = false
+            )
         {
             return new RefreshableSelector<T, T[], object>
                 (
-                refreshAsyncCancellable: getItems,
+                getItems,
                 canRefresh: () => true,
                 onCollectionChanged: onCollectionChanged,
                 onSelectionChanged: onSelectedItemChanged,
-                refreshOnFirstCollectionRequest: false
+                refreshOnFirstCollectionRequest: refreshOnFirstCollectionRequest
                 );
         }
 
         [TestInitialize]
         public void TestInitialize()
         {
-            Selector1 = CreateSelector(GetIntegersAsync, () => Selector1.SelectedIndex = 1, () => Selector2.RefreshCommand.Execute(null));
-            Selector2 = CreateSelector(Selector2RefreshTask, () => Selector2.SelectedIndex = 0, () => Selector3.RefreshCommand.Execute(null));
-            Selector3 = CreateSelector(Selector3RefreshTask, () => Selector3.SelectedIndex = 0);
+            Selector1 = CreateSelector(GetIntegersAsync, () => SelectFirstItem(Selector1), () => Selector2.RefreshCommand.Execute(null), true);
+            Selector2 = CreateSelector(Selector2RefreshTask, () => SelectFirstItem(Selector2), () => Selector3.RefreshCommand.Execute(null));
+            Selector3 = CreateSelector(Selector3RefreshTask, () => SelectFirstItem(Selector3));
         }
 
         /// <summary>
@@ -77,13 +95,16 @@ namespace RFBCodeWorks.Mvvm.Tests
             await Selector1.EnsureInitializedAsync(Token);
             Assert.IsFalse(Selector1.IsRefreshing);
             Assert.HasCount(6, Selector1.Items);
-            Assert.AreEqual(1, Selector1.SelectedIndex);
-            Assert.IsTrue(Selector2.IsRefreshing);
+            Assert.AreEqual(0, Selector1.SelectedIndex); // item was not yet selected due to multiple items in collection.
+
+            await Selector2.EnsureInitializedAsync(CancellationToken.None);
+            Assert.IsFalse(Selector2.IsRefreshing);
             Selector1.SelectedIndex = 2;
+            Assert.IsTrue(Selector2.IsRefreshing);
 
             // selector 2 should now be refreshing for the second time (since first refresh was triggered when selector 1 had selectedIndex set to 0 via OnCollectionChanged)
             Assert.IsTrue(Selector2.IsRefreshing);
-            await Selector2.EnsureInitializedAsync(Token);
+            await Selector2.EnsureInitializedAsync(CancellationToken.None);
             Assert.IsFalse(Selector2.IsRefreshing);
             Assert.AreEqual(2, selector2RefreshCount);
             Assert.AreEqual(0, Selector2.SelectedIndex);
@@ -92,7 +113,7 @@ namespace RFBCodeWorks.Mvvm.Tests
 
             // select 3 should now be on its 3rd refresh, since select2 has had its item changed 3 times.
             Assert.IsTrue(Selector3.IsRefreshing);
-            await Selector3.EnsureInitializedAsync(Token);
+            await Selector3.EnsureInitializedAsync(CancellationToken.None);
             Assert.IsFalse(Selector3.IsRefreshing);
             Assert.AreEqual(3, selector2RefreshCount);
             Assert.AreEqual(0, Selector2.SelectedIndex);
