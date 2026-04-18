@@ -137,8 +137,8 @@ namespace RFBCodeWorks.Mvvm.Primitives
             }
             set
             {
-                
-                if (!_collectionChanging  && _selectedIndex == value)
+
+                if (!_collectionChanging && _selectedIndex == value)
                 {
                     return; // no change;
                 }
@@ -179,7 +179,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException($"SelectedIndex property was set to a value outside the valid range (expected value between -1 and number of items in the collection ( currently: {Items.Count} )", nameof(SelectedIndex));
+                    throw new ArgumentOutOfRangeException(nameof(value), $"SelectedIndex property was set to a value outside the valid range (expected value between -1 and number of items in the collection ( currently: {Items.Count} )");
                 }
             }
         }
