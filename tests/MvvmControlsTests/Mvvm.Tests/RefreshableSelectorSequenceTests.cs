@@ -233,8 +233,8 @@ namespace RFBCodeWorks.Mvvm.Tests
             Assert.AreEqual(3, selector3RefreshCount, @"
 >> Selector3 should have refreshed 3 times: 
     >> 1st = Selector1 Selected item -> Selector2 refresh -> Selector2 OnCollectionChanged selected index 0 -> Selector3 refresh 
-    >> 2nd = Selector1 Changed selected Indexto 1 -> Selector2 refresh (cancelling previous) -> Selector2 OnCollectionChanged selected an item -> Selector3 refresh 
-    >> 3rd = Selector2 Changed selected Indexto 2 -> Selector3 refresh");
+    >> 2nd = Selector1 Changed SelectedIndex to 1 -> Selector2 refresh (cancelling previous) -> Selector2 OnCollectionChanged selected an item -> Selector3 refresh 
+    >> 3rd = Selector2 Changed SelectedIndex to 2 -> Selector3 refresh");
             Assert.AreEqual(0, Selector3.SelectedIndex, "\n >> Selector3 should have selected index 0");
             Assert.AreEqual(3, Selector3.SelectedItem, "\n >> Selector3 should have selected item 3 (equal to number of refreshes)");
         }
@@ -302,7 +302,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             Assert.AreEqual(2, selector3RefreshCount, $@"
 >> Selector3 should have refreshed 2 times: 
     >> 1st = Selector2 successful refresh -> Selector2 OnCollectionChanged selected index 0 -> Selector3 refresh     
-    >> 2nd = Selector2 Changed selected Indexto 2 -> Selector3 refresh");
+    >> 2nd = Selector2 Changed SelectedIndex to 2 -> Selector3 refresh");
 
             Assert.AreEqual(1, s3_cancelCount, "\n >> Selector3 should have cancelled 1 refresh");
             Assert.AreEqual(0, Selector3.SelectedIndex, "\n >> Selector3 should have selected index 0");
