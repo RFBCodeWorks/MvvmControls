@@ -1,4 +1,3 @@
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading;
@@ -154,8 +153,8 @@ namespace RFBCodeWorks.Mvvm.Tests
 
 
         /// <summary>
-        /// Selector 1 has has collection updated, triggers refresh on selector 2.
-        /// Verifies that Selector 2 has received 2 successul refreshes and calls its OnCollectionChanged logic the correct number of times
+        /// Selector 1 has had its collection updated, triggering refresh on selector 2.
+        /// Verifies that Selector 2 has received 2 successful refreshes and calls its OnCollectionChanged logic the correct number of times
         /// </summary>
         [TestMethod]
         [Timeout(10000, CooperativeCancellation =true)]

@@ -213,7 +213,7 @@ namespace RFBCodeWorks.Mvvm.Primitives
         partial void OnSelectedItemChanging(T value)
         {
             // reset the flag that would reset the SelectedIndex to -1
-            // this accomodates scenarios where OnCollectionChanged is used to select an item from the new collection.
+            // this accommodates scenarios where OnCollectionChanged is used to select an item from the new collection.
             _collectionChanging = false;
 
             if (_indexChanging || _selectedValueChanging) return; // changing event raised in index setter
