@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 namespace RFBCodeWorks.Mvvm.Tests
 {
     [TestClass]
+    [DoNotParallelize]
     public class RefreshableSelectorSequenceTests
     {
         public TestContext TestContext { get; set; }
 
         private CancellationToken Token => TestContext.CancellationToken;
-        private static readonly SemaphoreSlim testSequencer = new SemaphoreSlim(1);
 
 
 #pragma warning disable CA1859 // Intentionally tests via the interface
 
+        private IDisposable? tokenRegistration;
         private IRefreshableSelector Selector1 = null!;
         private IRefreshableSelector Selector2 = null!;
         private IRefreshableSelector Selector3 = null!;
@@ -48,17 +49,18 @@ namespace RFBCodeWorks.Mvvm.Tests
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
-        {
-            Assert.IsNotNull(testSequencer);
-        }
+        { }
 
         [TestCleanup]
-        public void TestCleanup() => testSequencer.Release();
+        public void TestCleanup()
+        {
+            tokenRegistration?.Dispose();
+        }
 
         [TestInitialize]
         public async Task TestInitialize()
         {
-            await testSequencer.WaitAsync(Token);
+            int delayPeriod = 200;
 
             selector2RefreshCount = 0;
             selector3RefreshCount = 0;
@@ -73,7 +75,7 @@ namespace RFBCodeWorks.Mvvm.Tests
             Selector1 = new RefreshableSelector<int, int[], object>(
                     async token =>
                     {
-                        await Task.Delay(1000, TestContext.CancellationToken);
+                        await Task.Delay(delayPeriod, TestContext.CancellationToken);
                         return GetIntegers();
                     },
                     onCollectionChanged: () => SelectFirstItem(Selector1),
@@ -95,7 +97,7 @@ namespace RFBCodeWorks.Mvvm.Tests
                     {
                         selector2RefreshCount++;
                         var i = selector2RefreshCount;
-                        await Task.Delay(1000, token);
+                        await Task.Delay(delayPeriod, token);
                         return [i + 1, i + 2, i + 3];
                     }
                     catch (OperationCanceledException)
@@ -123,7 +125,7 @@ namespace RFBCodeWorks.Mvvm.Tests
                     {
                         selector3RefreshCount++;
                         var i = selector3RefreshCount;
-                        await Task.Delay(1000, token);
+                        await Task.Delay(delayPeriod, token);
                         return [i];
                     }
                     catch (OperationCanceledException)
@@ -141,6 +143,13 @@ namespace RFBCodeWorks.Mvvm.Tests
             {
                 DisplayMemberPath = nameof(Selector3),
             };
+
+            tokenRegistration = Token.Register(() =>
+            {
+                Selector1.CancelRefreshCommand.Execute(null);
+                Selector2.CancelRefreshCommand.Execute(null);
+                Selector3.CancelRefreshCommand.Execute(null);
+             });
         }
 
 
@@ -149,6 +158,7 @@ namespace RFBCodeWorks.Mvvm.Tests
         /// Verifies that Selector 2 has received 2 successul refreshes and calls its OnCollectionChanged logic the correct number of times
         /// </summary>
         [TestMethod]
+        [Timeout(10000, CooperativeCancellation =true)]
         public Task Test_MultipleRefreshesOnSelector2()
         {
             return Run_MultipleRefreshesOnSelector2();
@@ -191,6 +201,7 @@ namespace RFBCodeWorks.Mvvm.Tests
         /// to ensure that the refreshes are happening in the correct sequence and that the correct number of refreshes are being triggered for each selector.
         /// </summary>
         [TestMethod]
+        [Timeout(10000, CooperativeCancellation = true)]
         public async Task Test_MultipleRefreshesOnSelector3()
         {
             
@@ -238,6 +249,7 @@ namespace RFBCodeWorks.Mvvm.Tests
         /// instead of waiting for completion prior to updated the prior selector's SelectedIndex.
         /// </remarks>
         [TestMethod]
+        [Timeout(10000, CooperativeCancellation = true)]
         public async Task Test_MultipleRefreshWithCancellation()
         {
             /* Overview
