@@ -135,6 +135,58 @@ namespace RFBCodeWorks.Mvvm
             }
         }
 
+        private static async Task WaitForTaskOrCancellationAsync(Task task, CancellationToken token)
+        {
+            if (task.Status < TaskStatus.RanToCompletion)
+            {
+                var tcs = new TaskCompletionSource<object>();
+                using var reg = token.Register(() => tcs.SetCanceled());
+                var completedTask = await Task.WhenAny(tcs.Task, task); // returns when cancellation is requested or the refresh task completes
+                if (completedTask == tcs.Task)
+                {
+                    token.ThrowIfCancellationRequested();
+                }
+            }
+        }
+
+        private async Task AwaitLatestExecutionTaskAsync(IAsyncRelayCommand asyncCommand, CancellationToken token)
+        {
+            while (asyncCommand.ExecutionTask is Task task)
+            {
+                await WaitForTaskOrCancellationAsync(task, token);
+
+                try
+                {
+                    await task;
+                    return;
+                }
+                catch (OperationCanceledException) when (!token.IsCancellationRequested)
+                {
+                    var currentTask = asyncCommand.ExecutionTask;
+                    if (ReferenceEquals(currentTask, task) && !asyncCommand.IsRunning && !IsRefreshing)
+                    {
+                        await asyncCommand.ExecuteAsync(token);
+                        return;
+                    }
+
+                    // Another refresh has superseded this one (or is still in-flight).
+                    // Continue waiting for the latest execution task.
+                }
+            }
+        }
+
+        private async Task RefreshAsyncInternal(IAsyncRelayCommand asyncCmd, CancellationToken token)
+        {
+            using var cancellationReg = token.Register(asyncCmd.Cancel);
+            if (asyncCmd.IsRunning)
+            {
+                await AwaitLatestExecutionTaskAsync(asyncCmd, token);
+            }
+            else
+            {
+                await asyncCmd.ExecuteAsync(token);
+            }
+        }
         /// <inheritdoc/>
         public IRelayCommand RefreshCommand => _refreshCommand ??= CreateCommand();
 
@@ -149,7 +201,7 @@ namespace RFBCodeWorks.Mvvm
             }
             else if (_cancellableRefreshAsync is not null)
             {
-                return new AsyncRelayCommand(RefreshTask, _canRefresh, AsyncRelayCommandOptions.None);
+                return new AsyncRelayCommand(RefreshTask, _canRefresh, AsyncRelayCommandOptions.FlowExceptionsToTaskScheduler);
             }
             return InactiveButton.Instance;
         }
@@ -331,18 +383,7 @@ namespace RFBCodeWorks.Mvvm
                 }
                 else if (RefreshCommand is IAsyncRelayCommand asyncCommand && asyncCommand.ExecutionTask is not null)
                 {
-                    var task = asyncCommand.ExecutionTask;
-                    if (task.Status < TaskStatus.RanToCompletion)
-                    {
-                        var tcs = new TaskCompletionSource<object>();
-                        using var reg = token.Register(() => tcs.SetCanceled());
-                        var completedTask = await Task.WhenAny(tcs.Task, task); // returns when cancellation is requested or the refresh task completes
-                        if (completedTask == tcs.Task)
-                        {
-                            token.ThrowIfCancellationRequested();
-                        }
-                    }
-                    await task;
+                    await AwaitLatestExecutionTaskAsync(asyncCommand, token);
                 }
 
                 else if (IsRefreshing)
@@ -351,6 +392,20 @@ namespace RFBCodeWorks.Mvvm
                     while (IsRefreshing)
                     {
                         await Task.Delay(50, token);
+                    }
+                }
+            }
+            catch (OperationCanceledException) when (!token.IsCancellationRequested && RefreshCommand is IAsyncRelayCommand)
+            {
+                if (RefreshCommand is IAsyncRelayCommand asyncCommand)
+                {
+                    try
+                    {
+                        await AwaitLatestExecutionTaskAsync(asyncCommand, token);
+                    }
+                    catch (OperationCanceledException) when (!token.IsCancellationRequested)
+                    {
+                        ResetInitializedState();
                     }
                 }
             }
@@ -400,12 +455,7 @@ namespace RFBCodeWorks.Mvvm
 
             if (RefreshCommand is IAsyncRelayCommand asyncCmd)
             {
-                using var cancellationReg = token.Register(asyncCmd.Cancel);
-                if (asyncCmd.IsRunning)
-                {
-                    return asyncCmd.ExecutionTask!;
-                }
-                return asyncCmd.ExecuteAsync(token);
+                return RefreshAsyncInternal(asyncCmd, token);
             }
             else if (_refresh is not null)
             {
