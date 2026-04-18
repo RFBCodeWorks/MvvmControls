@@ -259,16 +259,35 @@ namespace RFBCodeWorks.Mvvm.Tests
         }
 
         [TestMethod]
-        public async Task Test_RefreshAsync_MultipleCalls_ReturnsRunningTask()
+        public async Task Test_RefreshAsync_MultipleCalls_DoesNotCancelRunningTask()
         {
-            var tcs = new TaskCompletionSource<int[]>();
-            var selector = new RefreshableSelector<int, int[], object>(() => tcs.Task);
+            List <TaskCompletionSource<int[]>> tcsList = [];
+
+            bool anyTaskStarted = false;
+            bool anyTaskCancelled = false;
+            Func<CancellationToken, Task<int[]>> refreshAsync = (token) =>
+            {
+                var tcs = new TaskCompletionSource<int[]>();
+                token.Register(() =>
+                {
+                    anyTaskCancelled = true;
+                    tcs.TrySetCanceled(token);
+                });
+                anyTaskStarted = true;
+                tcsList.Add(tcs);
+                return tcs.Task;
+            };
+
+            var selector = new RefreshableSelector<int, int[], object>(refreshAsync);
 
             var firstTask = selector.RefreshAsync(Token);
             var secondTask = selector.RefreshAsync(Token);
-            Assert.AreSame(firstTask, secondTask);
-            tcs.TrySetResult(GetIntegers());
-            Assert.HasCount(6, await tcs.Task);
+            Assert.IsTrue(anyTaskStarted);
+            Assert.IsFalse(anyTaskCancelled);
+            Assert.HasCount(1, tcsList);
+            tcsList[0].SetResult(GetIntegers());
+            await firstTask;
+            await secondTask;
         }
 
         [TestMethod]
